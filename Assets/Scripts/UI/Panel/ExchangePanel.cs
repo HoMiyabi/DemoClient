@@ -98,16 +98,8 @@ namespace Kirara.UI.Panel
                             ExchangeId = item.ExchangeId,
                             ExchangeCount = dialog.Value,
                         });
-                        if (rsp.Code == 0)
-                        {
-                            Debug.Log("购买成功");
-                            UIMgr.Instance.PushPanel<ObtainPanel>()
-                                .Set(item.ToConfigId, dialog.Value * item.ToCount);
-                        }
-                        else
-                        {
-                            Debug.LogWarning($"购买失败: {rsp.Msg}");
-                        }
+                        UIMgr.Instance.PushPanel<ObtainPanel>()
+                            .Set(item.ToConfigId, dialog.Value * item.ToCount);
                     });
                 });
         }

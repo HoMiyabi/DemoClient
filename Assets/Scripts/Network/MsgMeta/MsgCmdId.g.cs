@@ -1,4 +1,5 @@
-﻿public static class MsgCmdId
+﻿// 本文件为生成的代码，所有修改都会丢失
+public static class MsgCmdId
 {
     public const uint Result = 1714577448;
     public const uint Ping = 27007083;

@@ -173,7 +173,7 @@ namespace Kirara
             NetFn.Send(new MsgEnterRoom());
             UIMgr.Instance.PushPanel<CombatPanel>();
 
-            FrontChIdx = PlayerService.player.playerInfo.FrontChIdx;
+            FrontChIdx = PlayerService.player.FrontChIdx;
 
             for (int i = 0; i < ChCtrls.Count; i++)
             {
@@ -221,7 +221,6 @@ namespace Kirara
             NetFn.Send(new MsgSwitchRole
             {
                 Idx = idx,
-                Next = true
             });
             SwitchCh(idx, true);
         }
@@ -234,7 +233,6 @@ namespace Kirara
             NetFn.Send(new MsgSwitchRole
             {
                 Idx = idx,
-                Next = false
             });
             SwitchCh(idx, false);
         }
@@ -259,8 +257,8 @@ namespace Kirara
 
         private void CreateCharacters()
         {
-            var cids = PlayerService.player.playerInfo.GroupChCids;
-            var chModels = PlayerService.player.chModels;
+            var cids = PlayerService.player.GroupChCids;
+            var chModels = PlayerService.player.Roles;
             Debug.Log("队伍角色数量：" + chModels.Count);
             foreach (int chCid in cids)
             {

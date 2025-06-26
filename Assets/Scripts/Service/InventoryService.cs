@@ -66,7 +66,7 @@ namespace Kirara.Service
 
         private static MaterialItem AddMaterialCount(int cid, int count)
         {
-            var item = PlayerService.player.materials.Find(it => it.Cid == cid);
+            var item = PlayerService.player.Materials.Find(it => it.Cid == cid);
             if (item != null)
             {
                 item.Count += count;
@@ -78,7 +78,7 @@ namespace Kirara.Service
                     Cid = cid,
                     Count = count
                 });
-                PlayerService.player.materials.Add(item);
+                PlayerService.player.Materials.Add(item);
             }
             return item;
         }
@@ -95,7 +95,7 @@ namespace Kirara.Service
 
         private static CurrencyItem AddCurrencyCount(int cid, int count)
         {
-            var item = PlayerService.player.currencies.Find(it => it.Cid == cid);
+            var item = PlayerService.player.Currencies.Find(it => it.Cid == cid);
             if (item != null)
             {
                 item.Count += count;
@@ -107,7 +107,7 @@ namespace Kirara.Service
                     Cid = cid,
                     Count = count
                 });
-                PlayerService.player.currencies.Add(item);
+                PlayerService.player.Currencies.Add(item);
             }
             return item;
         }
@@ -117,14 +117,14 @@ namespace Kirara.Service
         private static void ObtainDisc(NDiscItem disc)
         {
             var item = new DiscItem(disc);
-            PlayerService.player.discs.Add(item);
+            PlayerService.player.Discs.Add(item);
             OnObtainItem?.Invoke(item, 1);
         }
 
         private static void ObtainWeapon(NWeaponItem weapon)
         {
             var item = new WeaponItem(weapon);
-            PlayerService.player.weapons.Add(item);
+            PlayerService.player.Weapons.Add(item);
             OnObtainItem?.Invoke(item, 1);
         }
     }

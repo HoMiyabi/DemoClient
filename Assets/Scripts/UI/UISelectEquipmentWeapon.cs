@@ -38,7 +38,7 @@ namespace Kirara.UI
 
         [SerializeField] private GameObject UIInventoryCellWeaponPrefab;
 
-        private CharacterModel ch;
+        private RoleModel ch;
         private List<WeaponItem> weapons;
         private WeaponItem _selectedWeapon;
         private WeaponItem SelectedWeapon
@@ -66,7 +66,7 @@ namespace Kirara.UI
             }
         }
 
-        public void Set(CharacterModel ch)
+        public void Set(RoleModel ch)
         {
             Clear();
             this.ch = ch;
@@ -86,7 +86,7 @@ namespace Kirara.UI
 
         private List<WeaponItem> GetWeapons()
         {
-            var l = PlayerService.player.weapons.ToList();
+            var l = PlayerService.player.Weapons.ToList();
             if (l.Count > 0 && ch.Weapon != null)
             {
                 int idx = l.FindIndex(item => item.Id == ch.Weapon.Id);
@@ -102,11 +102,11 @@ namespace Kirara.UI
 
         private void UpdateEquipBtnView()
         {
-            if (ch.Weapon == null && SelectedWeapon.WearerId == 0)
+            if (ch.Weapon == null && SelectedWeapon.RoleId == null)
             {
                 SetEquipBtnEquip();
             }
-            else if (ch.Weapon != null && SelectedWeapon.WearerId == ch.Id)
+            else if (ch.Weapon != null && SelectedWeapon.RoleId == ch.Id)
             {
                 SetEquipBtnRemove();
             }

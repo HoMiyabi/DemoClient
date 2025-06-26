@@ -34,7 +34,7 @@ namespace Kirara.UI
         public Color energyLackColor = Color.white;
         public Color energyEnoughColor = Color.white;
 
-        private CharacterModel ch;
+        private RoleModel ch;
         private AssetHandle handle;
 
         private void Awake()
@@ -59,7 +59,7 @@ namespace Kirara.UI
             ch = null;
         }
 
-        public void Set(CharacterModel ch)
+        public void Set(RoleModel ch)
         {
             Clear();
             this.ch = ch;

@@ -94,11 +94,11 @@ namespace Kirara.UI
             UpdateSubAttrsView();
             disc.OnSubAttrsChanged += UpdateSubAttrsView;
 
-            EffDescContentText.text = $"2件套: {disc.SetEffect2Desc}\n" +
-                                      $"4件套: {disc.SetEffect4Desc}";
+            EffDescContentText.text = $"2件套: {disc.Config.SetEffect2Desc}\n" +
+                                      $"4件套: {disc.Config.SetEffect4Desc}";
 
             UIDiscPosIcon.Set(disc.Pos);
-            SetWearer(disc.WearerId);
+            SetRole(disc.RoleId);
 
             return this;
         }
@@ -124,14 +124,14 @@ namespace Kirara.UI
             LevelText.text = $"等级{disc.Level}/{ConfigMgr.tb.TbGlobalConfig.DiscMaxLevel}";
         }
 
-        private void SetWearer(int wearerId)
+        private void SetRole(string roleId)
         {
-            if (wearerId == 0)
+            if (roleId == null)
             {
                 WearerIcon.gameObject.SetActive(false);
                 return;
             }
-            var chInfo = PlayerService.player.chModels.First(it => it.Id == wearerId);
+            var chInfo = PlayerService.player.Roles.First(it => it.Id == roleId);
             wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chInfo.config.IconLoc);
             WearerIcon.sprite = wearerIconHandle.AssetObject as Sprite;
         }

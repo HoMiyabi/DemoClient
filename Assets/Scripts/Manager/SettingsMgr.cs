@@ -25,7 +25,7 @@ namespace Manager
             SFXVolume = 10
         };
 
-        private static int uid;
+        private static string uid;
 
         private static void SetAudio()
         {
@@ -41,7 +41,7 @@ namespace Manager
 
             string json = JsonConvert.SerializeObject(settings);
 
-            string fileDir = Path.Combine(Application.persistentDataPath, "player", uid.ToString());
+            string fileDir = Path.Combine(Application.persistentDataPath, "player", uid);
             string filePath = Path.Combine(fileDir, "player_settings.json");
 
             if (!Directory.Exists(fileDir))
@@ -52,11 +52,11 @@ namespace Manager
             File.WriteAllText(filePath, json);
         }
 
-        public static void Init(int uid)
+        public static void Init(string uid)
         {
             SettingsMgr.uid = uid;
 
-            string filePath = Path.Combine(Application.persistentDataPath, "player", uid.ToString(),
+            string filePath = Path.Combine(Application.persistentDataPath, "player", uid,
                 "player_settings.json");
             if (File.Exists(filePath))
             {

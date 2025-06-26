@@ -55,7 +55,7 @@ namespace Kirara.UI
         {
             if (_weapon != null)
             {
-                _weapon.OnWearerIdChanged -= SetWearer;
+                _weapon.OnRoleIdChanged -= SetRole;
             }
 
             itemIconHandle?.Release();
@@ -75,14 +75,14 @@ namespace Kirara.UI
                 if (_weapon == value) return;
                 Clear();
                 _weapon = value;
-                _weapon.OnWearerIdChanged += SetWearer;
+                _weapon.OnRoleIdChanged += SetRole;
 
                 SetIcon(_weapon.IconLoc);
-                UIInventoryRankBar.Set(_weapon.Rank);
+                UIInventoryRankBar.Set(_weapon.Config.Rank);
                 SetLevelText(_weapon.Level);
                 SetLocked(_weapon.Locked);
                 UIItemStar.SetStar(_weapon.RefineLevel);
-                SetWearer(_weapon.WearerId);
+                SetRole(_weapon.RoleId);
             }
         }
 
@@ -94,16 +94,16 @@ namespace Kirara.UI
             return this;
         }
 
-        private void SetWearer(int wearerId)
+        private void SetRole(string roleId)
         {
-            if (wearerId == 0)
+            if (roleId == null)
             {
                 WearerIconImg.sprite = null;
                 WearerIconImg.gameObject.SetActive(false);
                 return;
             }
             WearerIconImg.gameObject.SetActive(true);
-            var chModel = PlayerService.player.chModels.First(it => it.Id == wearerId);
+            var chModel = PlayerService.player.Roles.First(it => it.Id == roleId);
             wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chModel.config.IconLoc);
             WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
         }

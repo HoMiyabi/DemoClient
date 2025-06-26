@@ -44,8 +44,8 @@ namespace Kirara.UI.Panel
 
         private List<NOtherPlayer> playerInfos;
 
-        private NOtherPlayerInfo curChattingPlayer;
-        private List<NChatMsgRecordItem> chatRecords;
+        private NOtherPlayer curChattingPlayer;
+        private List<NChatMsgRecord> chatRecords;
 
         private void Awake()
         {
@@ -76,7 +76,7 @@ namespace Kirara.UI.Panel
         private void Start()
         {
             // 选择栏
-            playerInfos = PlayerService.player.friendInfos;
+            playerInfos = PlayerService.player.FriendUids;
             ChatFriendLoopScroll.prefabSource = ChatFriendPrefabSource;
             ChatFriendLoopScroll.dataSource = new LoopScrollDataSourceHandler(ProvideFriendData);
             ChatFriendLoopScroll.totalCount = playerInfos.Count;
@@ -89,9 +89,9 @@ namespace Kirara.UI.Panel
             SetSelectedPlayerInfo(playerInfos.FirstOrDefault());
         }
 
-        private void OnReceiveChatMsg(NChatMsgRecordItem record)
+        private void OnReceiveChatMsg(NChatMsgRecord record)
         {
-            if (curChattingPlayer == null || curChattingPlayer.UId != record.SenderUId) return;
+            if (curChattingPlayer == null || curChattingPlayer.Uid != record.SenderUid) return;
 
             ChatLoopScroll.totalCount = chatRecords.Count;
             ChatLoopScroll.RefillCellsFromEnd();
@@ -109,54 +109,46 @@ namespace Kirara.UI.Panel
 
         public async UniTask SendText(string text)
         {
-            var chatMsgItem = new NChatMsg
+            var chatMsg = new NChatMsg
             {
+                MsgType = 0,
                 Text = text,
             };
 
             var rsp = await NetFn.ReqSendChatMsg(new ReqSendChatMsg
             {
-                ReceiverUId = curChattingPlayer.UId,
-                ChatMsgItem = chatMsgItem,
+                ReceiverUid = curChattingPlayer.Uid,
+                ChatMsg = chatMsg,
             });
-            if (rsp.Code != 0)
+            chatRecords.Add(new NChatMsgRecord
             {
-                Debug.LogWarning($"发送失败: {rsp.Msg}");
-                return;
-            }
-            chatRecords.Add(new NChatMsgRecordItem
-            {
-                SenderUId = PlayerService.player.playerInfo.UId,
-                EpochMs = rsp.EpochMs,
-                ChatMsgItem = chatMsgItem,
+                SenderUid = PlayerService.player.Uid,
+                UnixTimeMs = rsp.UnixTimeMs,
+                ChatMsg = chatMsg
             });
 
             ChatLoopScroll.totalCount = chatRecords.Count;
             ChatLoopScroll.RefillCellsFromEnd();
         }
 
-        public async UniTask SendSticker(int stickerConfigId)
+        public async UniTask SendSticker(int stickerCid)
         {
-            var chatMsgItem = new NChatMsgItem
+            var chatMsg = new NChatMsg
             {
-                StickerConfigId = stickerConfigId,
+                MsgType = 1,
+                StickerCid = stickerCid,
             };
 
             var rsp = await NetFn.ReqSendChatMsg(new ReqSendChatMsg
             {
-                ReceiverUId = curChattingPlayer.UId,
-                ChatMsgItem = chatMsgItem
+                ReceiverUid = curChattingPlayer.Uid,
+                ChatMsg = chatMsg
             });
-            if (rsp.Code != 0)
+            chatRecords.Add(new NChatMsgRecord
             {
-                Debug.LogWarning($"发送失败: {rsp.Msg}");
-                return;
-            }
-            chatRecords.Add(new NChatMsgRecordItem
-            {
-                SenderUId = PlayerService.player.playerInfo.UId,
-                EpochMs = rsp.EpochMs,
-                ChatMsgItem = chatMsgItem,
+                SenderUid = PlayerService.player.Uid,
+                UnixTimeMs = rsp.UnixTimeMs,
+                ChatMsg = chatMsg
             });
 
             ChatLoopScroll.totalCount = chatRecords.Count;
@@ -182,7 +174,7 @@ namespace Kirara.UI.Panel
             item.Set(chatRecords[idx], curChattingPlayer);
         }
 
-        private void SetSelectedPlayerInfo(NOtherPlayerInfo newInfo)
+        private void SetSelectedPlayerInfo(NOtherPlayer newInfo)
         {
             curChattingPlayer = newInfo;
 
@@ -201,7 +193,7 @@ namespace Kirara.UI.Panel
             }
             else
             {
-                chatRecords = PlayerService.player.allChatRecords[curChattingPlayer.UId];
+                chatRecords = PlayerService.player.allChatRecords[curChattingPlayer.Uid];
 
                 UsernameText.text = curChattingPlayer.Username;
 

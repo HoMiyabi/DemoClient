@@ -48,10 +48,10 @@ namespace Kirara.UI
             InitUI();
         }
 
-        public void Set(NOtherPlayerInfo info)
+        public void Set(NOtherPlayer info)
         {
             Clear();
-            avatarHandle = ConfigAsset.GetIconInterKnotRole(info.AvatarConfigId);
+            avatarHandle = ConfigAsset.GetIconInterKnotRole(info.AvatarCid);
             AvatarImg.sprite = avatarHandle.AssetObject as Sprite;
 
             SignatureText.text = info.Signature;

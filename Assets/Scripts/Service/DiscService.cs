@@ -42,11 +42,6 @@ namespace Kirara.Service
                 MaterialCid = matCid,
                 Count = useCount
             });
-            if (rsp.Code != 0)
-            {
-                Debug.LogWarning($"失败: {rsp.Msg}");
-                return;
-            }
             CalcUpgraded(disc, useCount * matExp, out int level, out int exp);
             int prevLevel = disc.Level;
             disc.Level = level;

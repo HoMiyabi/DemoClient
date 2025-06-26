@@ -15,7 +15,7 @@ namespace Kirara.Manager
 
         public void Init()
         {
-            KiraraNetwork.Init(new ProtoMeta(), GetType().Assembly);
+            KiraraNetwork.Init(new MsgMeta(), GetType().Assembly);
         }
 
         public void Connect()
@@ -50,8 +50,7 @@ namespace Kirara.Manager
                 await UniTask.WaitForSeconds(interval);
 
                 var t1 = DateTime.UtcNow;
-                var msg = await session.CallAsync(ProtoMsgId.Ping, ping);
-                var pong = msg as Pong;
+                var pong = await session.CallAsync<Pong>(ProtoMsgId.Ping, ping);
                 var t2 = DateTime.UtcNow;
                 rttMs = (float)(t2 - t1).TotalMilliseconds;
                 serverTimeMs = pong.UnixTimeMs + rttMs / 2;

@@ -73,11 +73,11 @@ namespace Kirara.UI
             }
         }
 
-        public void Set(NChatMsgRecordItem record, NOtherPlayerInfo other)
+        public void Set(NChatMsgRecord record, NOtherPlayer other)
         {
             Clear();
 
-            bool isSelf = record.SenderUId == PlayerService.player.playerInfo.UId;
+            bool isSelf = record.SenderUid == PlayerService.player.Uid;
 
             // 位置左右
             isLeft = !isSelf;
@@ -85,30 +85,34 @@ namespace Kirara.UI
 
             // 头像
             avatarHandle = ConfigAsset.GetIconInterKnotRole(isSelf ?
-                PlayerService.player.playerInfo.AvatarCid : other.AvatarConfigId);
+                PlayerService.player.AvatarCid : other.AvatarCid);
             AvatarImg.sprite = avatarHandle.AssetObject as Sprite;
 
             // 内容
-            if (!string.IsNullOrEmpty(record.ChatMsgItem.Text))
+            if (record.ChatMsg.MsgType == 0)
             {
                 ChatText.gameObject.SetActive(true);
                 ChatStickerImg.gameObject.SetActive(false);
 
-                ChatText.text = record.ChatMsgItem.Text;
+                ChatText.text = record.ChatMsg.Text;
             }
-            else
+            else if (record.ChatMsg.MsgType == 1)
             {
                 ChatText.gameObject.SetActive(false);
                 ChatStickerImg.gameObject.SetActive(true);
 
-                stickerHandle = ConfigAsset.GetIconSticker(record.ChatMsgItem.StickerConfigId);
+                stickerHandle = ConfigAsset.GetIconSticker(record.ChatMsg.StickerCid);
                 ChatStickerImg.sprite = stickerHandle.AssetObject as Sprite;
+            }
+            else
+            {
+                Debug.LogError($"record.ChatMsg.MsgType: {record.ChatMsg.MsgType}");
             }
         }
 
         private void OnValidate()
         {
-            if (AvatarImg == null)
+            if (!AvatarImg)
             {
                 InitUI();
             }

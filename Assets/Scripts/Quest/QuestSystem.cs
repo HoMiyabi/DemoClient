@@ -61,11 +61,7 @@ namespace Manager
                 QuestChainCid = questChain.Cid,
                 QuestCid = questChain.Quest.Cid
             };
-            var rsp = await NetFn.ReqStartQuest(req);
-            if (rsp.Code != 0)
-            {
-                Debug.LogWarning($"StartQuest failed: {rsp.Msg}");
-            }
+            NetFn.ReqStartQuest(req).Forget();
         }
 
         public void AddQuestChain(int questChainCid, int questCid, bool truck = false)

@@ -65,7 +65,7 @@ namespace Kirara.UI.Panel
 
                     Debug.Log("初始化设置...");
                     StatusText.text = "初始化设置...";
-                    SettingsMgr.Init(PlayerService.player.playerInfo.UId);
+                    SettingsMgr.Init(PlayerService.player.Uid);
 
                     Debug.Log("点击进入游戏");
                     StatusText.text = "点击进入游戏";

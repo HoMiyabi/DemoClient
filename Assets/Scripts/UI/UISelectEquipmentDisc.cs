@@ -58,7 +58,7 @@ namespace Kirara.UI
             }
         }
 
-        private CharacterModel _ch;
+        private RoleModel _role;
 
         private void OnDestroy()
         {
@@ -67,21 +67,21 @@ namespace Kirara.UI
 
         private void Clear()
         {
-            if (_ch != null)
+            if (_role != null)
             {
-                _ch.OnDiscChanged -= OnChDiscChanged;
+                _role.OnDiscChanged -= OnRoleDiscChanged;
             }
         }
 
-        public void Set(CharacterModel ch, int pos)
+        public void Set(RoleModel role, int pos)
         {
             Clear();
-            _ch = ch;
+            _role = role;
             _pos = pos;
 
-            _ch.OnDiscChanged += OnChDiscChanged;
+            _role.OnDiscChanged += OnRoleDiscChanged;
 
-            discs = PlayerService.player.discs
+            discs = PlayerService.player.Discs
                 .Where(it => it.Pos == pos)
                 .ToList();
             ReorderDisc();
@@ -95,7 +95,7 @@ namespace Kirara.UI
             }
         }
 
-        private void OnChDiscChanged(int discPos)
+        private void OnRoleDiscChanged(int discPos)
         {
             if (discPos != _pos) return;
             UpdateEquipBtn();
@@ -103,9 +103,9 @@ namespace Kirara.UI
 
         private void ReorderDisc()
         {
-            if (_ch.Disc(_pos) != null)
+            if (_role.Disc(_pos) != null)
             {
-                int idx = discs.FindIndex(item => item.Id == _ch.Disc(_pos).Id);
+                int idx = discs.FindIndex(item => item.Id == _role.Disc(_pos).Id);
                 (discs[0], discs[idx]) = (discs[idx], discs[0]);
             }
         }
@@ -114,11 +114,11 @@ namespace Kirara.UI
 
         private void UpdateEquipBtn()
         {
-            if (_ch.Disc(_pos) == null && SelectedDisc.WearerId == 0)
+            if (_role.Disc(_pos) == null && SelectedDisc.RoleId == null)
             {
                 EquipBtnSwitchEquip();
             }
-            else if (_ch.Disc(_pos) != null && SelectedDisc.WearerId == _ch.Id)
+            else if (_role.Disc(_pos) != null && SelectedDisc.RoleId == _role.Id)
             {
                 EquipBtnSwitchRemove();
             }
@@ -139,7 +139,7 @@ namespace Kirara.UI
             EquipBtnText.text = "卸下";
             EquipBtn.interactable = true;
             EquipBtn.onClick.RemoveAllListeners();
-            EquipBtn.onClick.AddListener(() => _ch.RemoveDisc(_pos).Forget());
+            EquipBtn.onClick.AddListener(() => _role.RemoveDisc(_pos).Forget());
         }
 
         private void EquipBtnSwitchEquip()
@@ -147,7 +147,7 @@ namespace Kirara.UI
             EquipBtnText.text = "装备";
             EquipBtn.interactable = true;
             EquipBtn.onClick.RemoveAllListeners();
-            EquipBtn.onClick.AddListener(() => _ch.EquipDisc(_pos, SelectedDisc).Forget());
+            EquipBtn.onClick.AddListener(() => _role.EquipDisc(_pos, SelectedDisc).Forget());
         }
 
         #endregion

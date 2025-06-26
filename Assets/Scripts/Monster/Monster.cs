@@ -71,7 +71,7 @@ namespace Kirara
             var maxDazeAttr = ae.GetAttr(EAttrType.MaxDaze);
             dazeAttr.BaseValue = Mathf.Min(dazeAttr.BaseValue + daze, maxDazeAttr.Evaluate());
 
-            NetFn.ReqMonsterTakeDamage(new ReqMonsterTakeDamage
+            NetFn.Send(new MsgMonsterTakeDamage
             {
                 MonsterId = monsterId,
                 Damage = damage

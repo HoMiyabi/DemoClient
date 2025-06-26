@@ -21,7 +21,7 @@ namespace Kirara.UI
             LoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>("LoopScrollPrefabSource");
         }
 
-        private List<NOtherPlayerInfo> infos;
+        private List<NOtherPlayer> infos;
 
         private void Awake()
         {

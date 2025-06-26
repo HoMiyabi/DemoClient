@@ -74,7 +74,7 @@ namespace Kirara.UI
             BaseStatBar.Set(weapon.BaseAttr);
             AdvancedStatBar.Set(weapon.AdvancedAttr);
 
-            EffContentText.text = weapon.PassiveDesc;
+            EffContentText.text = weapon.Config.PassiveDesc;
             return this;
         }
     }

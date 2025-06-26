@@ -27,7 +27,7 @@ namespace Kirara
 
         public Transform Cam { get; private set; }
         public Animator Animator { get; private set; }
-        public CharacterModel ChModel { get; private set; }
+        public RoleModel ChModel { get; private set; }
         // private CombatStateMachine combatStateMachine { get; set; }
         public CinemachineVirtualCamera VCam { get; set; }
         public CharacterController CharacterController { get; private set; }
@@ -47,7 +47,7 @@ namespace Kirara
             InitRef();
         }
 
-        public ChCtrl Set(CharacterModel chModel)
+        public ChCtrl Set(RoleModel chModel)
         {
             ChModel = chModel;
             return this;

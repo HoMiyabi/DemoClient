@@ -1,31 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 
 namespace Kirara.Model
 {
     public class PlayerModel
     {
-        public NPlayerInfo playerInfo;
+        public string Uid { get; set; }
+        public string Username { get; set; }
+        public int AvatarCid { get; set; }
+        public string Signature { get; set; }
+        public List<string> FriendUids { get; set; }
+        public List<string> FriendRequestUids { get; set; }
+        public List<MaterialItem> Materials { get; set; }
+        public List<CurrencyItem> Currencies { get; set; }
+        public List<WeaponItem> Weapons { get; set; }
+        public List<DiscItem> Discs { get; set; }
+        public List<RoleModel> Roles { get; set; }
 
-        // public int UId;
-        // public string Username;
-        // public string Signature;
-        // public int AvatarCid;
-        // public List<int> FriendUIds;
-        // public List<int> FriendRequestUIds;
-        // public List<NMaterialItem> MatItems;
-        // public List<NCurrencyItem> CurItems;
-        // public List<int> GroupChCids;
-        // public int FrontChCid;
+        public Dictionary<string, List<NChatMsgRecord>> allChatRecords { get; set; }
+        public List<(int questChainCid, int currentQuestCid)> questProgresses { get; set; }
 
-        public List<CharacterModel> chModels;
-        public List<NOtherPlayerInfo> friendInfos;
-        public Dictionary<int, List<NChatMsgRecordItem>> allChatRecords;
-        public List<(int questChainCid, int currentQuestCid)> questProgresses;
-
-        public List<DiscItem> discs;
-        public List<WeaponItem> weapons;
-        public List<CurrencyItem> currencies;
-        public List<MaterialItem> materials;
+        public PlayerModel(NPlayer player)
+        {
+            Uid = player.Uid;
+            Username = player.Username;
+            AvatarCid = player.AvatarCid;
+            Signature = player.Signature;
+            FriendUids = player.FriendUids.ToList();
+        }
     }
 }

@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Kirara.Network;
 using TMPro;
 using UnityEngine.UI;
 
@@ -36,22 +37,22 @@ namespace Kirara.UI.Panel
 
         private async UniTaskVoid btnLogin_onClick()
         {
-            var rsp = await NetFn.ReqLogin(new ReqLogin
+            try
             {
-                Username = UsernameInput.text,
-                Password = PasswordInput.text
-            });
-
-            if (rsp.Code == 0)
-            {
+                var rsp = await NetFn.ReqLogin(new ReqLogin
+                {
+                    Username = UsernameInput.text,
+                    Password = PasswordInput.text
+                });
                 loginSuccess = true;
                 UIMgr.Instance.PopPanel(this);
             }
-            else
+            catch (ResultException e)
             {
+                var rsp = (RspLogin)e.Msg;
                 var panel = UIMgr.Instance.PushPanel<AlterDialogPanel>();
                 panel.Title = "提示";
-                panel.Content = rsp.Msg;
+                panel.Content = rsp.Result.Msg;
                 panel.OkClickedEvent.AddListener(() => UIMgr.Instance.PopPanel(panel));
             }
         }
@@ -66,7 +67,7 @@ namespace Kirara.UI.Panel
 
             var panel = UIMgr.Instance.PushPanel<AlterDialogPanel>();
             panel.Title = "提示";
-            panel.Content = rsp.Msg;
+            panel.Content = rsp.Result.Msg;
             panel.OkClickedEvent.AddListener(() => UIMgr.Instance.PopPanel(panel));
         }
     }

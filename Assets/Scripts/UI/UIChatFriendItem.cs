@@ -42,11 +42,11 @@ namespace Kirara.UI
             avatarHandle = null;
         }
 
-        public void Set(NOtherPlayerInfo info, UnityAction onClick)
+        public void Set(NOtherPlayer info, UnityAction onClick)
         {
             Clear();
 
-            avatarHandle = ConfigAsset.GetIconInterKnotRole(info.AvatarConfigId);
+            avatarHandle = ConfigAsset.GetIconInterKnotRole(info.AvatarCid);
             AvatarImg.sprite = avatarHandle.AssetObject as Sprite;
 
             UsernameText.text = info.Username;

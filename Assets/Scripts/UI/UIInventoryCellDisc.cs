@@ -52,7 +52,7 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
     {
         if (_disc != null)
         {
-            _disc.OnWearerIdChanged -= UpdateWearer;
+            _disc.OnRoleIdChanged -= UpdateRole;
             _disc.OnLevelChanged -= UpdateLevel;
         }
 
@@ -73,10 +73,10 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
             if (_disc == value) return;
             Clear();
             _disc = value;
-            _disc.OnWearerIdChanged += UpdateWearer;
+            _disc.OnRoleIdChanged += UpdateRole;
             _disc.OnLevelChanged += UpdateLevel;
 
-            UpdateWearer();
+            UpdateRole();
             UpdateLevel();
 
             SetIcon(_disc.IconLoc);
@@ -97,16 +97,16 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
         Btn.onClick.AddListener(onClick);
     }
 
-    private void UpdateWearer()
+    private void UpdateRole()
     {
-        if (_disc.WearerId == 0)
+        if (_disc.RoleId == null)
         {
             WearerIconImg.sprite = null;
             WearerIconImg.gameObject.SetActive(false);
             return;
         }
         WearerIconImg.gameObject.SetActive(true);
-        var chInfo = PlayerService.player.chModels.First(it => it.Id == _disc.WearerId);
+        var chInfo = PlayerService.player.Roles.First(it => it.Id == _disc.RoleId);
         wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chInfo.config.IconLoc);
         WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
     }

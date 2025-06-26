@@ -2,84 +2,69 @@
 using System.Collections.Generic;
 using System.Linq;
 using cfg.main;
-using Google.Protobuf.Collections;
 using Manager;
 
 namespace Kirara.Model
 {
     public class DiscItem : BaseItem
     {
-        private readonly DiscConfig config;
-        private readonly NDiscItem item;
-
-        public DiscItem(NDiscItem item)
-        {
-            this.item = item;
-            config = ConfigMgr.tb.TbDiscConfig[item.Cid];
-            _subAttrs = item.SubAttrs.ToList();
-        }
-
         public static int MaxLevel => ConfigMgr.tb.TbGlobalConfig.DiscMaxLevel;
+        public DiscConfig Config { get; private set; }
 
-        #region Config
+        public string Id { get; private set; }
+        public int Cid { get; private set; }
 
-        public int Cid => config.Id;
-        public override string Name => config.Name;
-        public override string IconLoc => config.IconLoc;
-        public List<AbilityConfig> SetAbilities2 => config.SetAbilities2;
-        public List<AbilityConfig> SetAbilities4 => config.SetAbilities4;
-        public string SetEffect2Desc => config.SetEffect2Desc;
-        public string SetEffect4Desc => config.SetEffect4Desc;
-        public string Rank => config.Rank;
-        public string Desc => config.Desc;
-
-        #endregion
-
-        public int Id => item.Id;
+        private int _level;
         public int Level
         {
-            get => item.Level;
+            get => _level;
             set
             {
-                if (item.Level == value) return;
-                item.Level = value;
+                if (_level == value) return;
+                _level = value;
                 OnLevelChanged?.Invoke();
             }
         }
         public event Action OnLevelChanged;
 
+        private int _exp;
         public int Exp
         {
-            get => item.Exp;
+            get => _exp;
             set
             {
-                if (item.Exp == value) return;
-                item.Exp = value;
+                if (_exp == value) return;
+                _exp = value;
                 OnExpChanged?.Invoke();
             }
         }
         public event Action OnExpChanged;
 
-        public int WearerId
+        private string _roleId;
+        public string RoleId
         {
-            get => item.WearerId;
+            get => _roleId;
             set
             {
-                if (item.WearerId == value) return;
-                item.WearerId = value;
-                OnWearerIdChanged?.Invoke();
+                if (_roleId == value) return;
+                _roleId = value;
+                OnRoleIdChanged?.Invoke();
             }
         }
-        public event Action OnWearerIdChanged;
+        public event Action OnRoleIdChanged;
 
-        public int Pos => item.Pos;
+        public bool Locked { get; set; }
+
+        public int Pos { get; set; }
+
+        private NDiscAttr _mainAttr;
         public NDiscAttr MainAttr
         {
-            get => item.MainAttr;
+            get => _mainAttr;
             set
             {
-                if (item.MainAttr == value) return;
-                item.MainAttr = value;
+                if (_mainAttr == value) return;
+                _mainAttr = value;
                 OnMainAttrChanged?.Invoke();
             }
         }
@@ -97,10 +82,28 @@ namespace Kirara.Model
         }
         public event Action OnSubAttrsChanged;
 
+        public override string Name => Config.Name;
+        public override string IconLoc => Config.IconLoc;
+
         public static int GetExp(int level)
         {
             var config = ConfigMgr.tb.TbDiscUpgradeExpConfig[level];
             return config.Exp;
+        }
+
+        public DiscItem(NDiscItem item)
+        {
+            Config = ConfigMgr.tb.TbDiscConfig[item.Cid];
+
+            Id = item.Id;
+            Cid = item.Cid;
+            Level = item.Level;
+            Exp = item.Exp;
+            RoleId = item.RoleId;
+            Locked = item.Locked;
+            Pos = item.Pos;
+            MainAttr = item.MainAttr;
+            SubAttrs = item.SubAttrs.ToList();
         }
     }
 }

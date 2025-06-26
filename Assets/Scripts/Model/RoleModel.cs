@@ -2,29 +2,53 @@
 using System.Collections.Generic;
 using cfg.main;
 using Cysharp.Threading.Tasks;
-
 using Kirara.AttrEffect;
 using Manager;
-using UnityEngine;
 
 namespace Kirara.Model
 {
-    public class CharacterModel
+    public class RoleModel
     {
-        public int Id { get; private set; }
         public readonly CharacterConfig config;
+        public string Id { get; set; }
+        public int Level { get; set; }
+        public int Exp { get; set; }
+
+        private WeaponItem _weapon;
+        public WeaponItem Weapon
+        {
+            get => _weapon;
+            set
+            {
+                if (value == _weapon) return;
+                if (_weapon != null)
+                {
+                    _weapon.RoleId = null;
+                    RemoveWeaponAbilities(_weapon);
+                }
+                _weapon = value;
+                if (_weapon != null)
+                {
+                    _weapon.RoleId = Id;
+                    AddWeaponAbilities(_weapon);
+                }
+
+                OnWeaponChanged?.Invoke();
+            }
+        }
+        public event Action OnWeaponChanged;
 
 
         public readonly AttrEffect.AttrEffect ae = new();
 
         private readonly Dictionary<int, int> discCidToCount = new();
 
-        public CharacterModel(NCharacterInfo nChInfo)
+        public RoleModel(NRole role)
         {
-            config = ConfigMgr.tb.TbCharacterConfig[nChInfo.ConfigId];
-            Id = nChInfo.Id;
+            config = ConfigMgr.tb.TbCharacterConfig[role.Cid];
+            Id = role.Id;
 
-            var chBaseAttrs = ConfigMgr.tb.TbCharacterBaseAttrConfig[nChInfo.ConfigId].ChBaseAttrs;
+            var chBaseAttrs = ConfigMgr.tb.TbCharacterBaseAttrConfig[role.Cid].ChBaseAttrs;
 
             foreach (var attr in chBaseAttrs)
             {
@@ -37,13 +61,13 @@ namespace Kirara.Model
             }
 
             // 设置武器
-            Weapon = PlayerService.player.weapons.Find(it => it.Id == nChInfo.WeaponId);
+            Weapon = PlayerService.player.Weapons.Find(it => it.Id == role.WeaponId);
 
             // 设置驱动盘
             discs = new DiscItem[6];
             for (int pos = 1; pos <= 6; pos++)
             {
-                SetDisc(pos, PlayerService.player.discs.Find(it => it.Id == nChInfo.DiscIds[pos - 1]));
+                SetDisc(pos, PlayerService.player.Discs.Find(it => it.Id == role.DiscIds[pos - 1]));
             }
 
             ae.GetAttr(EAttrType.CurrHp).BaseValue = ae.EvaluateAttr(EAttrType.Hp);
@@ -51,41 +75,17 @@ namespace Kirara.Model
 
         #region 武器 Weapon
 
-        private WeaponItem _weapon;
-        public WeaponItem Weapon
-        {
-            get => _weapon;
-            set
-            {
-                if (value == _weapon) return;
-                if (_weapon != null)
-                {
-                    _weapon.WearerId = 0;
-                    RemoveWeaponAbilities(_weapon);
-                }
-                _weapon = value;
-                if (_weapon != null)
-                {
-                    _weapon.WearerId = Id;
-                    AddWeaponAbilities(_weapon);
-                }
-
-                OnWeaponChanged?.Invoke();
-            }
-        }
-        public event Action OnWeaponChanged;
-
         public async UniTask RemoveWeapon()
         {
             var rsp = await NetFn.ReqRoleRemoveWeapon(new ReqRoleRemoveWeapon
             {
                 RoleId = Id
             });
-            if (rsp.Code != 0)
-            {
-                Debug.LogWarning($"失败: {rsp.Msg}");
-                return;
-            }
+            // if (rsp.Code != 0)
+            // {
+            //     Debug.LogWarning($"失败: {rsp.Msg}");
+            //     return;
+            // }
             Weapon = null;
         }
 
@@ -96,11 +96,11 @@ namespace Kirara.Model
                 RoleId = Id,
                 NewWeaponId = weapon.Id,
             });
-            if (rsp.Code != 0)
-            {
-                Debug.LogWarning($"失败: {rsp.Msg}");
-                return;
-            }
+            // if (rsp.Code != 0)
+            // {
+            //     Debug.LogWarning($"失败: {rsp.Msg}");
+            //     return;
+            // }
             Weapon = weapon;
         }
 
@@ -111,7 +111,7 @@ namespace Kirara.Model
             ae.RemoveAbility(effName);
 
             // 移除被动能力
-            foreach (var abilityConfig in weapon.PassiveAbilities)
+            foreach (var abilityConfig in weapon.Config.PassiveAbilities)
             {
                 ae.RemoveAbility(abilityConfig.Name);
             }
@@ -134,7 +134,7 @@ namespace Kirara.Model
                 ));
 
             // 添加被动能力
-            foreach (var abilityConfig in weapon.PassiveAbilities)
+            foreach (var abilityConfig in weapon.Config.PassiveAbilities)
             {
                 ae.AddAbility(abilityConfig.GetRuntime());
             }
@@ -154,32 +154,22 @@ namespace Kirara.Model
 
         public async UniTaskVoid RemoveDisc(int pos)
         {
-            var rsp = await NetFn.ReqCharacterRemoveDisc(new ReqCharacterRemoveDisc
+            var rsp = await NetFn.ReqRoleRemoveDisc(new ReqRoleRemoveDisc
             {
-                CharacterId = Id,
+                RoleId = Id,
                 DiscPos = pos,
             });
-            if (rsp.Code != 0)
-            {
-                Debug.LogWarning($"失败: {rsp.Msg}");
-                return;
-            }
             SetDisc(pos, null);
         }
 
         public async UniTaskVoid EquipDisc(int pos, DiscItem newDisc)
         {
-            var rsp = await NetFn.ReqCharacterEquipDisc(new ReqCharacterEquipDisc
+            var rsp = await NetFn.ReqRoleEquipDisc(new ReqRoleEquipDisc
             {
-                CharacterId = Id,
+                RoleId = Id,
                 DiscPos = pos,
                 NewDiscId = newDisc.Id
             });
-            if (rsp.Code != 0)
-            {
-                Debug.LogWarning($"失败: {rsp.Msg}");
-                return;
-            }
             SetDisc(pos, newDisc);
         }
 
@@ -189,7 +179,7 @@ namespace Kirara.Model
 
             if (Disc(pos) != null)
             {
-                Disc(pos).WearerId = 0;
+                Disc(pos).RoleId = null;
                 RemoveDiscAbilities(pos);
             }
 
@@ -198,7 +188,7 @@ namespace Kirara.Model
             discs[pos - 1] = newDisc;
             if (Disc(pos) != null)
             {
-                Disc(pos).WearerId = Id;
+                Disc(pos).RoleId = Id;
                 AddDiscAbilities(pos);
             }
 
@@ -245,14 +235,14 @@ namespace Kirara.Model
                 int cnt = discCidToCount[oldDisc.Cid];
                 if (cnt == 4)
                 {
-                    foreach (var effCfg in oldDisc.SetAbilities4)
+                    foreach (var effCfg in oldDisc.Config.SetAbilities4)
                     {
                         ae.RemoveAbility(effCfg.Name);
                     }
                 }
                 else if (cnt == 2)
                 {
-                    foreach (var effCfg in oldDisc.SetAbilities2)
+                    foreach (var effCfg in oldDisc.Config.SetAbilities2)
                     {
                         ae.RemoveAbility(effCfg.Name);
                     }
@@ -273,14 +263,14 @@ namespace Kirara.Model
                 int cnt = discCidToCount.GetValueOrDefault(newDisc.Cid) + 1;
                 if (cnt == 4)
                 {
-                    foreach (var effCfg in newDisc.SetAbilities4)
+                    foreach (var effCfg in newDisc.Config.SetAbilities4)
                     {
                         ae.AddAbility(effCfg.GetRuntime());
                     }
                 }
                 else if (cnt == 2)
                 {
-                    foreach (var effCfg in newDisc.SetAbilities2)
+                    foreach (var effCfg in newDisc.Config.SetAbilities2)
                     {
                         ae.AddAbility(effCfg.GetRuntime());
                     }
