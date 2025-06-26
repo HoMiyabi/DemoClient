@@ -4,7 +4,7 @@ namespace Kirara.NetHandler
 {
     public class NotifyUpdateOther_Handler : MsgHandler<NotifyUpdateOther>
     {
-        protected override void Run(Session session, NotifyUpdateOther message)
+        protected override void Run(NotifyUpdateOther message, Session session)
         {
             if (!SimPlayerSystem.Instance.TryGetSimPlayer(message.UId, out var simPlayer)) return;
 

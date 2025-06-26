@@ -173,7 +173,7 @@ namespace Kirara
             NetFn.Send(new MsgEnterRoom());
             UIMgr.Instance.PushPanel<CombatPanel>();
 
-            FrontChIdx = PlayerService.player.FrontChIdx;
+            FrontChIdx = PlayerService.player.FrontRoleId;
 
             for (int i = 0; i < ChCtrls.Count; i++)
             {
@@ -257,12 +257,12 @@ namespace Kirara
 
         private void CreateCharacters()
         {
-            var cids = PlayerService.player.GroupChCids;
+            var teamRoleIds = PlayerService.player.TeamRoleIds;
             var chModels = PlayerService.player.Roles;
             Debug.Log("队伍角色数量：" + chModels.Count);
-            foreach (int chCid in cids)
+            foreach (string roleId in teamRoleIds)
             {
-                var chModel = chModels.Find(it => it.config.Id == chCid);
+                var chModel = chModels.Find(it => it.Id == roleId);
                 Debug.Log($"加载角色 {chModel.config.Name}");
                 var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(chModel.config.PrefabLoc);
                 var go = handle.InstantiateSync(characterParent);

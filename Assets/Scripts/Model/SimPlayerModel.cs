@@ -14,7 +14,7 @@ namespace Kirara.Model
         public int frontChIdx;
         public SimChCtrl FrontCh => simChCtrls[frontChIdx];
 
-        public SimPlayerModel(NRoomSimPlayerInfo playerInfo)
+        public SimPlayerModel(NRoomSimPlayer playerInfo)
         {
             uid = playerInfo.UId;
             pos = playerInfo.PosRot.Pos.Unity();

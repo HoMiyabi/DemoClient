@@ -80,7 +80,7 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
             UpdateLevel();
 
             SetIcon(_disc.IconLoc);
-            UIInventoryRankBar.Set(_disc.Rank);
+            UIInventoryRankBar.Set(_disc.Config.Rank);
             UIDiscPosIcon.Set(_disc.Pos);
         }
     }

@@ -17,6 +17,8 @@ namespace Kirara.Model
         public List<WeaponItem> Weapons { get; set; }
         public List<DiscItem> Discs { get; set; }
         public List<RoleModel> Roles { get; set; }
+        public List<string> TeamRoleIds { get; set; }
+        public string FrontRoleId { get; set; }
 
         public Dictionary<string, List<NChatMsgRecord>> allChatRecords { get; set; }
         public List<(int questChainCid, int currentQuestCid)> questProgresses { get; set; }
@@ -28,6 +30,14 @@ namespace Kirara.Model
             AvatarCid = player.AvatarCid;
             Signature = player.Signature;
             FriendUids = player.FriendUids.ToList();
+            FriendRequestUids = player.FriendRequestUids.ToList();
+            Materials = player.Materials.Select(x => new MaterialItem(x)).ToList();
+            Currencies = player.Currencies.Select(x => new CurrencyItem(x)).ToList();
+            Weapons = player.Weapons.Select(x => new WeaponItem(x)).ToList();
+            Discs = player.Discs.Select(x => new DiscItem(x)).ToList();
+            Roles = player.Roles.Select(x => new RoleModel(x)).ToList();
+            TeamRoleIds = player.TeamRoleIds.ToList();
+            FrontRoleId = player.FrontRoleId;
         }
     }
 }
