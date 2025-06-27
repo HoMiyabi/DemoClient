@@ -1,7 +1,5 @@
 ﻿using System;
 using Kirara.Model;
-using Kirara.NetHandler;
-using UnityEngine;
 
 namespace Kirara.Service
 {
@@ -9,21 +7,7 @@ namespace Kirara.Service
     {
         public static event Action<BaseItem, int> OnObtainItem;
 
-        private static bool bInit;
-
-        public static void Init()
-        {
-            if (bInit)
-            {
-                Debug.LogWarning("InventoryService has already been initialized.");
-                return;
-            }
-            bInit = true;
-
-            NotifyObtainItems_Handler.OnNotifyObtainItems += OnNotifyObtainItems;
-        }
-
-        private static void OnNotifyObtainItems(NotifyObtainItems msg)
+        public static void NotifyObtainItems(NotifyObtainItems msg)
         {
             // 货币
             foreach (var cur in msg.CurItems)

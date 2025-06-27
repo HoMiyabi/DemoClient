@@ -1,15 +1,13 @@
-﻿using System;
-using Kirara.Network;
+﻿using Kirara.Network;
+using Kirara.Service;
 
 namespace Kirara.NetHandler
 {
     public class NotifyObtainItems_Handler : MsgHandler<NotifyObtainItems>
     {
-        public static event Action<NotifyObtainItems> OnNotifyObtainItems;
-
-        protected override void Run(Session session, NotifyObtainItems message)
+        protected override void Run(Session session, NotifyObtainItems msg)
         {
-            OnNotifyObtainItems?.Invoke(message);
+            InventoryService.NotifyObtainItems(msg);
         }
     }
 }

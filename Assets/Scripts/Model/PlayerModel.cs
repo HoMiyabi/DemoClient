@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-
 namespace Kirara.Model
 {
     public class PlayerModel
@@ -36,6 +35,12 @@ namespace Kirara.Model
             Roles = player.Roles.Select(x => new RoleModel(x)).ToList();
             TeamRoleIds = player.TeamRoleIds.ToList();
             FrontRoleId = player.FrontRoleId;
+
+            // 任务进度
+            questProgresses = new List<(int questChainCid, int currentQuestCid)>
+            {
+                (1, 1),
+            };
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Kirara.UI
             {
                 Username = text
             });
-            Debug.Log($"{rsp.OtherPlayerInfos}");
+            Debug.Log($"{rsp.SocialPlayers}");
         }
     }
 }

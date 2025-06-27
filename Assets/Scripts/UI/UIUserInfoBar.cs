@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿using Kirara.Model;
 using Kirara.UI.Panel;
 using Manager;
 using TMPro;
@@ -48,7 +47,7 @@ namespace Kirara.UI
             InitUI();
         }
 
-        public void Set(NSocialPlayer player)
+        public void Set(SocialPlayer player)
         {
             Clear();
             avatarHandle = ConfigAsset.GetIconInterKnotRole(player.AvatarCid);

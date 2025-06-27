@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Kirara.Service;
 using Kirara.UI.Panel;
 using Manager;
 using UnityEngine;
@@ -73,7 +73,7 @@ namespace Kirara.UI
         private void Cell_onClick(int idx)
         {
             gameObject.SetActive(false);
-            chatPanel.SendSticker(stickerConfigIds[idx]).Forget();
+            ChatService.SendSticker(chatPanel.ChattingPlayer, stickerConfigIds[idx]).Forget();
         }
     }
 }

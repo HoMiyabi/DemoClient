@@ -2,7 +2,7 @@
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
-using Kirara.NetHandler.Chat;
+using Kirara.Service;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,10 +45,10 @@ namespace Kirara.UI.Panel
         private List<SocialPlayer> friends;
 
         private SocialPlayer _chattingPlayer;
-        private SocialPlayer ChattingPlayer
+        public SocialPlayer ChattingPlayer
         {
             get => _chattingPlayer;
-            set
+            private set
             {
                 _chattingPlayer = value;
 
@@ -68,7 +68,7 @@ namespace Kirara.UI.Panel
                 {
                     UsernameText.text = _chattingPlayer.Username;
 
-                    ChatLoopScroll.totalCount = chatRecords.Count;
+                    ChatLoopScroll.totalCount = _chattingPlayer.ChatMsgs.Count;
                     ChatLoopScroll.RefillCellsFromEnd();
 
                     StickerBtn.interactable = true;
@@ -120,77 +120,32 @@ namespace Kirara.UI.Panel
             ChattingPlayer = friends.FirstOrDefault();
         }
 
-        private void OnReceiveChatMsg(NChatMsgRecord record)
-        {
-            if (ChattingPlayer == null || ChattingPlayer.Uid != record.SenderUid) return;
-
-            ChatLoopScroll.totalCount = chatRecords.Count;
-            ChatLoopScroll.RefillCellsFromEnd();
-        }
-
         private void OnEnable()
         {
-            NotifyReceiveChatMsg_Handler.OnReceiveChatMsg += OnReceiveChatMsg;
+            ChatService.OnAddChatMsg += OnAddChatMsg;
         }
 
         private void OnDisable()
         {
-            NotifyReceiveChatMsg_Handler.OnReceiveChatMsg -= OnReceiveChatMsg;
+            ChatService.OnAddChatMsg -= OnAddChatMsg;
         }
 
-        public async UniTask SendText(string text)
+        private void OnAddChatMsg(NChatMsg msg)
         {
-            var chatMsg = new NChatMsg
+            if (ChattingPlayer != null &&
+                (ChattingPlayer.Uid == msg.SenderUid ||
+                 ChattingPlayer.Uid == msg.ReceiverUid))
             {
-                MsgType = 0,
-                Text = text,
-            };
-
-            var rsp = await NetFn.ReqSendChatMsg(new ReqSendChatMsg
-            {
-                ReceiverUid = ChattingPlayer.Uid,
-                ChatMsg = chatMsg,
-            });
-            chatRecords.Add(new NChatMsgRecord
-            {
-                SenderUid = PlayerService.player.Uid,
-                UnixTimeMs = rsp.UnixTimeMs,
-                ChatMsg = chatMsg
-            });
-
-            ChatLoopScroll.totalCount = chatRecords.Count;
-            ChatLoopScroll.RefillCellsFromEnd();
-        }
-
-        public async UniTask SendSticker(int stickerCid)
-        {
-            var chatMsg = new NChatMsg
-            {
-                MsgType = 1,
-                StickerCid = stickerCid,
-            };
-
-            var rsp = await NetFn.ReqSendChatMsg(new ReqSendChatMsg
-            {
-                ReceiverUid = ChattingPlayer.Uid,
-                ChatMsg = chatMsg
-            });
-            chatRecords.Add(new NChatMsgRecord
-            {
-                SenderUid = PlayerService.player.Uid,
-                UnixTimeMs = rsp.UnixTimeMs,
-                ChatMsg = chatMsg
-            });
-
-            ChatLoopScroll.totalCount = chatRecords.Count;
-            ChatLoopScroll.RefillCellsFromEnd();
+                ChatLoopScroll.totalCount = ChattingPlayer.ChatMsgs.Count;
+                ChatLoopScroll.RefillCellsFromEnd();
+            }
         }
 
         private void SendBtn_onClick()
         {
             string text = ChatTextInput.text;
             ChatTextInput.text = "";
-            SendText(text).Forget();
+            ChatService.SendText(ChattingPlayer, text).Forget();
         }
 
         private void ProvideFriendData(Transform tra, int idx)
@@ -202,7 +157,7 @@ namespace Kirara.UI.Panel
         private void ProvideChatData(Transform tra, int idx)
         {
             var item = tra.GetComponent<UIChatItem>();
-            item.Set(chatRecords[idx], ChattingPlayer);
+            item.Set(ChattingPlayer.ChatMsgs[idx], ChattingPlayer);
         }
     }
 }

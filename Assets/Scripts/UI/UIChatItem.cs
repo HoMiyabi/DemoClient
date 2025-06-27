@@ -1,5 +1,4 @@
-﻿using System;
-using Kirara.Model;
+﻿using Kirara.Model;
 using Manager;
 using TMPro;
 using UnityEngine;
@@ -73,11 +72,11 @@ namespace Kirara.UI
             }
         }
 
-        public void Set(NChatMsgRecord record, SocialPlayer other)
+        public void Set(NChatMsg msg, SocialPlayer other)
         {
             Clear();
 
-            bool isSelf = record.SenderUid == PlayerService.player.Uid;
+            bool isSelf = msg.SenderUid == PlayerService.player.Uid;
 
             // 位置左右
             isLeft = !isSelf;
@@ -89,24 +88,24 @@ namespace Kirara.UI
             AvatarImg.sprite = avatarHandle.AssetObject as Sprite;
 
             // 内容
-            if (record.ChatMsg.MsgType == 0)
+            if (msg.MsgType == 0)
             {
                 ChatText.gameObject.SetActive(true);
                 ChatStickerImg.gameObject.SetActive(false);
 
-                ChatText.text = record.ChatMsg.Text;
+                ChatText.text = msg.Text;
             }
-            else if (record.ChatMsg.MsgType == 1)
+            else if (msg.MsgType == 1)
             {
                 ChatText.gameObject.SetActive(false);
                 ChatStickerImg.gameObject.SetActive(true);
 
-                stickerHandle = ConfigAsset.GetIconSticker(record.ChatMsg.StickerCid);
+                stickerHandle = ConfigAsset.GetIconSticker(msg.StickerCid);
                 ChatStickerImg.sprite = stickerHandle.AssetObject as Sprite;
             }
             else
             {
-                Debug.LogError($"record.ChatMsg.MsgType: {record.ChatMsg.MsgType}");
+                Debug.LogError($"record.ChatMsg.MsgType: {msg.MsgType}");
             }
         }
 
