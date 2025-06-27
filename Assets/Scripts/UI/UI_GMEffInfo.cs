@@ -32,7 +32,7 @@ namespace Kirara.UI
         {
             sb.Clear();
 
-            var aet = PlayerSystem.Instance.FrontCh.ChModel.ae;
+            var aet = PlayerSystem.Instance.FrontRoleCtrl.RoleModel.ae;
 
             sb.AppendLine("属性：");
             foreach (var type in attrTypes)

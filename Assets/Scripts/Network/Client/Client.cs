@@ -6,7 +6,7 @@ namespace Kirara.Network
 {
     public static class Client
     {
-        private static readonly NetMessageWorker worker = new();
+        public static readonly NetMsgProcessor processor = new();
 
         public static Session Connect(string host, int port, Action connectionRefused = null)
         {
@@ -23,16 +23,9 @@ namespace Kirara.Network
                 return null;
             }
 
-            worker.Start();
-
-            var session = new Session(socket, worker);
+            var session = new Session(socket, processor);
             _ = session.ReceiveAsync();
             return session;
-        }
-
-        public static void Stop()
-        {
-            worker.Stop();
         }
     }
 }

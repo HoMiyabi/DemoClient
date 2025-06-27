@@ -13,7 +13,7 @@ namespace Kirara
         private Vector3 targetPos;
         private Quaternion targetRot;
 
-        public SimChModel Model { get; private set; }
+        public SimRole Model { get; private set; }
         private ActionCtrl actionCtrl;
 
         private bool aiCtrl = false;
@@ -24,7 +24,7 @@ namespace Kirara
             animator = GetComponent<Animator>();
         }
 
-        public void Set(SimChModel model)
+        public void Set(SimRole model)
         {
             Model = model;
         }

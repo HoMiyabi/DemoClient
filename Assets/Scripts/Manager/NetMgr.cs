@@ -59,8 +59,12 @@ namespace Kirara.Manager
 
         private void OnApplicationQuit()
         {
-            Client.Stop();
             session.Close();
+        }
+
+        private void Update()
+        {
+            Client.processor.Update();
         }
     }
 }

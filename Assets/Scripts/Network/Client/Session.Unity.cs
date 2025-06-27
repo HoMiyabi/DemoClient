@@ -12,7 +12,7 @@ namespace Kirara.Network
             var utcs = new UniTaskCompletionSource<T>();
             try
             {
-                Call(cmdId, msg, rsp => CallbackWrapper((T)rsp, utcs).Forget());
+                Call(cmdId, msg, rsp => CallbackWrapper((T)rsp, utcs));
             }
             catch (Exception e)
             {
@@ -21,9 +21,8 @@ namespace Kirara.Network
             return utcs.Task;
         }
 
-        private async UniTaskVoid CallbackWrapper<T>(T msg, UniTaskCompletionSource<T> utcs) where T : IMessage
+        private void CallbackWrapper<T>(T msg, UniTaskCompletionSource<T> utcs) where T : IMessage
         {
-            await UniTask.SwitchToMainThread();
             Interceptor(msg, utcs);
             utcs.TrySetResult(msg);
         }

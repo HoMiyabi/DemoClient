@@ -11,7 +11,7 @@ namespace Kirara.NetHandler.Monster
             if (instance != null)
             {
                 Debug.Log("Spawn");
-                instance.SpawnMonster(message.MonsterConfigId, message.MonsterId,
+                instance.SpawnMonster(message.MonsterCid, message.MonsterId,
                     message.PosRot.Pos.Unity(), message.PosRot.Rot.Quat());
             }
         }

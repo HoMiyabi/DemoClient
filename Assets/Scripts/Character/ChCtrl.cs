@@ -27,7 +27,7 @@ namespace Kirara
 
         public Transform Cam { get; private set; }
         public Animator Animator { get; private set; }
-        public RoleModel ChModel { get; private set; }
+        public RoleModel RoleModel { get; private set; }
         // private CombatStateMachine combatStateMachine { get; set; }
         public CinemachineVirtualCamera VCam { get; set; }
         public CharacterController CharacterController { get; private set; }
@@ -47,15 +47,15 @@ namespace Kirara
             InitRef();
         }
 
-        public ChCtrl Set(RoleModel chModel)
+        public ChCtrl Set(RoleModel roleModel)
         {
-            ChModel = chModel;
+            RoleModel = roleModel;
             return this;
         }
 
         private void Update()
         {
-            ChModel.ae.Update();
+            RoleModel.ae.Update();
 
             if (EnableRotation)
             {

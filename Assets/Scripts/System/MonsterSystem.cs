@@ -17,9 +17,9 @@ namespace Kirara
         public event Action<Monster> OnMonsterSpawn;
         public event Action<Monster> OnMonsterDie;
 
-        public void SpawnMonster(int monsterConfigId, int monsterId, Vector3 pos, Quaternion rot)
+        public void SpawnMonster(int monsterCid, int monsterId, Vector3 pos, Quaternion rot)
         {
-            var config = ConfigMgr.tb.TbMonsterConfig[monsterConfigId];
+            var config = ConfigMgr.tb.TbMonsterConfig[monsterCid];
 
             var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(config.Location);
             var go = handle.InstantiateSync(monsterParent);
@@ -31,7 +31,7 @@ namespace Kirara
             go.transform.rotation = rot;
 
             var monster = go.GetComponent<Monster>();
-            monster.Set(monsterConfigId, monsterId);
+            monster.Set(monsterCid, monsterId);
             monsters.Add(monsterId, monster);
 
             UIMgr.Instance.AddHUD<UIMonsterStatusBar>().Set(monster);

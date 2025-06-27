@@ -28,23 +28,23 @@ namespace Kirara.UI
 
         private void OnEnable()
         {
-            PlayerSystem.Instance.OnFrontChChanged += UpdateView;
+            PlayerSystem.Instance.OnFrontRoleChanged += UpdateView;
         }
 
         private void OnDisable()
         {
-            PlayerSystem.Instance.OnFrontChChanged -= UpdateView;
+            PlayerSystem.Instance.OnFrontRoleChanged -= UpdateView;
         }
 
         private void UpdateView()
         {
-            int chIdx = PlayerSystem.Instance.FrontChIdx;
+            int chIdx = PlayerSystem.Instance.FrontRoleIdx;
             for (int i = 0; i < bars.Length; i++)
             {
-                if (i < PlayerSystem.Instance.ChCtrls.Count)
+                if (i < PlayerSystem.Instance.RoleCtrls.Count)
                 {
                     bars[i].gameObject.SetActive(true);
-                    bars[i].Set(PlayerSystem.Instance.ChCtrls[chIdx].ChModel);
+                    bars[i].Set(PlayerSystem.Instance.RoleCtrls[chIdx].RoleModel);
                     chIdx = PlayerSystem.Instance.GetNext(chIdx);
                 }
                 else

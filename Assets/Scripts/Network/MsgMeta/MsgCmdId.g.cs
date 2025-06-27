@@ -24,6 +24,8 @@ public static class MsgCmdId
     public const uint RspGetPlayerData = 1985654133;
     public const uint NSyncRole = 1896108177;
     public const uint NSyncPlayer = 2581999385;
+    public const uint NSimRole = 2041623307;
+    public const uint NSimPlayer = 2087244937;
     public const uint MsgEnterRoom = 771954010;
     public const uint MsgUpdateFromAutonomous = 2137892365;
     public const uint NotifyUpdateFromAuthority = 1564144334;

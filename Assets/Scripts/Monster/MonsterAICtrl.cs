@@ -82,7 +82,7 @@ namespace Kirara
                     idleColdTime += Time.deltaTime;
                     if (idleColdTime < maxIdleColdTime) return;
 
-                    var chPos = PlayerSystem.Instance.FrontCh.transform.position;
+                    var chPos = PlayerSystem.Instance.FrontRoleCtrl.transform.position;
                     float dis = Vector3.Distance(chPos, transform.position);
                     if (dis < attackDistance)
                     {
@@ -96,7 +96,7 @@ namespace Kirara
                 }
                 case State.Chase:
                 {
-                    var chPos = PlayerSystem.Instance.FrontCh.transform.position;
+                    var chPos = PlayerSystem.Instance.FrontRoleCtrl.transform.position;
                     transform.LookAt(chPos);
                     float dist = Vector3.Distance(chPos, transform.position);
                     if (dist < attackDistance)
@@ -138,7 +138,7 @@ namespace Kirara
                 }
                 case State.Attack:
                 {
-                    var chPos = PlayerSystem.Instance.FrontCh.transform.position;
+                    var chPos = PlayerSystem.Instance.FrontRoleCtrl.transform.position;
                     transform.LookAt(chPos);
                     int i = Random.Range(0, attackNames.Length);
                     actionPlayer.Play(attackActions[i], attackNames[i], 0.15f, () =>

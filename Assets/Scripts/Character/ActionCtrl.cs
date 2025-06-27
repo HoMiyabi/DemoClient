@@ -149,7 +149,7 @@ namespace Kirara
             int actionId = action.actionId;
             if (actionId == 0) return true;
             var config = ConfigMgr.tb.TbChActionNumericConfig[actionId];
-            if (config.EnergyCost <= ch.ChModel.ae.GetAttr(EAttrType.CurrEnergy).Evaluate())
+            if (config.EnergyCost <= ch.RoleModel.ae.GetAttr(EAttrType.CurrEnergy).Evaluate())
             {
                 return true;
             }
@@ -185,7 +185,7 @@ namespace Kirara
                 var config = ConfigMgr.tb.TbChActionNumericConfig[action.actionId];
                 if (config != null)
                 {
-                    ch.ChModel.ae.GetAttr(EAttrType.CurrEnergy).BaseValue -= config.EnergyCost;
+                    ch.RoleModel.ae.GetAttr(EAttrType.CurrEnergy).BaseValue -= config.EnergyCost;
                 }
             }
 

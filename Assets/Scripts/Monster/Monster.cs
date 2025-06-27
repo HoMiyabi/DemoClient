@@ -40,9 +40,9 @@ namespace Kirara
             characterController = GetComponent<CharacterController>();
         }
 
-        public void Set(int monsterConfigId, int monsterId)
+        public void Set(int monsterCid, int monsterId)
         {
-            this.monsterCid = monsterConfigId;
+            this.monsterCid = monsterCid;
             this.monsterId = monsterId;
             InitAE();
         }

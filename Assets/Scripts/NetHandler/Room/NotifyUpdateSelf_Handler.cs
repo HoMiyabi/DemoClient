@@ -7,7 +7,7 @@ namespace Kirara.NetHandler
     {
         protected override void Run(Session session, NotifyUpdateSelf message)
         {
-            var ch = PlayerSystem.Instance.FrontCh;
+            var ch = PlayerSystem.Instance.FrontRoleCtrl;
 
             ch.CharacterController.enabled = false;
             ch.transform.position = message.PosRot.Pos.Unity();

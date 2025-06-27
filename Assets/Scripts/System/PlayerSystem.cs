@@ -27,27 +27,29 @@ namespace Kirara
 
         private PlayerModel player;
 
-        public List<ChCtrl> ChCtrls;
-        public ChCtrl FrontCh => ChCtrls[FrontChIdx];
+        public List<ChCtrl> RoleCtrls;
+        public ChCtrl FrontRoleCtrl => RoleCtrls[FrontRoleIdx];
 
-        private int frontChIdx = -1;
-        public int FrontChIdx
+        private int _frontRoleIdx = -1;
+        public int FrontRoleIdx
         {
-            get => frontChIdx;
+            get => _frontRoleIdx;
             private set
             {
-                if (frontChIdx == value) return;
-                frontChIdx = value;
+                if (_frontRoleIdx == value) return;
+                _frontRoleIdx = value;
 
-                var ch = ChCtrls[frontChIdx];
+                var ch = RoleCtrls[_frontRoleIdx];
                 ch.VCam = vcam;
                 vcam.Follow = ch.vcamFollow;
                 vcam.LookAt = ch.vcamLookAt;
 
-                OnFrontChChanged?.Invoke();
+                OnFrontRoleChanged?.Invoke();
             }
         }
-        public event Action OnFrontChChanged;
+        public event Action OnFrontRoleChanged;
+
+        public string FrontRoleId => FrontRoleCtrl
 
         public bool switchEnabled = true;
 
@@ -59,7 +61,7 @@ namespace Kirara
 
             player = PlayerService.player;
 
-            ChCtrls = new List<ChCtrl>();
+            RoleCtrls = new List<ChCtrl>();
             input = new GameInput();
             cts = new CancellationTokenSource();
         }
@@ -90,20 +92,20 @@ namespace Kirara
                 {
                     return;
                 }
-                req.PosRot.Pos.Set(FrontCh.transform.position);
-                req.PosRot.Rot.Set(FrontCh.transform.eulerAngles);
+                req.PosRot.Pos.Set(FrontRoleCtrl.transform.position);
+                req.PosRot.Rot.Set(FrontRoleCtrl.transform.eulerAngles);
                 NetMgr.Instance.session.Send(req);
             }
         }
 
         public int GetNext(int idx)
         {
-            return (idx + 1) % ChCtrls.Count;
+            return (idx + 1) % RoleCtrls.Count;
         }
 
         public int GetPrev(int idx)
         {
-            return (idx - 1 + ChCtrls.Count) % ChCtrls.Count;
+            return (idx - 1 + RoleCtrls.Count) % RoleCtrls.Count;
         }
 
         private void OnEnable()
@@ -169,21 +171,21 @@ namespace Kirara
 
         private void Init()
         {
-            CreateCharacters();
+            CreateRoles();
             NetFn.Send(new MsgEnterRoom());
             UIMgr.Instance.PushPanel<CombatPanel>();
 
-            FrontChIdx = PlayerService.player.FrontRoleId;
+            FrontRoleIdx = PlayerService.player.FrontRoleId;
 
-            for (int i = 0; i < ChCtrls.Count; i++)
+            for (int i = 0; i < RoleCtrls.Count; i++)
             {
-                if (i == FrontChIdx)
+                if (i == FrontRoleIdx)
                 {
-                    ChCtrls[i].InitFront();
+                    RoleCtrls[i].InitFront();
                 }
                 else
                 {
-                    ChCtrls[i].InitBackground();
+                    RoleCtrls[i].InitBackground();
                 }
             }
 
@@ -198,7 +200,7 @@ namespace Kirara
             {
                 pressedDict[command] = true;
             }
-            FrontCh.ActionCtrl.Input(command, EActionCommandPhase.Down);
+            FrontRoleCtrl.ActionCtrl.Input(command, EActionCommandPhase.Down);
         }
 
         private void HandleCanceledInputToFrontCommand(InputAction.CallbackContext ctx)
@@ -210,52 +212,52 @@ namespace Kirara
             {
                 pressedDict[command] = false;
             }
-            FrontCh.ActionCtrl.Input(command, EActionCommandPhase.Up);
+            FrontRoleCtrl.ActionCtrl.Input(command, EActionCommandPhase.Up);
         }
 
         private void HandleSwitchCharacterNext(InputAction.CallbackContext ctx)
         {
             if (!switchEnabled) return;
 
-            int idx = GetNext(FrontChIdx);
+            int idx = GetNext(FrontRoleIdx);
             NetFn.Send(new MsgSwitchRole
             {
-                Idx = idx,
+                FrontRoleId = FrontRoleCtrl.RoleModel.Id
             });
-            SwitchCh(idx, true);
+            SwitchRole(idx, true);
         }
 
         private void HandleSwitchCharacterPrev(InputAction.CallbackContext ctx)
         {
             if (!switchEnabled) return;
 
-            int idx = GetPrev(FrontChIdx);
+            int idx = GetPrev(FrontRoleIdx);
             NetFn.Send(new MsgSwitchRole
             {
-                Idx = idx,
+                FrontRoleId = FrontRoleCtrl.RoleModel.Id
             });
-            SwitchCh(idx, false);
+            SwitchRole(idx, false);
         }
 
-        private void SwitchCh(int idx, bool isNext)
+        private void SwitchRole(int idx, bool isNext)
         {
-            var prev = FrontCh;
-            FrontChIdx = idx;
+            var prev = FrontRoleCtrl;
+            FrontRoleIdx = idx;
 
             var monster = MonsterSystem.Instance.ClosestAttackingMonster(prev.transform.position, out float dist);
             if (monster != null)
             {
                 prev.SwitchOutAided();
-                FrontCh.SwitchInParryAid(monster);
+                FrontRoleCtrl.SwitchInParryAid(monster);
             }
             else
             {
                 prev.SwitchOutNormal();
-                FrontCh.SwitchInNormal(prev, isNext);
+                FrontRoleCtrl.SwitchInNormal(prev, isNext);
             }
         }
 
-        private void CreateCharacters()
+        private void CreateRoles()
         {
             var teamRoleIds = PlayerService.player.TeamRoleIds;
             var chModels = PlayerService.player.Roles;
@@ -268,25 +270,25 @@ namespace Kirara
                 var go = handle.InstantiateSync(characterParent);
                 handle.Release();
 
-                ChCtrls.Add(go.GetComponent<ChCtrl>().Set(chModel));
+                RoleCtrls.Add(go.GetComponent<ChCtrl>().Set(chModel));
             }
         }
 
         private void Update()
         {
-            Player.transform.position = FrontCh.transform.position;
+            Player.transform.position = FrontRoleCtrl.transform.position;
 
             UpdateCharactersEnergyRegen();
-            FrontCh.ActionCtrl.UpdatePressed(pressedDict);
+            FrontRoleCtrl.ActionCtrl.UpdatePressed(pressedDict);
         }
 
         private void UpdateCharactersEnergyRegen()
         {
             const float mul = 8f;
             float maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
-            foreach (var ch in ChCtrls)
+            foreach (var ch in RoleCtrls)
             {
-                var model = ch.ChModel;
+                var model = ch.RoleModel;
                 var currEnergyAttr = model.ae.GetAttr(EAttrType.CurrEnergy);
                 if (currEnergyAttr.Evaluate() >= maxEnergy) continue;
 

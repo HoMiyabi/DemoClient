@@ -1,35 +1,32 @@
 ﻿using System.Collections.Generic;
-
 using Manager;
-using UnityEngine;
 
 namespace Kirara.Model
 {
-    public class SimPlayerModel
+    public class SimPlayer
     {
-        public readonly int uid;
-        public Vector3 pos;
-        public Quaternion rot;
+        public string Uid { get; private set; }
+        public List<SimRole> simRoles = new();
+
         public List<SimChCtrl> simChCtrls = new();
         public int frontChIdx;
         public SimChCtrl FrontCh => simChCtrls[frontChIdx];
 
-        public SimPlayerModel(NRoomSimPlayer playerInfo)
+        public SimPlayer(NSimPlayer simPlayer)
         {
-            uid = playerInfo.UId;
-            pos = playerInfo.PosRot.Pos.Unity();
-            rot = playerInfo.PosRot.Rot.Quat();
-            foreach (int chCid in playerInfo.GroupChCids)
+            Uid = simPlayer.Uid;
+
+            foreach (var simRole in simPlayer.Roles)
             {
-                string loc = ConfigMgr.tb.TbCharacterConfig[chCid].SimPrefabLoc;
+                string loc = ConfigMgr.tb.TbCharacterConfig[simRole.Cid].SimPrefabLoc;
                 var go = AssetMgr.Instance.InstantiateGO(loc, SimPlayerSystem.Instance.simulateCharacterParent);
 
                 var simCh = go.GetComponent<SimChCtrl>();
-                simCh.Set(new SimChModel(chCid));
+                simCh.Set(new SimRole(simRole));
                 simCh.SetImmediate(pos, rot);
                 simChCtrls.Add(simCh);
             }
-            frontChIdx = playerInfo.FrontChIdx;
+            frontChIdx = simPlayer.FrontChIdx;
 
             for (int i = 0; i < simChCtrls.Count; i++)
             {

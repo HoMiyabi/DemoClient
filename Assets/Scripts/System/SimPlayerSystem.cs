@@ -7,21 +7,21 @@ namespace Kirara
     public class SimPlayerSystem : UnitySingleton<SimPlayerSystem>
     {
         [SerializeField] public Transform simulateCharacterParent;
-        private readonly Dictionary<string, SimPlayerModel> simPlayers = new();
+        private readonly Dictionary<string, SimPlayer> simPlayers = new();
 
-        public void AddSimPlayer(NRoomSimPlayerInfo playerInfo)
+        public void AddSimPlayer(NSimPlayer simPlayer)
         {
-            var player = new SimPlayerModel(playerInfo);
-            simPlayers.Add(playerInfo.UId, player);
+            var player = new SimPlayer(simPlayer);
+            simPlayers.Add(simPlayer.Uid, player);
         }
 
         public void RemoveSimPlayer(string uid)
         {
             if (simPlayers.Remove(uid, out var simPlayer))
             {
-                foreach (var simCh in simPlayer.simChCtrls)
+                foreach (var simRole in simPlayer.simChCtrls)
                 {
-                    Destroy(simCh.gameObject);
+                    Destroy(simRole.gameObject);
                 }
             }
             else
@@ -30,7 +30,7 @@ namespace Kirara
             }
         }
 
-        public bool TryGetSimPlayer(string uid, out SimPlayerModel simPlayer)
+        public bool TryGetSimPlayer(string uid, out SimPlayer simPlayer)
         {
             if (simPlayers.TryGetValue(uid, out simPlayer)) return true;
             Debug.LogWarning($"Get SimPlayer {uid} is not found");

@@ -73,7 +73,7 @@ namespace Kirara
 
             var config = ConfigMgr.tb.TbChHitNumericConfig[box.hitId];
 
-            CalcNumeric(ch.ChModel, config.DmgMult, config.DazeMult,
+            CalcNumeric(ch.RoleModel, config.DmgMult, config.DazeMult,
                 out float dmg, out float daze, out bool isCrit);
 
             target.TakeEffect(dmg, daze, (ch.transform.position - target.transform.position).normalized);
