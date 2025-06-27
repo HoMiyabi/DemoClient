@@ -1,52 +1,62 @@
 ﻿using System.Collections.Generic;
 using Manager;
+using UnityEngine;
 
 namespace Kirara.Model
 {
     public class SimPlayer
     {
         public string Uid { get; private set; }
-        public List<SimRole> simRoles = new();
-
-        public List<SimChCtrl> simChCtrls = new();
-        public int frontChIdx;
-        public SimChCtrl FrontCh => simChCtrls[frontChIdx];
+        private Dictionary<string, SimRole> SimRoles { get; set; } = new();
+        private Dictionary<string, SimRoleCtrl> SimRoleCtrls { get; set; } = new();
 
         public SimPlayer(NSimPlayer simPlayer)
         {
             Uid = simPlayer.Uid;
 
-            foreach (var simRole in simPlayer.Roles)
+            foreach (var nSimRole in simPlayer.Roles)
             {
+                var simRole = new SimRole(nSimRole);
+                SimRoles.Add(simRole.Id, simRole);
+
                 string loc = ConfigMgr.tb.TbCharacterConfig[simRole.Cid].SimPrefabLoc;
                 var go = AssetMgr.Instance.InstantiateGO(loc, SimPlayerSystem.Instance.simulateCharacterParent);
 
-                var simCh = go.GetComponent<SimChCtrl>();
-                simCh.Set(new SimRole(simRole));
-                simCh.SetImmediate(pos, rot);
-                simChCtrls.Add(simCh);
+                var simRoleCtrl = go.GetComponent<SimRoleCtrl>();
+                simRoleCtrl.Set(simRole);
+                simRoleCtrl.UpdateImmediate();
+                SimRoleCtrls.Add(simRole.Id, simRoleCtrl);
             }
-            frontChIdx = simPlayer.FrontChIdx;
+        }
 
-            for (int i = 0; i < simChCtrls.Count; i++)
+        // public void SwitchCh(int idx, bool next)
+        // {
+        //     FrontCh.AIControl();
+        //     frontChIdx = idx;
+        //     FrontCh.SimControl();
+        // }
+
+        public void Update(NSyncPlayer syncPlayer)
+        {
+            foreach (var syncRole in syncPlayer.Roles)
             {
-                var ch = simChCtrls[i];
-                if (i == frontChIdx)
+                if (SimRoles.TryGetValue(syncRole.Id, out var simRole))
                 {
-                    ch.gameObject.SetActive(true);
+                    simRole.Update(syncRole);
                 }
                 else
                 {
-                    ch.gameObject.SetActive(false);
+                    Debug.LogWarning($"SimRole: {syncRole.Id} not found");
                 }
             }
         }
 
-        public void SwitchCh(int idx, bool next)
+        public void RolePlayAction(string roleId, string actionName)
         {
-            FrontCh.AIControl();
-            frontChIdx = idx;
-            FrontCh.SimControl();
+            if (SimRoleCtrls.TryGetValue(roleId, out var simRoleCtrl))
+            {
+                simRoleCtrl.PlayAction(actionName, 0.15f);
+            }
         }
     }
 }

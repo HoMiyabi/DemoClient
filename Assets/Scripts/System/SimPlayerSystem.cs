@@ -15,18 +15,21 @@ namespace Kirara
             simPlayers.Add(simPlayer.Uid, player);
         }
 
-        public void RemoveSimPlayer(string uid)
+        public void RemoveSimPlayer(IList<string> uids)
         {
-            if (simPlayers.Remove(uid, out var simPlayer))
+            foreach (string uid in uids)
             {
-                foreach (var simRole in simPlayer.simChCtrls)
+                if (simPlayers.Remove(uid, out var simPlayer))
                 {
-                    Destroy(simRole.gameObject);
+                    foreach (var simRole in simPlayer.simRoleCtrls)
+                    {
+                        Destroy(simRole.gameObject);
+                    }
                 }
-            }
-            else
-            {
-                Debug.LogWarning($"Remove SimPlayer {uid} is not found");
+                else
+                {
+                    Debug.LogWarning($"Remove SimPlayer {uid} is not found");
+                }
             }
         }
 

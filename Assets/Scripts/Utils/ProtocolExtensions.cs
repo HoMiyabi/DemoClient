@@ -18,6 +18,16 @@ namespace Kirara
             return Quaternion.Euler(v.X, v.Y, v.Z);
         }
 
+        public static Vector3 Pos(this NPosRot posRot)
+        {
+            return posRot.Pos.Unity();
+        }
+
+        public static Quaternion Rot(this NPosRot posRot)
+        {
+            return posRot.Rot.Quat();
+        }
+
         public static NFloat3 Set(this NFloat3 self, Vector3 v)
         {
             self.X = v.x;

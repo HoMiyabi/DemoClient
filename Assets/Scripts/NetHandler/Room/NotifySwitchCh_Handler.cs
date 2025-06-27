@@ -1,4 +1,4 @@
-﻿using Kirara.Network;
+﻿/*using Kirara.Network;
 
 namespace Kirara.NetHandler
 {
@@ -11,4 +11,4 @@ namespace Kirara.NetHandler
             simPlayer.SwitchCh(message.Idx, message.Next);
         }
     }
-}
+}*/

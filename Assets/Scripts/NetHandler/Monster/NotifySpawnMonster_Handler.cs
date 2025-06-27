@@ -12,7 +12,7 @@ namespace Kirara.NetHandler.Monster
             {
                 Debug.Log("Spawn");
                 instance.SpawnMonster(message.MonsterCid, message.MonsterId,
-                    message.PosRot.Pos.Unity(), message.PosRot.Rot.Quat());
+                    message.PosRot.Pos(), message.PosRot.Rot());
             }
         }
     }
