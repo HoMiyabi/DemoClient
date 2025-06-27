@@ -29,12 +29,15 @@ namespace Kirara.Model
             }
         }
 
-        // public void SwitchCh(int idx, bool next)
-        // {
-        //     FrontCh.AIControl();
-        //     frontChIdx = idx;
-        //     FrontCh.SimControl();
-        // }
+        public void RemoveAllRoles()
+        {
+            foreach (var simRoleCtrl in SimRoleCtrls.Values)
+            {
+                Object.Destroy(simRoleCtrl.gameObject);
+            }
+            SimRoleCtrls.Clear();
+            SimRoles.Clear();
+        }
 
         public void Update(NSyncPlayer syncPlayer)
         {

@@ -5,7 +5,7 @@ public static class MsgCmdId
     public const uint Ping = 27007083;
     public const uint Pong = 3719997737;
     public const uint NPlayer = 2781745302;
-    public const uint NOtherPlayer = 3506768364;
+    public const uint NSocialPlayer = 2689911483;
     public const uint NMaterialItem = 2480641759;
     public const uint NCurrencyItem = 405364627;
     public const uint NWeaponItem = 568993744;
@@ -41,8 +41,6 @@ public static class MsgCmdId
     public const uint RspExchange = 831974011;
     public const uint ReqSearchPlayer = 2866604937;
     public const uint RspSearchPlayer = 1874194466;
-    public const uint ReqGetFriendInfos = 3320990260;
-    public const uint RspGetFriendInfos = 1261174803;
     public const uint ReqSendAddFriend = 649372023;
     public const uint RspSendAddFriend = 636023888;
     public const uint ReqAcceptAddFriend = 2152874350;
@@ -58,12 +56,9 @@ public static class MsgCmdId
     public const uint ReqModifyAvatar = 3380788258;
     public const uint RspModifyAvatar = 2921328180;
     public const uint NChatMsg = 2855959593;
-    public const uint NChatMsgRecord = 962422967;
     public const uint ReqSendChatMsg = 2086519665;
     public const uint RspSendChatMsg = 3616542926;
     public const uint NotifyReceiveChatMsg = 2959667348;
-    public const uint ReqGetChatRecords = 965426102;
-    public const uint RspGetChatRecords = 394733889;
     public const uint NRole = 447426920;
     public const uint ReqRoleRemoveDisc = 3893140301;
     public const uint RspRoleRemoveDisc = 1515992233;

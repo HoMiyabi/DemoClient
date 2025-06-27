@@ -21,10 +21,7 @@ namespace Kirara
             {
                 if (simPlayers.Remove(uid, out var simPlayer))
                 {
-                    foreach (var simRole in simPlayer.simRoleCtrls)
-                    {
-                        Destroy(simRole.gameObject);
-                    }
+                    simPlayer.RemoveAllRoles();
                 }
                 else
                 {

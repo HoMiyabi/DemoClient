@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Kirara.Model;
 using Kirara.NetHandler.Chat;
 using TMPro;
 using UnityEngine;
@@ -42,10 +42,41 @@ namespace Kirara.UI.Panel
             StickerBtn = c.Q<Button>("StickerBtn");
         }
 
-        private List<NOtherPlayer> playerInfos;
+        private List<SocialPlayer> friends;
 
-        private NOtherPlayer curChattingPlayer;
-        private List<NChatMsgRecord> chatRecords;
+        private SocialPlayer _chattingPlayer;
+        private SocialPlayer ChattingPlayer
+        {
+            get => _chattingPlayer;
+            set
+            {
+                _chattingPlayer = value;
+
+                if (_chattingPlayer == null)
+                {
+                    // 聊天对象为空
+                    UsernameText.text = "Empty";
+
+                    ChatLoopScroll.totalCount = 0;
+                    ChatLoopScroll.RefillCellsFromEnd();
+
+                    StickerBtn.interactable = false;
+                    ChatTextInput.interactable = false;
+                    SendBtn.interactable = false;
+                }
+                else
+                {
+                    UsernameText.text = _chattingPlayer.Username;
+
+                    ChatLoopScroll.totalCount = chatRecords.Count;
+                    ChatLoopScroll.RefillCellsFromEnd();
+
+                    StickerBtn.interactable = true;
+                    ChatTextInput.interactable = true;
+                    SendBtn.interactable = true;
+                }
+            }
+        }
 
         private void Awake()
         {
@@ -76,22 +107,22 @@ namespace Kirara.UI.Panel
         private void Start()
         {
             // 选择栏
-            playerInfos = PlayerService.player.FriendUids;
+            friends = PlayerService.player.Friends;
             ChatFriendLoopScroll.prefabSource = ChatFriendPrefabSource;
             ChatFriendLoopScroll.dataSource = new LoopScrollDataSourceHandler(ProvideFriendData);
-            ChatFriendLoopScroll.totalCount = playerInfos.Count;
+            ChatFriendLoopScroll.totalCount = friends.Count;
             ChatFriendLoopScroll.RefillCells();
 
             // 聊天栏
             ChatLoopScroll.prefabSource = ChatPrefabSource;
             ChatLoopScroll.dataSource = new LoopScrollDataSourceHandler(ProvideChatData);
 
-            SetSelectedPlayerInfo(playerInfos.FirstOrDefault());
+            ChattingPlayer = friends.FirstOrDefault();
         }
 
         private void OnReceiveChatMsg(NChatMsgRecord record)
         {
-            if (curChattingPlayer == null || curChattingPlayer.Uid != record.SenderUid) return;
+            if (ChattingPlayer == null || ChattingPlayer.Uid != record.SenderUid) return;
 
             ChatLoopScroll.totalCount = chatRecords.Count;
             ChatLoopScroll.RefillCellsFromEnd();
@@ -117,7 +148,7 @@ namespace Kirara.UI.Panel
 
             var rsp = await NetFn.ReqSendChatMsg(new ReqSendChatMsg
             {
-                ReceiverUid = curChattingPlayer.Uid,
+                ReceiverUid = ChattingPlayer.Uid,
                 ChatMsg = chatMsg,
             });
             chatRecords.Add(new NChatMsgRecord
@@ -141,7 +172,7 @@ namespace Kirara.UI.Panel
 
             var rsp = await NetFn.ReqSendChatMsg(new ReqSendChatMsg
             {
-                ReceiverUid = curChattingPlayer.Uid,
+                ReceiverUid = ChattingPlayer.Uid,
                 ChatMsg = chatMsg
             });
             chatRecords.Add(new NChatMsgRecord
@@ -165,45 +196,13 @@ namespace Kirara.UI.Panel
         private void ProvideFriendData(Transform tra, int idx)
         {
             var item = tra.GetComponent<UIChatFriendItem>();
-            item.Set(playerInfos[idx], () => SetSelectedPlayerInfo(playerInfos[idx]));
+            item.Set(friends[idx], () => ChattingPlayer = friends[idx]);
         }
 
         private void ProvideChatData(Transform tra, int idx)
         {
             var item = tra.GetComponent<UIChatItem>();
-            item.Set(chatRecords[idx], curChattingPlayer);
-        }
-
-        private void SetSelectedPlayerInfo(NOtherPlayer newInfo)
-        {
-            curChattingPlayer = newInfo;
-
-            if (curChattingPlayer == null)
-            {
-                chatRecords = null;
-
-                UsernameText.text = "Empty";
-
-                ChatLoopScroll.totalCount = 0;
-                ChatLoopScroll.RefillCellsFromEnd();
-
-                StickerBtn.interactable = false;
-                ChatTextInput.interactable = false;
-                SendBtn.interactable = false;
-            }
-            else
-            {
-                chatRecords = PlayerService.player.allChatRecords[curChattingPlayer.Uid];
-
-                UsernameText.text = curChattingPlayer.Username;
-
-                ChatLoopScroll.totalCount = chatRecords.Count;
-                ChatLoopScroll.RefillCellsFromEnd();
-
-                StickerBtn.interactable = true;
-                ChatTextInput.interactable = true;
-                SendBtn.interactable = true;
-            }
+            item.Set(chatRecords[idx], ChattingPlayer);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Kirara
         }
         public event Action OnFrontRoleChanged;
 
-        public string FrontRoleId => FrontRoleCtrl
+        public string FrontRoleId => FrontRoleCtrl.RoleModel.Id;
 
         public bool switchEnabled = true;
 
@@ -171,7 +171,7 @@ namespace Kirara
 
         private void Init()
         {
-            CreateRoles();
+            CreateTeamRoles();
             NetFn.Send(new MsgEnterRoom());
             UIMgr.Instance.PushPanel<CombatPanel>();
 
@@ -257,20 +257,20 @@ namespace Kirara
             }
         }
 
-        private void CreateRoles()
+        private void CreateTeamRoles()
         {
             var teamRoleIds = PlayerService.player.TeamRoleIds;
-            var chModels = PlayerService.player.Roles;
-            Debug.Log("队伍角色数量：" + chModels.Count);
+            var roles = PlayerService.player.Roles;
+            Debug.Log("拥有角色数量：" + roles.Count);
             foreach (string roleId in teamRoleIds)
             {
-                var chModel = chModels.Find(it => it.Id == roleId);
-                Debug.Log($"加载角色 {chModel.config.Name}");
-                var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(chModel.config.PrefabLoc);
-                var go = handle.InstantiateSync(characterParent);
-                handle.Release();
+                var role = roles.Find(it => it.Id == roleId);
+                Debug.Log($"加载角色 {role.config.Name}");
+                var go = AssetMgr.Instance.InstantiateGO(role.config.PrefabLoc, characterParent);
+                var roleCtrl = go.GetComponent<ChCtrl>();
+                roleCtrl.Set(role);
 
-                RoleCtrls.Add(go.GetComponent<ChCtrl>().Set(chModel));
+                RoleCtrls.Add(roleCtrl);
             }
         }
 
@@ -278,11 +278,12 @@ namespace Kirara
         {
             Player.transform.position = FrontRoleCtrl.transform.position;
 
-            UpdateCharactersEnergyRegen();
+            UpdateRolesEnergyRegen();
             FrontRoleCtrl.ActionCtrl.UpdatePressed(pressedDict);
         }
 
-        private void UpdateCharactersEnergyRegen()
+        // 更新角色的能量回复
+        private void UpdateRolesEnergyRegen()
         {
             const float mul = 8f;
             float maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;

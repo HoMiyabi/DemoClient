@@ -5,15 +5,15 @@ namespace Kirara.NetHandler.Chat
 {
     public class NotifyReceiveChatMsg_Handler : MsgHandler<NotifyReceiveChatMsg>
     {
-        public static event Action<NChatMsgRecord> OnReceiveChatMsg;
+        public static event Action<NChatMsg> OnReceiveChatMsg;
 
         protected override void Run(Session session, NotifyReceiveChatMsg msg)
         {
-            var record = msg.ChatMsgRecord;
-            var records = PlayerService.player.allChatRecords[record.SenderUid];
-            records.Add(record);
+            var chatMsg = msg.ChatMsg;
+            var records = PlayerService.player.allChatRecords[chatMsg.SenderUid];
+            records.Add(chatMsg);
 
-            OnReceiveChatMsg?.Invoke(record);
+            OnReceiveChatMsg?.Invoke(chatMsg);
         }
     }
 }

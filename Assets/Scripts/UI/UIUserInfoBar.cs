@@ -48,15 +48,15 @@ namespace Kirara.UI
             InitUI();
         }
 
-        public void Set(NOtherPlayer info)
+        public void Set(NSocialPlayer player)
         {
             Clear();
-            avatarHandle = ConfigAsset.GetIconInterKnotRole(info.AvatarCid);
+            avatarHandle = ConfigAsset.GetIconInterKnotRole(player.AvatarCid);
             AvatarImg.sprite = avatarHandle.AssetObject as Sprite;
 
-            SignatureText.text = info.Signature;
-            UsernameText.text = info.Username;
-            UIUserOnlineStatus.text = info.IsOnline ? "在线" : "离线";
+            SignatureText.text = player.Signature;
+            UsernameText.text = player.Username;
+            UIUserOnlineStatus.text = player.IsOnline ? "在线" : "离线";
 
             ChatBtn.onClick.AddListener(() => UIMgr.Instance.PushPanel<ChatPanel>());
         }

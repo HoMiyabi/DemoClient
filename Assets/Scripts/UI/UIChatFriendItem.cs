@@ -1,4 +1,5 @@
-﻿using Manager;
+﻿using Kirara.Model;
+using Manager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -42,15 +43,15 @@ namespace Kirara.UI
             avatarHandle = null;
         }
 
-        public void Set(NOtherPlayer info, UnityAction onClick)
+        public void Set(SocialPlayer player, UnityAction onClick)
         {
             Clear();
 
-            avatarHandle = ConfigAsset.GetIconInterKnotRole(info.AvatarCid);
+            avatarHandle = ConfigAsset.GetIconInterKnotRole(player.AvatarCid);
             AvatarImg.sprite = avatarHandle.AssetObject as Sprite;
 
-            UsernameText.text = info.Username;
-            OnlineStatus.text = info.IsOnline ? "在线" : "离线";
+            UsernameText.text = player.Username;
+            OnlineStatus.text = player.IsOnline ? "在线" : "离线";
 
             Btn.onClick.AddListener(onClick);
         }

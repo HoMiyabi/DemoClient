@@ -50,7 +50,7 @@ namespace Kirara.Manager
                 await UniTask.WaitForSeconds(interval);
 
                 var t1 = DateTime.UtcNow;
-                var pong = await session.CallAsync<Pong>(ProtoMsgId.Ping, ping);
+                var pong = await session.CallAsync<Pong>(MsgCmdId.Ping, ping);
                 var t2 = DateTime.UtcNow;
                 rttMs = (float)(t2 - t1).TotalMilliseconds;
                 serverTimeMs = pong.UnixTimeMs + rttMs / 2;

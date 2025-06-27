@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using Kirara.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +21,7 @@ namespace Kirara.UI
             LoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>("LoopScrollPrefabSource");
         }
 
-        private List<NOtherPlayer> infos;
+        private List<SocialPlayer> friends;
 
         private void Awake()
         {
@@ -30,18 +30,18 @@ namespace Kirara.UI
 
         private void Start()
         {
-            infos = PlayerService.player.FriendUids;
+            friends = PlayerService.player.Friends;
 
             LoopScroll.prefabSource = LoopScrollPrefabSource;
             LoopScroll.dataSource = this;
-            LoopScroll.totalCount = infos.Count;
+            LoopScroll.totalCount = friends.Count;
             LoopScroll.RefillCells();
         }
 
         public void ProvideData(Transform tra, int idx)
         {
             var bar = tra.GetComponent<UIUserInfoBar>();
-            bar.Set(infos[idx]);
+            bar.Set(friends[idx]);
         }
     }
 }

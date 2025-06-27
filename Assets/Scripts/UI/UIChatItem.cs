@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Kirara.Model;
 using Manager;
 using TMPro;
 using UnityEngine;
@@ -73,7 +73,7 @@ namespace Kirara.UI
             }
         }
 
-        public void Set(NChatMsgRecord record, NOtherPlayer other)
+        public void Set(NChatMsgRecord record, SocialPlayer other)
         {
             Clear();
 
