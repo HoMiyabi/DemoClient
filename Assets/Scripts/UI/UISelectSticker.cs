@@ -73,7 +73,7 @@ namespace Kirara.UI
         private void Cell_onClick(int idx)
         {
             gameObject.SetActive(false);
-            ChatService.SendSticker(chatPanel.ChattingPlayer, stickerConfigIds[idx]).Forget();
+            SocialService.SendSticker(chatPanel.ChattingPlayer, stickerConfigIds[idx]).Forget();
         }
     }
 }

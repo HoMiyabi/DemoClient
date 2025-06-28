@@ -34,14 +34,14 @@ namespace Kirara.UI
             EnergyRegenStatBar = c.Q<UIStatBar>("EnergyRegenStatBar");
         }
 
-        private RoleModel ch;
+        private Role ch;
 
         private void Awake()
         {
             InitUI();
         }
 
-        public void Set(RoleModel ch)
+        public void Set(Role ch)
         {
             this.ch = ch;
             UpdateInfo();

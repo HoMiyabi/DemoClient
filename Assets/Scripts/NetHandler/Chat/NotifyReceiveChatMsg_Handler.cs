@@ -8,7 +8,7 @@ namespace Kirara.NetHandler.Chat
         protected override void Run(Session session, NotifyReceiveChatMsg msg)
         {
             var chatMsg = msg.ChatMsg;
-            ChatService.NotifyReceiveChatMsg(chatMsg);
+            SocialService.NotifyReceiveChatMsg(chatMsg);
         }
     }
 }

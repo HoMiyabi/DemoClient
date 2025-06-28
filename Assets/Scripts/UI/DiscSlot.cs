@@ -25,7 +25,7 @@ namespace Kirara.UI
             InitUI();
         }
 
-        private RoleModel ch;
+        private Role ch;
         private int pos;
         private AssetHandle icon;
 
@@ -72,7 +72,7 @@ namespace Kirara.UI
             }
         }
 
-        public DiscSlot Set(RoleModel ch, int pos, Action<int> onClick)
+        public DiscSlot Set(Role ch, int pos, Action<int> onClick)
         {
             Clear();
             this.ch = ch;

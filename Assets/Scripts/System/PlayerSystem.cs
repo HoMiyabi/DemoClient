@@ -4,7 +4,6 @@ using System.Threading;
 using cfg.main;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
-using Kirara.Manager;
 using Kirara.Model;
 using Kirara.TimelineAction;
 using Kirara.UI.Panel;
@@ -25,7 +24,7 @@ namespace Kirara
 
         private CancellationTokenSource cts;
 
-        private PlayerModel player;
+        private Player player;
 
         public List<ChCtrl> RoleCtrls;
         public ChCtrl FrontRoleCtrl => RoleCtrls[FrontRoleIdx];
@@ -49,7 +48,14 @@ namespace Kirara
         }
         public event Action OnFrontRoleChanged;
 
-        public string FrontRoleId => FrontRoleCtrl.RoleModel.Id;
+        public string FrontRoleId
+        {
+            get => FrontRoleCtrl.Role.Id;
+            set
+            {
+                FrontRoleIdx = player.Roles.FindIndex(x => x.Id == value);
+            }
+        }
 
         public bool switchEnabled = true;
 
@@ -71,30 +77,32 @@ namespace Kirara
             cts.Cancel();
         }
 
-        private int updateSelfInterval = 16;
+        private int updateInterval = 16;
 
-        private async UniTaskVoid SendUpdateSelf()
+        private async UniTaskVoid RepeatSendUpdateFromAutonomous()
         {
-            var req = new MsgUpdateSelf()
+            var req = new MsgUpdateFromAutonomous
             {
-                PosRot = new NPosRot()
+                Player = new NSyncPlayer
                 {
-                    Pos = new NFloat3(),
-                    Rot = new NFloat3()
+                    Uid = PlayerService.player.Uid,
                 }
             };
             var token = cts.Token;
 
             while (!token.IsCancellationRequested)
             {
-                await UniTask.Delay(updateSelfInterval, true, PlayerLoopTiming.Update, token);
+                await UniTask.Delay(updateInterval, true, PlayerLoopTiming.Update, token);
                 if (token.IsCancellationRequested)
                 {
                     return;
                 }
-                req.PosRot.Pos.Set(FrontRoleCtrl.transform.position);
-                req.PosRot.Rot.Set(FrontRoleCtrl.transform.eulerAngles);
-                NetMgr.Instance.session.Send(req);
+                req.Player.Roles.Clear();
+                foreach (var roleCtrl in RoleCtrls)
+                {
+                    req.Player.Roles.Add(roleCtrl.Role.SyncRole);
+                }
+                NetFn.Send(req);
             }
         }
 
@@ -175,7 +183,7 @@ namespace Kirara
             NetFn.Send(new MsgEnterRoom());
             UIMgr.Instance.PushPanel<CombatPanel>();
 
-            FrontRoleIdx = PlayerService.player.FrontRoleId;
+            FrontRoleId = PlayerService.player.FrontRoleId;
 
             for (int i = 0; i < RoleCtrls.Count; i++)
             {
@@ -189,7 +197,7 @@ namespace Kirara
                 }
             }
 
-            SendUpdateSelf().Forget();
+            RepeatSendUpdateFromAutonomous().Forget();
         }
 
         private void HandleStartedInputToFrontCommand(InputAction.CallbackContext ctx)
@@ -222,7 +230,7 @@ namespace Kirara
             int idx = GetNext(FrontRoleIdx);
             NetFn.Send(new MsgSwitchRole
             {
-                FrontRoleId = FrontRoleCtrl.RoleModel.Id
+                FrontRoleId = FrontRoleCtrl.Role.Id
             });
             SwitchRole(idx, true);
         }
@@ -234,7 +242,7 @@ namespace Kirara
             int idx = GetPrev(FrontRoleIdx);
             NetFn.Send(new MsgSwitchRole
             {
-                FrontRoleId = FrontRoleCtrl.RoleModel.Id
+                FrontRoleId = FrontRoleCtrl.Role.Id
             });
             SwitchRole(idx, false);
         }
@@ -289,7 +297,7 @@ namespace Kirara
             float maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
             foreach (var ch in RoleCtrls)
             {
-                var model = ch.RoleModel;
+                var model = ch.Role;
                 var currEnergyAttr = model.ae.GetAttr(EAttrType.CurrEnergy);
                 if (currEnergyAttr.Evaluate() >= maxEnergy) continue;
 

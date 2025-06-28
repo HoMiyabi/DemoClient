@@ -7,7 +7,6 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Kirara.Model;
 using Kirara.TimelineAction;
-using UnityEngine.Serialization;
 
 namespace Kirara
 {
@@ -27,7 +26,7 @@ namespace Kirara
 
         public Transform Cam { get; private set; }
         public Animator Animator { get; private set; }
-        public RoleModel RoleModel { get; private set; }
+        public Role Role { get; private set; }
         // private CombatStateMachine combatStateMachine { get; set; }
         public CinemachineVirtualCamera VCam { get; set; }
         public CharacterController CharacterController { get; private set; }
@@ -47,15 +46,15 @@ namespace Kirara
             InitRef();
         }
 
-        public ChCtrl Set(RoleModel roleModel)
+        public ChCtrl Set(Role role)
         {
-            RoleModel = roleModel;
+            Role = role;
             return this;
         }
 
         private void Update()
         {
-            RoleModel.ae.Update();
+            Role.ae.Update();
 
             if (EnableRotation)
             {

@@ -58,7 +58,7 @@ namespace Kirara.UI
             }
         }
 
-        private RoleModel _role;
+        private Role _role;
 
         private void OnDestroy()
         {
@@ -73,7 +73,7 @@ namespace Kirara.UI
             }
         }
 
-        public void Set(RoleModel role, int pos)
+        public void Set(Role role, int pos)
         {
             Clear();
             _role = role;

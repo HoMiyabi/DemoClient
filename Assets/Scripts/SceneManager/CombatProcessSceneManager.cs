@@ -9,12 +9,12 @@ namespace Kirara
 {
     public class CombatProcessSceneManager
     {
-        private static bool GetIsCrit(RoleModel ch)
+        private static bool GetIsCrit(Role ch)
         {
             return Random.Range(0f, 1f) <= ch.ae.GetAttr(EAttrType.CritRate).Evaluate();
         }
 
-        private static float CalcDamage(RoleModel ch, float dmgMult, bool isCrit)
+        private static float CalcDamage(Role ch, float dmgMult, bool isCrit)
         {
             float dmg = ch.ae.GetAttr(EAttrType.Atk).Evaluate() * dmgMult;
             if (isCrit)
@@ -24,13 +24,13 @@ namespace Kirara
             return dmg;
         }
 
-        private static float CalcDaze(RoleModel ch, float dazeMult)
+        private static float CalcDaze(Role ch, float dazeMult)
         {
             float daze = ch.ae.GetAttr(EAttrType.Impact).Evaluate() * dazeMult;
             return daze;
         }
 
-        private static void CalcNumeric(RoleModel ch, float dmgMult, float dazeMult,
+        private static void CalcNumeric(Role ch, float dmgMult, float dazeMult,
             out float dmg, out float daze, out bool isCrit)
         {
             isCrit = GetIsCrit(ch);
@@ -73,7 +73,7 @@ namespace Kirara
 
             var config = ConfigMgr.tb.TbChHitNumericConfig[box.hitId];
 
-            CalcNumeric(ch.RoleModel, config.DmgMult, config.DazeMult,
+            CalcNumeric(ch.Role, config.DmgMult, config.DazeMult,
                 out float dmg, out float daze, out bool isCrit);
 
             target.TakeEffect(dmg, daze, (ch.transform.position - target.transform.position).normalized);

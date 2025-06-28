@@ -38,7 +38,7 @@ namespace Kirara.UI
 
         [SerializeField] private GameObject UIInventoryCellWeaponPrefab;
 
-        private RoleModel ch;
+        private Role ch;
         private List<WeaponItem> weapons;
         private WeaponItem _selectedWeapon;
         private WeaponItem SelectedWeapon
@@ -66,7 +66,7 @@ namespace Kirara.UI
             }
         }
 
-        public void Set(RoleModel ch)
+        public void Set(Role ch)
         {
             Clear();
             this.ch = ch;

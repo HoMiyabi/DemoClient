@@ -7,7 +7,7 @@ using Manager;
 
 namespace Kirara.Model
 {
-    public class RoleModel
+    public class Role
     {
         public readonly CharacterConfig config;
         public string Id { get; set; }
@@ -38,12 +38,21 @@ namespace Kirara.Model
         }
         public event Action OnWeaponChanged;
 
-
         public readonly AttrEffect.AttrEffect ae = new();
 
         private readonly Dictionary<int, int> discCidToCount = new();
 
-        public RoleModel(NRole role)
+        public NSyncRole SyncRole => new NSyncRole
+        {
+            Id = Id,
+            PosRot = new NPosRot
+            {
+                Pos = null,
+                Rot = null
+            }
+        };
+
+        public Role(NRole role)
         {
             config = ConfigMgr.tb.TbCharacterConfig[role.Cid];
             Id = role.Id;

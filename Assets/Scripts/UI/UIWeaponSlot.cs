@@ -25,7 +25,7 @@ namespace Kirara.UI
             InitUI();
         }
 
-        private RoleModel ch;
+        private Role ch;
         private AssetHandle iconHandle;
 
         private void OnDestroy()
@@ -67,7 +67,7 @@ namespace Kirara.UI
             }
         }
 
-        public void Set(RoleModel ch, UnityAction onClick)
+        public void Set(Role ch, UnityAction onClick)
         {
             Clear();
             this.ch = ch;

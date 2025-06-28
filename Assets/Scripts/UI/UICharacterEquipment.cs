@@ -33,7 +33,7 @@ namespace Kirara.UI
         private DiscSlot[] discSlots;
         public int SlotCount => discSlots.Length;
 
-        private RoleModel ch;
+        private Role ch;
 
         private Transform parent;
 
@@ -54,7 +54,7 @@ namespace Kirara.UI
             return discSlots[pos - 1];
         }
 
-        public void Set(RoleModel ch)
+        public void Set(Role ch)
         {
             this.ch = ch;
             for (int pos = 1; pos <= SlotCount; pos++)

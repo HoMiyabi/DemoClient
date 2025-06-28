@@ -122,12 +122,12 @@ namespace Kirara.UI.Panel
 
         private void OnEnable()
         {
-            ChatService.OnAddChatMsg += OnAddChatMsg;
+            SocialService.OnAddChatMsg += OnAddChatMsg;
         }
 
         private void OnDisable()
         {
-            ChatService.OnAddChatMsg -= OnAddChatMsg;
+            SocialService.OnAddChatMsg -= OnAddChatMsg;
         }
 
         private void OnAddChatMsg(NChatMsg msg)
@@ -145,7 +145,7 @@ namespace Kirara.UI.Panel
         {
             string text = ChatTextInput.text;
             ChatTextInput.text = "";
-            ChatService.SendText(ChattingPlayer, text).Forget();
+            SocialService.SendText(ChattingPlayer, text).Forget();
         }
 
         private void ProvideFriendData(Transform tra, int idx)

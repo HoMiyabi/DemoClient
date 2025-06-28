@@ -119,7 +119,7 @@ namespace Kirara.TimelineAction
                     var col = cols[i];
                     if (col.TryGetComponent<ChCtrl>(out var chCtrl))
                     {
-                        var invAttr = chCtrl.RoleModel.ae.GetAttr(EAttrType.Invincible);
+                        var invAttr = chCtrl.Role.ae.GetAttr(EAttrType.Invincible);
                         if (invAttr.BaseValue == 0f)
                         {
                             Debug.Log($"Monster命中{chCtrl.characterName}");

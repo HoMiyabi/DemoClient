@@ -44,7 +44,7 @@ namespace Kirara.UI
                 if (i < PlayerSystem.Instance.RoleCtrls.Count)
                 {
                     bars[i].gameObject.SetActive(true);
-                    bars[i].Set(PlayerSystem.Instance.RoleCtrls[chIdx].RoleModel);
+                    bars[i].Set(PlayerSystem.Instance.RoleCtrls[chIdx].Role);
                     chIdx = PlayerSystem.Instance.GetNext(chIdx);
                 }
                 else

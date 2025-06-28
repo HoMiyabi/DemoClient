@@ -21,7 +21,7 @@ namespace Kirara.UI.Panel
             UICharacterEquipment = c.Q<UICharacterEquipment>("UICharacterEquipment");
         }
 
-        private RoleModel ch;
+        private Role ch;
 
         private void Awake()
         {
@@ -29,7 +29,7 @@ namespace Kirara.UI.Panel
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
         }
 
-        public void Set(RoleModel ch)
+        public void Set(Role ch)
         {
             this.ch = ch;
 
