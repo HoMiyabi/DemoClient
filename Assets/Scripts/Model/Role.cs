@@ -52,7 +52,7 @@ namespace Kirara.Model
             }
         };
 
-        public Role(NRole role)
+        public Role(NRole role, Player player)
         {
             config = ConfigMgr.tb.TbCharacterConfig[role.Cid];
             Id = role.Id;
@@ -70,13 +70,13 @@ namespace Kirara.Model
             }
 
             // 设置武器
-            Weapon = PlayerService.player.Weapons.Find(it => it.Id == role.WeaponId);
+            Weapon = player.Weapons.Find(it => it.Id == role.WeaponId);
 
             // 设置驱动盘
             discs = new DiscItem[6];
             for (int pos = 1; pos <= 6; pos++)
             {
-                SetDisc(pos, PlayerService.player.Discs.Find(it => it.Id == role.DiscIds[pos - 1]));
+                SetDisc(pos, player.Discs.Find(it => it.Id == role.DiscIds[pos - 1]));
             }
 
             ae.GetAttr(EAttrType.CurrHp).BaseValue = ae.EvaluateAttr(EAttrType.Hp);

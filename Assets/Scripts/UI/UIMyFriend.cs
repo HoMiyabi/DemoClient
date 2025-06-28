@@ -30,7 +30,7 @@ namespace Kirara.UI
 
         private void Start()
         {
-            friends = PlayerService.player.Friends;
+            friends = PlayerService.Player.Friends;
 
             LoopScroll.prefabSource = LoopScrollPrefabSource;
             LoopScroll.dataSource = this;

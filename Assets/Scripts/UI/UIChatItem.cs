@@ -76,7 +76,7 @@ namespace Kirara.UI
         {
             Clear();
 
-            bool isSelf = msg.SenderUid == PlayerService.player.Uid;
+            bool isSelf = msg.SenderUid == PlayerService.Player.Uid;
 
             // 位置左右
             isLeft = !isSelf;
@@ -84,7 +84,7 @@ namespace Kirara.UI
 
             // 头像
             avatarHandle = ConfigAsset.GetIconInterKnotRole(isSelf ?
-                PlayerService.player.AvatarCid : other.AvatarCid);
+                PlayerService.Player.AvatarCid : other.AvatarCid);
             AvatarImg.sprite = avatarHandle.AssetObject as Sprite;
 
             // 内容

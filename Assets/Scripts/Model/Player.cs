@@ -32,7 +32,7 @@ namespace Kirara.Model
             Currencies = player.Currencies.Select(x => new CurrencyItem(x)).ToList();
             Weapons = player.Weapons.Select(x => new WeaponItem(x)).ToList();
             Discs = player.Discs.Select(x => new DiscItem(x)).ToList();
-            Roles = player.Roles.Select(x => new Role(x)).ToList();
+            Roles = player.Roles.Select(x => new Role(x, this)).ToList();
             TeamRoleIds = player.TeamRoleIds.ToList();
             FrontRoleId = player.FrontRoleId;
 

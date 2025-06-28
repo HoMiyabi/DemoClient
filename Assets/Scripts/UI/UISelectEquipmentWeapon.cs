@@ -86,7 +86,7 @@ namespace Kirara.UI
 
         private List<WeaponItem> GetWeapons()
         {
-            var l = PlayerService.player.Weapons.ToList();
+            var l = PlayerService.Player.Weapons.ToList();
             if (l.Count > 0 && ch.Weapon != null)
             {
                 int idx = l.FindIndex(item => item.Id == ch.Weapon.Id);

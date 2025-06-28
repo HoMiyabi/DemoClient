@@ -106,7 +106,7 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
             return;
         }
         WearerIconImg.gameObject.SetActive(true);
-        var chInfo = PlayerService.player.Roles.First(it => it.Id == _disc.RoleId);
+        var chInfo = PlayerService.Player.Roles.First(it => it.Id == _disc.RoleId);
         wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chInfo.config.IconLoc);
         WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
     }

@@ -131,7 +131,7 @@ namespace Kirara.UI
                 WearerIcon.gameObject.SetActive(false);
                 return;
             }
-            var chInfo = PlayerService.player.Roles.First(it => it.Id == roleId);
+            var chInfo = PlayerService.Player.Roles.First(it => it.Id == roleId);
             wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chInfo.config.IconLoc);
             WearerIcon.sprite = wearerIconHandle.AssetObject as Sprite;
         }

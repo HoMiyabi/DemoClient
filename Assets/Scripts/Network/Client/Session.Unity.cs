@@ -35,7 +35,7 @@ namespace Kirara.Network
                 fieldDesc.MessageType == Result.Descriptor)
             {
                 var result = (Result)fieldDesc.Accessor.GetValue(msg);
-                if (result.Code != 0)
+                if (result != null && result.Code != 0)
                 {
                     utcs.TrySetException(new ResultException(msg, $"[失败] Code: {result.Code}, Msg: {result.Msg}, " +
                                                              $"内容: {msg}"));

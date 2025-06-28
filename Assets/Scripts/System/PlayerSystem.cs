@@ -65,7 +65,7 @@ namespace Kirara
         {
             base.Awake();
 
-            player = PlayerService.player;
+            player = PlayerService.Player;
 
             RoleCtrls = new List<ChCtrl>();
             input = new GameInput();
@@ -85,7 +85,7 @@ namespace Kirara
             {
                 Player = new NSyncPlayer
                 {
-                    Uid = PlayerService.player.Uid,
+                    Uid = PlayerService.Player.Uid,
                 }
             };
             var token = cts.Token;
@@ -183,7 +183,7 @@ namespace Kirara
             NetFn.Send(new MsgEnterRoom());
             UIMgr.Instance.PushPanel<CombatPanel>();
 
-            FrontRoleId = PlayerService.player.FrontRoleId;
+            FrontRoleId = PlayerService.Player.FrontRoleId;
 
             for (int i = 0; i < RoleCtrls.Count; i++)
             {
@@ -267,8 +267,8 @@ namespace Kirara
 
         private void CreateTeamRoles()
         {
-            var teamRoleIds = PlayerService.player.TeamRoleIds;
-            var roles = PlayerService.player.Roles;
+            var teamRoleIds = PlayerService.Player.TeamRoleIds;
+            var roles = PlayerService.Player.Roles;
             Debug.Log("拥有角色数量：" + roles.Count);
             foreach (string roleId in teamRoleIds)
             {

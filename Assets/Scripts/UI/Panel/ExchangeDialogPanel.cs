@@ -95,7 +95,7 @@ namespace Kirara.UI.Panel
 
         private void SetCount(NExchangeItem item)
         {
-            var items = PlayerService.player.Currencies;
+            var items = PlayerService.Player.Currencies;
             var currency = items.First(x => x.Cid == item.FromConfigId);
             UINumSlider.Set(1, currency.Count / item.FromCount);
 

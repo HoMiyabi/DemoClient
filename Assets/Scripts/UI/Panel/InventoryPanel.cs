@@ -100,7 +100,7 @@ namespace Kirara.UI.Panel
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             pool = new Stack<Transform>();
 
-            CoinText.text = PlayerService.player.Currencies.First(it => it.Cid == 1).Count.ToString();
+            CoinText.text = PlayerService.Player.Currencies.First(it => it.Cid == 1).Count.ToString();
 
             SetItems();
             SetTab();
@@ -108,14 +108,14 @@ namespace Kirara.UI.Panel
 
         private void SetItems()
         {
-            weapons = PlayerService.player.Weapons;
+            weapons = PlayerService.Player.Weapons;
 
             weaponPool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
             WeaponLoopScroll.SetPoolFunc(weaponPool.GetObject, weaponPool.ReturnObject);
             WeaponLoopScroll.provideData = ProvideWeaponData;
             WeaponLoopScroll.totalCount = weapons.Count;
 
-            discs = PlayerService.player.Discs;
+            discs = PlayerService.Player.Discs;
 
             discPool = new LoopScrollGOPool(UIInventoryCellDiscPrefab, transform);
             DiscLoopScroll.SetPoolFunc(discPool.GetObject, discPool.ReturnObject);

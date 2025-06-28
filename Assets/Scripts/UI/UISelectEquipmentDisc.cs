@@ -81,7 +81,7 @@ namespace Kirara.UI
 
             _role.OnDiscChanged += OnRoleDiscChanged;
 
-            discs = PlayerService.player.Discs
+            discs = PlayerService.Player.Discs
                 .Where(it => it.Pos == pos)
                 .ToList();
             ReorderDisc();

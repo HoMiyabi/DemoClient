@@ -73,7 +73,7 @@ namespace Kirara.UI.Panel
 
             int matCid = 1;
 
-            mat = PlayerService.player.Materials.Find(it => it.Cid == matCid);
+            mat = PlayerService.Player.Materials.Find(it => it.Cid == matCid);
 
             UICloseBtn.onClick.AddListener(PopPanel);
             subStatBars = new[] {UISubStatBar1, UISubStatBar2, UISubStatBar3, UISubStatBar4};

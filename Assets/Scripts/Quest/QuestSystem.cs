@@ -33,7 +33,7 @@ namespace Manager
 
         private void Start()
         {
-            Init(PlayerService.player.questProgresses);
+            Init(PlayerService.Player.questProgresses);
         }
 
         public void Init(List<(int questChainCid, int currentQuestCid)> questProgresses)

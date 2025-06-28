@@ -103,7 +103,7 @@ namespace Kirara.UI
                 return;
             }
             WearerIconImg.gameObject.SetActive(true);
-            var chModel = PlayerService.player.Roles.First(it => it.Id == roleId);
+            var chModel = PlayerService.Player.Roles.First(it => it.Id == roleId);
             wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chModel.config.IconLoc);
             WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
         }

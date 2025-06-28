@@ -107,7 +107,7 @@ namespace Kirara.UI.Panel
         private void Start()
         {
             // 选择栏
-            friends = PlayerService.player.Friends;
+            friends = PlayerService.Player.Friends;
             ChatFriendLoopScroll.prefabSource = ChatFriendPrefabSource;
             ChatFriendLoopScroll.dataSource = new LoopScrollDataSourceHandler(ProvideFriendData);
             ChatFriendLoopScroll.totalCount = friends.Count;
