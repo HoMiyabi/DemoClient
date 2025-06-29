@@ -10,7 +10,7 @@ namespace Kirara.TimelineAction
 
         public override void NotifyBegin(ActionPlayer player)
         {
-            var ch = player.GetComponent<ChCtrl>();
+            var ch = player.GetComponent<RoleCtrl>();
             if (ch != null)
             {
                 vcamFollow = ch.vcamFollow;

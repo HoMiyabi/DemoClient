@@ -8,8 +8,7 @@ namespace Kirara.TimelineAction
         public bool enableRotation = false;
         public bool enableRecenter = false;
         public bool lookAtMonster = false;
-        public bool enableCharacterController = true;
-        public bool activeGameObject = true;
+        public ERoleShowState roleShowState = ERoleShowState.Front;
 
         public static ActionParams GetStateDefault(EActionState state)
         {

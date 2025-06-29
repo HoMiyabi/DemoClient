@@ -156,7 +156,7 @@ namespace Kirara.TimelineAction
                     }
 
                     actionCtrl.Refresh();
-                    actionCtrl.ExecuteActionFullName(Action.name);
+                    actionCtrl.PlayActionFullName(Action.name);
                 }
                 if (GUILayout.Button("Animator", GUILayout.ExpandWidth(false)))
                 {

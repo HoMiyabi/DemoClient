@@ -11,7 +11,7 @@ namespace Kirara.UI
 
         private Queue<string>[] ques = new Queue<string>[3];
 
-        public UICharacterState Set(List<ChCtrl> characters)
+        public UICharacterState Set(List<RoleCtrl> characters)
         {
             // for (int i = 0; i < PlayerSystem.Instance.ChCtrls.Count; i++)
             // {

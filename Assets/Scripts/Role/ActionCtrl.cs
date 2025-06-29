@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using cfg.main;
 using Kirara.TimelineAction;
 using Manager;
@@ -13,7 +12,7 @@ namespace Kirara
         public KiraraActionListSO actionList;
         public Dictionary<string, KiraraActionSO> ActionDict { get; private set; }
         public ActionPlayer ActionPlayer { get; private set; }
-        private ChCtrl ch;
+        private RoleCtrl roleCtrl;
 
         private KiraraActionSO _action;
         public EActionState State { get; set; }
@@ -28,14 +27,13 @@ namespace Kirara
         private void Awake()
         {
             ActionPlayer = GetComponent<ActionPlayer>();
-            ch = GetComponent<ChCtrl>();
+            roleCtrl = GetComponent<RoleCtrl>();
             Refresh();
         }
 
         public void Refresh()
         {
-            ActionDict = actionList.actions?
-                .ToDictionary(x => RemoveNamePrefix(x.name));
+            ActionDict = actionList.ActionDict;
         }
 
         public void UpdatePressed(Dictionary<EActionCommand, bool> pressedDict)
@@ -53,7 +51,7 @@ namespace Kirara
                     if (ActionPriority.Get(action.actionState) > ActionPriority.Get(State))
                     {
                         Debug.Log(($"优先级转移 {action.name} > {_action.name}"));
-                        ExecuteAction(actionName, 0.15f);
+                        PlayAction(actionName, 0.15f);
                     }
                 }
             }
@@ -65,25 +63,10 @@ namespace Kirara
                     IsPressed(pressedDict, cancelWin.cancelInfo.command) &&
                     cancelWin.Inside(ActionPlayer.Time))
                 {
-                    ExecuteAction(cancelWin.cancelInfo.actionName, cancelWin.cancelInfo.fadeDuration);
+                    PlayAction(cancelWin.cancelInfo.actionName, cancelWin.cancelInfo.fadeDuration);
                     return;
                 }
             }
-        }
-
-        // 前缀为Action_Name_
-        private string RemoveNamePrefix(string actionFullName)
-        {
-            if (!string.IsNullOrEmpty(actionList.namePrefix))
-            {
-                if (actionFullName.StartsWith(actionList.namePrefix))
-                {
-                    return actionFullName[actionList.namePrefix.Length..];
-                }
-                Debug.LogError($"无法移除前缀 全名：{actionFullName}，前缀：{actionList.namePrefix}");
-            }
-            Debug.Log($"{name} 前缀为空");
-            return actionFullName;
         }
 
         public void Input(EActionCommand command, EActionCommandPhase phase)
@@ -94,7 +77,7 @@ namespace Kirara
             foreach (var cancelWin in cancelWindowsAsset)
             {
                 if (cancelWin.Check(command, phase, ActionPlayer.Time) &&
-                    TryExecuteAction(cancelWin.cancelInfo.actionName, cancelWin.cancelInfo.fadeDuration))
+                    TryPlayAction(cancelWin.cancelInfo.actionName, cancelWin.cancelInfo.fadeDuration))
                 {
                     return;
                 }
@@ -110,7 +93,7 @@ namespace Kirara
                     if (ActionPriority.Get(action.actionState) > ActionPriority.Get(State))
                     {
                         // Debug.Log(($"优先级转移 [{action.name}] > [{_action.name}]"));
-                        ExecuteAction(actionName, 0.15f);
+                        PlayAction(actionName, 0.15f);
                     }
                 }
             }
@@ -149,19 +132,19 @@ namespace Kirara
             int actionId = action.actionId;
             if (actionId == 0) return true;
             var config = ConfigMgr.tb.TbChActionNumericConfig[actionId];
-            if (config.EnergyCost <= ch.Role.ae.GetAttr(EAttrType.CurrEnergy).Evaluate())
+            if (config.EnergyCost <= roleCtrl.Role.ae.GetAttr(EAttrType.CurrEnergy).Evaluate())
             {
                 return true;
             }
             return false;
         }
 
-        public void ExecuteActionFullName(string actionFullName, float fadeDuration = 0f, Action onFinish = null)
+        public void PlayActionFullName(string actionFullName, float fadeDuration = 0f, Action onFinish = null)
         {
-            ExecuteAction(RemoveNamePrefix(actionFullName), fadeDuration, onFinish);
+            PlayAction(actionList.RemoveNamePrefix(actionFullName), fadeDuration, onFinish);
         }
 
-        public bool TryExecuteAction(string actionName, float fadeDuration = 0f, Action onFinish = null)
+        public bool TryPlayAction(string actionName, float fadeDuration = 0f, Action onFinish = null)
         {
             if (!ActionDict.TryGetValue(actionName, out var action))
             {
@@ -169,23 +152,28 @@ namespace Kirara
                 return false;
             }
             if (!IsActionExecutableInternal(action)) return false;
-            ExecuteActionInternal(action, actionName, fadeDuration, onFinish);
+            PlayActionInternal(action, actionName, fadeDuration, onFinish);
             return true;
         }
 
-        private void ExecuteActionInternal(KiraraActionSO action, string actionName, float fadeDuration = 0f, Action onFinish = null)
+        private void PlayActionInternal(KiraraActionSO action, string actionName, float fadeDuration = 0f, Action onFinish = null)
         {
+            NetFn.Send(new MsgRolePlayAction
+            {
+                RoleId = roleCtrl.Role.Id,
+                ActionName = actionName
+            });
             _action = action;
 
             State = action.actionState;
-            ch.SetActionParams(action.actionParams);
+            roleCtrl.SetActionParams(action.actionParams);
 
             if (action.actionId != 0)
             {
                 var config = ConfigMgr.tb.TbChActionNumericConfig[action.actionId];
                 if (config != null)
                 {
-                    ch.Role.ae.GetAttr(EAttrType.CurrEnergy).BaseValue -= config.EnergyCost;
+                    roleCtrl.Role.ae.GetAttr(EAttrType.CurrEnergy).BaseValue -= config.EnergyCost;
                 }
             }
 
@@ -202,14 +190,14 @@ namespace Kirara
             ActionPlayer.Play(action, actionName, fadeDuration, onFinish);
         }
 
-        public void ExecuteAction(string actionName, float fadeDuration = 0f, Action onFinish = null)
+        public void PlayAction(string actionName, float fadeDuration = 0f, Action onFinish = null)
         {
             if (!ActionDict.TryGetValue(actionName, out var action))
             {
                 Debug.LogError($"{name} 没有动作 {actionName}");
                 return;
             }
-            ExecuteActionInternal(action, actionName, fadeDuration, onFinish);
+            PlayActionInternal(action, actionName, fadeDuration, onFinish);
         }
 
         private void AddEndCancel(ref Action onFinish)
@@ -223,7 +211,7 @@ namespace Kirara
                 // Debug.Log($"{name} 添加结束转移到{_action.finishNextActionName}");
                 onFinish += () =>
                 {
-                    ExecuteAction(finishCancel.actionName, finishCancel.fadeDuration);
+                    PlayAction(finishCancel.actionName, finishCancel.fadeDuration);
                 };
             }
             else

@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 using Animancer;
+using cfg.main;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Kirara.Model;
 using Kirara.TimelineAction;
+using Manager;
 
 namespace Kirara
 {
-    public class ChCtrl : MonoBehaviour
+    public class RoleCtrl : MonoBehaviour
     {
-        public int characterId;
-        public string characterName;
-
         public Transform vcamFollow;
         public Transform vcamLookAt;
 
@@ -25,12 +24,12 @@ namespace Kirara
         public ClipTransition clip;
 
         public Transform Cam { get; private set; }
-        public Animator Animator { get; private set; }
+        private Animator Animator { get; set; }
         public Role Role { get; private set; }
         // private CombatStateMachine combatStateMachine { get; set; }
         public CinemachineVirtualCamera VCam { get; set; }
-        public CharacterController CharacterController { get; private set; }
-        public ChGravity ChGravity { get; private set; }
+        private CharacterController CharacterController { get; set; }
+        private ChGravity ChGravity { get; set; }
         public ActionCtrl ActionCtrl { get; private set; }
 
         private bool EnableRotation { get; set; }
@@ -54,11 +53,12 @@ namespace Kirara
 
         private void Update()
         {
+            UpdateEnergyRegen();
             Role.ae.Update();
 
             if (EnableRotation)
             {
-                CharacterRotation();
+                ProcessRotation();
             }
             if (EnableRecenter)
             {
@@ -75,8 +75,7 @@ namespace Kirara
             EnableRotation = actionParams.enableRotation;
             EnableRecenter = actionParams.enableRecenter;
             lookAtMonster = actionParams.lookAtMonster;
-            CharacterController.enabled = actionParams.enableCharacterController;
-            gameObject.SetActive(actionParams.activeGameObject);
+            SetShowState(actionParams.roleShowState);
         }
 
         private void InitRef()
@@ -114,7 +113,7 @@ namespace Kirara
             }
         }
 
-        private void CharacterRotation()
+        private void ProcessRotation()
         {
             var inputDir = PlayerSystem.Instance.input.Combat.Move.ReadValue<Vector2>();
             if (inputDir == Vector2.zero)
@@ -158,27 +157,13 @@ namespace Kirara
 
         private void OnAnimatorMove()
         {
-            if (CharacterController.enabled)
-            {
-                CharacterController.Move(Animator.deltaPosition);
-            }
-            else
-            {
-                transform.position += Animator.deltaPosition;
-            }
+            AddPos(Animator.deltaPosition);
             transform.rotation *= Animator.deltaRotation;
         }
 
         public void PlaySFX(AudioClip clip)
         {
             AudioMgr.Instance.PlaySFX(clip, transform.position);
-        }
-
-        public void PlayAction(string actionName, float fadeDuration = 0f, Action onEnd = null)
-        {
-            Debug.Log($"不再发送PlayAction {actionName}");
-            // NetFn.SendPlayAction(actionName);
-            ActionCtrl.ExecuteAction(actionName, fadeDuration, onEnd);
         }
 
         public void LookAtMonster(float maxDist)
@@ -209,18 +194,38 @@ namespace Kirara
 
         public void InitFront()
         {
-            CharacterController.enabled = true;
-            ChGravity.enabled = true;
-            gameObject.SetActive(true);
-            ActionCtrl.ExecuteAction(ActionName.Idle);
+            ActionCtrl.PlayAction(ActionName.Idle);
         }
 
         public void InitBackground()
         {
-            CharacterController.enabled = false;
-            ChGravity.enabled = false;
-            gameObject.SetActive(false);
-            ActionCtrl.ExecuteAction(ActionName.Background);
+            ActionCtrl.PlayAction(ActionName.Background);
+        }
+
+        private void SetPos(Vector3 pos)
+        {
+            if (CharacterController.enabled)
+            {
+                CharacterController.enabled = false;
+                transform.position = pos;
+                CharacterController.enabled = true;
+            }
+            else
+            {
+                transform.position = pos;
+            }
+        }
+
+        private void AddPos(Vector3 delta)
+        {
+            if (CharacterController.enabled)
+            {
+                CharacterController.Move(delta);
+            }
+            else
+            {
+                transform.position += delta;
+            }
         }
 
         // 格挡切入
@@ -229,60 +234,85 @@ namespace Kirara
             Debug.Log($"{name} 角色进入格挡");
             ChGravity.enabled = true;
             gameObject.SetActive(true);
-            CharacterController.enabled = false;
 
             // 格挡
             // todo)) 格挡点数
             const float parryDist = 3f;
             transform.forward = -monster.transform.forward;
-            transform.position = monster.transform.position + monster.transform.forward * parryDist;
-            ActionCtrl.ExecuteAction(ActionName.Attack_ParryAid_Start);
-            monster.parryingCh = this;
+            SetPos(monster.transform.position + monster.transform.forward * parryDist);
+            ActionCtrl.PlayAction(ActionName.Attack_ParryAid_Start);
+            monster.ParryingRole = this;
 
-            CharacterController.enabled = true;
         }
 
         private Vector3 switchNextLocalPos = new(1, 0, -1);
         private Vector3 switchPrevLocalPos = new(-1, 0, -1);
 
-        // 普通切入
-        public void SwitchInNormal(ChCtrl prev, bool isNext)
+        private void SetShowState(ERoleShowState state)
         {
-            ChGravity.enabled = true;
-            gameObject.SetActive(true);
-            CharacterController.enabled = false;
+            switch (state)
+            {
+                case ERoleShowState.Front:
+                    ChGravity.enabled = true;
+                    CharacterController.enabled = true;
+                    gameObject.SetActive(true);
+                    break;
+                case ERoleShowState.Ghost:
+                    ChGravity.enabled = false;
+                    CharacterController.enabled = false;
+                    gameObject.SetActive(true);
+                    break;
+                case ERoleShowState.Background:
+                    ChGravity.enabled = false;
+                    CharacterController.enabled = false;
+                    gameObject.SetActive(false);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            }
+        }
 
+        // 普通切入
+        public void SwitchInNormal(RoleCtrl prev, bool isNext)
+        {
             transform.forward = prev.transform.forward;
-            CharacterController.enabled = false;
-            transform.position = prev.transform.TransformPoint(isNext ? switchNextLocalPos : switchPrevLocalPos);
-            CharacterController.enabled = true;
+            SetPos(prev.transform.TransformPoint(isNext ? switchNextLocalPos : switchPrevLocalPos));
 
-            ActionCtrl.ExecuteAction(ActionName.SwitchIn_Normal);
-
-            CharacterController.enabled = true;
+            ActionCtrl.PlayAction(ActionName.SwitchIn_Normal);
         }
 
         public void SwitchOutNormal()
         {
-            CharacterController.enabled = false;
-            ChGravity.enabled = false;
             transform.DOKill();
-            ActionCtrl.ExecuteAction(ActionName.SwitchOut_Normal);
+            ActionCtrl.PlayAction(ActionName.SwitchOut_Normal);
         }
 
         public void SwitchOutAided()
         {
-            ActionCtrl.ExecuteAction(ActionName.Background);
+            ActionCtrl.PlayAction(ActionName.Background);
         }
 
         public async UniTaskVoid EnterParryAid()
         {
-            ActionCtrl.ExecuteAction(ActionName.Attack_ParryAid_H);
+            ActionCtrl.PlayAction(ActionName.Attack_ParryAid_H);
 
             const float duration = 0.5f;
             ActionCtrl.ActionPlayer.Speed = 0f;
             await UniTask.WaitForSeconds(duration);
             ActionCtrl.ActionPlayer.Speed = 1f;
+        }
+
+        // 更新能量恢复
+        private void UpdateEnergyRegen()
+        {
+            const float mul = 8f;
+            float maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
+
+            var currEnergyAttr = Role.ae.GetAttr(EAttrType.CurrEnergy);
+            if (currEnergyAttr.Evaluate() >= maxEnergy) return;
+
+            float regen = Role.ae.GetAttr(EAttrType.EnergyRegen).Evaluate() * mul;
+            currEnergyAttr.BaseValue = Mathf.Min(currEnergyAttr.BaseValue + Time.deltaTime * regen, maxEnergy);
         }
     }
 }

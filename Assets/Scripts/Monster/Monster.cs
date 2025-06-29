@@ -25,7 +25,7 @@ namespace Kirara
         public int monsterCid;
         public int monsterId;
 
-        public ChCtrl parryingCh;
+        public RoleCtrl ParryingRole { get; set; }
 
         public BoxCollider boxCollider;
         public SphereCollider sphereCollider;

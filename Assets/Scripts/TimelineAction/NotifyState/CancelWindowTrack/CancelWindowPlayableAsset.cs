@@ -1,7 +1,4 @@
 ﻿using System.ComponentModel;
-using Kirara.TimelineAction;
-using UnityEngine;
-using UnityEngine.Playables;
 
 namespace Kirara.TimelineAction
 {
@@ -11,17 +8,11 @@ namespace Kirara.TimelineAction
         public float inputBufferDuration = 0.1f;
         public CancelInfo cancelInfo;
 
-        public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
-        {
-            return ScriptPlayable<CancelWindowPlayable>.Create(graph);
-        }
-
         public override void NotifyBegin(ActionPlayer player)
         {
             var actionCtrl = player.GetComponent<ActionCtrl>();
-            if (actionCtrl == null)
+            if (!actionCtrl)
             {
-                Debug.LogWarning("ActionCtrl is null");
                 return;
             }
             actionCtrl.cancelWindowsAsset.Add(this);
@@ -30,9 +21,8 @@ namespace Kirara.TimelineAction
         public override void NotifyEnd(ActionPlayer player)
         {
             var actionCtrl = player.GetComponent<ActionCtrl>();
-            if (actionCtrl == null)
+            if (!actionCtrl)
             {
-                Debug.LogWarning("ActionCtrl is null");
                 return;
             }
             actionCtrl.cancelWindowsAsset.Remove(this);

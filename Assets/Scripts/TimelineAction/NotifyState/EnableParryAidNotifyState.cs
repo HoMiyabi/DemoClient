@@ -8,7 +8,7 @@ namespace Kirara.TimelineAction
     {
         public override void NotifyBegin(ActionPlayer player)
         {
-            var ch = player.GetComponent<ChCtrl>();
+            var ch = player.GetComponent<RoleCtrl>();
             if (ch == null)
             {
                 Debug.Log("ch == null");
@@ -19,7 +19,7 @@ namespace Kirara.TimelineAction
 
         public override void NotifyEnd(ActionPlayer player)
         {
-            var ch = player.GetComponent<ChCtrl>();
+            var ch = player.GetComponent<RoleCtrl>();
             if (ch == null)
             {
                 Debug.Log("ch == null");

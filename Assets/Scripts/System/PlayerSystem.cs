@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using cfg.main;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
@@ -26,8 +25,8 @@ namespace Kirara
 
         private Player player;
 
-        public List<ChCtrl> RoleCtrls;
-        public ChCtrl FrontRoleCtrl => RoleCtrls[FrontRoleIdx];
+        public List<RoleCtrl> RoleCtrls;
+        public RoleCtrl FrontRoleCtrl => RoleCtrls[FrontRoleIdx];
 
         private int _frontRoleIdx = -1;
         public int FrontRoleIdx
@@ -67,7 +66,7 @@ namespace Kirara
 
             player = PlayerService.Player;
 
-            RoleCtrls = new List<ChCtrl>();
+            RoleCtrls = new List<RoleCtrl>();
             input = new GameInput();
             cts = new CancellationTokenSource();
         }
@@ -228,10 +227,6 @@ namespace Kirara
             if (!switchEnabled) return;
 
             int idx = GetNext(FrontRoleIdx);
-            NetFn.Send(new MsgSwitchRole
-            {
-                FrontRoleId = FrontRoleCtrl.Role.Id
-            });
             SwitchRole(idx, true);
         }
 
@@ -240,10 +235,6 @@ namespace Kirara
             if (!switchEnabled) return;
 
             int idx = GetPrev(FrontRoleIdx);
-            NetFn.Send(new MsgSwitchRole
-            {
-                FrontRoleId = FrontRoleCtrl.Role.Id
-            });
             SwitchRole(idx, false);
         }
 
@@ -251,6 +242,11 @@ namespace Kirara
         {
             var prev = FrontRoleCtrl;
             FrontRoleIdx = idx;
+
+            NetFn.Send(new MsgSwitchRole
+            {
+                FrontRoleId = FrontRoleCtrl.Role.Id
+            });
 
             var monster = MonsterSystem.Instance.ClosestAttackingMonster(prev.transform.position, out float dist);
             if (monster != null)
@@ -275,7 +271,7 @@ namespace Kirara
                 var role = roles.Find(it => it.Id == roleId);
                 Debug.Log($"加载角色 {role.config.Name}");
                 var go = AssetMgr.Instance.InstantiateGO(role.config.PrefabLoc, characterParent);
-                var roleCtrl = go.GetComponent<ChCtrl>();
+                var roleCtrl = go.GetComponent<RoleCtrl>();
                 roleCtrl.Set(role);
 
                 RoleCtrls.Add(roleCtrl);
@@ -285,25 +281,7 @@ namespace Kirara
         private void Update()
         {
             Player.transform.position = FrontRoleCtrl.transform.position;
-
-            UpdateRolesEnergyRegen();
             FrontRoleCtrl.ActionCtrl.UpdatePressed(pressedDict);
-        }
-
-        // 更新角色的能量回复
-        private void UpdateRolesEnergyRegen()
-        {
-            const float mul = 8f;
-            float maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
-            foreach (var ch in RoleCtrls)
-            {
-                var model = ch.Role;
-                var currEnergyAttr = model.ae.GetAttr(EAttrType.CurrEnergy);
-                if (currEnergyAttr.Evaluate() >= maxEnergy) continue;
-
-                float regen = model.ae.GetAttr(EAttrType.EnergyRegen).Evaluate() * mul;
-                currEnergyAttr.BaseValue = Mathf.Min(currEnergyAttr.BaseValue + Time.deltaTime * regen, maxEnergy);
-            }
         }
     }
 }

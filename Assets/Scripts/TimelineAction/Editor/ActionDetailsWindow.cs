@@ -24,7 +24,7 @@ namespace Kirara.TimelineAction
 
         private void ClearEditor()
         {
-            if (editor != null)
+            if (editor)
             {
                 DestroyImmediate(editor);
                 editor = null;
@@ -38,7 +38,7 @@ namespace Kirara.TimelineAction
             {
                 action = ActionListWindow.Instance.Action;
                 ClearEditor();
-                if (action != null)
+                if (action)
                 {
                     editor = UnityEditor.Editor.CreateEditor(action);
                 }
@@ -55,7 +55,7 @@ namespace Kirara.TimelineAction
         {
             using var s = new GUILayout.ScrollViewScope(scrollPos);
             scrollPos = s.scrollPosition;
-            if (editor == null)
+            if (!editor)
             {
                 EditorGUILayout.HelpBox("未选择动作", MessageType.Info);
                 return;

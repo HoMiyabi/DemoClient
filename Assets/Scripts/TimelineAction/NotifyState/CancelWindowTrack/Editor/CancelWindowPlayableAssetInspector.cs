@@ -1,6 +1,4 @@
-﻿using System;
-using Kirara.TimelineAction;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Kirara.TimelineAction

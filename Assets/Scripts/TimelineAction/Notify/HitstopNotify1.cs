@@ -12,15 +12,9 @@ namespace Kirara.TimelineAction
 
         public override void Notify(ActionPlayer player)
         {
-            var ch = player.GetComponent<ChCtrl>();
-            if (ch != null)
-            {
-                ch.TryTriggerHitstop(duration, animationSpeed);
-            }
-            else
-            {
-                Debug.Log("ch == null");
-            }
+            var ch = player.GetComponent<RoleCtrl>();
+            if (!ch) return;
+            ch.TryTriggerHitstop(duration, animationSpeed);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Kirara
             daze = CalcDaze(ch, dazeMult);
         }
 
-        private static void PlayVisual(ChCtrl ch, Monster target, float dmg, bool isCrit, BoxPlayableAsset box)
+        private static void PlayVisual(RoleCtrl role, Monster target, float dmg, bool isCrit, BoxPlayableAsset box)
         {
             // 命中特效
             // Debug.Log($"prefab={box.particlePrefab}, setRot={box.setRot}, rotValue={box.rotValue}");
@@ -47,7 +47,7 @@ namespace Kirara
                 var vfxWPos = target.transform.position + new Vector3(0, 1f, 0);
                 if (box.setRot)
                 {
-                    ParticleMgr.Instance.Play(box.particlePrefab, vfxWPos, ch.transform.forward,
+                    ParticleMgr.Instance.Play(box.particlePrefab, vfxWPos, role.transform.forward,
                         box.rotValue, box.rotMaxValue);
                 }
                 else
@@ -63,7 +63,7 @@ namespace Kirara
                 SetDamage(target.transform, popupTextLocalPos, dmg, isCrit).Play();
         }
 
-        public static void HandleChSingleTarget(ChCtrl ch, Monster target, BoxPlayableAsset box)
+        public static void HandleChSingleTarget(RoleCtrl role, Monster target, BoxPlayableAsset box)
         {
             if (box.hitId == 0)
             {
@@ -73,17 +73,17 @@ namespace Kirara
 
             var config = ConfigMgr.tb.TbChHitNumericConfig[box.hitId];
 
-            CalcNumeric(ch.Role, config.DmgMult, config.DazeMult,
+            CalcNumeric(role.Role, config.DmgMult, config.DazeMult,
                 out float dmg, out float daze, out bool isCrit);
 
-            target.TakeEffect(dmg, daze, (ch.transform.position - target.transform.position).normalized);
+            target.TakeEffect(dmg, daze, (role.transform.position - target.transform.position).normalized);
 
-            PlayVisual(ch, target, dmg, isCrit, box);
+            PlayVisual(role, target, dmg, isCrit, box);
 
             // 聚怪效果
             if (box.hitGatherDist != 0f)
             {
-                var worldCenter = ch.transform.TransformPoint(box.center);
+                var worldCenter = role.transform.TransformPoint(box.center);
 
                 // 移动向量的水平投影，最长不能超过v
                 var v = (worldCenter - target.transform.position);
@@ -95,19 +95,19 @@ namespace Kirara
             }
         }
 
-        public static void ChHit(ChCtrl ch, BoxPlayableAsset box)
+        public static void ChHit(RoleCtrl role, BoxPlayableAsset box)
         {
-            int count = box.PhysicsOverlap(ch.transform, LayerMask.GetMask("Monster"));
+            int count = box.PhysicsOverlap(role.transform, LayerMask.GetMask("Monster"));
 
-            ch.lastHitMonsters.Clear();
+            role.lastHitMonsters.Clear();
             for (int i = 0; i < count; i++)
             {
                 var col = box.cols[i];
                 var mon = col.GetComponent<Monster>();
                 if (mon != null)
                 {
-                    HandleChSingleTarget(ch, mon, box);
-                    ch.lastHitMonsters.Add(mon);
+                    HandleChSingleTarget(role, mon, box);
+                    role.lastHitMonsters.Add(mon);
                 }
                 else
                 {

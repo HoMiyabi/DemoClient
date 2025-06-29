@@ -19,7 +19,7 @@ namespace Kirara.TimelineAction
             }
             actionCtrl.State = actionState;
 
-            var chCtrl = player.GetComponent<ChCtrl>();
+            var chCtrl = player.GetComponent<RoleCtrl>();
             if (chCtrl == null)
             {
                 Debug.LogWarning("ChCtrl is null");

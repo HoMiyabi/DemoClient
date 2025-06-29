@@ -47,7 +47,7 @@ namespace Kirara.TimelineAction
 
         public readonly Collider[] cols = new Collider[16];
         private Monster monster;
-        private ChCtrl ch;
+        private RoleCtrl role;
 
         public override void NotifyBegin(ActionPlayer player)
         {
@@ -58,8 +58,8 @@ namespace Kirara.TimelineAction
                 return;
             }
 
-            ch = player.GetComponent<ChCtrl>();
-            if (ch != null)
+            role = player.GetComponent<RoleCtrl>();
+            if (role != null)
             {
                 if (boxType == EBoxType.HitBox)
                 {
@@ -102,14 +102,14 @@ namespace Kirara.TimelineAction
 
         private void MonsterHitBoxBegin()
         {
-            if (monster.parryingCh != null)
+            if (monster.ParryingRole != null)
             {
                 // 有角色在格挡自己
                 Debug.Log("触发格挡");
-                monster.parryingCh.EnterParryAid().Forget();
+                monster.ParryingRole.EnterParryAid().Forget();
                 monster.EnterParried().Forget();
 
-                monster.parryingCh = null;
+                monster.ParryingRole = null;
             }
             else
             {
@@ -117,12 +117,12 @@ namespace Kirara.TimelineAction
                 for (int i = 0; i < count; i++)
                 {
                     var col = cols[i];
-                    if (col.TryGetComponent<ChCtrl>(out var chCtrl))
+                    if (col.TryGetComponent<RoleCtrl>(out var roleCtrl))
                     {
-                        var invAttr = chCtrl.Role.ae.GetAttr(EAttrType.Invincible);
+                        var invAttr = roleCtrl.Role.ae.GetAttr(EAttrType.Invincible);
                         if (invAttr.BaseValue == 0f)
                         {
-                            Debug.Log($"Monster命中{chCtrl.characterName}");
+                            Debug.Log($"Monster命中{roleCtrl.Role.config.Name}");
                         }
                     }
                 }
@@ -186,7 +186,7 @@ namespace Kirara.TimelineAction
 
         private void ChHitBoxBegin()
         {
-            CombatProcessSceneManager.ChHit(ch, this);
+            CombatProcessSceneManager.ChHit(role, this);
         }
     }
 }

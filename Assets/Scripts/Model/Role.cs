@@ -52,7 +52,7 @@ namespace Kirara.Model
             }
         };
 
-        public ChCtrl RoleCtrl { get; set; }
+        public RoleCtrl RoleCtrl { get; set; }
 
         public Role(NRole role, Player player)
         {
