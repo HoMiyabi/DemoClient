@@ -47,10 +47,12 @@ namespace Kirara.Model
             Id = Id,
             PosRot = new NPosRot
             {
-                Pos = null,
-                Rot = null
+                Pos = new NFloat3().Set(RoleCtrl.transform.position),
+                Rot = new NFloat3().Set(RoleCtrl.transform.rotation.eulerAngles)
             }
         };
+
+        public ChCtrl RoleCtrl { get; set; }
 
         public Role(NRole role, Player player)
         {

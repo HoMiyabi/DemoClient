@@ -1,5 +1,6 @@
 ﻿using System;
 using Kirara.Model;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 namespace Kirara
@@ -8,11 +9,9 @@ namespace Kirara
     {
         private Animator animator;
 
-        private Vector3 targetPos;
-        private Quaternion targetRot;
-
         public SimRole SimRole { get; private set; }
         private ActionCtrl actionCtrl;
+        private float followSpeed = 25f;
 
         // private bool aiCtrl = false;
 
@@ -31,8 +30,8 @@ namespace Kirara
         {
             // if (aiCtrl) return;
 
-            transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 25f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * 25f);
+            transform.position = Vector3.Lerp(transform.position, SimRole.Pos, Time.deltaTime * followSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, SimRole.Rot, Time.deltaTime * followSpeed);
         }
 
         public void UpdateImmediate()

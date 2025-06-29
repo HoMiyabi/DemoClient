@@ -46,10 +46,10 @@ namespace Kirara
             InitRef();
         }
 
-        public ChCtrl Set(Role role)
+        public void Set(Role role)
         {
             Role = role;
-            return this;
+            Role.RoleCtrl = this;
         }
 
         private void Update()
