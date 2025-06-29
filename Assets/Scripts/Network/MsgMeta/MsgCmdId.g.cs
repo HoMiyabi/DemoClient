@@ -11,7 +11,7 @@ public static class MsgCmdId
     public const uint NWeaponItem = 568993744;
     public const uint NDiscItem = 1657633930;
     public const uint NFloat3 = 1622357853;
-    public const uint NPosRot = 804836044;
+    public const uint NMovement = 3995046013;
     public const uint NWeaponAttr = 1039573298;
     public const uint NDiscAttr = 1921576065;
     public const uint MsgGachaWeapon = 295505741;
@@ -70,8 +70,9 @@ public static class MsgCmdId
     public const uint RspRoleEquipWeapon = 535603439;
     public const uint NotifySpawnMonster = 1335435402;
     public const uint MsgMonsterTakeDamage = 3304804109;
-    public const uint NotifySyncMonsterTakeDamage = 3341671965;
+    public const uint NotifyMonsterTakeDamage = 1734271160;
     public const uint NotifyMonsterDie = 1248714921;
+    public const uint NotifyMonsterRepMovement = 2254557434;
     public const uint ReqStartQuest = 233243126;
     public const uint RspStartQuest = 33942814;
     public const uint ReqUpgradeDisc = 2081491270;

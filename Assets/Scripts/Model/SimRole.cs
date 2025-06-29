@@ -13,14 +13,14 @@ namespace Kirara.Model
         {
             Id = simRole.Id;
             Cid = simRole.Cid;
-            Pos = simRole.PosRot.Pos();
-            Rot = simRole.PosRot.Rot();
+            Pos = simRole.Movement.Pos();
+            Rot = simRole.Movement.Rot();
         }
 
         public void Update(NSyncRole syncRole)
         {
-            Pos = syncRole.PosRot.Pos();
-            Rot = syncRole.PosRot.Rot();
+            Pos = syncRole.Movement.Pos();
+            Rot = syncRole.Movement.Rot();
         }
     }
 }

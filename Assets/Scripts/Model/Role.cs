@@ -45,7 +45,7 @@ namespace Kirara.Model
         public NSyncRole SyncRole => new NSyncRole
         {
             Id = Id,
-            PosRot = new NPosRot
+            Movement = new NMovement
             {
                 Pos = new NFloat3().Set(RoleCtrl.transform.position),
                 Rot = new NFloat3().Set(RoleCtrl.transform.rotation.eulerAngles)

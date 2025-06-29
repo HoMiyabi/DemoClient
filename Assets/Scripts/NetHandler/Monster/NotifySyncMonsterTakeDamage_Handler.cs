@@ -2,16 +2,16 @@
 
 namespace Kirara.NetHandler.Monster
 {
-    public class NotifySyncMonsterTakeDamage_Handler : MsgHandler<NotifySyncMonsterTakeDamage>
+    public class NotifySyncMonsterTakeDamage_Handler : MsgHandler<NotifyMonsterTakeDamage>
     {
-        protected override void Run(Session session, NotifySyncMonsterTakeDamage message)
+        protected override void Run(Session session, NotifyMonsterTakeDamage msg)
         {
             var instance = MonsterSystem.Instance;
             if (instance != null)
             {
-                if (instance.monsters.TryGetValue(message.MonsterId, out var monster))
+                if (instance.monsters.TryGetValue(msg.MonsterId, out var monster))
                 {
-                    monster.TakeEffect(message.Damage, 0f);
+                    monster.TakeEffect(msg.Damage, 0f);
                 }
             }
         }

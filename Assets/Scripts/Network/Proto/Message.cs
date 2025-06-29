@@ -46,91 +46,93 @@ public static partial class MessageReflection {
           "BlJvbGVJZBgFIAEoCRIOCgZMb2NrZWQYBiABKAgSCwoDUG9zGAcgASgFEhwK",
           "CE1haW5BdHRyGAggASgLMgouTkRpc2NBdHRyEhwKCFN1YkF0dHJzGAkgAygL",
           "MgouTkRpc2NBdHRyIioKB05GbG9hdDMSCQoBWBgBIAEoAhIJCgFZGAIgASgC",
-          "EgkKAVoYAyABKAIiNwoHTlBvc1JvdBIVCgNQb3MYASABKAsyCC5ORmxvYXQz",
-          "EhUKA1JvdBgCIAEoCzIILk5GbG9hdDMiMAoLTldlYXBvbkF0dHISEgoKQXR0",
-          "clR5cGVJZBgBIAEoBRINCgVWYWx1ZRgCIAEoAiJZCglORGlzY0F0dHISEwoL",
-          "QXR0ckVudHJ5SWQYASABKAUSEgoKQXR0clR5cGVJZBgCIAEoBRINCgVWYWx1",
-          "ZRgDIAEoAhIUCgxVcGdyYWRlVGltZXMYBCABKAUiEAoOTXNnR2FjaGFXZWFw",
-          "b24iDgoMTXNnR2FjaGFEaXNjIjEKC1JlcVJlZ2lzdGVyEhAKCFVzZXJuYW1l",
-          "GAEgASgJEhAKCFBhc3N3b3JkGAIgASgJIiYKC1JzcFJlZ2lzdGVyEhcKBlJl",
-          "c3VsdBgBIAEoCzIHLlJlc3VsdCIuCghSZXFMb2dpbhIQCghVc2VybmFtZRgB",
-          "IAEoCRIQCghQYXNzd29yZBgCIAEoCSIjCghSc3BMb2dpbhIXCgZSZXN1bHQY",
-          "ASABKAsyBy5SZXN1bHQiEgoQUmVxR2V0UGxheWVyRGF0YSJJChBSc3BHZXRQ",
-          "bGF5ZXJEYXRhEhcKBlJlc3VsdBgBIAEoCzIHLlJlc3VsdBIcCgpQbGF5ZXJE",
-          "YXRhGAIgASgLMgguTlBsYXllciIxCglOU3luY1JvbGUSCgoCSWQYASABKAkS",
-          "GAoGUG9zUm90GAIgASgLMgguTlBvc1JvdCI1CgtOU3luY1BsYXllchILCgNV",
-          "aWQYASABKAkSGQoFUm9sZXMYAiADKAsyCi5OU3luY1JvbGUiPQoITlNpbVJv",
-          "bGUSCgoCSWQYASABKAkSGAoGUG9zUm90GAIgASgLMgguTlBvc1JvdBILCgND",
-          "aWQYAyABKAUiMwoKTlNpbVBsYXllchILCgNVaWQYASABKAkSGAoFUm9sZXMY",
-          "AiADKAsyCS5OU2ltUm9sZSIOCgxNc2dFbnRlclJvb20iNwoXTXNnVXBkYXRl",
-          "RnJvbUF1dG9ub21vdXMSHAoGUGxheWVyGAEgASgLMgwuTlN5bmNQbGF5ZXIi",
-          "OQoZTm90aWZ5VXBkYXRlRnJvbUF1dGhvcml0eRIcCgZQbGF5ZXIYASABKAsy",
-          "DC5OU3luY1BsYXllciI5ChlOb3RpZnlBZGRTaW11bGF0ZWRQbGF5ZXJzEhwK",
-          "B1BsYXllcnMYASADKAsyCy5OU2ltUGxheWVyIiwKHE5vdGlmeVJlbW92ZVNp",
-          "bXVsYXRlZFBsYXllcnMSDAoEVWlkcxgBIAMoCSI3ChFNc2dSb2xlUGxheUFj",
-          "dGlvbhIOCgZSb2xlSWQYASABKAkSEgoKQWN0aW9uTmFtZRgCIAEoCSJMChlO",
-          "b3RpZnlPdGhlclJvbGVQbGF5QWN0aW9uEgsKA1VpZBgBIAEoCRIOCgZSb2xl",
-          "SWQYAiABKAkSEgoKQWN0aW9uTmFtZRgDIAEoCSIkCg1Nc2dTd2l0Y2hSb2xl",
-          "EhMKC0Zyb250Um9sZUlkGAEgASgJIhUKE1JlcUdldEV4Y2hhbmdlSXRlbXMi",
-          "TQoTUnNwR2V0RXhjaGFuZ2VJdGVtcxIXCgZSZXN1bHQYASABKAsyBy5SZXN1",
-          "bHQSHQoFSXRlbXMYAiADKAsyDi5ORXhjaGFuZ2VJdGVtInEKDU5FeGNoYW5n",
-          "ZUl0ZW0SEgoKRXhjaGFuZ2VJZBgBIAEoBRIUCgxGcm9tQ29uZmlnSWQYAiAB",
-          "KAUSEQoJRnJvbUNvdW50GAMgASgFEhIKClRvQ29uZmlnSWQYBCABKAUSDwoH",
-          "VG9Db3VudBgFIAEoBSI4CgtSZXFFeGNoYW5nZRISCgpFeGNoYW5nZUlkGAEg",
-          "ASgFEhUKDUV4Y2hhbmdlQ291bnQYAiABKAUiJgoLUnNwRXhjaGFuZ2USFwoG",
-          "UmVzdWx0GAEgASgLMgcuUmVzdWx0IiMKD1JlcVNlYXJjaFBsYXllchIQCghV",
-          "c2VybmFtZRgBIAEoCSJRCg9Sc3BTZWFyY2hQbGF5ZXISFwoGUmVzdWx0GAEg",
-          "ASgLMgcuUmVzdWx0EiUKDVNvY2lhbFBsYXllcnMYAiABKAsyDi5OU29jaWFs",
-          "UGxheWVyIiUKEFJlcVNlbmRBZGRGcmllbmQSEQoJVGFyZ2V0VWlkGAEgASgJ",
-          "IisKEFJzcFNlbmRBZGRGcmllbmQSFwoGUmVzdWx0GAEgASgLMgcuUmVzdWx0",
-          "IicKElJlcUFjY2VwdEFkZEZyaWVuZBIRCglTZW5kZXJVaWQYASABKAkiLQoS",
-          "UnNwQWNjZXB0QWRkRnJpZW5kEhcKBlJlc3VsdBgBIAEoCzIHLlJlc3VsdCIn",
-          "ChJSZXFSZWZ1c2VBZGRGcmllbmQSEQoJU2VuZGVyVWlkGAEgASgJIi0KElJz",
-          "cFJlZnVzZUFkZEZyaWVuZBIXCgZSZXN1bHQYASABKAsyBy5SZXN1bHQiJAoP",
-          "UmVxRGVsZXRlRnJpZW5kEhEKCUZyaWVuZFVpZBgBIAEoCSIqCg9Sc3BEZWxl",
-          "dGVGcmllbmQSFwoGUmVzdWx0GAEgASgLMgcuUmVzdWx0IicKElJlcU1vZGlm",
-          "eVNpZ25hdHVyZRIRCglTaWduYXR1cmUYASABKAkiLQoSUnNwTW9kaWZ5U2ln",
-          "bmF0dXJlEhcKBlJlc3VsdBgBIAEoCzIHLlJlc3VsdCI9ChFSZXFNb2RpZnlQ",
-          "YXNzd29yZBITCgtPbGRQYXNzd29yZBgBIAEoCRITCgtOZXdQYXNzd29yZBgC",
-          "IAEoCSIsChFSc3BNb2RpZnlQYXNzd29yZBIXCgZSZXN1bHQYASABKAsyBy5S",
-          "ZXN1bHQiJAoPUmVxTW9kaWZ5QXZhdGFyEhEKCUF2YXRhckNpZBgBIAEoBSIq",
-          "Cg9Sc3BNb2RpZnlBdmF0YXISFwoGUmVzdWx0GAEgASgLMgcuUmVzdWx0InkK",
-          "CE5DaGF0TXNnEhEKCVNlbmRlclVpZBgBIAEoCRITCgtSZWNlaXZlclVpZBgC",
-          "IAEoCRISCgpVbml4VGltZU1zGAMgASgDEg8KB01zZ1R5cGUYBCABKAUSDAoE",
-          "VGV4dBgFIAEoCRISCgpTdGlja2VyQ2lkGAYgASgFIiwKDlJlcVNlbmRDaGF0",
-          "TXNnEhoKB0NoYXRNc2cYASABKAsyCS5OQ2hhdE1zZyI9Cg5Sc3BTZW5kQ2hh",
-          "dE1zZxIXCgZSZXN1bHQYASABKAsyBy5SZXN1bHQSEgoKVW5peFRpbWVNcxgC",
-          "IAEoAyIyChROb3RpZnlSZWNlaXZlQ2hhdE1zZxIaCgdDaGF0TXNnGAEgASgL",
-          "MgkuTkNoYXRNc2cijQEKBU5Sb2xlEgoKAklkGAEgASgJEgsKA0NpZBgCIAEo",
-          "BRINCgVMZXZlbBgDIAEoBRILCgNFeHAYBCABKAUSEAoIV2VhcG9uSWQYBSAB",
-          "KAkSDwoHRGlzY0lkcxgGIAMoCRIVCgNQb3MYByABKAsyCC5ORmxvYXQzEhUK",
-          "A1JvdBgIIAEoCzIILk5GbG9hdDMiNAoRUmVxUm9sZVJlbW92ZURpc2MSDgoG",
-          "Um9sZUlkGAEgASgJEg8KB0Rpc2NQb3MYAiABKAUiLAoRUnNwUm9sZVJlbW92",
-          "ZURpc2MSFwoGUmVzdWx0GAEgASgLMgcuUmVzdWx0IkYKEFJlcVJvbGVFcXVp",
-          "cERpc2MSDgoGUm9sZUlkGAEgASgJEg8KB0Rpc2NQb3MYAiABKAUSEQoJTmV3",
-          "RGlzY0lkGAMgASgJIisKEFJzcFJvbGVFcXVpcERpc2MSFwoGUmVzdWx0GAEg",
-          "ASgLMgcuUmVzdWx0IiUKE1JlcVJvbGVSZW1vdmVXZWFwb24SDgoGUm9sZUlk",
-          "GAEgASgJIi4KE1JzcFJvbGVSZW1vdmVXZWFwb24SFwoGUmVzdWx0GAEgASgL",
-          "MgcuUmVzdWx0IjkKElJlcVJvbGVFcXVpcFdlYXBvbhIOCgZSb2xlSWQYASAB",
-          "KAkSEwoLTmV3V2VhcG9uSWQYAiABKAkiLQoSUnNwUm9sZUVxdWlwV2VhcG9u",
-          "EhcKBlJlc3VsdBgBIAEoCzIHLlJlc3VsdCJVChJOb3RpZnlTcGF3bk1vbnN0",
-          "ZXISEgoKTW9uc3RlckNpZBgBIAEoBRIRCglNb25zdGVySWQYAiABKAUSGAoG",
-          "UG9zUm90GAMgASgLMgguTlBvc1JvdCI5ChRNc2dNb25zdGVyVGFrZURhbWFn",
-          "ZRIRCglNb25zdGVySWQYASABKAUSDgoGRGFtYWdlGAIgASgCIkAKG05vdGlm",
-          "eVN5bmNNb25zdGVyVGFrZURhbWFnZRIRCglNb25zdGVySWQYASABKAUSDgoG",
-          "RGFtYWdlGAIgASgCIiUKEE5vdGlmeU1vbnN0ZXJEaWUSEQoJTW9uc3Rlcklk",
-          "GAEgASgFIjgKDVJlcVN0YXJ0UXVlc3QSFQoNUXVlc3RDaGFpbkNpZBgBIAEo",
-          "BRIQCghRdWVzdENpZBgCIAEoBSIoCg1Sc3BTdGFydFF1ZXN0EhcKBlJlc3Vs",
-          "dBgBIAEoCzIHLlJlc3VsdCJECg5SZXFVcGdyYWRlRGlzYxIOCgZEaXNjSWQY",
-          "ASABKAkSEwoLTWF0ZXJpYWxDaWQYAiABKAUSDQoFQ291bnQYAyABKAUiRwoO",
-          "UnNwVXBncmFkZURpc2MSFwoGUmVzdWx0GAEgASgLMgcuUmVzdWx0EhwKCFN1",
-          "YkF0dHJzGAIgAygLMgouTkRpc2NBdHRyIjcKEU1zZ0dhdGhlck1hdGVyaWFs",
-          "EhMKC01hdGVyaWFsQ2lkGAEgASgFEg0KBUNvdW50GAIgASgFIi4KFU1zZ0Nv",
-          "bXBsZXRlUXVlc3RDaGFpbhIVCg1RdWVzdENoYWluQ2lkGAEgASgFIpkBChFO",
-          "b3RpZnlPYnRhaW5JdGVtcxIgCghDdXJJdGVtcxgBIAMoCzIOLk5DdXJyZW5j",
-          "eUl0ZW0SIAoITWF0SXRlbXMYAiADKAsyDi5OTWF0ZXJpYWxJdGVtEh0KCURp",
-          "c2NJdGVtcxgDIAMoCzIKLk5EaXNjSXRlbRIhCgtXZWFwb25JdGVtcxgEIAMo",
-          "CzIMLk5XZWFwb25JdGVtYgZwcm90bzM="));
+          "EgkKAVoYAyABKAIiOQoJTk1vdmVtZW50EhUKA1BvcxgBIAEoCzIILk5GbG9h",
+          "dDMSFQoDUm90GAIgASgLMgguTkZsb2F0MyIwCgtOV2VhcG9uQXR0chISCgpB",
+          "dHRyVHlwZUlkGAEgASgFEg0KBVZhbHVlGAIgASgCIlkKCU5EaXNjQXR0chIT",
+          "CgtBdHRyRW50cnlJZBgBIAEoBRISCgpBdHRyVHlwZUlkGAIgASgFEg0KBVZh",
+          "bHVlGAMgASgCEhQKDFVwZ3JhZGVUaW1lcxgEIAEoBSIQCg5Nc2dHYWNoYVdl",
+          "YXBvbiIOCgxNc2dHYWNoYURpc2MiMQoLUmVxUmVnaXN0ZXISEAoIVXNlcm5h",
+          "bWUYASABKAkSEAoIUGFzc3dvcmQYAiABKAkiJgoLUnNwUmVnaXN0ZXISFwoG",
+          "UmVzdWx0GAEgASgLMgcuUmVzdWx0Ii4KCFJlcUxvZ2luEhAKCFVzZXJuYW1l",
+          "GAEgASgJEhAKCFBhc3N3b3JkGAIgASgJIiMKCFJzcExvZ2luEhcKBlJlc3Vs",
+          "dBgBIAEoCzIHLlJlc3VsdCISChBSZXFHZXRQbGF5ZXJEYXRhIkkKEFJzcEdl",
+          "dFBsYXllckRhdGESFwoGUmVzdWx0GAEgASgLMgcuUmVzdWx0EhwKClBsYXll",
+          "ckRhdGEYAiABKAsyCC5OUGxheWVyIjUKCU5TeW5jUm9sZRIKCgJJZBgBIAEo",
+          "CRIcCghNb3ZlbWVudBgCIAEoCzIKLk5Nb3ZlbWVudCI1CgtOU3luY1BsYXll",
+          "chILCgNVaWQYASABKAkSGQoFUm9sZXMYAiADKAsyCi5OU3luY1JvbGUiQQoI",
+          "TlNpbVJvbGUSCgoCSWQYASABKAkSHAoITW92ZW1lbnQYAiABKAsyCi5OTW92",
+          "ZW1lbnQSCwoDQ2lkGAMgASgFIjMKCk5TaW1QbGF5ZXISCwoDVWlkGAEgASgJ",
+          "EhgKBVJvbGVzGAIgAygLMgkuTlNpbVJvbGUiDgoMTXNnRW50ZXJSb29tIjcK",
+          "F01zZ1VwZGF0ZUZyb21BdXRvbm9tb3VzEhwKBlBsYXllchgBIAEoCzIMLk5T",
+          "eW5jUGxheWVyIjkKGU5vdGlmeVVwZGF0ZUZyb21BdXRob3JpdHkSHAoGUGxh",
+          "eWVyGAEgASgLMgwuTlN5bmNQbGF5ZXIiOQoZTm90aWZ5QWRkU2ltdWxhdGVk",
+          "UGxheWVycxIcCgdQbGF5ZXJzGAEgAygLMgsuTlNpbVBsYXllciIsChxOb3Rp",
+          "ZnlSZW1vdmVTaW11bGF0ZWRQbGF5ZXJzEgwKBFVpZHMYASADKAkiNwoRTXNn",
+          "Um9sZVBsYXlBY3Rpb24SDgoGUm9sZUlkGAEgASgJEhIKCkFjdGlvbk5hbWUY",
+          "AiABKAkiTAoZTm90aWZ5T3RoZXJSb2xlUGxheUFjdGlvbhILCgNVaWQYASAB",
+          "KAkSDgoGUm9sZUlkGAIgASgJEhIKCkFjdGlvbk5hbWUYAyABKAkiJAoNTXNn",
+          "U3dpdGNoUm9sZRITCgtGcm9udFJvbGVJZBgBIAEoCSIVChNSZXFHZXRFeGNo",
+          "YW5nZUl0ZW1zIk0KE1JzcEdldEV4Y2hhbmdlSXRlbXMSFwoGUmVzdWx0GAEg",
+          "ASgLMgcuUmVzdWx0Eh0KBUl0ZW1zGAIgAygLMg4uTkV4Y2hhbmdlSXRlbSJx",
+          "Cg1ORXhjaGFuZ2VJdGVtEhIKCkV4Y2hhbmdlSWQYASABKAUSFAoMRnJvbUNv",
+          "bmZpZ0lkGAIgASgFEhEKCUZyb21Db3VudBgDIAEoBRISCgpUb0NvbmZpZ0lk",
+          "GAQgASgFEg8KB1RvQ291bnQYBSABKAUiOAoLUmVxRXhjaGFuZ2USEgoKRXhj",
+          "aGFuZ2VJZBgBIAEoBRIVCg1FeGNoYW5nZUNvdW50GAIgASgFIiYKC1JzcEV4",
+          "Y2hhbmdlEhcKBlJlc3VsdBgBIAEoCzIHLlJlc3VsdCIjCg9SZXFTZWFyY2hQ",
+          "bGF5ZXISEAoIVXNlcm5hbWUYASABKAkiUQoPUnNwU2VhcmNoUGxheWVyEhcK",
+          "BlJlc3VsdBgBIAEoCzIHLlJlc3VsdBIlCg1Tb2NpYWxQbGF5ZXJzGAIgASgL",
+          "Mg4uTlNvY2lhbFBsYXllciIlChBSZXFTZW5kQWRkRnJpZW5kEhEKCVRhcmdl",
+          "dFVpZBgBIAEoCSIrChBSc3BTZW5kQWRkRnJpZW5kEhcKBlJlc3VsdBgBIAEo",
+          "CzIHLlJlc3VsdCInChJSZXFBY2NlcHRBZGRGcmllbmQSEQoJU2VuZGVyVWlk",
+          "GAEgASgJIi0KElJzcEFjY2VwdEFkZEZyaWVuZBIXCgZSZXN1bHQYASABKAsy",
+          "By5SZXN1bHQiJwoSUmVxUmVmdXNlQWRkRnJpZW5kEhEKCVNlbmRlclVpZBgB",
+          "IAEoCSItChJSc3BSZWZ1c2VBZGRGcmllbmQSFwoGUmVzdWx0GAEgASgLMgcu",
+          "UmVzdWx0IiQKD1JlcURlbGV0ZUZyaWVuZBIRCglGcmllbmRVaWQYASABKAki",
+          "KgoPUnNwRGVsZXRlRnJpZW5kEhcKBlJlc3VsdBgBIAEoCzIHLlJlc3VsdCIn",
+          "ChJSZXFNb2RpZnlTaWduYXR1cmUSEQoJU2lnbmF0dXJlGAEgASgJIi0KElJz",
+          "cE1vZGlmeVNpZ25hdHVyZRIXCgZSZXN1bHQYASABKAsyBy5SZXN1bHQiPQoR",
+          "UmVxTW9kaWZ5UGFzc3dvcmQSEwoLT2xkUGFzc3dvcmQYASABKAkSEwoLTmV3",
+          "UGFzc3dvcmQYAiABKAkiLAoRUnNwTW9kaWZ5UGFzc3dvcmQSFwoGUmVzdWx0",
+          "GAEgASgLMgcuUmVzdWx0IiQKD1JlcU1vZGlmeUF2YXRhchIRCglBdmF0YXJD",
+          "aWQYASABKAUiKgoPUnNwTW9kaWZ5QXZhdGFyEhcKBlJlc3VsdBgBIAEoCzIH",
+          "LlJlc3VsdCJ5CghOQ2hhdE1zZxIRCglTZW5kZXJVaWQYASABKAkSEwoLUmVj",
+          "ZWl2ZXJVaWQYAiABKAkSEgoKVW5peFRpbWVNcxgDIAEoAxIPCgdNc2dUeXBl",
+          "GAQgASgFEgwKBFRleHQYBSABKAkSEgoKU3RpY2tlckNpZBgGIAEoBSIsCg5S",
+          "ZXFTZW5kQ2hhdE1zZxIaCgdDaGF0TXNnGAEgASgLMgkuTkNoYXRNc2ciPQoO",
+          "UnNwU2VuZENoYXRNc2cSFwoGUmVzdWx0GAEgASgLMgcuUmVzdWx0EhIKClVu",
+          "aXhUaW1lTXMYAiABKAMiMgoUTm90aWZ5UmVjZWl2ZUNoYXRNc2cSGgoHQ2hh",
+          "dE1zZxgBIAEoCzIJLk5DaGF0TXNnIo0BCgVOUm9sZRIKCgJJZBgBIAEoCRIL",
+          "CgNDaWQYAiABKAUSDQoFTGV2ZWwYAyABKAUSCwoDRXhwGAQgASgFEhAKCFdl",
+          "YXBvbklkGAUgASgJEg8KB0Rpc2NJZHMYBiADKAkSFQoDUG9zGAcgASgLMggu",
+          "TkZsb2F0MxIVCgNSb3QYCCABKAsyCC5ORmxvYXQzIjQKEVJlcVJvbGVSZW1v",
+          "dmVEaXNjEg4KBlJvbGVJZBgBIAEoCRIPCgdEaXNjUG9zGAIgASgFIiwKEVJz",
+          "cFJvbGVSZW1vdmVEaXNjEhcKBlJlc3VsdBgBIAEoCzIHLlJlc3VsdCJGChBS",
+          "ZXFSb2xlRXF1aXBEaXNjEg4KBlJvbGVJZBgBIAEoCRIPCgdEaXNjUG9zGAIg",
+          "ASgFEhEKCU5ld0Rpc2NJZBgDIAEoCSIrChBSc3BSb2xlRXF1aXBEaXNjEhcK",
+          "BlJlc3VsdBgBIAEoCzIHLlJlc3VsdCIlChNSZXFSb2xlUmVtb3ZlV2VhcG9u",
+          "Eg4KBlJvbGVJZBgBIAEoCSIuChNSc3BSb2xlUmVtb3ZlV2VhcG9uEhcKBlJl",
+          "c3VsdBgBIAEoCzIHLlJlc3VsdCI5ChJSZXFSb2xlRXF1aXBXZWFwb24SDgoG",
+          "Um9sZUlkGAEgASgJEhMKC05ld1dlYXBvbklkGAIgASgJIi0KElJzcFJvbGVF",
+          "cXVpcFdlYXBvbhIXCgZSZXN1bHQYASABKAsyBy5SZXN1bHQiZQoSTm90aWZ5",
+          "U3Bhd25Nb25zdGVyEhIKCk1vbnN0ZXJDaWQYASABKAUSEQoJTW9uc3Rlcklk",
+          "GAIgASgFEhwKCE1vdmVtZW50GAMgASgLMgouTk1vdmVtZW50EgoKAkhwGAQg",
+          "ASgCIjkKFE1zZ01vbnN0ZXJUYWtlRGFtYWdlEhEKCU1vbnN0ZXJJZBgBIAEo",
+          "BRIOCgZEYW1hZ2UYAiABKAIiPAoXTm90aWZ5TW9uc3RlclRha2VEYW1hZ2US",
+          "EQoJTW9uc3RlcklkGAEgASgFEg4KBkRhbWFnZRgCIAEoAiIlChBOb3RpZnlN",
+          "b25zdGVyRGllEhEKCU1vbnN0ZXJJZBgBIAEoBSJLChhOb3RpZnlNb25zdGVy",
+          "UmVwTW92ZW1lbnQSEQoJTW9uc3RlcklkGAEgASgFEhwKCE1vdmVtZW50GAIg",
+          "ASgLMgouTk1vdmVtZW50IjgKDVJlcVN0YXJ0UXVlc3QSFQoNUXVlc3RDaGFp",
+          "bkNpZBgBIAEoBRIQCghRdWVzdENpZBgCIAEoBSIoCg1Sc3BTdGFydFF1ZXN0",
+          "EhcKBlJlc3VsdBgBIAEoCzIHLlJlc3VsdCJECg5SZXFVcGdyYWRlRGlzYxIO",
+          "CgZEaXNjSWQYASABKAkSEwoLTWF0ZXJpYWxDaWQYAiABKAUSDQoFQ291bnQY",
+          "AyABKAUiRwoOUnNwVXBncmFkZURpc2MSFwoGUmVzdWx0GAEgASgLMgcuUmVz",
+          "dWx0EhwKCFN1YkF0dHJzGAIgAygLMgouTkRpc2NBdHRyIjcKEU1zZ0dhdGhl",
+          "ck1hdGVyaWFsEhMKC01hdGVyaWFsQ2lkGAEgASgFEg0KBUNvdW50GAIgASgF",
+          "Ii4KFU1zZ0NvbXBsZXRlUXVlc3RDaGFpbhIVCg1RdWVzdENoYWluQ2lkGAEg",
+          "ASgFIpkBChFOb3RpZnlPYnRhaW5JdGVtcxIgCghDdXJJdGVtcxgBIAMoCzIO",
+          "Lk5DdXJyZW5jeUl0ZW0SIAoITWF0SXRlbXMYAiADKAsyDi5OTWF0ZXJpYWxJ",
+          "dGVtEh0KCURpc2NJdGVtcxgDIAMoCzIKLk5EaXNjSXRlbRIhCgtXZWFwb25J",
+          "dGVtcxgEIAMoCzIMLk5XZWFwb25JdGVtYgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -144,7 +146,7 @@ public static partial class MessageReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::NWeaponItem), global::NWeaponItem.Parser, new[]{ "Id", "Cid", "Level", "Exp", "RoleId", "Locked", "RefineLevel", "BaseAttr", "AdvancedAttr" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NDiscItem), global::NDiscItem.Parser, new[]{ "Id", "Cid", "Level", "Exp", "RoleId", "Locked", "Pos", "MainAttr", "SubAttrs" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NFloat3), global::NFloat3.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NPosRot), global::NPosRot.Parser, new[]{ "Pos", "Rot" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NMovement), global::NMovement.Parser, new[]{ "Pos", "Rot" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NWeaponAttr), global::NWeaponAttr.Parser, new[]{ "AttrTypeId", "Value" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NDiscAttr), global::NDiscAttr.Parser, new[]{ "AttrEntryId", "AttrTypeId", "Value", "UpgradeTimes" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgGachaWeapon), global::MsgGachaWeapon.Parser, null, null, null, null, null),
@@ -155,9 +157,9 @@ public static partial class MessageReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::RspLogin), global::RspLogin.Parser, new[]{ "Result" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::ReqGetPlayerData), global::ReqGetPlayerData.Parser, null, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::RspGetPlayerData), global::RspGetPlayerData.Parser, new[]{ "Result", "PlayerData" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NSyncRole), global::NSyncRole.Parser, new[]{ "Id", "PosRot" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NSyncRole), global::NSyncRole.Parser, new[]{ "Id", "Movement" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NSyncPlayer), global::NSyncPlayer.Parser, new[]{ "Uid", "Roles" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NSimRole), global::NSimRole.Parser, new[]{ "Id", "PosRot", "Cid" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NSimRole), global::NSimRole.Parser, new[]{ "Id", "Movement", "Cid" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NSimPlayer), global::NSimPlayer.Parser, new[]{ "Uid", "Roles" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgEnterRoom), global::MsgEnterRoom.Parser, null, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgUpdateFromAutonomous), global::MsgUpdateFromAutonomous.Parser, new[]{ "Player" }, null, null, null, null),
@@ -201,10 +203,11 @@ public static partial class MessageReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::RspRoleRemoveWeapon), global::RspRoleRemoveWeapon.Parser, new[]{ "Result" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::ReqRoleEquipWeapon), global::ReqRoleEquipWeapon.Parser, new[]{ "RoleId", "NewWeaponId" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::RspRoleEquipWeapon), global::RspRoleEquipWeapon.Parser, new[]{ "Result" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NotifySpawnMonster), global::NotifySpawnMonster.Parser, new[]{ "MonsterCid", "MonsterId", "PosRot" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NotifySpawnMonster), global::NotifySpawnMonster.Parser, new[]{ "MonsterCid", "MonsterId", "Movement", "Hp" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgMonsterTakeDamage), global::MsgMonsterTakeDamage.Parser, new[]{ "MonsterId", "Damage" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NotifySyncMonsterTakeDamage), global::NotifySyncMonsterTakeDamage.Parser, new[]{ "MonsterId", "Damage" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NotifyMonsterTakeDamage), global::NotifyMonsterTakeDamage.Parser, new[]{ "MonsterId", "Damage" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NotifyMonsterDie), global::NotifyMonsterDie.Parser, new[]{ "MonsterId" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NotifyMonsterRepMovement), global::NotifyMonsterRepMovement.Parser, new[]{ "MonsterId", "Movement" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::ReqStartQuest), global::ReqStartQuest.Parser, new[]{ "QuestChainCid", "QuestCid" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::RspStartQuest), global::RspStartQuest.Parser, new[]{ "Result" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::ReqUpgradeDisc), global::ReqUpgradeDisc.Parser, new[]{ "DiscId", "MaterialCid", "Count" }, null, null, null, null),
@@ -3303,9 +3306,6 @@ public sealed partial class NDiscItem : pb::IMessage<NDiscItem>
 
 }
 
-/// <summary>
-/// 3D向量
-/// </summary>
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
 public sealed partial class NFloat3 : pb::IMessage<NFloat3>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -3579,19 +3579,19 @@ public sealed partial class NFloat3 : pb::IMessage<NFloat3>
 }
 
 /// <summary>
-/// 位置和旋转
+/// 移动
 /// </summary>
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-public sealed partial class NPosRot : pb::IMessage<NPosRot>
+public sealed partial class NMovement : pb::IMessage<NMovement>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
 #endif
 {
-  private static readonly pb::MessageParser<NPosRot> _parser = new pb::MessageParser<NPosRot>(() => new NPosRot());
+  private static readonly pb::MessageParser<NMovement> _parser = new pb::MessageParser<NMovement>(() => new NMovement());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public static pb::MessageParser<NPosRot> Parser { get { return _parser; } }
+  public static pb::MessageParser<NMovement> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3607,7 +3607,7 @@ public sealed partial class NPosRot : pb::IMessage<NPosRot>
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public NPosRot() {
+  public NMovement() {
     OnConstruction();
   }
 
@@ -3615,7 +3615,7 @@ public sealed partial class NPosRot : pb::IMessage<NPosRot>
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public NPosRot(NPosRot other) : this() {
+  public NMovement(NMovement other) : this() {
     pos_ = other.pos_ != null ? other.pos_.Clone() : null;
     rot_ = other.rot_ != null ? other.rot_.Clone() : null;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -3623,8 +3623,8 @@ public sealed partial class NPosRot : pb::IMessage<NPosRot>
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public NPosRot Clone() {
-    return new NPosRot(this);
+  public NMovement Clone() {
+    return new NMovement(this);
   }
 
   /// <summary>Field number for the "Pos" field.</summary>
@@ -3654,12 +3654,12 @@ public sealed partial class NPosRot : pb::IMessage<NPosRot>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override bool Equals(object other) {
-    return Equals(other as NPosRot);
+    return Equals(other as NMovement);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public bool Equals(NPosRot other) {
+  public bool Equals(NMovement other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
@@ -3745,7 +3745,7 @@ public sealed partial class NPosRot : pb::IMessage<NPosRot>
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public void MergeFrom(NPosRot other) {
+  public void MergeFrom(NMovement other) {
     if (other == null) {
       return;
     }
@@ -6047,7 +6047,7 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public NSyncRole(NSyncRole other) : this() {
     id_ = other.id_;
-    posRot_ = other.posRot_ != null ? other.posRot_.Clone() : null;
+    movement_ = other.movement_ != null ? other.movement_.Clone() : null;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -6069,15 +6069,15 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
     }
   }
 
-  /// <summary>Field number for the "PosRot" field.</summary>
-  public const int PosRotFieldNumber = 2;
-  private global::NPosRot posRot_;
+  /// <summary>Field number for the "Movement" field.</summary>
+  public const int MovementFieldNumber = 2;
+  private global::NMovement movement_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public global::NPosRot PosRot {
-    get { return posRot_; }
+  public global::NMovement Movement {
+    get { return movement_; }
     set {
-      posRot_ = value;
+      movement_ = value;
     }
   }
 
@@ -6097,7 +6097,7 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
       return true;
     }
     if (Id != other.Id) return false;
-    if (!object.Equals(PosRot, other.PosRot)) return false;
+    if (!object.Equals(Movement, other.Movement)) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -6106,7 +6106,7 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
   public override int GetHashCode() {
     int hash = 1;
     if (Id.Length != 0) hash ^= Id.GetHashCode();
-    if (posRot_ != null) hash ^= PosRot.GetHashCode();
+    if (movement_ != null) hash ^= Movement.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -6129,9 +6129,9 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
       output.WriteRawTag(10);
       output.WriteString(Id);
     }
-    if (posRot_ != null) {
+    if (movement_ != null) {
       output.WriteRawTag(18);
-      output.WriteMessage(PosRot);
+      output.WriteMessage(Movement);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -6147,9 +6147,9 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
       output.WriteRawTag(10);
       output.WriteString(Id);
     }
-    if (posRot_ != null) {
+    if (movement_ != null) {
       output.WriteRawTag(18);
-      output.WriteMessage(PosRot);
+      output.WriteMessage(Movement);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -6164,8 +6164,8 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
     if (Id.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
     }
-    if (posRot_ != null) {
-      size += 1 + pb::CodedOutputStream.ComputeMessageSize(PosRot);
+    if (movement_ != null) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(Movement);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -6182,11 +6182,11 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
     if (other.Id.Length != 0) {
       Id = other.Id;
     }
-    if (other.posRot_ != null) {
-      if (posRot_ == null) {
-        PosRot = new global::NPosRot();
+    if (other.movement_ != null) {
+      if (movement_ == null) {
+        Movement = new global::NMovement();
       }
-      PosRot.MergeFrom(other.PosRot);
+      Movement.MergeFrom(other.Movement);
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -6212,10 +6212,10 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
           break;
         }
         case 18: {
-          if (posRot_ == null) {
-            PosRot = new global::NPosRot();
+          if (movement_ == null) {
+            Movement = new global::NMovement();
           }
-          input.ReadMessage(PosRot);
+          input.ReadMessage(Movement);
           break;
         }
       }
@@ -6242,10 +6242,10 @@ public sealed partial class NSyncRole : pb::IMessage<NSyncRole>
           break;
         }
         case 18: {
-          if (posRot_ == null) {
-            PosRot = new global::NPosRot();
+          if (movement_ == null) {
+            Movement = new global::NMovement();
           }
-          input.ReadMessage(PosRot);
+          input.ReadMessage(Movement);
           break;
         }
       }
@@ -6521,7 +6521,7 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public NSimRole(NSimRole other) : this() {
     id_ = other.id_;
-    posRot_ = other.posRot_ != null ? other.posRot_.Clone() : null;
+    movement_ = other.movement_ != null ? other.movement_.Clone() : null;
     cid_ = other.cid_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
@@ -6544,15 +6544,15 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
     }
   }
 
-  /// <summary>Field number for the "PosRot" field.</summary>
-  public const int PosRotFieldNumber = 2;
-  private global::NPosRot posRot_;
+  /// <summary>Field number for the "Movement" field.</summary>
+  public const int MovementFieldNumber = 2;
+  private global::NMovement movement_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public global::NPosRot PosRot {
-    get { return posRot_; }
+  public global::NMovement Movement {
+    get { return movement_; }
     set {
-      posRot_ = value;
+      movement_ = value;
     }
   }
 
@@ -6584,7 +6584,7 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
       return true;
     }
     if (Id != other.Id) return false;
-    if (!object.Equals(PosRot, other.PosRot)) return false;
+    if (!object.Equals(Movement, other.Movement)) return false;
     if (Cid != other.Cid) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -6594,7 +6594,7 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
   public override int GetHashCode() {
     int hash = 1;
     if (Id.Length != 0) hash ^= Id.GetHashCode();
-    if (posRot_ != null) hash ^= PosRot.GetHashCode();
+    if (movement_ != null) hash ^= Movement.GetHashCode();
     if (Cid != 0) hash ^= Cid.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -6618,9 +6618,9 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
       output.WriteRawTag(10);
       output.WriteString(Id);
     }
-    if (posRot_ != null) {
+    if (movement_ != null) {
       output.WriteRawTag(18);
-      output.WriteMessage(PosRot);
+      output.WriteMessage(Movement);
     }
     if (Cid != 0) {
       output.WriteRawTag(24);
@@ -6640,9 +6640,9 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
       output.WriteRawTag(10);
       output.WriteString(Id);
     }
-    if (posRot_ != null) {
+    if (movement_ != null) {
       output.WriteRawTag(18);
-      output.WriteMessage(PosRot);
+      output.WriteMessage(Movement);
     }
     if (Cid != 0) {
       output.WriteRawTag(24);
@@ -6661,8 +6661,8 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
     if (Id.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
     }
-    if (posRot_ != null) {
-      size += 1 + pb::CodedOutputStream.ComputeMessageSize(PosRot);
+    if (movement_ != null) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(Movement);
     }
     if (Cid != 0) {
       size += 1 + pb::CodedOutputStream.ComputeInt32Size(Cid);
@@ -6682,11 +6682,11 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
     if (other.Id.Length != 0) {
       Id = other.Id;
     }
-    if (other.posRot_ != null) {
-      if (posRot_ == null) {
-        PosRot = new global::NPosRot();
+    if (other.movement_ != null) {
+      if (movement_ == null) {
+        Movement = new global::NMovement();
       }
-      PosRot.MergeFrom(other.PosRot);
+      Movement.MergeFrom(other.Movement);
     }
     if (other.Cid != 0) {
       Cid = other.Cid;
@@ -6715,10 +6715,10 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
           break;
         }
         case 18: {
-          if (posRot_ == null) {
-            PosRot = new global::NPosRot();
+          if (movement_ == null) {
+            Movement = new global::NMovement();
           }
-          input.ReadMessage(PosRot);
+          input.ReadMessage(Movement);
           break;
         }
         case 24: {
@@ -6749,10 +6749,10 @@ public sealed partial class NSimRole : pb::IMessage<NSimRole>
           break;
         }
         case 18: {
-          if (posRot_ == null) {
-            PosRot = new global::NPosRot();
+          if (movement_ == null) {
+            Movement = new global::NMovement();
           }
-          input.ReadMessage(PosRot);
+          input.ReadMessage(Movement);
           break;
         }
         case 24: {
@@ -16471,6 +16471,9 @@ public sealed partial class RspRoleEquipWeapon : pb::IMessage<RspRoleEquipWeapon
 
 }
 
+/// <summary>
+/// 通知怪物生成
+/// </summary>
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
 public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -16508,7 +16511,8 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
   public NotifySpawnMonster(NotifySpawnMonster other) : this() {
     monsterCid_ = other.monsterCid_;
     monsterId_ = other.monsterId_;
-    posRot_ = other.posRot_ != null ? other.posRot_.Clone() : null;
+    movement_ = other.movement_ != null ? other.movement_.Clone() : null;
+    hp_ = other.hp_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -16542,15 +16546,27 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
     }
   }
 
-  /// <summary>Field number for the "PosRot" field.</summary>
-  public const int PosRotFieldNumber = 3;
-  private global::NPosRot posRot_;
+  /// <summary>Field number for the "Movement" field.</summary>
+  public const int MovementFieldNumber = 3;
+  private global::NMovement movement_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public global::NPosRot PosRot {
-    get { return posRot_; }
+  public global::NMovement Movement {
+    get { return movement_; }
     set {
-      posRot_ = value;
+      movement_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "Hp" field.</summary>
+  public const int HpFieldNumber = 4;
+  private float hp_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public float Hp {
+    get { return hp_; }
+    set {
+      hp_ = value;
     }
   }
 
@@ -16571,7 +16587,8 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
     }
     if (MonsterCid != other.MonsterCid) return false;
     if (MonsterId != other.MonsterId) return false;
-    if (!object.Equals(PosRot, other.PosRot)) return false;
+    if (!object.Equals(Movement, other.Movement)) return false;
+    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Hp, other.Hp)) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -16581,7 +16598,8 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
     int hash = 1;
     if (MonsterCid != 0) hash ^= MonsterCid.GetHashCode();
     if (MonsterId != 0) hash ^= MonsterId.GetHashCode();
-    if (posRot_ != null) hash ^= PosRot.GetHashCode();
+    if (movement_ != null) hash ^= Movement.GetHashCode();
+    if (Hp != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Hp);
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -16608,9 +16626,13 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
       output.WriteRawTag(16);
       output.WriteInt32(MonsterId);
     }
-    if (posRot_ != null) {
+    if (movement_ != null) {
       output.WriteRawTag(26);
-      output.WriteMessage(PosRot);
+      output.WriteMessage(Movement);
+    }
+    if (Hp != 0F) {
+      output.WriteRawTag(37);
+      output.WriteFloat(Hp);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -16630,9 +16652,13 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
       output.WriteRawTag(16);
       output.WriteInt32(MonsterId);
     }
-    if (posRot_ != null) {
+    if (movement_ != null) {
       output.WriteRawTag(26);
-      output.WriteMessage(PosRot);
+      output.WriteMessage(Movement);
+    }
+    if (Hp != 0F) {
+      output.WriteRawTag(37);
+      output.WriteFloat(Hp);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -16650,8 +16676,11 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
     if (MonsterId != 0) {
       size += 1 + pb::CodedOutputStream.ComputeInt32Size(MonsterId);
     }
-    if (posRot_ != null) {
-      size += 1 + pb::CodedOutputStream.ComputeMessageSize(PosRot);
+    if (movement_ != null) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(Movement);
+    }
+    if (Hp != 0F) {
+      size += 1 + 4;
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -16671,11 +16700,14 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
     if (other.MonsterId != 0) {
       MonsterId = other.MonsterId;
     }
-    if (other.posRot_ != null) {
-      if (posRot_ == null) {
-        PosRot = new global::NPosRot();
+    if (other.movement_ != null) {
+      if (movement_ == null) {
+        Movement = new global::NMovement();
       }
-      PosRot.MergeFrom(other.PosRot);
+      Movement.MergeFrom(other.Movement);
+    }
+    if (other.Hp != 0F) {
+      Hp = other.Hp;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -16705,10 +16737,14 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
           break;
         }
         case 26: {
-          if (posRot_ == null) {
-            PosRot = new global::NPosRot();
+          if (movement_ == null) {
+            Movement = new global::NMovement();
           }
-          input.ReadMessage(PosRot);
+          input.ReadMessage(Movement);
+          break;
+        }
+        case 37: {
+          Hp = input.ReadFloat();
           break;
         }
       }
@@ -16739,10 +16775,14 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
           break;
         }
         case 26: {
-          if (posRot_ == null) {
-            PosRot = new global::NPosRot();
+          if (movement_ == null) {
+            Movement = new global::NMovement();
           }
-          input.ReadMessage(PosRot);
+          input.ReadMessage(Movement);
+          break;
+        }
+        case 37: {
+          Hp = input.ReadFloat();
           break;
         }
       }
@@ -16752,6 +16792,9 @@ public sealed partial class NotifySpawnMonster : pb::IMessage<NotifySpawnMonster
 
 }
 
+/// <summary>
+/// 消息怪物接受伤害
+/// </summary>
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
 public sealed partial class MsgMonsterTakeDamage : pb::IMessage<MsgMonsterTakeDamage>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -16987,17 +17030,20 @@ public sealed partial class MsgMonsterTakeDamage : pb::IMessage<MsgMonsterTakeDa
 
 }
 
+/// <summary>
+/// 通知怪物接受伤害
+/// </summary>
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-public sealed partial class NotifySyncMonsterTakeDamage : pb::IMessage<NotifySyncMonsterTakeDamage>
+public sealed partial class NotifyMonsterTakeDamage : pb::IMessage<NotifyMonsterTakeDamage>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
 #endif
 {
-  private static readonly pb::MessageParser<NotifySyncMonsterTakeDamage> _parser = new pb::MessageParser<NotifySyncMonsterTakeDamage>(() => new NotifySyncMonsterTakeDamage());
+  private static readonly pb::MessageParser<NotifyMonsterTakeDamage> _parser = new pb::MessageParser<NotifyMonsterTakeDamage>(() => new NotifyMonsterTakeDamage());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public static pb::MessageParser<NotifySyncMonsterTakeDamage> Parser { get { return _parser; } }
+  public static pb::MessageParser<NotifyMonsterTakeDamage> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -17013,7 +17059,7 @@ public sealed partial class NotifySyncMonsterTakeDamage : pb::IMessage<NotifySyn
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public NotifySyncMonsterTakeDamage() {
+  public NotifyMonsterTakeDamage() {
     OnConstruction();
   }
 
@@ -17021,7 +17067,7 @@ public sealed partial class NotifySyncMonsterTakeDamage : pb::IMessage<NotifySyn
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public NotifySyncMonsterTakeDamage(NotifySyncMonsterTakeDamage other) : this() {
+  public NotifyMonsterTakeDamage(NotifyMonsterTakeDamage other) : this() {
     monsterId_ = other.monsterId_;
     damage_ = other.damage_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -17029,8 +17075,8 @@ public sealed partial class NotifySyncMonsterTakeDamage : pb::IMessage<NotifySyn
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public NotifySyncMonsterTakeDamage Clone() {
-    return new NotifySyncMonsterTakeDamage(this);
+  public NotifyMonsterTakeDamage Clone() {
+    return new NotifyMonsterTakeDamage(this);
   }
 
   /// <summary>Field number for the "MonsterId" field.</summary>
@@ -17060,12 +17106,12 @@ public sealed partial class NotifySyncMonsterTakeDamage : pb::IMessage<NotifySyn
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override bool Equals(object other) {
-    return Equals(other as NotifySyncMonsterTakeDamage);
+    return Equals(other as NotifyMonsterTakeDamage);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public bool Equals(NotifySyncMonsterTakeDamage other) {
+  public bool Equals(NotifyMonsterTakeDamage other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
@@ -17151,7 +17197,7 @@ public sealed partial class NotifySyncMonsterTakeDamage : pb::IMessage<NotifySyn
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public void MergeFrom(NotifySyncMonsterTakeDamage other) {
+  public void MergeFrom(NotifyMonsterTakeDamage other) {
     if (other == null) {
       return;
     }
@@ -17222,6 +17268,9 @@ public sealed partial class NotifySyncMonsterTakeDamage : pb::IMessage<NotifySyn
 
 }
 
+/// <summary>
+/// 通知怪物死亡
+/// </summary>
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
 public sealed partial class NotifyMonsterDie : pb::IMessage<NotifyMonsterDie>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -17421,6 +17470,250 @@ public sealed partial class NotifyMonsterDie : pb::IMessage<NotifyMonsterDie>
 }
 
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+public sealed partial class NotifyMonsterRepMovement : pb::IMessage<NotifyMonsterRepMovement>
+#if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    , pb::IBufferMessage
+#endif
+{
+  private static readonly pb::MessageParser<NotifyMonsterRepMovement> _parser = new pb::MessageParser<NotifyMonsterRepMovement>(() => new NotifyMonsterRepMovement());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pb::MessageParser<NotifyMonsterRepMovement> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::MessageReflection.Descriptor.MessageTypes[71]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public NotifyMonsterRepMovement() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public NotifyMonsterRepMovement(NotifyMonsterRepMovement other) : this() {
+    monsterId_ = other.monsterId_;
+    movement_ = other.movement_ != null ? other.movement_.Clone() : null;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public NotifyMonsterRepMovement Clone() {
+    return new NotifyMonsterRepMovement(this);
+  }
+
+  /// <summary>Field number for the "MonsterId" field.</summary>
+  public const int MonsterIdFieldNumber = 1;
+  private int monsterId_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int MonsterId {
+    get { return monsterId_; }
+    set {
+      monsterId_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "Movement" field.</summary>
+  public const int MovementFieldNumber = 2;
+  private global::NMovement movement_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public global::NMovement Movement {
+    get { return movement_; }
+    set {
+      movement_ = value;
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override bool Equals(object other) {
+    return Equals(other as NotifyMonsterRepMovement);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(NotifyMonsterRepMovement other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (MonsterId != other.MonsterId) return false;
+    if (!object.Equals(Movement, other.Movement)) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (MonsterId != 0) hash ^= MonsterId.GetHashCode();
+    if (movement_ != null) hash ^= Movement.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void WriteTo(pb::CodedOutputStream output) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    output.WriteRawMessage(this);
+  #else
+    if (MonsterId != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(MonsterId);
+    }
+    if (movement_ != null) {
+      output.WriteRawTag(18);
+      output.WriteMessage(Movement);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (MonsterId != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(MonsterId);
+    }
+    if (movement_ != null) {
+      output.WriteRawTag(18);
+      output.WriteMessage(Movement);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(ref output);
+    }
+  }
+  #endif
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int CalculateSize() {
+    int size = 0;
+    if (MonsterId != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(MonsterId);
+    }
+    if (movement_ != null) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(Movement);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(NotifyMonsterRepMovement other) {
+    if (other == null) {
+      return;
+    }
+    if (other.MonsterId != 0) {
+      MonsterId = other.MonsterId;
+    }
+    if (other.movement_ != null) {
+      if (movement_ == null) {
+        Movement = new global::NMovement();
+      }
+      Movement.MergeFrom(other.Movement);
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(pb::CodedInputStream input) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    input.ReadRawMessage(this);
+  #else
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+    if ((tag & 7) == 4) {
+      // Abort on any end group tag.
+      return;
+    }
+    switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 8: {
+          MonsterId = input.ReadInt32();
+          break;
+        }
+        case 18: {
+          if (movement_ == null) {
+            Movement = new global::NMovement();
+          }
+          input.ReadMessage(Movement);
+          break;
+        }
+      }
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+    if ((tag & 7) == 4) {
+      // Abort on any end group tag.
+      return;
+    }
+    switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+          break;
+        case 8: {
+          MonsterId = input.ReadInt32();
+          break;
+        }
+        case 18: {
+          if (movement_ == null) {
+            Movement = new global::NMovement();
+          }
+          input.ReadMessage(Movement);
+          break;
+        }
+      }
+    }
+  }
+  #endif
+
+}
+
+[global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
 public sealed partial class ReqStartQuest : pb::IMessage<ReqStartQuest>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
@@ -17435,7 +17728,7 @@ public sealed partial class ReqStartQuest : pb::IMessage<ReqStartQuest>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::MessageReflection.Descriptor.MessageTypes[71]; }
+    get { return global::MessageReflection.Descriptor.MessageTypes[72]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17670,7 +17963,7 @@ public sealed partial class RspStartQuest : pb::IMessage<RspStartQuest>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::MessageReflection.Descriptor.MessageTypes[72]; }
+    get { return global::MessageReflection.Descriptor.MessageTypes[73]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17877,7 +18170,7 @@ public sealed partial class ReqUpgradeDisc : pb::IMessage<ReqUpgradeDisc>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::MessageReflection.Descriptor.MessageTypes[73]; }
+    get { return global::MessageReflection.Descriptor.MessageTypes[74]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18149,7 +18442,7 @@ public sealed partial class RspUpgradeDisc : pb::IMessage<RspUpgradeDisc>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::MessageReflection.Descriptor.MessageTypes[74]; }
+    get { return global::MessageReflection.Descriptor.MessageTypes[75]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18382,7 +18675,7 @@ public sealed partial class MsgGatherMaterial : pb::IMessage<MsgGatherMaterial>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::MessageReflection.Descriptor.MessageTypes[75]; }
+    get { return global::MessageReflection.Descriptor.MessageTypes[76]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18620,7 +18913,7 @@ public sealed partial class MsgCompleteQuestChain : pb::IMessage<MsgCompleteQues
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::MessageReflection.Descriptor.MessageTypes[76]; }
+    get { return global::MessageReflection.Descriptor.MessageTypes[77]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18821,7 +19114,7 @@ public sealed partial class NotifyObtainItems : pb::IMessage<NotifyObtainItems>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::MessageReflection.Descriptor.MessageTypes[77]; }
+    get { return global::MessageReflection.Descriptor.MessageTypes[78]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
