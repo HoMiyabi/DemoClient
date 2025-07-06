@@ -57,7 +57,7 @@ namespace Kirara.TimelineAction
             {
                 UpdateGO();
             }
-            Action = ActionList != null ? ActionList.actions?.FirstOrDefault() : null;
+            Action = ActionList ? ActionList.actions?.FirstOrDefault() : null;
         }
 
         private void SetAction(KiraraActionSO action)
@@ -65,7 +65,7 @@ namespace Kirara.TimelineAction
             _action = action;
 
             var window = TimelineWindowHelper.GetWindow();
-            if (director != null)
+            if (director)
             {
                 director.playableAsset = _action;
 
@@ -74,6 +74,7 @@ namespace Kirara.TimelineAction
                     if (track is AnimationTrack)
                     {
                         director.SetGenericBinding(track, animator);
+                        break;
                     }
                 }
                 window.SetTimeline(director);
@@ -105,19 +106,19 @@ namespace Kirara.TimelineAction
             if (go == _go) return;
 
             _go = go;
-            if (_go == null)
+            if (_go)
+            {
+                actionCtrl = _go.GetComponent<ActionCtrl>();
+                animator = _go.GetComponent<Animator>();
+                director = _go.GetComponent<PlayableDirector>();
+                SetActionList(actionCtrl ? actionCtrl.actionList : null, false);
+            }
+            else
             {
                 animator = null;
                 actionCtrl = null;
                 director = null;
                 SetActionList(null, false);
-            }
-            else
-            {
-                actionCtrl = _go.GetComponent<ActionCtrl>();
-                animator = _go.GetComponent<Animator>();
-                director = _go.GetComponent<PlayableDirector>();
-                SetActionList(actionCtrl != null ? actionCtrl.actionList : null, false);
             }
         }
 
@@ -136,7 +137,7 @@ namespace Kirara.TimelineAction
                 "GameObject", GO, typeof(GameObject), true);
 
             // 名字前缀
-            if (ActionList != null)
+            if (ActionList)
             {
                 EditorGUI.BeginChangeCheck();
                 ActionList.namePrefix = EditorGUILayout.TextField("名字前缀", ActionList.namePrefix);
@@ -146,6 +147,7 @@ namespace Kirara.TimelineAction
                 }
             }
 
+            // 控制栏
             using (new GUILayout.HorizontalScope())
             {
                 if (GUILayout.Button(MyEditorGUIIcon.PlayButton, GUILayout.ExpandWidth(false)))
@@ -169,6 +171,10 @@ namespace Kirara.TimelineAction
                 {
                     rtAnimCtrl = animator.runtimeAnimatorController;
                     animator.runtimeAnimatorController = null;
+                }
+                if (GUILayout.Button("导出Json", GUILayout.ExpandWidth(false)))
+                {
+                    Debug.Log(ActionList.ToJson());
                 }
             }
 

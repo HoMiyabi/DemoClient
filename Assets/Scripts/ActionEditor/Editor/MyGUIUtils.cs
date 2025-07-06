@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -7,14 +7,10 @@ namespace Kirara.ActionEditor
 {
     public static class MyGUIUtils
     {
-        static MyGUIUtils()
-        {
-            InitToolbarSearchField();
-        }
+        private static readonly Func<string, GUILayoutOption[], string>
+            ToolbarSearchFieldFunc =GetToolbarSearchFieldFunc();
 
-        private static Func<string, GUILayoutOption[], string> ToolbarSearchFieldFunc;
-
-        private static void InitToolbarSearchField()
+        private static Func<string, GUILayoutOption[], string> GetToolbarSearchFieldFunc()
         {
             var method = typeof(EditorGUILayout).GetMethod(
                 "ToolbarSearchField",
@@ -24,18 +20,16 @@ namespace Kirara.ActionEditor
                 null);
             if (method == null)
             {
-                Debug.LogError("EditorGUILayout.ToolbarSearchField not found");
-                return;
+                throw new Exception("EditorGUILayout.ToolbarSearchField not found");
             }
             var del = method.CreateDelegate(typeof(Func<string, GUILayoutOption[], string>));
-            ToolbarSearchFieldFunc = (Func<string, GUILayoutOption[], string>)del;
+            return (Func<string, GUILayoutOption[], string>)del;
         }
 
         public static string ToolbarSearchField(string text, params GUILayoutOption[] options)
         {
             return ToolbarSearchFieldFunc(text, options);
         }
-
 
         private static Color color;
         public static void BeginHighlight(GUIStyle style, bool condition)
@@ -53,4 +47,4 @@ namespace Kirara.ActionEditor
             GUI.backgroundColor = color;
         }
     }
-}*/
+}

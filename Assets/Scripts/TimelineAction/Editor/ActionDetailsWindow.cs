@@ -1,19 +1,17 @@
-﻿using System.Linq;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Kirara.TimelineAction
 {
     public class ActionDetailsWindow : EditorWindow
     {
-        private const string TITLE = "动作细节面板";
         private UnityEditor.Editor editor;
-        private KiraraActionSO action;
+        private KiraraActionSO _action;
         private Vector2 scrollPos;
 
         public static ActionDetailsWindow GetWindow()
         {
-            var window = GetWindow<ActionDetailsWindow>(TITLE);
+            var window = GetWindow<ActionDetailsWindow>("动作细节面板");
             return window;
         }
 
@@ -34,13 +32,13 @@ namespace Kirara.TimelineAction
         private void UpdateEditor()
         {
             if (ActionListWindow.Instance == null) return;
-            if (ActionListWindow.Instance.Action != action)
+            if (ActionListWindow.Instance.Action != _action)
             {
-                action = ActionListWindow.Instance.Action;
+                _action = ActionListWindow.Instance.Action;
                 ClearEditor();
-                if (action)
+                if (_action)
                 {
-                    editor = UnityEditor.Editor.CreateEditor(action);
+                    editor = UnityEditor.Editor.CreateEditor(_action);
                 }
             }
         }
@@ -55,20 +53,26 @@ namespace Kirara.TimelineAction
         {
             using var s = new GUILayout.ScrollViewScope(scrollPos);
             scrollPos = s.scrollPosition;
-            if (!editor)
+            if (editor)
             {
-                EditorGUILayout.HelpBox("未选择动作", MessageType.Info);
-                return;
+                DrawAction();
             }
+            else
+            {
+                DrawNull();
+            }
+        }
 
+        private void DrawAction()
+        {
             editor.OnInspectorGUI();
 
-            if (ActionListWindow.Instance.ActionList == null) return;
+            if (!ActionListWindow.Instance.ActionList) return;
 
             var instance = ActionListWindow.Instance;
-            string fullName = instance.ActionList.namePrefix + action.finishCancelInfo.actionName;
+            string fullName = instance.ActionList.namePrefix + _action.finishCancelInfo.actionName;
             var next = instance.ActionList.actions.Find(a => a.name == fullName);
-            if (next != null)
+            if (next)
             {
                 if (GUILayout.Button("切换动作"))
                 {
@@ -82,10 +86,15 @@ namespace Kirara.TimelineAction
 
             if (GUILayout.Button("重置参数为状态默认"))
             {
-                Undo.RecordObject(action, "重置参数为状态默认");
-                action.actionParams = ActionParams.GetStateDefault(action.actionState);
-                EditorUtility.SetDirty(action);
+                Undo.RecordObject(_action, "重置参数为状态默认");
+                _action.actionParams = ActionParams.GetStateDefault(_action.actionState);
+                EditorUtility.SetDirty(_action);
             }
+        }
+
+        private void DrawNull()
+        {
+            EditorGUILayout.HelpBox("未选择动作", MessageType.Info);
         }
     }
 }

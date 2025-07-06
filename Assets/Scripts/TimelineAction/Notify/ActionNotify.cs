@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.Timeline;
+﻿using UnityEngine.Timeline;
 
 namespace Kirara.TimelineAction
 {
@@ -7,7 +6,6 @@ namespace Kirara.TimelineAction
     {
         public virtual void Notify(ActionPlayer player)
         {
-            Debug.Log("ActionNotify");
         }
     }
 }

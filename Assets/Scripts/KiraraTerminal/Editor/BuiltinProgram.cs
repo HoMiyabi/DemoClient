@@ -105,5 +105,13 @@ namespace KiraraTerminal
             }
             AssetDatabase.Refresh();
         }
+
+        [Program("rootmotion")]
+        public static void RootMotion()
+        {
+            var asset = Selection.activeObject;
+            var clip = (AnimationClip)asset;
+
+        }
     }
 }

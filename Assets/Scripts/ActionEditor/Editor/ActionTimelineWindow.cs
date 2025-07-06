@@ -1,7 +1,8 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ActionEditor.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,9 +10,10 @@ namespace Kirara.ActionEditor
 {
     public class ActionTimelineWindow : EditorWindow
     {
-        private const string TITLE = "Kirara 动作时间轴";
-
-        private ActionEditorBackend be;
+        public ActionSO Action { get; set; }
+        public ActionTrack Track { get; set; }
+        public Color ClipColor { get; set; } = Color.green;
+        public static float FrameRate = 60f;
 
         private float trackHeight = 20f;
         private float frameWidth = 10f;
@@ -25,8 +27,7 @@ namespace Kirara.ActionEditor
 
         private float trackSpacing = 1f;
 
-        private List<GUITrackClip> guiTrackClips;
-        private ActionTrackSO draggingTrack;
+        private GUINotify draggingNotify;
         private Vector2 mousePosInDraggingRect;
 
         private MyGridLayout layout;
@@ -36,50 +37,37 @@ namespace Kirara.ActionEditor
         private Rect TrackHeadRect => layout.Rect10;
         private Rect TracksRect => layout.Rect11;
 
-        private Type[] actionTrackTypes;
-
-        [MenuItem("Kirara/Kirara 动作时间轴")]
-        public static void GetWindow()
-        {
-            GetWindow<ActionTimelineWindow>(TITLE);
-        }
+        private static readonly Type[] actionNotifyTypes = GetSubclassTypes(typeof(ActionNotifySO));
+        private static readonly Type[] actionNotifyStateTypes = GetSubclassTypes(typeof(ActionNotifyStateSO));
 
         private void OnEnable()
         {
-            be = ActionEditorBackend.Instance;
-            guiTrackClips ??= new List<GUITrackClip>();
             layout = new MyGridLayout(this, 150f, 20f, 1f, 1f);
-
-            actionTrackTypes = Assembly.GetAssembly(typeof(ActionTrackSO))
-                .GetTypes()
-                .Where(t => t.IsSubclassOf(typeof(ActionTrackSO)))
-                .ToArray();
         }
 
-        private void AddTrackOnClick()
+        public static ActionTimelineWindow GetWindow()
         {
-            var menu = new GenericMenu();
-            foreach (var type in actionTrackTypes)
-            {
-                string displayName = ObjectNames.NicifyVariableName(type.Name);
-                menu.AddItem(new GUIContent(displayName), false, () =>
-                {
-                    be.AddTrack(type);
-                });
-            }
-            menu.ShowAsContext();
+            return GetWindow<ActionTimelineWindow>("动作时间轴");
+        }
+
+        private static Type[] GetSubclassTypes(Type baseType)
+        {
+            return Assembly.GetAssembly(baseType)
+                .GetTypes()
+                .Where(t => t.IsSubclassOf(baseType))
+                .ToArray();
         }
 
         private void DrawControlBar()
         {
             using var scope = new GUI.GroupScope(ControlBarRect);
-            using (new EditorGUI.DisabledScope(be.Action == null))
+            using (new EditorGUI.DisabledScope(Action == null))
             {
                 float width = 20f;
                 var rect = new Rect(0, 0, width, ControlBarRect.height);
                 if (GUI.Button(rect, "+", EditorStyles.toolbarButton))
                 {
-                    AddTrackOnClick();
+                    Action!.AddTrack();
                 }
                 rect.x += width;
                 if (GUI.Button(rect, "<", EditorStyles.toolbarButton))
@@ -130,7 +118,7 @@ namespace Kirara.ActionEditor
 
         private void ScrollH(float scroll)
         {
-            if (be.Action == null || be.Action.tracks == null || be.Action.tracks.Count == 0) return;
+            if (Action == null || Action.tracks.Count == 0) return;
             int scrollFrame = NormalizeInt(scroll) * framePerScroll;
             float viewMinFrame = viewMinTime * frameRate;
             viewMinTime = Mathf.Max(Mathf.Round(viewMinFrame + scrollFrame) / frameRate, 0f);
@@ -138,8 +126,8 @@ namespace Kirara.ActionEditor
 
         private void ScrollV(float scroll)
         {
-            if (be.Action == null || be.Action.tracks == null || be.Action.tracks.Count == 0) return;
-            viewMinTrackIdx = Mathf.Clamp(viewMinTrackIdx + NormalizeInt(scroll), 0, be.Action.tracks.Count - 1);
+            if (Action == null || Action.tracks.Count == 0) return;
+            viewMinTrackIdx = Mathf.Clamp(viewMinTrackIdx + NormalizeInt(scroll), 0, Action.tracks.Count - 1);
         }
 
         private void HandleEvent()
@@ -172,24 +160,24 @@ namespace Kirara.ActionEditor
                     if (e.button == 0)
                     {
                         // 拖动轨道
-                        for (int i = 0; i < guiTrackClips.Count; i++)
-                        {
-                            if (guiTrackClips[i].left.Contains(e.mousePosition))
-                            {
-                                e.Use();
-                            }
-                            else if (guiTrackClips[i].right.Contains(e.mousePosition))
-                            {
-                                e.Use();
-                            }
-                            else if (guiTrackClips[i].main.Contains(e.mousePosition))
-                            {
-                                e.Use();
-                                draggingTrack = be.Action.tracks[i];
-                                // mousePosInDraggingRect = e.mousePosition - guiTrackClips[i].position;
-                                break;
-                            }
-                        }
+                        // for (int i = 0; i < guiTrackClips.Count; i++)
+                        // {
+                        //     if (guiTrackClips[i].left.Contains(e.mousePosition))
+                        //     {
+                        //         e.Use();
+                        //     }
+                        //     else if (guiTrackClips[i].right.Contains(e.mousePosition))
+                        //     {
+                        //         e.Use();
+                        //     }
+                        //     else if (guiTrackClips[i].main.Contains(e.mousePosition))
+                        //     {
+                        //         e.Use();
+                        //         draggingNotify = Action.tracks[i];
+                        //         // mousePosInDraggingRect = e.mousePosition - guiTrackClips[i].position;
+                        //         break;
+                        //     }
+                        // }
                         // 点击刻度
                         // if (tracksRect.Contains(e.mousePosition))
                         // {
@@ -204,9 +192,9 @@ namespace Kirara.ActionEditor
                 {
                     if (e.button == 0)
                     {
-                        if (draggingTrack != null)
+                        if (draggingNotify != null)
                         {
-                            draggingTrack = null;
+                            draggingNotify = null;
                             e.Use();
                         }
                     }
@@ -214,7 +202,7 @@ namespace Kirara.ActionEditor
                 }
                 case EventType.MouseDrag:
                 {
-                    if (draggingTrack != null)
+                    if (draggingNotify != null)
                     {
                         e.Use();
                         UpdateDragging(e.mousePosition);
@@ -233,12 +221,11 @@ namespace Kirara.ActionEditor
 
         private void UpdateDragging(Vector2 mousePos)
         {
-            if (draggingTrack == null) return;
+            if (draggingNotify == null) return;
 
             float offset = (mousePos - mousePosInDraggingRect - TracksRect.position).x;
             float roundFrame = Mathf.Round(offset / frameWidth + ViewMinFrame);
-            draggingTrack.start = Mathf.Max(roundFrame / frameRate, 0);
-            EditorUtility.SetDirty(draggingTrack);
+            // draggingNotify.start = Mathf.Max(roundFrame / frameRate, 0);
         }
 
         private void OnGUI()
@@ -261,6 +248,8 @@ namespace Kirara.ActionEditor
             EditorGUI.DrawRect(layout.RectHSpacing, Color.black);
             EditorGUI.DrawRect(layout.RectVSpacing, Color.black);
         }
+
+        private Vector2 scrollPos;
 
         private void DrawScale()
         {
@@ -306,13 +295,13 @@ namespace Kirara.ActionEditor
         {
             using var scope = new GUI.GroupScope(TrackHeadRect);
 
-            if (be.Action == null || be.Action.tracks == null) return;
+            if (Action == null) return;
 
             var vLayout = new MyVLayout(TrackHeadRect.width, TrackHeadRect.height, trackHeight, trackSpacing);
             int i = 0;
-            for (int idx = viewMinTrackIdx; idx < be.Action.tracks.Count; idx++, i++)
+            for (int idx = viewMinTrackIdx; idx < Action.tracks.Count; idx++, i++)
             {
-                var track = be.Action.tracks[idx];
+                var track = Action.tracks[idx];
 
                 if (!vLayout.TryRect(i, out var rect)) break;
 
@@ -320,10 +309,10 @@ namespace Kirara.ActionEditor
                 {
                     alignment = TextAnchor.MiddleLeft,
                 };
-                MyGUIUtils.BeginHighlight(style, track == be.Track);
+                MyGUIUtils.BeginHighlight(style, track == Track);
                 if (GUI.Button(rect, track.name, style))
                 {
-                    be.Track = track;
+                    Track = track;
                 }
                 MyGUIUtils.EndHighlight();
                 EditorGUI.DrawRect(vLayout.Spacing(i), Color.gray);
@@ -334,41 +323,39 @@ namespace Kirara.ActionEditor
         {
             using var scope = new GUI.GroupScope(TracksRect);
 
-            guiTrackClips.Clear();
-            if (be.Action == null || be.Action.tracks == null) return;
+            if (Action == null) return;
 
-            int i = 0;
-            for (int idx = viewMinTrackIdx; idx < be.Action.tracks.Count; idx++, i++)
-            {
-                var track = be.Action.tracks[idx];
-
-                float clipStart = TimeToPos(track.start - viewMinTime);
-                float clipWidth = TimeToPos(track.duration);
-
-                var clip = new GUITrackClip();
-
-                clip.main = new Rect(clipStart, TrackY(i), clipWidth, trackHeight);
-                if (clip.main.y > TracksRect.height)
-                {
-                    break;
-                }
-
-                clip.left = clip.main.Width(4).CenterX(clip.main.x);
-                clip.right = clip.main.Width(4).CenterX(clip.main.xMax);
-
-
-                EditorGUIUtility.AddCursorRect(clip.left, MouseCursor.ResizeHorizontal);
-                EditorGUIUtility.AddCursorRect(clip.right, MouseCursor.ResizeHorizontal);
-
-
-                EditorGUI.DrawRect(clip.main, track.ClipColor);
-                EditorGUI.DrawRect(new Rect(0, TrackSpacingY(i + 1), TracksRect.width, 1), Color.gray);
-
-                clip.main = GetAbsRect(clip.main, TracksRect);
-                clip.left = GetAbsRect(clip.left, TracksRect);
-                clip.right = GetAbsRect(clip.right, TracksRect);
-                guiTrackClips.Add(clip);
-            }
+            // int i = 0;
+            // for (int idx = viewMinTrackIdx; idx < Action.tracks.Count; idx++, i++)
+            // {
+            //     var track = Action.tracks[idx];
+            //
+            //     float clipStart = TimeToPos(track.start - viewMinTime);
+            //     float clipWidth = TimeToPos(track.duration);
+            //
+            //     var clip = new GUITrackClip();
+            //
+            //     clip.main = new Rect(clipStart, TrackY(i), clipWidth, trackHeight);
+            //     if (clip.main.y > TracksRect.height)
+            //     {
+            //         break;
+            //     }
+            //
+            //     clip.left = clip.main.Width(4).CenterX(clip.main.x);
+            //     clip.right = clip.main.Width(4).CenterX(clip.main.xMax);
+            //
+            //
+            //     EditorGUIUtility.AddCursorRect(clip.left, MouseCursor.ResizeHorizontal);
+            //     EditorGUIUtility.AddCursorRect(clip.right, MouseCursor.ResizeHorizontal);
+            //
+            //
+            //     EditorGUI.DrawRect(clip.main, ClipColor);
+            //     EditorGUI.DrawRect(new Rect(0, TrackSpacingY(i + 1), TracksRect.width, 1), Color.gray);
+            //
+            //     clip.main = GetAbsRect(clip.main, TracksRect);
+            //     clip.left = GetAbsRect(clip.left, TracksRect);
+            //     clip.right = GetAbsRect(clip.right, TracksRect);
+            // }
         }
 
         private static Rect GetAbsRect(Rect rect, Rect parent)
@@ -391,4 +378,4 @@ namespace Kirara.ActionEditor
             return index * (trackHeight + trackSpacing) - trackSpacing;
         }
     }
-}*/
+}
