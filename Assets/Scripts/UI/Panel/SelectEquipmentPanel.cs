@@ -7,18 +7,18 @@ namespace Kirara.UI.Panel
 {
     public class SelectEquipmentPanel : BasePanel
     {
-        private Button UIBackBtn;
-        private UISelectEquipmentDisc UISelectEquipmentDisc;
+        #region View
+        private Button                  UIBackBtn;
+        private UISelectEquipmentDisc   UISelectEquipmentDisc;
         private UISelectEquipmentWeapon UISelectEquipmentWeapon;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIBackBtn = c.Q<Button>("UIBackBtn");
-            UISelectEquipmentDisc = c.Q<UISelectEquipmentDisc>("UISelectEquipmentDisc");
-            UISelectEquipmentWeapon = c.Q<UISelectEquipmentWeapon>("UISelectEquipmentWeapon");
+            var c                   = GetComponent<KiraraRuntimeComponents>();
+            UIBackBtn               = c.Q<Button>(0, "UIBackBtn");
+            UISelectEquipmentDisc   = c.Q<UISelectEquipmentDisc>(1, "UISelectEquipmentDisc");
+            UISelectEquipmentWeapon = c.Q<UISelectEquipmentWeapon>(2, "UISelectEquipmentWeapon");
         }
+        #endregion
 
         private void Awake()
         {

@@ -10,24 +10,24 @@ namespace Kirara.UI
 {
     public class UIUserInfoBar : MonoBehaviour
     {
-        private Button AvatarBtn;
-        private Image AvatarImg;
-        private Button ChatBtn;
+        #region View
+        private Button          AvatarBtn;
+        private Image           AvatarImg;
+        private Button          ChatBtn;
         private TextMeshProUGUI SignatureText;
         private TextMeshProUGUI UsernameText;
         private TextMeshProUGUI UIUserOnlineStatus;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            AvatarBtn = c.Q<Button>("AvatarBtn");
-            AvatarImg = c.Q<Image>("AvatarImg");
-            ChatBtn = c.Q<Button>("ChatBtn");
-            SignatureText = c.Q<TextMeshProUGUI>("SignatureText");
-            UsernameText = c.Q<TextMeshProUGUI>("UsernameText");
-            UIUserOnlineStatus = c.Q<TextMeshProUGUI>("UIUserOnlineStatus");
+            var c              = GetComponent<KiraraRuntimeComponents>();
+            AvatarBtn          = c.Q<Button>(0, "AvatarBtn");
+            AvatarImg          = c.Q<Image>(1, "AvatarImg");
+            ChatBtn            = c.Q<Button>(2, "ChatBtn");
+            SignatureText      = c.Q<TextMeshProUGUI>(3, "SignatureText");
+            UsernameText       = c.Q<TextMeshProUGUI>(4, "UsernameText");
+            UIUserOnlineStatus = c.Q<TextMeshProUGUI>(5, "UIUserOnlineStatus");
         }
+        #endregion
 
         private AssetHandle avatarHandle;
 

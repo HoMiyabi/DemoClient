@@ -18,11 +18,10 @@ namespace Kirara.UI.Panel
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            NameText = c.Q<TextMeshProUGUI>("NameText");
-            OptionParent = c.Q<RectTransform>("OptionParent");
-            Btn = c.Q<Button>("Btn");
-            UIDialogueText = c.Q<UIDialogueText>("UIDialogueText");
+            NameText = c.Q<TextMeshProUGUI>(0, "NameText");
+            OptionParent = c.Q<RectTransform>(1, "OptionParent");
+            Btn = c.Q<Button>(2, "Btn");
+            UIDialogueText = c.Q<UIDialogueText>(3, "UIDialogueText");
         }
         #endregion
 

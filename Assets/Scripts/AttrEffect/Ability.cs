@@ -1,60 +1,130 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using XLua;
 
 namespace Kirara.AttrEffect
 {
+    [CSharpCallLua, LuaCallCSharp]
     public class Ability
     {
-        public AttrEffect ae;
+        // 名字
+        public string name;
+        // 持续时间
+        public double duration = double.PositiveInfinity;
+        // 最大层数
+        public int stackLimit = 1;
 
-        public readonly string name;
-        public readonly Effect effect;
+        public Action<Ability> init;
+        public Action<Ability> onAdded;
+        public Action onRemoved;
+        public Action onAttackLanded;
+        public Action onStackChanged;
+        public Action<List<double>, double> stackRefreshPolicy;
+        public Action<List<double>, double> overflowRefreshPolicy;
+        public Dictionary<string, double> attrs;
 
-        // 触发
-        public readonly bool triggerOnAdd;
-        public readonly List<string> eventNames;
-        public readonly float triggerInterval;
-        public float TriggerTimer { get; private set; }
+        // 运行时数据
+        // 能力集
+        private AbilitySet abilitySet;
+        // 当前层数
+        public int stackCount = 1;
+        // 每层的剩余时间
+        public List<double> remainingTimes = new();
 
-        public Ability(string name, Effect effect,
-            bool triggerOnAdd = true, List<string> eventNames = null, float triggerInterval = 0f)
+        public Ability()
+        {
+        }
+
+        public Ability(string name)
         {
             this.name = name;
-            this.effect = effect;
-
-            this.triggerOnAdd = triggerOnAdd;
-            this.eventNames = eventNames;
-            this.triggerInterval = triggerInterval;
         }
 
-        public virtual void OnAdded()
+        public void setTimer(string handle, float time)
         {
-            if (triggerOnAdd)
+            abilitySet.SetTimer(handle, time);
+        }
+
+        public bool hasTimer(string handle)
+        {
+            return abilitySet.HasTimer(handle);
+        }
+
+        public void attachAbility(string abilityName)
+        {
+            abilitySet.AttachAbility(abilityName);
+        }
+
+        public static double Inject(string abilityName, string varName)
+        {
+            if (abilityName == "ShenHaiFangKe_1" && varName == "Rate")
             {
-                Trigger();
+                return 0.114514;
+            }
+            return 0;
+        }
+
+        public void Update(float dt)
+        {
+            for (int i = 0; i < remainingTimes.Count;)
+            {
+                remainingTimes[i] -= dt;
+                if (remainingTimes[i] <= 0)
+                {
+                    remainingTimes.RemoveAt(i);
+                    stackCount--;
+                }
+                else
+                {
+                    i++;
+                }
             }
         }
 
-        private void Trigger()
+        public void OnAttached()
         {
-            ae.ApplyEffect(effect);
-            TriggerTimer = triggerInterval;
-        }
-
-        public void WakeUp()
-        {
-            if (TriggerTimer <= 0f)
+            if (stackCount < stackLimit)
             {
-                Trigger();
+                remainingTimes.Add(duration);
+                stackCount++;
+                stackRefreshPolicy?.Invoke(remainingTimes, duration);
+            }
+            else
+            {
+                overflowRefreshPolicy?.Invoke(remainingTimes, duration);
             }
         }
 
-        public void Update()
+        private static void RefreshPolicy_DoNothing(List<double> remainingTimes, double duration)
         {
-            if (TriggerTimer > 0)
+        }
+
+        private static void RefreshPolicy_RefreshMin(List<double> remainingTimes, double duration)
+        {
+            int idx = 0;
+            double min = remainingTimes[0];
+            for (int i = 1; i < remainingTimes.Count; i++)
             {
-                TriggerTimer = Mathf.Max(0f, TriggerTimer - Time.deltaTime);
+                if (remainingTimes[i] < min)
+                {
+                    min = remainingTimes[i];
+                    idx = i;
+                }
             }
+            remainingTimes[idx] = duration;
+        }
+
+        private static void RefreshPolicy_RefreshAll(List<double> remainingTimes, double duration)
+        {
+            for (int i = 0; i < remainingTimes.Count; i++)
+            {
+                remainingTimes[i] = duration;
+            }
+        }
+
+        public List<Ability> GetConfig()
+        {
+            return null;
         }
     }
 }

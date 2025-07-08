@@ -8,12 +8,7 @@ namespace Kirara
     {
         public static Ability GetRuntime(this AbilityConfig config)
         {
-            return new Ability(
-                config.Name,
-                config.Effect.GetRuntime(),
-                config.TriggerOnAdd,
-                config.EventNames,
-                config.TriggerInterval);
+            return null;
         }
 
         public static Effect GetRuntime(this EffectConfig config)

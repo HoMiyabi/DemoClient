@@ -8,18 +8,18 @@ namespace Kirara.UI
 {
     public class UIStatBar : MonoBehaviour
     {
+        #region View
         private TextMeshProUGUI StatNameText;
         private TextMeshProUGUI StatValueText;
         private TextMeshProUGUI UpgradeTimeText;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            StatNameText = c.Q<TextMeshProUGUI>("StatNameText");
-            StatValueText = c.Q<TextMeshProUGUI>("StatValueText");
-            UpgradeTimeText = c.Q<TextMeshProUGUI>("UpgradeTimeText");
+            var c           = GetComponent<KiraraRuntimeComponents>();
+            StatNameText    = c.Q<TextMeshProUGUI>(0, "StatNameText");
+            StatValueText   = c.Q<TextMeshProUGUI>(1, "StatValueText");
+            UpgradeTimeText = c.Q<TextMeshProUGUI>(2, "UpgradeTimeText");
         }
+        #endregion
 
         private void Awake()
         {

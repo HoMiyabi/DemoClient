@@ -7,24 +7,24 @@ namespace Kirara.UI.Panel
 {
     public class LoginDialogPanel : BasePanel
     {
-        private TMP_InputField PasswordInput;
+        #region View
+        private Button UICloseBtn;
         private TMP_InputField UsernameInput;
+        private TMP_InputField PasswordInput;
         private Button LoginBtn;
         private Button RegisterBtn;
-        private Button UICloseBtn;
-
-        public bool loginSuccess = false;
-
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            PasswordInput = c.dict["PasswordInput"] as TMP_InputField;
-            UsernameInput = c.dict["UsernameInput"] as TMP_InputField;
-            LoginBtn = c.dict["LoginBtn"] as Button;
-            RegisterBtn = c.dict["RegisterBtn"] as Button;
-            UICloseBtn = c.dict["UICloseBtn"] as Button;
+            UICloseBtn = c.Q<Button>(0, "UICloseBtn");
+            UsernameInput = c.Q<TMP_InputField>(1, "UsernameInput");
+            PasswordInput = c.Q<TMP_InputField>(2, "PasswordInput");
+            LoginBtn = c.Q<Button>(3, "LoginBtn");
+            RegisterBtn = c.Q<Button>(4, "RegisterBtn");
         }
+        #endregion
+
+        public bool LoginSuccess { get; private set; }
 
         private void Awake()
         {
@@ -44,7 +44,7 @@ namespace Kirara.UI.Panel
                     Username = UsernameInput.text,
                     Password = PasswordInput.text
                 });
-                loginSuccess = true;
+                LoginSuccess = true;
                 UIMgr.Instance.PopPanel(this);
             }
             catch (ResultException e)

@@ -12,24 +12,23 @@ using YooAsset;
 public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
 {
     #region View
-    private TextMeshProUGUI InfoText;
-    private Image WearerIconImg;
-    private Image IconImg;
-    private Button Btn;
+    private TextMeshProUGUI    InfoText;
+    private Image              WearerIconImg;
+    private Image              IconImg;
+    private Button             Btn;
     private UIInventoryRankBar UIInventoryRankBar;
-    private UIDiscPosIcon UIDiscPosIcon;
-    private Image SelectBorder;
+    private UIDiscPosIcon      UIDiscPosIcon;
+    private Image              SelectBorder;
     private void InitUI()
     {
-        var c = GetComponent<KiraraRuntimeComponents>();
-        c.Init();
-        InfoText = c.Q<TextMeshProUGUI>("InfoText");
-        WearerIconImg = c.Q<Image>("WearerIconImg");
-        IconImg = c.Q<Image>("IconImg");
-        Btn = c.Q<Button>("Btn");
-        UIInventoryRankBar = c.Q<UIInventoryRankBar>("UIInventoryRankBar");
-        UIDiscPosIcon = c.Q<UIDiscPosIcon>("UIDiscPosIcon");
-        SelectBorder = c.Q<Image>("SelectBorder");
+        var c              = GetComponent<KiraraRuntimeComponents>();
+        InfoText           = c.Q<TextMeshProUGUI>(0, "InfoText");
+        WearerIconImg      = c.Q<Image>(1, "WearerIconImg");
+        IconImg            = c.Q<Image>(2, "IconImg");
+        Btn                = c.Q<Button>(3, "Btn");
+        UIInventoryRankBar = c.Q<UIInventoryRankBar>(4, "UIInventoryRankBar");
+        UIDiscPosIcon      = c.Q<UIDiscPosIcon>(5, "UIDiscPosIcon");
+        SelectBorder       = c.Q<Image>(6, "SelectBorder");
     }
     #endregion
 

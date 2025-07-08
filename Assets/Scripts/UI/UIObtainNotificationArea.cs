@@ -12,14 +12,13 @@ namespace Kirara.UI
     public class UIObtainNotificationArea : MonoBehaviour
     {
         #region View
-        private RectTransform NotificationsParent;
+        private RectTransform   NotificationsParent;
         private TextMeshProUGUI TitleText;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            NotificationsParent = c.Q<RectTransform>("NotificationsParent");
-            TitleText = c.Q<TextMeshProUGUI>("TitleText");
+            var c               = GetComponent<KiraraRuntimeComponents>();
+            NotificationsParent = c.Q<RectTransform>(0, "NotificationsParent");
+            TitleText           = c.Q<TextMeshProUGUI>(1, "TitleText");
         }
         #endregion
 

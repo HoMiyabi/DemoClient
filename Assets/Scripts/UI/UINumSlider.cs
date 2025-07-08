@@ -7,22 +7,22 @@ namespace Kirara.UI
 {
     public class UINumSlider : MonoBehaviour
     {
-        private Button DecreaseBtn;
+        #region View
+        private Button          DecreaseBtn;
         private TextMeshProUGUI MinText;
-        private Slider Slider;
+        private Slider          Slider;
         private TextMeshProUGUI MaxText;
-        private Button IncreaseBtn;
-
+        private Button          IncreaseBtn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            DecreaseBtn = c.dict["DecreaseBtn"] as Button;
-            MinText = c.dict["MinText"] as TextMeshProUGUI;
-            Slider = c.dict["Slider"] as Slider;
-            MaxText = c.dict["MaxText"] as TextMeshProUGUI;
-            IncreaseBtn = c.dict["IncreaseBtn"] as Button;
+            var c       = GetComponent<KiraraRuntimeComponents>();
+            DecreaseBtn = c.Q<Button>(0, "DecreaseBtn");
+            MinText     = c.Q<TextMeshProUGUI>(1, "MinText");
+            Slider      = c.Q<Slider>(2, "Slider");
+            MaxText     = c.Q<TextMeshProUGUI>(3, "MaxText");
+            IncreaseBtn = c.Q<Button>(4, "IncreaseBtn");
         }
+        #endregion
 
         private int value;
         public int Value

@@ -10,28 +10,27 @@ namespace Kirara.UI.Panel
     public class QuestPanel : BasePanel
     {
         #region View
-        private Button UIBackBtn;
-        private Button TrackTargetBtn;
-        private TextMeshProUGUI QuestChainNameText;
-        private TextMeshProUGUI QuestNameText;
-        private TextMeshProUGUI QuestDescText;
-        private TextMeshProUGUI TrackTargetBtnText;
-        private TextMeshProUGUI QuestProgressText;
-        private UIQuestRewordBar UIQuestRewordBar;
+        private Button                 UIBackBtn;
+        private Button                 TrackTargetBtn;
+        private TextMeshProUGUI        QuestChainNameText;
+        private TextMeshProUGUI        QuestNameText;
+        private TextMeshProUGUI        QuestDescText;
+        private TextMeshProUGUI        TrackTargetBtnText;
+        private TextMeshProUGUI        QuestProgressText;
+        private UIQuestRewordBar       UIQuestRewordBar;
         private LoopVerticalScrollRect LoopScroll;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIBackBtn = c.Q<Button>("UIBackBtn");
-            TrackTargetBtn = c.Q<Button>("TrackTargetBtn");
-            QuestChainNameText = c.Q<TextMeshProUGUI>("QuestChainNameText");
-            QuestNameText = c.Q<TextMeshProUGUI>("QuestNameText");
-            QuestDescText = c.Q<TextMeshProUGUI>("QuestDescText");
-            TrackTargetBtnText = c.Q<TextMeshProUGUI>("TrackTargetBtnText");
-            QuestProgressText = c.Q<TextMeshProUGUI>("QuestProgressText");
-            UIQuestRewordBar = c.Q<UIQuestRewordBar>("UIQuestRewordBar");
-            LoopScroll = c.Q<LoopVerticalScrollRect>("LoopScroll");
+            var c              = GetComponent<KiraraRuntimeComponents>();
+            UIBackBtn          = c.Q<Button>(0, "UIBackBtn");
+            TrackTargetBtn     = c.Q<Button>(1, "TrackTargetBtn");
+            QuestChainNameText = c.Q<TextMeshProUGUI>(2, "QuestChainNameText");
+            QuestNameText      = c.Q<TextMeshProUGUI>(3, "QuestNameText");
+            QuestDescText      = c.Q<TextMeshProUGUI>(4, "QuestDescText");
+            TrackTargetBtnText = c.Q<TextMeshProUGUI>(5, "TrackTargetBtnText");
+            QuestProgressText  = c.Q<TextMeshProUGUI>(6, "QuestProgressText");
+            UIQuestRewordBar   = c.Q<UIQuestRewordBar>(7, "UIQuestRewordBar");
+            LoopScroll         = c.Q<LoopVerticalScrollRect>(8, "LoopScroll");
         }
         #endregion
 

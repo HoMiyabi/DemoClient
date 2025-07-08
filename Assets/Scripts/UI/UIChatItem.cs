@@ -10,22 +10,22 @@ namespace Kirara.UI
 
     public class UIChatItem : MonoBehaviour
     {
-        private Image AvatarImg;
-        private TextMeshProUGUI ChatText;
+        #region View
+        private Image                 AvatarImg;
+        private TextMeshProUGUI       ChatText;
         private HorizontalLayoutGroup Layout;
-        private Image ChatBubble;
-        private Image ChatStickerImg;
-
+        private Image                 ChatBubble;
+        private Image                 ChatStickerImg;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            AvatarImg = c.Q<Image>("AvatarImg");
-            ChatText = c.Q<TextMeshProUGUI>("ChatText");
-            Layout = c.Q<HorizontalLayoutGroup>("Layout");
-            ChatBubble = c.Q<Image>("ChatBubble");
-            ChatStickerImg = c.Q<Image>("ChatStickerImg");
+            var c          = GetComponent<KiraraRuntimeComponents>();
+            AvatarImg      = c.Q<Image>(0, "AvatarImg");
+            ChatText       = c.Q<TextMeshProUGUI>(1, "ChatText");
+            Layout         = c.Q<HorizontalLayoutGroup>(2, "Layout");
+            ChatBubble     = c.Q<Image>(3, "ChatBubble");
+            ChatStickerImg = c.Q<Image>(4, "ChatStickerImg");
         }
+        #endregion
 
         [SerializeField] private bool isLeft = true;
         [SerializeField] private Color leftBubbleColor = Color.white;

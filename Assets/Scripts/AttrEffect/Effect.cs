@@ -11,6 +11,11 @@ namespace Kirara.AttrEffect
         HasDuration
     }
 
+    public enum RefreshPolicy
+    {
+
+    }
+
     public class Effect
     {
         public readonly string name;

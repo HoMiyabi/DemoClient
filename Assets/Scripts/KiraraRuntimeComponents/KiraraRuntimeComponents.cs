@@ -27,62 +27,48 @@ namespace Kirara.UI
             }
         }
 
-        public Component addComponent;
-
         public List<Item> items = new();
 
-        public Dictionary<string, Component> dict;
-
-        public void Init()
+        public T Q<T>(int index, string fieldName) where T : Component
         {
-            dict = items.ToDictionary(x => x.fieldName, x => x.component);
-        }
-
-        public T Q<T>(string fieldName) where T : Component
-        {
-            if (!dict.TryGetValue(fieldName, out var component))
+            if (index < 0 || index >= items.Count)
             {
-                Debug.LogError($"{name}找不到组件{fieldName}，是否未更新代码？");
+                Debug.LogWarning($"索引越界, index: {index}, fieldName: {fieldName}, items.Count: {items.Count}");
                 return null;
             }
-            if (component == null)
+            var item = items[index];
+            if (item.fieldName != fieldName)
             {
-                Debug.LogWarning($"{component.name}组件{fieldName}为空");
+                Debug.LogWarning($"字段名不匹配, index: {index}, fieldName: {fieldName}, item.fieldName: {item.fieldName}");
+                return null;
+            }
+            var component = item.component;
+            if (!component)
+            {
+                Debug.LogWarning($"组件为null, index: {index}, fieldName: {fieldName}");
                 return null;
             }
             var com = component as T;
-            if (com == null)
+            if (!com)
             {
-                Debug.LogError($"{component.name}组件{fieldName}类型不为{typeof(T).Name}，请检查代码");
+                Debug.LogWarning($"组件类型不匹配, index: {index}, fieldName: {fieldName}, 组件实际类型: {component.GetType()}");
                 return null;
             }
             return com;
         }
 
 #if UNITY_EDITOR
-
-        private void OnValidate()
-        {
-            if (addComponent != null)
-            {
-                items.Add(new Item(addComponent.name, addComponent));
-                addComponent = null;
-            }
-        }
-
         [UnityEditor.InitializeOnLoadMethod]
         private static void Load()
         {
             UnityEditor.EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyWindowItemOnGUI;
         }
 
-        private static readonly string[] texts = new[]
-        {
+        private static readonly string[] texts = {
             "★",
         };
 
-        private static readonly Color[] colors = new[]
-        {
+        private static readonly Color[] colors = {
             Color.yellow,
             Color.white,
             Color.red,

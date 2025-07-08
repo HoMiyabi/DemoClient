@@ -7,18 +7,18 @@ namespace Kirara.UI
 {
     public class UISettingItem : MonoBehaviour
     {
+        #region View
         private TextMeshProUGUI NameText;
         private TextMeshProUGUI ValueText;
-        private Slider Slider;
-
+        private Slider          Slider;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            NameText = c.dict["NameText"] as TextMeshProUGUI;
-            ValueText = c.dict["ValueText"] as TextMeshProUGUI;
-            Slider = c.dict["Slider"] as Slider;
+            var c     = GetComponent<KiraraRuntimeComponents>();
+            NameText  = c.Q<TextMeshProUGUI>(0, "NameText");
+            ValueText = c.Q<TextMeshProUGUI>(1, "ValueText");
+            Slider    = c.Q<Slider>(2, "Slider");
         }
+        #endregion
 
         private void Awake()
         {

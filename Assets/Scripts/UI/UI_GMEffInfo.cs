@@ -13,8 +13,7 @@ namespace Kirara.UI
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Text = c.Q<TextMeshProUGUI>("Text");
+            Text  = c.Q<TextMeshProUGUI>(0, "Text");
         }
         #endregion
 

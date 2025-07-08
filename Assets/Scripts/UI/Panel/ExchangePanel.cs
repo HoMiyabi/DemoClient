@@ -10,16 +10,16 @@ namespace Kirara.UI.Panel
 {
     public class ExchangePanel : BasePanel
     {
-        private Button UIBackBtn;
+        #region View
+        private Button                 UIBackBtn;
         private LoopVerticalScrollRect ExchangeLoopScroll;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIBackBtn = c.dict["UIBackBtn"] as Button;
-            ExchangeLoopScroll = c.dict["ExchangeLoopScroll"] as LoopVerticalScrollRect;
+            var c              = GetComponent<KiraraRuntimeComponents>();
+            UIBackBtn          = c.Q<Button>(0, "UIBackBtn");
+            ExchangeLoopScroll = c.Q<LoopVerticalScrollRect>(1, "ExchangeLoopScroll");
         }
+        #endregion
 
         private AssetHandle cellHandle;
 

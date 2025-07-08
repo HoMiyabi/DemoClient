@@ -12,18 +12,17 @@ namespace Kirara.UI
     public class UIObtainNotification : MonoBehaviour
     {
         #region View
-        private Image Icon;
+        private Image           Icon;
         private TextMeshProUGUI NameText;
         private TextMeshProUGUI CountText;
-        private CanvasGroup Group;
+        private CanvasGroup     Group;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Icon = c.Q<Image>("Icon");
-            NameText = c.Q<TextMeshProUGUI>("NameText");
-            CountText = c.Q<TextMeshProUGUI>("CountText");
-            Group = c.Q<CanvasGroup>("Group");
+            var c     = GetComponent<KiraraRuntimeComponents>();
+            Icon      = c.Q<Image>(0, "Icon");
+            NameText  = c.Q<TextMeshProUGUI>(1, "NameText");
+            CountText = c.Q<TextMeshProUGUI>(2, "CountText");
+            Group     = c.Q<CanvasGroup>(3, "Group");
         }
         #endregion
 

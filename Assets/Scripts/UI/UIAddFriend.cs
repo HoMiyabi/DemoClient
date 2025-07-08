@@ -7,18 +7,18 @@ namespace Kirara.UI
 {
     public class UIAddFriend : MonoBehaviour
     {
+        #region View
         private TextMeshProUGUI FriendRequestCountText;
-        private TMP_InputField SearchInput;
-        private Button SearchBtn;
-
+        private TMP_InputField  SearchInput;
+        private Button          SearchBtn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            FriendRequestCountText = c.Q<TextMeshProUGUI>("FriendRequestCountText");
-            SearchInput = c.Q<TMP_InputField>("SearchInput");
-            SearchBtn = c.Q<Button>("SearchBtn");
+            var c                  = GetComponent<KiraraRuntimeComponents>();
+            FriendRequestCountText = c.Q<TextMeshProUGUI>(0, "FriendRequestCountText");
+            SearchInput            = c.Q<TMP_InputField>(1, "SearchInput");
+            SearchBtn              = c.Q<Button>(2, "SearchBtn");
         }
+        #endregion
 
         private void Awake()
         {

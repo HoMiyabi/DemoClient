@@ -9,22 +9,22 @@ namespace Kirara.UI.Panel
 {
     public class ObtainPanel : BasePanel
     {
-        private Button ConfirmBtn;
+        #region View
+        private Button          ConfirmBtn;
         private TextMeshProUGUI ToItemCountText;
-        private Image Icon;
-        private Button UIOverlayBtn;
+        private Image           Icon;
+        private Button          UIOverlayBtn;
         private TextMeshProUGUI NameText;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            ConfirmBtn = c.dict["ConfirmBtn"] as Button;
-            ToItemCountText = c.dict["ToItemCountText"] as TextMeshProUGUI;
-            Icon = c.dict["Icon"] as Image;
-            UIOverlayBtn = c.dict["UIOverlayBtn"] as Button;
-            NameText = c.dict["NameText"] as TextMeshProUGUI;
+            var c           = GetComponent<KiraraRuntimeComponents>();
+            ConfirmBtn      = c.Q<Button>(0, "ConfirmBtn");
+            ToItemCountText = c.Q<TextMeshProUGUI>(1, "ToItemCountText");
+            Icon            = c.Q<Image>(2, "Icon");
+            UIOverlayBtn    = c.Q<Button>(3, "UIOverlayBtn");
+            NameText        = c.Q<TextMeshProUGUI>(4, "NameText");
         }
+        #endregion
 
         private AssetHandle iconHandle;
 

@@ -11,16 +11,16 @@ namespace Kirara.UI
 {
     public class UISelectSticker : MonoBehaviour, LoopScrollDataSource
     {
-        private LoopVerticalScrollRect SelectStickerLoopScroll;
+        #region View
+        private LoopVerticalScrollRect       SelectStickerLoopScroll;
         private SimpleLoopScrollPrefabSource SelectStickerLoopScrollPrefabSource;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            SelectStickerLoopScroll = c.Q<LoopVerticalScrollRect>("SelectStickerLoopScroll");
-            SelectStickerLoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>("SelectStickerLoopScrollPrefabSource");
+            var c                               = GetComponent<KiraraRuntimeComponents>();
+            SelectStickerLoopScroll             = c.Q<LoopVerticalScrollRect>(0, "SelectStickerLoopScroll");
+            SelectStickerLoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(1, "SelectStickerLoopScrollPrefabSource");
         }
+        #endregion
 
         private ChatPanel chatPanel;
         private List<int> stickerConfigIds;

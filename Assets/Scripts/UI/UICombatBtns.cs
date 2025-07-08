@@ -13,13 +13,12 @@ namespace Kirara.UI
         private Button UltimateBtn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            SwitchBtn = c.Q<Button>("SwitchBtn");
-            SpecialSkillBtn = c.Q<Button>("SpecialSkillBtn");
-            DodgeBtn = c.Q<Button>("DodgeBtn");
-            AttackBtn = c.Q<Button>("AttackBtn");
-            UltimateBtn = c.Q<Button>("UltimateBtn");
+            var c           = GetComponent<KiraraRuntimeComponents>();
+            SwitchBtn       = c.Q<Button>(0, "SwitchBtn");
+            SpecialSkillBtn = c.Q<Button>(1, "SpecialSkillBtn");
+            DodgeBtn        = c.Q<Button>(2, "DodgeBtn");
+            AttackBtn       = c.Q<Button>(3, "AttackBtn");
+            UltimateBtn     = c.Q<Button>(4, "UltimateBtn");
         }
         #endregion
 

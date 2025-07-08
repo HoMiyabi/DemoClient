@@ -7,6 +7,7 @@ namespace Kirara.UI.Panel
 {
     public class AlterDialogPanel : BasePanel
     {
+        #region View
         private Image BoxBgImg;
         private TextMeshProUGUI TitleText;
         private TextMeshProUGUI ContentText;
@@ -15,20 +16,19 @@ namespace Kirara.UI.Panel
         private RectTransform BoxTra;
         private Image BgImg;
         private CanvasGroup CanvasGroup;
-
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            BoxBgImg = c.Q<Image>("BoxBgImg");
-            TitleText = c.Q<TextMeshProUGUI>("TitleText");
-            ContentText = c.Q<TextMeshProUGUI>("ContentText");
-            OkBtn = c.Q<Button>("OkBtn");
-            CloseBtn = c.Q<Button>("CloseBtn");
-            BoxTra = c.Q<RectTransform>("BoxTra");
-            BgImg = c.Q<Image>("BgImg");
-            CanvasGroup = c.Q<CanvasGroup>("CanvasGroup");
+            BoxBgImg = c.Q<Image>(0, "BoxBgImg");
+            TitleText = c.Q<TextMeshProUGUI>(1, "TitleText");
+            ContentText = c.Q<TextMeshProUGUI>(2, "ContentText");
+            OkBtn = c.Q<Button>(3, "OkBtn");
+            CloseBtn = c.Q<Button>(4, "CloseBtn");
+            BoxTra = c.Q<RectTransform>(5, "BoxTra");
+            BgImg = c.Q<Image>(6, "BgImg");
+            CanvasGroup = c.Q<CanvasGroup>(7, "CanvasGroup");
         }
+        #endregion
 
         private void Awake()
         {

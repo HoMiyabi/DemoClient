@@ -9,16 +9,16 @@ namespace Kirara.UI
 {
     public class DiscSlot : MonoBehaviour
     {
-        private Image Img;
+        #region View
+        private Image  Img;
         private Button Btn;
-
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Img = c.Q<Image>("Img");
-            Btn = c.Q<Button>("Btn");
+            Img   = c.Q<Image>(0, "Img");
+            Btn   = c.Q<Button>(1, "Btn");
         }
+        #endregion
 
         private void Awake()
         {

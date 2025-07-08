@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Kirara.Manager;
 using Manager;
 using TMPro;
@@ -10,16 +9,16 @@ namespace Kirara.UI.Panel
 {
     public class BootPanel : BasePanel
     {
+        #region View
         private Button BgBtn;
         private TextMeshProUGUI StatusText;
-
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            BgBtn = c.Q<Button>("BgBtn");
-            StatusText = c.Q<TextMeshProUGUI>("StatusText");
+            BgBtn = c.Q<Button>(0, "BgBtn");
+            StatusText = c.Q<TextMeshProUGUI>(1, "StatusText");
         }
+        #endregion
 
         private void Awake()
         {
@@ -33,29 +32,34 @@ namespace Kirara.UI.Panel
             Boot().Forget();
         }
 
+        private void SetStatus(string text)
+        {
+            Debug.Log(text);
+            StatusText.text = text;
+        }
+
         private async UniTaskVoid Boot()
         {
-            Debug.Log("连接服务器...");
-            StatusText.text = "连接服务器...";
+            SetStatus("连接服务器...");
             NetMgr.Instance.Init();
             NetMgr.Instance.Connect();
 
-            Debug.Log("初始化资源...");
-            StatusText.text = "初始化资源...";
+            SetStatus("初始化资源...");
             await AssetMgr.Instance.InitAll().ToUniTask();
 
-            Debug.Log("加载配置...");
-            StatusText.text = "加载配置...";
+            SetStatus("初始化脚本...");
+            LuaMgr.Instance.Init();
+
+            SetStatus("加载配置...");
             ConfigMgr.LoadTables();
 
-            Debug.Log("点击登录");
-            StatusText.text = "点击登录";
+            SetStatus("点击登录");
             BgBtn.onClick.AddListener(() =>
             {
                 var login = UIMgr.Instance.PushPanel<LoginDialogPanel>();
                 login.onClosed = UniTask.Action(async () =>
                 {
-                    if (!login.loginSuccess) return;
+                    if (!login.LoginSuccess) return;
 
                     BgBtn.onClick.RemoveAllListeners();
 

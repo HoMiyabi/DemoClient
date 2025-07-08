@@ -6,16 +6,16 @@ namespace Kirara.UI
 {
     public class UISelectStickerCell : MonoBehaviour
     {
+        #region View
         private Button Btn;
-        private Image Img;
-
+        private Image  Img;
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Btn = c.Q<Button>("Btn");
-            Img = c.Q<Image>("Img");
+            Btn   = c.Q<Button>(0, "Btn");
+            Img   = c.Q<Image>(1, "Img");
         }
+        #endregion
 
         private void Awake()
         {

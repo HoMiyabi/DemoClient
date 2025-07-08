@@ -10,16 +10,16 @@ namespace Kirara.UI.Panel
 {
     public class LoadingPanel : BasePanel
     {
-        private Image ProgressBarImg;
+        #region View
+        private Image           ProgressBarImg;
         private TextMeshProUGUI ProgressText;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            ProgressBarImg = c.dict["ProgressBarImg"] as Image;
-            ProgressText = c.dict["ProgressText"] as TextMeshProUGUI;
+            var c          = GetComponent<KiraraRuntimeComponents>();
+            ProgressBarImg = c.Q<Image>(0, "ProgressBarImg");
+            ProgressText   = c.Q<TextMeshProUGUI>(1, "ProgressText");
         }
+        #endregion
 
         private float progress;
 

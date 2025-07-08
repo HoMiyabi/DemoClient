@@ -10,28 +10,27 @@ namespace Kirara.UI.Panel
     public class InventoryPanel : BasePanel
     {
         #region View
-        private Button UIBackBtn;
+        private Button          UIBackBtn;
         private TextMeshProUGUI CoinText;
-        private Image CoinIconImg;
+        private Image           CoinIconImg;
         private TextMeshProUGUI InventoryNameText;
-        private UIDiscDetail UIDiscDetail;
+        private UIDiscDetail    UIDiscDetail;
         private UITabController UITabController;
-        private UIWeaponDetail UIWeaponDetail;
-        private GridScroller WeaponLoopScroll;
-        private GridScroller DiscLoopScroll;
+        private UIWeaponDetail  UIWeaponDetail;
+        private GridScroller    WeaponLoopScroll;
+        private GridScroller    DiscLoopScroll;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIBackBtn = c.Q<Button>("UIBackBtn");
-            CoinText = c.Q<TextMeshProUGUI>("CoinText");
-            CoinIconImg = c.Q<Image>("CoinIconImg");
-            InventoryNameText = c.Q<TextMeshProUGUI>("InventoryNameText");
-            UIDiscDetail = c.Q<UIDiscDetail>("UIDiscDetail");
-            UITabController = c.Q<UITabController>("UITabController");
-            UIWeaponDetail = c.Q<UIWeaponDetail>("UIWeaponDetail");
-            WeaponLoopScroll = c.Q<GridScroller>("WeaponLoopScroll");
-            DiscLoopScroll = c.Q<GridScroller>("DiscLoopScroll");
+            var c             = GetComponent<KiraraRuntimeComponents>();
+            UIBackBtn         = c.Q<Button>(0, "UIBackBtn");
+            CoinText          = c.Q<TextMeshProUGUI>(1, "CoinText");
+            CoinIconImg       = c.Q<Image>(2, "CoinIconImg");
+            InventoryNameText = c.Q<TextMeshProUGUI>(3, "InventoryNameText");
+            UIDiscDetail      = c.Q<UIDiscDetail>(4, "UIDiscDetail");
+            UITabController   = c.Q<UITabController>(5, "UITabController");
+            UIWeaponDetail    = c.Q<UIWeaponDetail>(6, "UIWeaponDetail");
+            WeaponLoopScroll  = c.Q<GridScroller>(7, "WeaponLoopScroll");
+            DiscLoopScroll    = c.Q<GridScroller>(8, "DiscLoopScroll");
         }
         #endregion
 

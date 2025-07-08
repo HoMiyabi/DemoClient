@@ -138,11 +138,8 @@ namespace Kirara.Model
                 // Advanced 进阶属性
                 weapon.AdvancedAttr.GetModifier()
             };
-            string abilityName = weapon.Name + "主动";
-            ae.AddAbility(new Ability(
-                abilityName,
-                new Effect(abilityName, EffectDurationPolicy.Infinite, 0, modifiers)
-                ));
+            string name = weapon.Name + "主动";
+            ae.AddAbility(new Ability(name));
 
             // 添加被动能力
             foreach (var abilityConfig in weapon.Config.PassiveAbilities)
@@ -224,10 +221,7 @@ namespace Kirara.Model
                 modifiers.Add(nIdModifier.GetModifier());
             }
 
-            ae.AddAbility(new Ability(
-                $"驱动盘{pos}",
-                new Effect($"驱动盘{pos}", EffectDurationPolicy.Infinite, 0, modifiers)
-                ));
+            ae.AddAbility(new Ability($"驱动盘{pos}"));
         }
 
         private bool IsDiscSameConfig(DiscItem disc1, DiscItem disc2)

@@ -1,12 +1,12 @@
 ﻿using cfg.main;
 using Kirara.Model;
-using Manager;
 using UnityEngine;
 
 namespace Kirara.UI
 {
     public class UICharacterBasicStat : MonoBehaviour
     {
+        #region View
         private UIStatBar HPStatBar;
         private UIStatBar ATKStatBar;
         private UIStatBar DEFStatBar;
@@ -17,22 +17,21 @@ namespace Kirara.UI
         private UIStatBar AnomalyProficiencyStatBar;
         private UIStatBar PEN_RatioStatBar;
         private UIStatBar EnergyRegenStatBar;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            HPStatBar = c.Q<UIStatBar>("HPStatBar");
-            ATKStatBar = c.Q<UIStatBar>("ATKStatBar");
-            DEFStatBar = c.Q<UIStatBar>("DEFStatBar");
-            ImpactStatBar = c.Q<UIStatBar>("ImpactStatBar");
-            CRIT_RateStatBar = c.Q<UIStatBar>("CRIT_RateStatBar");
-            CRIT_DMGStatBar = c.Q<UIStatBar>("CRIT_DMGStatBar");
-            AnomalyMasteryStatBar = c.Q<UIStatBar>("AnomalyMasteryStatBar");
-            AnomalyProficiencyStatBar = c.Q<UIStatBar>("AnomalyProficiencyStatBar");
-            PEN_RatioStatBar = c.Q<UIStatBar>("PEN_RatioStatBar");
-            EnergyRegenStatBar = c.Q<UIStatBar>("EnergyRegenStatBar");
+            var c                     = GetComponent<KiraraRuntimeComponents>();
+            HPStatBar                 = c.Q<UIStatBar>(0, "HPStatBar");
+            ATKStatBar                = c.Q<UIStatBar>(1, "ATKStatBar");
+            DEFStatBar                = c.Q<UIStatBar>(2, "DEFStatBar");
+            ImpactStatBar             = c.Q<UIStatBar>(3, "ImpactStatBar");
+            CRIT_RateStatBar          = c.Q<UIStatBar>(4, "CRIT_RateStatBar");
+            CRIT_DMGStatBar           = c.Q<UIStatBar>(5, "CRIT_DMGStatBar");
+            AnomalyMasteryStatBar     = c.Q<UIStatBar>(6, "AnomalyMasteryStatBar");
+            AnomalyProficiencyStatBar = c.Q<UIStatBar>(7, "AnomalyProficiencyStatBar");
+            PEN_RatioStatBar          = c.Q<UIStatBar>(8, "PEN_RatioStatBar");
+            EnergyRegenStatBar        = c.Q<UIStatBar>(9, "EnergyRegenStatBar");
         }
+        #endregion
 
         private Role ch;
 

@@ -8,22 +8,22 @@ namespace Kirara.UI
 {
     public class UIUpgradeDiscExpBar : MonoBehaviour
     {
-        private Image BgBar;
-        private Image Bar;
+        #region View
+        private Image           BgBar;
+        private Image           Bar;
         private TextMeshProUGUI CurrentLevelText;
         private TextMeshProUGUI UpgradedLevelText;
         private TextMeshProUGUI ExpText;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            BgBar = c.Q<Image>("BgBar");
-            Bar = c.Q<Image>("Bar");
-            CurrentLevelText = c.Q<TextMeshProUGUI>("CurrentLevelText");
-            UpgradedLevelText = c.Q<TextMeshProUGUI>("UpgradedLevelText");
-            ExpText = c.Q<TextMeshProUGUI>("ExpText");
+            var c             = GetComponent<KiraraRuntimeComponents>();
+            BgBar             = c.Q<Image>(0, "BgBar");
+            Bar               = c.Q<Image>(1, "Bar");
+            CurrentLevelText  = c.Q<TextMeshProUGUI>(2, "CurrentLevelText");
+            UpgradedLevelText = c.Q<TextMeshProUGUI>(3, "UpgradedLevelText");
+            ExpText           = c.Q<TextMeshProUGUI>(4, "ExpText");
         }
+        #endregion
 
         private DiscItem disc;
 

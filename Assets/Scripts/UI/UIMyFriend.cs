@@ -8,18 +8,18 @@ namespace Kirara.UI
 {
     public class UIMyFriend : MonoBehaviour, LoopScrollDataSource
     {
-        private TextMeshProUGUI FriendCountText;
-        private LoopVerticalScrollRect LoopScroll;
+        #region View
+        private TextMeshProUGUI              FriendCountText;
+        private LoopVerticalScrollRect       LoopScroll;
         private SimpleLoopScrollPrefabSource LoopScrollPrefabSource;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            FriendCountText = c.Q<TextMeshProUGUI>("FriendCountText");
-            LoopScroll = c.Q<LoopVerticalScrollRect>("LoopScroll");
-            LoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>("LoopScrollPrefabSource");
+            var c                  = GetComponent<KiraraRuntimeComponents>();
+            FriendCountText        = c.Q<TextMeshProUGUI>(0, "FriendCountText");
+            LoopScroll             = c.Q<LoopVerticalScrollRect>(1, "LoopScroll");
+            LoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(2, "LoopScrollPrefabSource");
         }
+        #endregion
 
         private List<SocialPlayer> friends;
 

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,16 +8,16 @@ namespace Kirara.UI
 {
     public class UIDialogueText : MonoBehaviour
     {
-        private TextMeshProUGUI ContentText;
+        #region View
+        private TextMeshProUGUI       ContentText;
         private HorizontalLayoutGroup Layout;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            ContentText = c.Q<TextMeshProUGUI>("ContentText");
-            Layout = c.Q<HorizontalLayoutGroup>("Layout");
+            var c       = GetComponent<KiraraRuntimeComponents>();
+            ContentText = c.Q<TextMeshProUGUI>(0, "ContentText");
+            Layout      = c.Q<HorizontalLayoutGroup>(1, "Layout");
         }
+        #endregion
 
         public bool IsPlaying { get; private set; }
 

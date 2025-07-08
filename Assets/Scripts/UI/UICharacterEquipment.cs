@@ -1,5 +1,4 @@
-﻿using System;
-using Kirara.Model;
+﻿using Kirara.Model;
 using Kirara.UI.Panel;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,23 +9,22 @@ namespace Kirara.UI
     {
         #region View
         private UIWeaponSlot UIWeaponSlot;
-        private DiscSlot UIDiscSlot;
-        private DiscSlot UIDiscSlot1;
-        private DiscSlot UIDiscSlot2;
-        private DiscSlot UIDiscSlot3;
-        private DiscSlot UIDiscSlot4;
-        private DiscSlot UIDiscSlot5;
+        private DiscSlot     UIDiscSlot;
+        private DiscSlot     UIDiscSlot1;
+        private DiscSlot     UIDiscSlot2;
+        private DiscSlot     UIDiscSlot3;
+        private DiscSlot     UIDiscSlot4;
+        private DiscSlot     UIDiscSlot5;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIWeaponSlot = c.Q<UIWeaponSlot>("UIWeaponSlot");
-            UIDiscSlot = c.Q<DiscSlot>("UIDiscSlot");
-            UIDiscSlot1 = c.Q<DiscSlot>("UIDiscSlot1");
-            UIDiscSlot2 = c.Q<DiscSlot>("UIDiscSlot2");
-            UIDiscSlot3 = c.Q<DiscSlot>("UIDiscSlot3");
-            UIDiscSlot4 = c.Q<DiscSlot>("UIDiscSlot4");
-            UIDiscSlot5 = c.Q<DiscSlot>("UIDiscSlot5");
+            var c        = GetComponent<KiraraRuntimeComponents>();
+            UIWeaponSlot = c.Q<UIWeaponSlot>(0, "UIWeaponSlot");
+            UIDiscSlot   = c.Q<DiscSlot>(1, "UIDiscSlot");
+            UIDiscSlot1  = c.Q<DiscSlot>(2, "UIDiscSlot1");
+            UIDiscSlot2  = c.Q<DiscSlot>(3, "UIDiscSlot2");
+            UIDiscSlot3  = c.Q<DiscSlot>(4, "UIDiscSlot3");
+            UIDiscSlot4  = c.Q<DiscSlot>(5, "UIDiscSlot4");
+            UIDiscSlot5  = c.Q<DiscSlot>(6, "UIDiscSlot5");
         }
         #endregion
 

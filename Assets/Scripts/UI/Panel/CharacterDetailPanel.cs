@@ -6,20 +6,20 @@ namespace Kirara.UI.Panel
 {
     public class CharacterDetailPanel : BasePanel
     {
+        #region View
         private UITabController UITabController;
         private Button UIBackBtn;
         private UICharacterBasicStat UICharacterBasicStat;
         private UICharacterEquipment UICharacterEquipment;
-
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UITabController = c.Q<UITabController>("UITabController");
-            UIBackBtn = c.Q<Button>("UIBackBtn");
-            UICharacterBasicStat = c.Q<UICharacterBasicStat>("UICharacterBasicStat");
-            UICharacterEquipment = c.Q<UICharacterEquipment>("UICharacterEquipment");
+            UITabController = c.Q<UITabController>(0, "UITabController");
+            UIBackBtn = c.Q<Button>(1, "UIBackBtn");
+            UICharacterBasicStat = c.Q<UICharacterBasicStat>(2, "UICharacterBasicStat");
+            UICharacterEquipment = c.Q<UICharacterEquipment>(3, "UICharacterEquipment");
         }
+        #endregion
 
         private Role ch;
 

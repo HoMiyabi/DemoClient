@@ -10,20 +10,20 @@ namespace Kirara.UI
 {
     public class UIChatFriendItem : MonoBehaviour
     {
-        private Image AvatarImg;
+        #region View
+        private Image           AvatarImg;
         private TextMeshProUGUI UsernameText;
         private TextMeshProUGUI OnlineStatus;
-        private Button Btn;
-
+        private Button          Btn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            AvatarImg = c.Q<Image>("AvatarImg");
-            UsernameText = c.Q<TextMeshProUGUI>("UsernameText");
-            OnlineStatus = c.Q<TextMeshProUGUI>("OnlineStatus");
-            Btn = c.Q<Button>("Btn");
+            var c        = GetComponent<KiraraRuntimeComponents>();
+            AvatarImg    = c.Q<Image>(0, "AvatarImg");
+            UsernameText = c.Q<TextMeshProUGUI>(1, "UsernameText");
+            OnlineStatus = c.Q<TextMeshProUGUI>(2, "OnlineStatus");
+            Btn          = c.Q<Button>(3, "Btn");
         }
+        #endregion
 
         private AssetHandle avatarHandle;
 

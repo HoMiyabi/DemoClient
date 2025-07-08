@@ -7,14 +7,14 @@ namespace Kirara.UI
 {
     public class UIDiscPosIcon : MonoBehaviour
     {
+        #region View
         private Image Img;
-
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Img = c.Q<Image>("Img");
+            Img   = c.Q<Image>(0, "Img");
         }
+        #endregion
 
         private AssetHandle handle;
 

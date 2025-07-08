@@ -10,11 +10,10 @@ namespace Kirara.UI
         private UISingleChStatusBar UISmallSingleChStatusBar1;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIBigSingleChStatusBar = c.Q<UISingleChStatusBar>("UIBigSingleChStatusBar");
-            UISmallSingleChStatusBar = c.Q<UISingleChStatusBar>("UISmallSingleChStatusBar");
-            UISmallSingleChStatusBar1 = c.Q<UISingleChStatusBar>("UISmallSingleChStatusBar1");
+            var c                     = GetComponent<KiraraRuntimeComponents>();
+            UIBigSingleChStatusBar    = c.Q<UISingleChStatusBar>(0, "UIBigSingleChStatusBar");
+            UISmallSingleChStatusBar  = c.Q<UISingleChStatusBar>(1, "UISmallSingleChStatusBar");
+            UISmallSingleChStatusBar1 = c.Q<UISingleChStatusBar>(2, "UISmallSingleChStatusBar1");
         }
         #endregion
 

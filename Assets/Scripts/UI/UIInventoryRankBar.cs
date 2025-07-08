@@ -5,14 +5,14 @@ namespace Kirara.UI
 {
     public class UIInventoryRankBar : MonoBehaviour
     {
+        #region View
         private Image Img;
-
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Img = c.Q<Image>("Img");
+            Img   = c.Q<Image>(0, "Img");
         }
+        #endregion
 
         [SerializeField] private Color SColor = Color.white;
         [SerializeField] private Color AColor = Color.white;

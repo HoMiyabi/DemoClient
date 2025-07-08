@@ -11,30 +11,30 @@ namespace Kirara.UI
 {
     public class UIWeaponDetail : MonoBehaviour
     {
+        #region View
         private TextMeshProUGUI NameText;
-        private Image WearerIconImg;
+        private Image           WearerIconImg;
         private TextMeshProUGUI LevelText;
-        private Image BackIconImg;
-        private Image IconImg;
-        private UIItemStar UIItemStar;
+        private Image           BackIconImg;
+        private Image           IconImg;
+        private UIItemStar      UIItemStar;
         private TextMeshProUGUI EffContentText;
-        private UIStatBar BaseStatBar;
-        private UIStatBar AdvancedStatBar;
-
+        private UIStatBar       BaseStatBar;
+        private UIStatBar       AdvancedStatBar;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            NameText = c.Q<TextMeshProUGUI>("NameText");
-            WearerIconImg = c.Q<Image>("WearerIconImg");
-            LevelText = c.Q<TextMeshProUGUI>("LevelText");
-            BackIconImg = c.Q<Image>("BackIconImg");
-            IconImg = c.Q<Image>("IconImg");
-            UIItemStar = c.Q<UIItemStar>("UIItemStar");
-            EffContentText = c.Q<TextMeshProUGUI>("EffContentText");
-            BaseStatBar = c.Q<UIStatBar>("BaseStatBar");
-            AdvancedStatBar = c.Q<UIStatBar>("AdvancedStatBar");
+            var c           = GetComponent<KiraraRuntimeComponents>();
+            NameText        = c.Q<TextMeshProUGUI>(0, "NameText");
+            WearerIconImg   = c.Q<Image>(1, "WearerIconImg");
+            LevelText       = c.Q<TextMeshProUGUI>(2, "LevelText");
+            BackIconImg     = c.Q<Image>(3, "BackIconImg");
+            IconImg         = c.Q<Image>(4, "IconImg");
+            UIItemStar      = c.Q<UIItemStar>(5, "UIItemStar");
+            EffContentText  = c.Q<TextMeshProUGUI>(6, "EffContentText");
+            BaseStatBar     = c.Q<UIStatBar>(7, "BaseStatBar");
+            AdvancedStatBar = c.Q<UIStatBar>(8, "AdvancedStatBar");
         }
+        #endregion
 
         private AssetHandle iconHandle;
 

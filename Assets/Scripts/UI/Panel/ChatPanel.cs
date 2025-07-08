@@ -11,6 +11,7 @@ namespace Kirara.UI.Panel
 {
     public class ChatPanel : BasePanel
     {
+        #region View
         private Button UIOverlayBtn;
         private Button UIBackBtn;
         private TMP_InputField ChatTextInput;
@@ -23,24 +24,23 @@ namespace Kirara.UI.Panel
         private Button UISelectStickerOverlay;
         private UISelectSticker UISelectSticker;
         private Button StickerBtn;
-
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIOverlayBtn = c.Q<Button>("UIOverlayBtn");
-            UIBackBtn = c.Q<Button>("UIBackBtn");
-            ChatTextInput = c.Q<TMP_InputField>("ChatTextInput");
-            SendBtn = c.Q<Button>("SendBtn");
-            UsernameText = c.Q<TextMeshProUGUI>("UsernameText");
-            ChatFriendLoopScroll = c.Q<LoopVerticalScrollRect>("ChatFriendLoopScroll");
-            ChatLoopScroll = c.Q<LoopVerticalScrollRect>("ChatLoopScroll");
-            ChatFriendPrefabSource = c.Q<SimpleLoopScrollPrefabSource>("ChatFriendPrefabSource");
-            ChatPrefabSource = c.Q<SimpleLoopScrollPrefabSource>("ChatPrefabSource");
-            UISelectStickerOverlay = c.Q<Button>("UISelectStickerOverlay");
-            UISelectSticker = c.Q<UISelectSticker>("UISelectSticker");
-            StickerBtn = c.Q<Button>("StickerBtn");
+            UIOverlayBtn = c.Q<Button>(0, "UIOverlayBtn");
+            UIBackBtn = c.Q<Button>(1, "UIBackBtn");
+            ChatTextInput = c.Q<TMP_InputField>(2, "ChatTextInput");
+            SendBtn = c.Q<Button>(3, "SendBtn");
+            UsernameText = c.Q<TextMeshProUGUI>(4, "UsernameText");
+            ChatFriendLoopScroll = c.Q<LoopVerticalScrollRect>(5, "ChatFriendLoopScroll");
+            ChatLoopScroll = c.Q<LoopVerticalScrollRect>(6, "ChatLoopScroll");
+            ChatFriendPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(7, "ChatFriendPrefabSource");
+            ChatPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(8, "ChatPrefabSource");
+            UISelectStickerOverlay = c.Q<Button>(9, "UISelectStickerOverlay");
+            UISelectSticker = c.Q<UISelectSticker>(10, "UISelectSticker");
+            StickerBtn = c.Q<Button>(11, "StickerBtn");
         }
+        #endregion
 
         private List<SocialPlayer> friends;
 

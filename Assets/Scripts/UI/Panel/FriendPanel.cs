@@ -5,14 +5,14 @@ namespace Kirara.UI.Panel
 {
     public class FriendPanel : BasePanel
     {
+        #region View
         private Button UIBackBtn;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIBackBtn = c.Q<Button>("UIBackBtn");
+            var c     = GetComponent<KiraraRuntimeComponents>();
+            UIBackBtn = c.Q<Button>(0, "UIBackBtn");
         }
+        #endregion
 
         private void Awake()
         {

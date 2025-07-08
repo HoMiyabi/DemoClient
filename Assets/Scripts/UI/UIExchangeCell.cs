@@ -10,24 +10,24 @@ namespace Kirara.UI
 {
     public class UIExchangeCell : MonoBehaviour
     {
+        #region View
         private TextMeshProUGUI ToItemNameText;
-        private Image FromItemIcon;
+        private Image           FromItemIcon;
         private TextMeshProUGUI FromItemCountText;
         private TextMeshProUGUI ToItemCountText;
-        private Image ToItemIcon;
-        private Button Btn;
-
+        private Image           ToItemIcon;
+        private Button          Btn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            ToItemNameText = c.Q<TextMeshProUGUI>("ToItemNameText");
-            FromItemIcon = c.Q<Image>("FromItemIcon");
-            FromItemCountText = c.Q<TextMeshProUGUI>("FromItemCountText");
-            ToItemCountText = c.Q<TextMeshProUGUI>("ToItemCountText");
-            ToItemIcon = c.Q<Image>("ToItemIcon");
-            Btn = c.Q<Button>("Btn");
+            var c             = GetComponent<KiraraRuntimeComponents>();
+            ToItemNameText    = c.Q<TextMeshProUGUI>(0, "ToItemNameText");
+            FromItemIcon      = c.Q<Image>(1, "FromItemIcon");
+            FromItemCountText = c.Q<TextMeshProUGUI>(2, "FromItemCountText");
+            ToItemCountText   = c.Q<TextMeshProUGUI>(3, "ToItemCountText");
+            ToItemIcon        = c.Q<Image>(4, "ToItemIcon");
+            Btn               = c.Q<Button>(5, "Btn");
         }
+        #endregion
 
         private void Awake()
         {

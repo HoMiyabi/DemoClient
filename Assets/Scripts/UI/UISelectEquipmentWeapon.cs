@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
-using Kirara.Service;
-using Kirara.System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,20 +10,20 @@ namespace Kirara.UI
 {
     public class UISelectEquipmentWeapon : MonoBehaviour, LoopScrollDataSource
     {
-        private UIWeaponDetail UIWeaponDetail;
-        private Button EquipBtn;
+        #region View
+        private UIWeaponDetail         UIWeaponDetail;
+        private Button                 EquipBtn;
         private LoopVerticalScrollRect LoopScroll;
-        private TextMeshProUGUI EquipBtnText;
-
+        private TextMeshProUGUI        EquipBtnText;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIWeaponDetail = c.Q<UIWeaponDetail>("UIWeaponDetail");
-            EquipBtn = c.Q<Button>("EquipBtn");
-            LoopScroll = c.Q<LoopVerticalScrollRect>("LoopScroll");
-            EquipBtnText = c.Q<TextMeshProUGUI>("EquipBtnText");
+            var c          = GetComponent<KiraraRuntimeComponents>();
+            UIWeaponDetail = c.Q<UIWeaponDetail>(0, "UIWeaponDetail");
+            EquipBtn       = c.Q<Button>(1, "EquipBtn");
+            LoopScroll     = c.Q<LoopVerticalScrollRect>(2, "LoopScroll");
+            EquipBtnText   = c.Q<TextMeshProUGUI>(3, "EquipBtnText");
         }
+        #endregion
 
         private void Awake()
         {

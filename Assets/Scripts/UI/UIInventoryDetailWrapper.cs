@@ -5,14 +5,14 @@ namespace Kirara.UI
 {
     public class UIInventoryDetailWrapper : MonoBehaviour
     {
+        #region View
         private RectTransform Viewport;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Viewport = c.Q<RectTransform>("Viewport");
+            var c    = GetComponent<KiraraRuntimeComponents>();
+            Viewport = c.Q<RectTransform>(0, "Viewport");
         }
+        #endregion
 
         public RectTransform DetailView => Viewport.GetChild(0) as RectTransform;
     }

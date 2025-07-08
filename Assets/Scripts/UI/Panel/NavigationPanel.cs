@@ -5,20 +5,20 @@ namespace Kirara.UI.Panel
 {
     public class NavigationPanel : BasePanel
     {
+        #region View
         private Button SettingBtn;
         private Button InventoryBtn;
         private Button UIBackBtn;
         private Button FriendBtn;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            SettingBtn = c.Q<Button>("SettingBtn");
-            InventoryBtn = c.Q<Button>("InventoryBtn");
-            UIBackBtn = c.Q<Button>("UIBackBtn");
-            FriendBtn = c.Q<Button>("FriendBtn");
+            var c        = GetComponent<KiraraRuntimeComponents>();
+            SettingBtn   = c.Q<Button>(0, "SettingBtn");
+            InventoryBtn = c.Q<Button>(1, "InventoryBtn");
+            UIBackBtn    = c.Q<Button>(2, "UIBackBtn");
+            FriendBtn    = c.Q<Button>(3, "FriendBtn");
         }
+        #endregion
 
         private void Awake()
         {

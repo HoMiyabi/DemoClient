@@ -9,18 +9,17 @@ using UnityEngine.UI;
 public class RoleSelectPanel : BasePanel
 {
     #region View
-    private Button UIBackBtn;
-    private Button SelectBtn;
-    private GridScroller LoopScroll;
+    private Button           UIBackBtn;
+    private Button           SelectBtn;
+    private GridScroller     LoopScroll;
     private SelectController SelectController;
     private void InitUI()
     {
-        var c = GetComponent<KiraraRuntimeComponents>();
-        c.Init();
-        UIBackBtn = c.Q<Button>("UIBackBtn");
-        SelectBtn = c.Q<Button>("SelectBtn");
-        LoopScroll = c.Q<GridScroller>("LoopScroll");
-        SelectController = c.Q<SelectController>("SelectController");
+        var c            = GetComponent<KiraraRuntimeComponents>();
+        UIBackBtn        = c.Q<Button>(0, "UIBackBtn");
+        SelectBtn        = c.Q<Button>(1, "SelectBtn");
+        LoopScroll       = c.Q<GridScroller>(2, "LoopScroll");
+        SelectController = c.Q<SelectController>(3, "SelectController");
     }
     #endregion
 

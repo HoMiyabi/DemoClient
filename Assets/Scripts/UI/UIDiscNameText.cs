@@ -5,14 +5,14 @@ namespace Kirara.UI
 {
     public class UIDiscNameText : MonoBehaviour
     {
+        #region View
         private TextMeshProUGUI Text;
-
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Text = c.Q<TextMeshProUGUI>("Text");
+            Text  = c.Q<TextMeshProUGUI>(0, "Text");
         }
+        #endregion
 
         private void Awake()
         {

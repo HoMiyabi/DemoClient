@@ -6,33 +6,31 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using YooAsset;
-using NotImplementedException = System.NotImplementedException;
 
 namespace Kirara.UI
 {
     public class UIInventoryCellWeapon : MonoBehaviour, ISelectItem
     {
         #region View
-        private TextMeshProUGUI InfoText;
-        private UIItemStar UIItemStar;
-        private Image LockedImg;
-        private Image WearerIconImg;
-        private Image IconImg;
-        private Button Btn;
+        private TextMeshProUGUI    InfoText;
+        private UIItemStar         UIItemStar;
+        private Image              LockedImg;
+        private Image              WearerIconImg;
+        private Image              IconImg;
+        private Button             Btn;
         private UIInventoryRankBar UIInventoryRankBar;
-        private Image SelectBorder;
+        private Image              SelectBorder;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            InfoText = c.Q<TextMeshProUGUI>("InfoText");
-            UIItemStar = c.Q<UIItemStar>("UIItemStar");
-            LockedImg = c.Q<Image>("LockedImg");
-            WearerIconImg = c.Q<Image>("WearerIconImg");
-            IconImg = c.Q<Image>("IconImg");
-            Btn = c.Q<Button>("Btn");
-            UIInventoryRankBar = c.Q<UIInventoryRankBar>("UIInventoryRankBar");
-            SelectBorder = c.Q<Image>("SelectBorder");
+            var c              = GetComponent<KiraraRuntimeComponents>();
+            InfoText           = c.Q<TextMeshProUGUI>(0, "InfoText");
+            UIItemStar         = c.Q<UIItemStar>(1, "UIItemStar");
+            LockedImg          = c.Q<Image>(2, "LockedImg");
+            WearerIconImg      = c.Q<Image>(3, "WearerIconImg");
+            IconImg            = c.Q<Image>(4, "IconImg");
+            Btn                = c.Q<Button>(5, "Btn");
+            UIInventoryRankBar = c.Q<UIInventoryRankBar>(6, "UIInventoryRankBar");
+            SelectBorder       = c.Q<Image>(7, "SelectBorder");
         }
         #endregion
 

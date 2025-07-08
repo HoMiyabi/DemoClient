@@ -10,13 +10,12 @@ namespace Kirara.UI
     {
         #region View
         private TextMeshProUGUI Text;
-        private CanvasGroup CanvasGroup;
+        private CanvasGroup     CanvasGroup;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Text = c.Q<TextMeshProUGUI>("Text");
-            CanvasGroup = c.Q<CanvasGroup>("CanvasGroup");
+            var c       = GetComponent<KiraraRuntimeComponents>();
+            Text        = c.Q<TextMeshProUGUI>(0, "Text");
+            CanvasGroup = c.Q<CanvasGroup>(1, "CanvasGroup");
         }
         #endregion
 

@@ -10,18 +10,18 @@ using UnityEngine.UI;
 /// </summary>
 public class UITargetIndicator : MonoBehaviour
 {
-    private RectTransform RotTra;
-    private Image ArrowImg;
+    #region View
+    private RectTransform   RotTra;
+    private Image           ArrowImg;
     private TextMeshProUGUI DistanceText;
-
     private void InitUI()
     {
-        var c = GetComponent<KiraraRuntimeComponents>();
-        c.Init();
-        RotTra = c.dict["RotTra"] as RectTransform;
-        ArrowImg = c.dict["ArrowImg"] as Image;
-        DistanceText = c.dict["DistanceText"] as TextMeshProUGUI;
+        var c        = GetComponent<KiraraRuntimeComponents>();
+        RotTra       = c.Q<RectTransform>(0, "RotTra");
+        ArrowImg     = c.Q<Image>(1, "ArrowImg");
+        DistanceText = c.Q<TextMeshProUGUI>(2, "DistanceText");
     }
+    #endregion
 
     private void Awake()
     {

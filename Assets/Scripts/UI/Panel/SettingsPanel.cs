@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using Manager;
-using Newtonsoft.Json;
+﻿using Manager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,16 +6,16 @@ namespace Kirara.UI.Panel
 {
     public class SettingsPanel : BasePanel
     {
-        private Button UIBackBtn;
+        #region View
+        private Button        UIBackBtn;
         private RectTransform Content;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIBackBtn = c.dict["UIBackBtn"] as Button;
-            Content = c.dict["Content"] as RectTransform;
+            var c     = GetComponent<KiraraRuntimeComponents>();
+            UIBackBtn = c.Q<Button>(0, "UIBackBtn");
+            Content   = c.Q<RectTransform>(1, "Content");
         }
+        #endregion
 
         private const string settingItemName = "UISettingItem";
 

@@ -10,22 +10,22 @@ namespace Kirara.UI
 {
     public class UISelectEquipmentDisc : MonoBehaviour, LoopScrollDataSource
     {
-        private UIDiscDetail UIDiscDetail;
-        private Button UpgradeBtn;
-        private Button EquipBtn;
+        #region View
+        private UIDiscDetail           UIDiscDetail;
+        private Button                 UpgradeBtn;
+        private Button                 EquipBtn;
         private LoopVerticalScrollRect LoopScroll;
-        private TextMeshProUGUI EquipBtnText;
-
+        private TextMeshProUGUI        EquipBtnText;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UIDiscDetail = c.Q<UIDiscDetail>("UIDiscDetail");
-            UpgradeBtn = c.Q<Button>("UpgradeBtn");
-            EquipBtn = c.Q<Button>("EquipBtn");
-            LoopScroll = c.Q<LoopVerticalScrollRect>("LoopScroll");
-            EquipBtnText = c.Q<TextMeshProUGUI>("EquipBtnText");
+            var c        = GetComponent<KiraraRuntimeComponents>();
+            UIDiscDetail = c.Q<UIDiscDetail>(0, "UIDiscDetail");
+            UpgradeBtn   = c.Q<Button>(1, "UpgradeBtn");
+            EquipBtn     = c.Q<Button>(2, "EquipBtn");
+            LoopScroll   = c.Q<LoopVerticalScrollRect>(3, "LoopScroll");
+            EquipBtnText = c.Q<TextMeshProUGUI>(4, "EquipBtnText");
         }
+        #endregion
 
         private void Awake()
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,18 +6,18 @@ namespace Kirara.UI
 {
     public class UIHeadInfo : MonoBehaviour
     {
-        private Image LeftArrowImg;
+        #region View
+        private Image           LeftArrowImg;
         private TextMeshProUGUI NameText;
-        private Image RightArrowImg;
-
+        private Image           RightArrowImg;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            LeftArrowImg = c.dict["LeftArrowImg"] as Image;
-            NameText = c.dict["NameText"] as TextMeshProUGUI;
-            RightArrowImg = c.dict["RightArrowImg"] as Image;
+            var c         = GetComponent<KiraraRuntimeComponents>();
+            LeftArrowImg  = c.Q<Image>(0, "LeftArrowImg");
+            NameText      = c.Q<TextMeshProUGUI>(1, "NameText");
+            RightArrowImg = c.Q<Image>(2, "RightArrowImg");
         }
+        #endregion
 
         public string Name
         {

@@ -10,40 +10,40 @@ namespace Kirara.UI.Panel
 {
     public class UpgradeDiscDialogPanel : BasePanel
     {
-        private Button UICloseBtn;
-        private UIDiscPosIcon UIDiscPosIcon;
-        private UIStatBar UIMainStatBar;
-        private UIStatBar UISubStatBar1;
-        private UIStatBar UISubStatBar2;
-        private UIStatBar UISubStatBar3;
-        private UIStatBar UISubStatBar4;
-        private Button UpgradeBtn;
-        private Button UIUpgradeMaterial;
-        private Button DecBtn;
-        private TextMeshProUGUI CountText;
-        private UIDiscIcon UIDiscIcon;
-        private UIDiscNameText UIDiscNameText;
+        #region View
+        private Button              UICloseBtn;
+        private UIDiscPosIcon       UIDiscPosIcon;
+        private UIStatBar           UIMainStatBar;
+        private UIStatBar           UISubStatBar1;
+        private UIStatBar           UISubStatBar2;
+        private UIStatBar           UISubStatBar3;
+        private UIStatBar           UISubStatBar4;
+        private Button              UpgradeBtn;
+        private Button              UIUpgradeMaterial;
+        private Button              DecBtn;
+        private TextMeshProUGUI     CountText;
+        private UIDiscIcon          UIDiscIcon;
+        private UIDiscNameText      UIDiscNameText;
         private UIUpgradeDiscExpBar UIUpgradeDiscExpBar;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            UICloseBtn = c.Q<Button>("UICloseBtn");
-            UIDiscPosIcon = c.Q<UIDiscPosIcon>("UIDiscPosIcon");
-            UIMainStatBar = c.Q<UIStatBar>("UIMainStatBar");
-            UISubStatBar1 = c.Q<UIStatBar>("UISubStatBar1");
-            UISubStatBar2 = c.Q<UIStatBar>("UISubStatBar2");
-            UISubStatBar3 = c.Q<UIStatBar>("UISubStatBar3");
-            UISubStatBar4 = c.Q<UIStatBar>("UISubStatBar4");
-            UpgradeBtn = c.Q<Button>("UpgradeBtn");
-            UIUpgradeMaterial = c.Q<Button>("UIUpgradeMaterial");
-            DecBtn = c.Q<Button>("DecBtn");
-            CountText = c.Q<TextMeshProUGUI>("CountText");
-            UIDiscIcon = c.Q<UIDiscIcon>("UIDiscIcon");
-            UIDiscNameText = c.Q<UIDiscNameText>("UIDiscNameText");
-            UIUpgradeDiscExpBar = c.Q<UIUpgradeDiscExpBar>("UIUpgradeDiscExpBar");
+            var c               = GetComponent<KiraraRuntimeComponents>();
+            UICloseBtn          = c.Q<Button>(0, "UICloseBtn");
+            UIDiscPosIcon       = c.Q<UIDiscPosIcon>(1, "UIDiscPosIcon");
+            UIMainStatBar       = c.Q<UIStatBar>(2, "UIMainStatBar");
+            UISubStatBar1       = c.Q<UIStatBar>(3, "UISubStatBar1");
+            UISubStatBar2       = c.Q<UIStatBar>(4, "UISubStatBar2");
+            UISubStatBar3       = c.Q<UIStatBar>(5, "UISubStatBar3");
+            UISubStatBar4       = c.Q<UIStatBar>(6, "UISubStatBar4");
+            UpgradeBtn          = c.Q<Button>(7, "UpgradeBtn");
+            UIUpgradeMaterial   = c.Q<Button>(8, "UIUpgradeMaterial");
+            DecBtn              = c.Q<Button>(9, "DecBtn");
+            CountText           = c.Q<TextMeshProUGUI>(10, "CountText");
+            UIDiscIcon          = c.Q<UIDiscIcon>(11, "UIDiscIcon");
+            UIDiscNameText      = c.Q<UIDiscNameText>(12, "UIDiscNameText");
+            UIUpgradeDiscExpBar = c.Q<UIUpgradeDiscExpBar>(13, "UIUpgradeDiscExpBar");
         }
+        #endregion
 
         private UIStatBar[] subStatBars;
 

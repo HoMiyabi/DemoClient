@@ -8,16 +8,16 @@ namespace Kirara.UI
 {
     public class UISimpleQuestInfo : MonoBehaviour
     {
+        #region View
         private TextMeshProUGUI QuestChainText;
         private TextMeshProUGUI QuestText;
-
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            QuestChainText = c.Q<TextMeshProUGUI>("QuestChainText");
-            QuestText = c.Q<TextMeshProUGUI>("QuestText");
+            var c          = GetComponent<KiraraRuntimeComponents>();
+            QuestChainText = c.Q<TextMeshProUGUI>(0, "QuestChainText");
+            QuestText      = c.Q<TextMeshProUGUI>(1, "QuestText");
         }
+        #endregion
 
         private void Awake()
         {

@@ -9,16 +9,15 @@ namespace Kirara.UI
     public class UIRoleSelectCell : MonoBehaviour, ISelectItem
     {
         #region View
-        private Image SelectBorder;
-        private Image Icon;
+        private Image  SelectBorder;
+        private Image  Icon;
         private Button Btn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            SelectBorder = c.Q<Image>("SelectBorder");
-            Icon = c.Q<Image>("Icon");
-            Btn = c.Q<Button>("Btn");
+            var c        = GetComponent<KiraraRuntimeComponents>();
+            SelectBorder = c.Q<Image>(0, "SelectBorder");
+            Icon         = c.Q<Image>(1, "Icon");
+            Btn          = c.Q<Button>(2, "Btn");
         }
         #endregion
 

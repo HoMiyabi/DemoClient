@@ -10,14 +10,13 @@ namespace Kirara.UI
     public class UIQuestRewordCell : MonoBehaviour
     {
         #region View
-        private Image Icon;
+        private Image           Icon;
         private TextMeshProUGUI CountText;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Icon = c.Q<Image>("Icon");
-            CountText = c.Q<TextMeshProUGUI>("CountText");
+            var c     = GetComponent<KiraraRuntimeComponents>();
+            Icon      = c.Q<Image>(0, "Icon");
+            CountText = c.Q<TextMeshProUGUI>(1, "CountText");
         }
         #endregion
 

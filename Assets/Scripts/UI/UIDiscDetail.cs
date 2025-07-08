@@ -12,33 +12,32 @@ namespace Kirara.UI
     {
         #region View
         private TextMeshProUGUI NameText;
-        private Image WearerIcon;
+        private Image           WearerIcon;
         private TextMeshProUGUI LevelText;
-        private Image Icon;
-        private UIStatBar MainAttrBar;
+        private Image           Icon;
+        private UIStatBar       MainAttrBar;
         private TextMeshProUGUI EffDescContentText;
-        private UIStatBar SubAttrBar;
-        private UIStatBar SubAttrBar1;
-        private UIStatBar SubAttrBar2;
-        private UIStatBar SubAttrBar3;
-        private Image BackIcon;
-        private UIDiscPosIcon UIDiscPosIcon;
+        private UIStatBar       SubAttrBar;
+        private UIStatBar       SubAttrBar1;
+        private UIStatBar       SubAttrBar2;
+        private UIStatBar       SubAttrBar3;
+        private Image           BackIcon;
+        private UIDiscPosIcon   UIDiscPosIcon;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            NameText = c.Q<TextMeshProUGUI>("NameText");
-            WearerIcon = c.Q<Image>("WearerIcon");
-            LevelText = c.Q<TextMeshProUGUI>("LevelText");
-            Icon = c.Q<Image>("Icon");
-            MainAttrBar = c.Q<UIStatBar>("MainAttrBar");
-            EffDescContentText = c.Q<TextMeshProUGUI>("EffDescContentText");
-            SubAttrBar = c.Q<UIStatBar>("SubAttrBar");
-            SubAttrBar1 = c.Q<UIStatBar>("SubAttrBar1");
-            SubAttrBar2 = c.Q<UIStatBar>("SubAttrBar2");
-            SubAttrBar3 = c.Q<UIStatBar>("SubAttrBar3");
-            BackIcon = c.Q<Image>("BackIcon");
-            UIDiscPosIcon = c.Q<UIDiscPosIcon>("UIDiscPosIcon");
+            var c              = GetComponent<KiraraRuntimeComponents>();
+            NameText           = c.Q<TextMeshProUGUI>(0, "NameText");
+            WearerIcon         = c.Q<Image>(1, "WearerIcon");
+            LevelText          = c.Q<TextMeshProUGUI>(2, "LevelText");
+            Icon               = c.Q<Image>(3, "Icon");
+            MainAttrBar        = c.Q<UIStatBar>(4, "MainAttrBar");
+            EffDescContentText = c.Q<TextMeshProUGUI>(5, "EffDescContentText");
+            SubAttrBar         = c.Q<UIStatBar>(6, "SubAttrBar");
+            SubAttrBar1        = c.Q<UIStatBar>(7, "SubAttrBar1");
+            SubAttrBar2        = c.Q<UIStatBar>(8, "SubAttrBar2");
+            SubAttrBar3        = c.Q<UIStatBar>(9, "SubAttrBar3");
+            BackIcon           = c.Q<Image>(10, "BackIcon");
+            UIDiscPosIcon      = c.Q<UIDiscPosIcon>(11, "UIDiscPosIcon");
         }
         #endregion
 

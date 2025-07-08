@@ -11,34 +11,34 @@ namespace Kirara.UI.Panel
 {
     public class ExchangeDialogPanel : BasePanel
     {
+        #region View
         private TextMeshProUGUI TitleText;
-        private Image ToIcon;
         private TextMeshProUGUI ToNameCountText;
-        private TextMeshProUGUI DescText;
-        private UINumSlider UINumSlider;
-        private Button UICloseBtn;
-        private Button ConfirmBtn;
-        private Image FromIcon;
+        private TextMeshProUGUI ToDescText;
+        private UINumSlider     UINumSlider;
+        private Button          UICloseBtn;
+        private Image           FromIcon;
         private TextMeshProUGUI FromCountCostText;
-        private Button UIOverlayBtn;
+        private Button          UIOverlayBtn;
         private TextMeshProUGUI ExchangeCountText;
-
+        private Button          ConfirmBtn;
+        private Image           ToIcon;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            TitleText = c.Q<TextMeshProUGUI>("TitleText");
-            ToIcon = c.Q<Image>("ToIcon");
-            ToNameCountText = c.Q<TextMeshProUGUI>("ToNameCountText");
-            DescText = c.Q<TextMeshProUGUI>("DescText");
-            UINumSlider = c.Q<UINumSlider>("UINumSlider");
-            UICloseBtn = c.Q<Button>("UICloseBtn");
-            ConfirmBtn = c.Q<Button>("ConfirmBtn");
-            FromIcon = c.Q<Image>("FromIcon");
-            FromCountCostText = c.Q<TextMeshProUGUI>("FromCountCostText");
-            UIOverlayBtn = c.Q<Button>("UIOverlayBtn");
-            ExchangeCountText = c.Q<TextMeshProUGUI>("ExchangeCountText");
+            var c             = GetComponent<KiraraRuntimeComponents>();
+            TitleText         = c.Q<TextMeshProUGUI>(0, "TitleText");
+            ToNameCountText   = c.Q<TextMeshProUGUI>(1, "ToNameCountText");
+            ToDescText        = c.Q<TextMeshProUGUI>(2, "ToDescText");
+            UINumSlider       = c.Q<UINumSlider>(3, "UINumSlider");
+            UICloseBtn        = c.Q<Button>(4, "UICloseBtn");
+            FromIcon          = c.Q<Image>(5, "FromIcon");
+            FromCountCostText = c.Q<TextMeshProUGUI>(6, "FromCountCostText");
+            UIOverlayBtn      = c.Q<Button>(7, "UIOverlayBtn");
+            ExchangeCountText = c.Q<TextMeshProUGUI>(8, "ExchangeCountText");
+            ConfirmBtn        = c.Q<Button>(9, "ConfirmBtn");
+            ToIcon            = c.Q<Image>(10, "ToIcon");
         }
+        #endregion
 
         public string Title { get => TitleText.text; set => TitleText.text = value; }
         public int Value => UINumSlider.Value;
@@ -90,7 +90,7 @@ namespace Kirara.UI.Panel
             toIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(toConfig.IconLoc);
             ToIcon.sprite = toIconHandle.AssetObject as Sprite;
             ToNameCountText.text = $"{toConfig.Name} X{item.ToCount}";
-            DescText.text = toConfig.Desc;
+            ToDescText.text = toConfig.Desc;
         }
 
         private void SetCount(NExchangeItem item)

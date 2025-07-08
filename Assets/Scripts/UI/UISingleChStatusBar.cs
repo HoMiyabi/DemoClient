@@ -12,22 +12,21 @@ namespace Kirara.UI
     public class UISingleChStatusBar : MonoBehaviour
     {
         #region View
-        private Image CharacterIcon;
+        private Image           CharacterIcon;
         private TextMeshProUGUI HPText;
         private TextMeshProUGUI MaxHPText;
-        private Image HPBar;
-        private Image EnergyBar;
-        private Image DecibelBar;
+        private Image           HPBar;
+        private Image           EnergyBar;
+        private Image           DecibelBar;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            CharacterIcon = c.Q<Image>("CharacterIcon");
-            HPText = c.Q<TextMeshProUGUI>("HPText");
-            MaxHPText = c.Q<TextMeshProUGUI>("MaxHPText");
-            HPBar = c.Q<Image>("HPBar");
-            EnergyBar = c.Q<Image>("EnergyBar");
-            DecibelBar = c.Q<Image>("DecibelBar");
+            var c         = GetComponent<KiraraRuntimeComponents>();
+            CharacterIcon = c.Q<Image>(0, "CharacterIcon");
+            HPText        = c.Q<TextMeshProUGUI>(1, "HPText");
+            MaxHPText     = c.Q<TextMeshProUGUI>(2, "MaxHPText");
+            HPBar         = c.Q<Image>(3, "HPBar");
+            EnergyBar     = c.Q<Image>(4, "EnergyBar");
+            DecibelBar    = c.Q<Image>(5, "DecibelBar");
         }
         #endregion
 

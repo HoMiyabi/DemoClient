@@ -7,16 +7,16 @@ namespace Kirara.UI
 {
     public class UINotification : MonoBehaviour
     {
+        #region View
         private TextMeshProUGUI Text;
-        private CanvasGroup Group;
-
+        private CanvasGroup     Group;
         private void InitUI()
         {
             var c = GetComponent<KiraraRuntimeComponents>();
-            c.Init();
-            Text = c.Q<TextMeshProUGUI>("Text");
-            Group = c.Q<CanvasGroup>("Group");
+            Text  = c.Q<TextMeshProUGUI>(0, "Text");
+            Group = c.Q<CanvasGroup>(1, "Group");
         }
+        #endregion
 
         public void Awake()
         {
