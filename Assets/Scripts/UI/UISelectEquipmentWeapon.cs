@@ -99,7 +99,7 @@ namespace Kirara.UI
 
         private void UpdateEquipBtnView()
         {
-            if (ch.Weapon == null && SelectedWeapon.RoleId == null)
+            if (ch.Weapon == null && SelectedWeapon.RoleId == "")
             {
                 SetEquipBtnEquip();
             }

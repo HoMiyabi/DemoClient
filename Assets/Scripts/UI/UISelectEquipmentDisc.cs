@@ -114,7 +114,7 @@ namespace Kirara.UI
 
         private void UpdateEquipBtn()
         {
-            if (_role.Disc(_pos) == null && SelectedDisc.RoleId == null)
+            if (_role.Disc(_pos) == null && SelectedDisc.RoleId == "")
             {
                 EquipBtnSwitchEquip();
             }

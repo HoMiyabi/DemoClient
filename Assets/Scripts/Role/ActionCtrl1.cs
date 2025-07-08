@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Kirara
 {
-    public class ActionCtrl : MonoBehaviour
+    public class ActionCtrl1 : MonoBehaviour
     {
         public KiraraActionListSO actionList;
         public Dictionary<string, KiraraActionSO> ActionDict { get; private set; }

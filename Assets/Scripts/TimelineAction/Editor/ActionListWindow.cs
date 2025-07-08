@@ -22,7 +22,7 @@ namespace Kirara.TimelineAction
         private GameObject GO { get => _go; set => SetGO(value); }
 
         private Animator animator;
-        private ActionCtrl actionCtrl;
+        private ActionCtrl1 actionCtrl;
         private PlayableDirector director;
         private RuntimeAnimatorController rtAnimCtrl;
 
@@ -90,7 +90,7 @@ namespace Kirara.TimelineAction
         private void UpdateGO()
         {
             GO = null;
-            var actionCtrls = FindObjectsByType<ActionCtrl>(FindObjectsSortMode.None);
+            var actionCtrls = FindObjectsByType<ActionCtrl1>(FindObjectsSortMode.None);
             foreach (var ctrl in actionCtrls)
             {
                 if (ctrl.actionList == ActionList)
@@ -108,7 +108,7 @@ namespace Kirara.TimelineAction
             _go = go;
             if (_go)
             {
-                actionCtrl = _go.GetComponent<ActionCtrl>();
+                actionCtrl = _go.GetComponent<ActionCtrl1>();
                 animator = _go.GetComponent<Animator>();
                 director = _go.GetComponent<PlayableDirector>();
                 SetActionList(actionCtrl ? actionCtrl.actionList : null, false);

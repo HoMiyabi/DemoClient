@@ -41,7 +41,7 @@ namespace Kirara.UI
         }
         #endregion
 
-        private DiscItem disc;
+        private DiscItem _disc;
         private AssetHandle discIconHandle;
         private AssetHandle posIconHandle;
         private AssetHandle wearerIconHandle;
@@ -61,10 +61,10 @@ namespace Kirara.UI
 
         public void Clear()
         {
-            if (disc != null)
+            if (_disc != null)
             {
-                disc.OnLevelChanged -= UpdateLevelView;
-                disc.OnSubAttrsChanged -= UpdateSubAttrsView;
+                _disc.OnLevelChanged -= UpdateLevelView;
+                _disc.OnSubAttrsChanged -= UpdateSubAttrsView;
             }
             discIconHandle?.Release();
             discIconHandle = null;
@@ -77,7 +77,7 @@ namespace Kirara.UI
         public UIDiscDetail Set(DiscItem disc)
         {
             Clear();
-            this.disc = disc;
+            _disc = disc;
 
             NameText.text = $"{disc.Name}[{disc.Pos}]";
             UpdateLevelView();
@@ -106,10 +106,10 @@ namespace Kirara.UI
         {
             for (int i = 0; i < subAttrBars.Length; i++)
             {
-                if (i < disc.SubAttrs.Count)
+                if (i < _disc.SubAttrs.Count)
                 {
                     subAttrBars[i].gameObject.SetActive(true);
-                    subAttrBars[i].Set(disc.SubAttrs[i]);
+                    subAttrBars[i].Set(_disc.SubAttrs[i]);
                 }
                 else
                 {
@@ -120,18 +120,18 @@ namespace Kirara.UI
 
         private void UpdateLevelView()
         {
-            LevelText.text = $"等级{disc.Level}/{ConfigMgr.tb.TbGlobalConfig.DiscMaxLevel}";
+            LevelText.text = $"等级{_disc.Level}/{ConfigMgr.tb.TbGlobalConfig.DiscMaxLevel}";
         }
 
         private void SetRole(string roleId)
         {
-            if (roleId == null)
+            if (string.IsNullOrEmpty(roleId))
             {
                 WearerIcon.gameObject.SetActive(false);
                 return;
             }
-            var chInfo = PlayerService.Player.Roles.First(it => it.Id == roleId);
-            wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chInfo.config.IconLoc);
+            var role = PlayerService.Player.Roles.First(it => it.Id == roleId);
+            wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.config.IconLoc);
             WearerIcon.sprite = wearerIconHandle.AssetObject as Sprite;
         }
     }

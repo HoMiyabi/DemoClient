@@ -1,5 +1,4 @@
-﻿using System;
-using cfg.main;
+﻿using cfg.main;
 using Kirara.Model;
 using Manager;
 using TMPro;
@@ -9,7 +8,7 @@ using YooAsset;
 
 namespace Kirara.UI
 {
-    public class UISingleChStatusBar : MonoBehaviour
+    public class UIBigRoleStatusBar : MonoBehaviour
     {
         #region View
         private Image           CharacterIcon;
@@ -33,7 +32,7 @@ namespace Kirara.UI
         public Color energyLackColor = Color.white;
         public Color energyEnoughColor = Color.white;
 
-        private Role ch;
+        private Role role;
         private AssetHandle handle;
 
         private void Awake()
@@ -48,20 +47,20 @@ namespace Kirara.UI
 
         private void Clear()
         {
-            if (ch != null)
+            if (role != null)
             {
-                ch.ae.GetAttr(EAttrType.CurrHp).OnBaseValueChanged -= SetHP;
-                ch.ae.GetAttr(EAttrType.CurrEnergy).OnBaseValueChanged -= SetEnergy;
+                role.ae.GetAttr(EAttrType.CurrHp).OnBaseValueChanged -= SetHP;
+                role.ae.GetAttr(EAttrType.CurrEnergy).OnBaseValueChanged -= SetEnergy;
             }
             handle?.Release();
             handle = null;
-            ch = null;
+            role = null;
         }
 
         public void Set(Role ch)
         {
             Clear();
-            this.ch = ch;
+            this.role = ch;
 
             var currHpAttr = ch.ae.GetAttr(EAttrType.CurrHp);
             var currEnergyAttr = ch.ae.GetAttr(EAttrType.CurrEnergy);
@@ -76,7 +75,7 @@ namespace Kirara.UI
 
         private void SetHP(float hp)
         {
-            float maxHP = ch.ae.GetAttr(EAttrType.Hp).Evaluate();
+            float maxHP = role.ae.GetAttr(EAttrType.Hp).Evaluate();
 
             HPBar.fillAmount = hp / maxHP;
 
@@ -93,7 +92,7 @@ namespace Kirara.UI
         private void SetEnergy(float energy)
         {
             // todo)) 有点太脏了
-            int actionId = ch.config.Id * 100;
+            int actionId = role.config.Id * 100;
             var chNumeric = ConfigMgr.tb.TbChActionNumericConfig[actionId];
 
             float exSpecialEnergy = chNumeric.EnergyCost;

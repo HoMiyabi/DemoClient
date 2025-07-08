@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Kirara.Model;
+using Kirara.Service;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -99,7 +100,8 @@ namespace Kirara.UI.Panel
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             pool = new Stack<Transform>();
 
-            CoinText.text = PlayerService.Player.Currencies.First(it => it.Cid == 1).Count.ToString();
+            CoinText.text = PlayerService.Player.Currencies
+                .Find(x => x.Cid == 1)?.Count.ToString() ?? "0";
 
             SetItems();
             SetTab();

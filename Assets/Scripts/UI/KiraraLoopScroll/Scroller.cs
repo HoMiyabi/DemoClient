@@ -7,18 +7,35 @@ using UnityEngine.UI;
 public abstract class Scroller : MonoBehaviour,
     IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerDownHandler, IScrollHandler, IPointerUpHandler
 {
+    // 内容
     public RectTransform content;
+
+    // 滚动条
     public Scrollbar scrollbar;
+
+    // 滚动方向
     public EDirection direction = EDirection.Vertical;
+
+    // 一阶粘性阻尼
+    // 阻尼率
+    public float dampingRatio = 7f;
+
+    // 减速率
     public float decelerationRate = 0.135f;
 
+    // 回弹时长，用于鼠标释放时超出范围，回弹到边界
     public float elasticDuration = 0.3f;
-    public float scrollSensitivity = 0.1f;
-    public float scrollDuration = 0.3f;
 
-    public bool isInfinite = false;
-    public int totalCount;
+    // 鼠标滚轮灵敏度
+    public float wheelSensitivity = 0.1f;
 
+    // 鼠标滚轮滚动时长
+    public float wheelScrollDuration = 0.3f;
+
+    // 是否为无限滚动
+    public bool isInfinite;
+
+    // 对齐功能
     public Snap snap = new()
     {
         enable = false,
@@ -26,51 +43,54 @@ public abstract class Scroller : MonoBehaviour,
         speedThreshold = 50f
     };
 
+    // 状态
     private EScrollerState state = EScrollerState.Idle;
 
     protected virtual float GetSnapPos(float pos) => pos;
 
-    // 滚动空间长度
-    protected abstract float SpaceLength { get; }
+    // 内容长度
+    protected abstract float ContentLength { get; }
 
-    // 滚动窗口长度
-    protected abstract float ViewLength { get; }
+    // 窗口长度
+    protected abstract float WindowLength { get; }
 
-    // 合法空间长度，比如窗口大于滚动空间，合法长度就为0
-    protected float ValidSpaceLength => isInfinite ? float.PositiveInfinity : Mathf.Max(0f, SpaceLength - ViewLength);
+    // Idle状态下，Pos可以在的范围
+    protected ScrollRange ValidRange => isInfinite ?
+        ScrollRange.Infinity : new ScrollRange(0f, Mathf.Max(0f, ContentLength - WindowLength));
 
-    // 窗口中的内容长度，因为窗口可能超出空间，超出部分不属于内容长度
-    protected float ViewContentLength
+    // 窗口中的内容长度，因为窗口可能超出内容，比如滑到了边缘外，窗口有部分没有内容
+    protected float ContentLengthInWindow
     {
         get
         {
-            if (isInfinite) return ViewLength;
+            if (isInfinite) return WindowLength;
 
-            float l = Mathf.Max(ViewPos, 0f);
-            float r = Mathf.Min(ViewPos + ViewLength, SpaceLength);
+            float l = Mathf.Max(Pos, 0f);
+            float r = Mathf.Min(Pos + WindowLength, ContentLength);
             return Mathf.Max(r - l, 0f);
         }
     }
 
     // 滚动位置
-    private float viewPos;
-    protected float ViewPos
+    private float _pos;
+    protected float Pos
     {
-        get => viewPos;
+        get => _pos;
         set
         {
-            if (Mathf.Approximately(value, viewPos)) return;
+            if (Mathf.Approximately(value, _pos)) return;
 
             SetPos(value, true);
         }
     }
 
-    private float scrollSpeed;
+    private float scrollVelocity;
     private Vector2 prevPointerPos;
 
-    private AnimState animState;
+    private readonly AnimState animState = new();
 
     #region Pooling
+    public int totalCount;
     public delegate GameObject GetObject(int idx);
     public delegate void ReturnObject(GameObject go);
     public delegate void ProvideData(GameObject go, int idx);
@@ -92,10 +112,10 @@ public abstract class Scroller : MonoBehaviour,
 
     private void SetPos(float scrollPos, bool updateScrollbar)
     {
-        viewPos = scrollPos;
+        _pos = scrollPos;
         if (updateScrollbar && scrollbar)
         {
-            scrollbar.SetValueWithoutNotify(scrollPos / ValidSpaceLength);
+            scrollbar.SetValueWithoutNotify(scrollPos / ValidRange.Length);
         }
         CullCells();
         UpdateCellsPos();
@@ -118,20 +138,23 @@ public abstract class Scroller : MonoBehaviour,
         SetPos(0f, true);
     }
 
+    // 滚动条返回的值是0-1
     private void OnScrollBarValueChanged(float x)
     {
         state = EScrollerState.Idle;
-        SetPos(x * ValidSpaceLength, false);
+        SetPos(x * ValidRange.Length, false);
     }
 
     private void UpdateScrollBarSize()
     {
         if (scrollbar)
         {
-            scrollbar.size = ViewContentLength / SpaceLength;
+            // 滚动条的手柄长 = 可见内容长度 / 内容总长度
+            scrollbar.size = ContentLengthInWindow / ContentLength;
         }
     }
 
+    // 拖拽开始
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (eventData.button != PointerEventData.InputButton.Left) return;
@@ -141,6 +164,7 @@ public abstract class Scroller : MonoBehaviour,
             eventData.pressEventCamera, out prevPointerPos);
     }
 
+    // 拖拽结束
     public void OnEndDrag(PointerEventData eventData)
     {
         if (eventData.button != PointerEventData.InputButton.Left) return;
@@ -151,21 +175,39 @@ public abstract class Scroller : MonoBehaviour,
         prevPointerPos = pointerPos;
 
         float offset = CalcDeltaProj(delta);
-        scrollSpeed = offset / Time.unscaledDeltaTime;
+        scrollVelocity = offset / Time.unscaledDeltaTime;
 
-        // 如果不是无限滚动且释放位置超出范围，滚动到合法位置
-        if (!isInfinite && viewPos < 0f)
+        // 如果释放位置超出合法范围，滚动到合法边界
+        if (!ValidRange.Contains(Pos))
         {
-            ScrollTo(0f, elasticDuration);
-        }
-        else if (!isInfinite && viewPos > ValidSpaceLength )
-        {
-            ScrollTo(ValidSpaceLength, elasticDuration);
+            ScrollTo(ValidRange.GetNearEdge(Pos), elasticDuration);
         }
         else
         {
-            // 要么是无限滚动，要么在范围内
-            state = EScrollerState.Inertia;
+            // 释放位置在范围内
+            if (snap.enable)
+            {
+                // 计算停止点
+                AnimState.CalcInertiaEndPos(Pos, out float endPos, scrollVelocity, dampingRatio);
+                if (ValidRange.Contains(endPos))
+                {
+                    // 对齐停止点
+                    endPos = GetSnapPos(endPos);
+                    state = EScrollerState.Anim;
+                    animState.SetInertia(Pos, endPos, scrollVelocity, dampingRatio);
+                }
+                else
+                {
+                    // 停止点超出范围，不对齐
+                    state = EScrollerState.Anim;
+                    animState.SetInertiaV0DampingRatio(Pos, scrollVelocity, dampingRatio);
+                }
+            }
+            else
+            {
+                state = EScrollerState.Anim;
+                animState.SetInertiaV0DampingRatio(Pos, scrollVelocity, dampingRatio);
+            }
         }
     }
 
@@ -184,22 +226,22 @@ public abstract class Scroller : MonoBehaviour,
         prevPointerPos = pointerPos;
 
         float deltaProj = CalcDeltaProj(delta);
-        scrollSpeed = deltaProj / Time.deltaTime;
+        scrollVelocity = deltaProj / Time.deltaTime;
 
-        if (!isInfinite && (viewPos < 0f || viewPos > SpaceLength - ViewLength))
+        if (!isInfinite && (_pos < 0f || _pos > ContentLength - WindowLength))
         {
             deltaProj *= 0.25f;
         }
 
-        ViewPos += deltaProj;
+        Pos += deltaProj;
     }
 
+    // 鼠标按下，强制停止
     public void OnPointerDown(PointerEventData eventData)
     {
         if (eventData.button != PointerEventData.InputButton.Left) return;
 
-        scrollSpeed = 0f;
-
+        scrollVelocity = 0f;
         state = EScrollerState.Idle;
     }
 
@@ -208,15 +250,15 @@ public abstract class Scroller : MonoBehaviour,
         if (eventData.button != PointerEventData.InputButton.Left) return;
     }
 
-    // 鼠标滚轮
+    // 鼠标滚轮滚动
     public void OnScroll(PointerEventData eventData)
     {
         float delta = eventData.scrollDelta.y;
         // 滚轮向下为负，向上为正
         // 滚轮向下对应视窗向下，坐标增加
         delta = -delta;
-        scrollSpeed = 0f;
-        ScrollTo(ViewPos + delta * scrollSensitivity, scrollDuration);
+        scrollVelocity = 0f;
+        ScrollTo(Pos + delta * wheelSensitivity, wheelScrollDuration);
     }
 
     private float CalcDeltaProj(Vector2 delta)
@@ -236,78 +278,73 @@ public abstract class Scroller : MonoBehaviour,
     {
         if (state == EScrollerState.Anim)
         {
-            ViewPos = animState.Update(ViewPos, Time.unscaledDeltaTime, out bool isComplete);
-            if (isComplete)
+            if (!animState.IsComplete)
             {
-                state = EScrollerState.Idle;
-            }
-        }
-        else if (state == EScrollerState.Inertia)
-        {
-            UpdateInertia();
-        }
-        UpdateScrollBarSize();
-    }
-
-    private void UpdateInertia()
-    {
-        float k = Mathf.Pow(decelerationRate, Time.unscaledDeltaTime);
-        if (!isInfinite && (ViewPos < 0f || ViewPos > ValidSpaceLength))
-        {
-            // 惯性超出空间，额外减速
-            k *= 0.5f;
-        }
-        scrollSpeed *= k;
-
-        ViewPos += scrollSpeed * Time.unscaledDeltaTime;
-
-        if (isInfinite)
-        {
-            // 无限滚动
-            if (Mathf.Abs(scrollSpeed) < 1f)
-            {
-                scrollSpeed = 0f;
-                state = EScrollerState.Idle;
-            }
-            if (snap.enable && Mathf.Abs(scrollSpeed) < snap.speedThreshold)
-            {
-                ScrollTo(GetSnapPos(ViewPos), snap.duration);
-            }
-        }
-        else
-        {
-            // 非无限滚动
-            if (viewPos < 0f)
-            {
-                if (Mathf.Abs(scrollSpeed) < 1f)
+                float pos1 = Pos;
+                Pos = animState.Update(Time.unscaledDeltaTime);
+                if (ValidRange.Contains(pos1) && !ValidRange.Contains(Pos))
                 {
-                    // 小于空间且速度很小
-                    ScrollTo(0f, elasticDuration);
-                }
-            }
-            else if (viewPos > ValidSpaceLength)
-            {
-                if (Mathf.Abs(scrollSpeed) < 1f)
-                {
-                    // 大于空间且速度很小
-                    ScrollTo(ValidSpaceLength, elasticDuration);
+                    // 动画从边缘滑出
+                    animState.Kill();
+                    Pos = ValidRange.GetNearEdge(Pos);
+                    state = EScrollerState.Idle;
                 }
             }
             else
             {
-                // 在空间内
-                if (snap.enable && Mathf.Abs(scrollSpeed) < snap.speedThreshold)
-                {
-                    ScrollTo(GetSnapPos(ViewPos), snap.duration);
-                }
+                state = EScrollerState.Idle;
             }
         }
+        UpdateScrollBarSize();
     }
+
+    // private void UpdateInertia()
+    // {
+    //     float k = Mathf.Pow(decelerationRate, Time.unscaledDeltaTime);
+    //     if (!ValidRange.Contains(Pos))
+    //     {
+    //         // 惯性超出空间，额外减速
+    //         k *= 0.5f;
+    //     }
+    //     scrollVelocity *= k;
+    //
+    //     Pos += scrollVelocity * Time.unscaledDeltaTime;
+    //
+    //     if (isInfinite)
+    //     {
+    //         // 无限滚动
+    //         if (Mathf.Abs(scrollVelocity) < 1f)
+    //         {
+    //             scrollVelocity = 0f;
+    //             state = EScrollerState.Idle;
+    //         }
+    //         if (snap.enable && Mathf.Abs(scrollVelocity) < snap.speedThreshold)
+    //         {
+    //             ScrollTo(GetSnapPos(Pos), snap.duration);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         // 非无限滚动
+    //         if (!ValidRange.Contains(Pos) && Mathf.Abs(scrollVelocity) < 1f)
+    //         {
+    //             ScrollTo(ValidRange.GetNearEdge(Pos), elasticDuration);
+    //         }
+    //         else
+    //         {
+    //             // 在空间内
+    //             if (snap.enable && Mathf.Abs(scrollVelocity) < snap.speedThreshold)
+    //             {
+    //                 ScrollTo(GetSnapPos(Pos), snap.duration);
+    //             }
+    //         }
+    //     }
+    // }
 
     public void ScrollTo(float pos, float duration, Action onComplete = null)
     {
-        scrollSpeed = 0f;
         state = EScrollerState.Anim;
-        animState.Set(ViewPos, pos, duration, onComplete);
+        scrollVelocity = 0f;
+        animState.Set(Pos, pos, duration, onComplete);
     }
 }

@@ -33,25 +33,25 @@ namespace Kirara.UI
         {
             if (index < 0 || index >= items.Count)
             {
-                Debug.LogWarning($"索引越界, index: {index}, fieldName: {fieldName}, items.Count: {items.Count}");
+                Debug.LogWarning($"索引越界, name: {name}, index: {index}, fieldName: {fieldName}, items.Count: {items.Count}");
                 return null;
             }
             var item = items[index];
             if (item.fieldName != fieldName)
             {
-                Debug.LogWarning($"字段名不匹配, index: {index}, fieldName: {fieldName}, item.fieldName: {item.fieldName}");
+                Debug.LogWarning($"字段名不匹配, name: {name}, index: {index}, fieldName: {fieldName}, item.fieldName: {item.fieldName}");
                 return null;
             }
             var component = item.component;
             if (!component)
             {
-                Debug.LogWarning($"组件为null, index: {index}, fieldName: {fieldName}");
+                Debug.LogWarning($"组件为null, name: {name}, index: {index}, fieldName: {fieldName}");
                 return null;
             }
             var com = component as T;
             if (!com)
             {
-                Debug.LogWarning($"组件类型不匹配, index: {index}, fieldName: {fieldName}, 组件实际类型: {component.GetType()}");
+                Debug.LogWarning($"组件类型不匹配, name: {name}, index: {index}, fieldName: {fieldName}, 组件实际类型: {component.GetType()}");
                 return null;
             }
             return com;
@@ -82,7 +82,7 @@ namespace Kirara.UI
         private static void OnHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
         {
             var go = UnityEditor.EditorUtility.InstanceIDToObject(instanceID) as GameObject;
-            if (go == null)
+            if (!go)
             {
                 return;
             }
@@ -93,25 +93,26 @@ namespace Kirara.UI
 
             for (int i = 0; i < runtimeComponents.Count; i++)
             {
-                if (runtimeComponents[i].items
-                    .Select(x =>
-                    {
-                        if (x.component != null)
-                        {
-                            return x.component.gameObject;
-                        }
-                        Debug.LogWarning($"丢失引用 {runtimeComponents[i].name} 字段名: {x.fieldName}");
-                        return null;
-                    })
-                    .Contains(go))
+                var coms = runtimeComponents[i];
+                foreach (var item in coms.items)
                 {
-                    GUI.Label(r, texts[(i / colors.Length) % texts.Length], new GUIStyle()
+                    if (item.component)
                     {
-                        normal = new GUIStyleState()
+                        if (item.component.gameObject == go)
                         {
-                            textColor = colors[i % colors.Length]
+                            GUI.Label(r, texts[(i / colors.Length) % texts.Length], new GUIStyle()
+                            {
+                                normal = new GUIStyleState()
+                                {
+                                    textColor = colors[i % colors.Length]
+                                }
+                            });
                         }
-                    });
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"丢失引用, go: {runtimeComponents[i].name}, 字段名: {item.fieldName}");
+                    }
                 }
             }
         }

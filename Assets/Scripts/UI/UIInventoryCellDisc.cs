@@ -98,15 +98,15 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
 
     private void UpdateRole()
     {
-        if (_disc.RoleId == null)
+        if (string.IsNullOrEmpty(_disc.RoleId))
         {
             WearerIconImg.sprite = null;
             WearerIconImg.gameObject.SetActive(false);
             return;
         }
         WearerIconImg.gameObject.SetActive(true);
-        var chInfo = PlayerService.Player.Roles.First(it => it.Id == _disc.RoleId);
-        wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chInfo.config.IconLoc);
+        var role = PlayerService.Player.Roles.First(it => it.Id == _disc.RoleId);
+        wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.config.IconLoc);
         WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
     }
 

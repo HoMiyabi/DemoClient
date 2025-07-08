@@ -114,7 +114,7 @@ public class GridScroller : Scroller
     {
         get
         {
-            int minLine = Mathf.FloorToInt((ViewPos - CullingBottom + UsefulSpacing) / LineWidth);
+            int minLine = Mathf.FloorToInt((Pos - CullingBottom + UsefulSpacing) / LineWidth);
             int idx = minLine * columnCount;
             return isInfinite ? idx : Mathf.Max(idx, 0);
         }
@@ -124,7 +124,7 @@ public class GridScroller : Scroller
     {
         get
         {
-            int maxLine = Mathf.CeilToInt((ViewPos + ViewLength + CullingTop) / LineWidth);
+            int maxLine = Mathf.CeilToInt((Pos + WindowLength + CullingTop) / LineWidth);
             int idx = maxLine * columnCount;
             return isInfinite ? idx : Mathf.Min(idx, totalCount);
         }
@@ -175,7 +175,7 @@ public class GridScroller : Scroller
 
     private Vector2 GetCellPosInUGUISpace(int row, int col)
     {
-        return GetCellPos(row, col) - new Vector2(0, -ViewPos);
+        return GetCellPos(row, col) - new Vector2(0, -Pos);
     }
 
     private int GetRow(int idx)
@@ -202,8 +202,8 @@ public class GridScroller : Scroller
         return Mathf.Round(pos / LineWidth) * LineWidth;
     }
 
-    protected override float SpaceLength => isInfinite ? float.PositiveInfinity : LineWidth * LineCount;
-    protected override float ViewLength
+    protected override float ContentLength => isInfinite ? float.PositiveInfinity : LineWidth * LineCount;
+    protected override float WindowLength
     {
         get
         {

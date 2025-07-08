@@ -23,7 +23,7 @@ namespace Kirara.Model
                 if (value == _weapon) return;
                 if (_weapon != null)
                 {
-                    _weapon.RoleId = null;
+                    _weapon.RoleId = "";
                     RemoveWeaponAbilities(_weapon);
                 }
                 _weapon = value;
@@ -187,7 +187,7 @@ namespace Kirara.Model
 
             if (Disc(pos) != null)
             {
-                Disc(pos).RoleId = null;
+                Disc(pos).RoleId = "";
                 RemoveDiscAbilities(pos);
             }
 
