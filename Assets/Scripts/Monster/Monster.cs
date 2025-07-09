@@ -1,93 +1,66 @@
 ﻿using System;
 using cfg.main;
 using Cysharp.Threading.Tasks;
-
-using Kirara.AttrEffect;
-using Kirara.Manager;
+using Kirara.Model;
 using Kirara.TimelineAction;
-using Manager;
 using UnityEngine;
 
 namespace Kirara
 {
     public class Monster : MonoBehaviour
     {
-        public string monsterName;
         public Transform statusBarFollow;
         public Transform attackLightFollow;
         public Transform indicatorFollow;
 
-        public event Action onDie;
-
-        private MonsterAICtrl monsterAICtrl;
-        public AttrEffect.AttrEffect ae;
-
-        public int monsterCid;
-        public int monsterId;
-
-        public RoleCtrl ParryingRole { get; set; }
-
         public BoxCollider boxCollider;
         public SphereCollider sphereCollider;
 
-        private ActionPlayer actionPlayer;
-        private CharacterController characterController;
+        public event Action onDie;
+
+        public RoleCtrl ParryingRole { get; set; }
+
+        private MonsterAICtrl MonsterAICtrl { get; set; }
+        private ActionPlayer ActionPlayer { get; set; }
+        private CharacterController CharacterController { get; set; }
+        public MonsterModel Model { get; private set; }
 
         private void Awake()
         {
-            monsterAICtrl = GetComponent<MonsterAICtrl>();
-            actionPlayer = GetComponent<ActionPlayer>();
-            characterController = GetComponent<CharacterController>();
+            MonsterAICtrl = GetComponent<MonsterAICtrl>();
+            ActionPlayer = GetComponent<ActionPlayer>();
+            CharacterController = GetComponent<CharacterController>();
         }
 
-        public void Set(int monsterCid, int monsterId)
+        public void Set(MonsterModel model)
         {
-            this.monsterCid = monsterCid;
-            this.monsterId = monsterId;
-            InitAE();
+            Model = model;
         }
 
-        private void InitAE()
+        private void HandleNumeric(double damage, double daze)
         {
-            var config = ConfigMgr.tb.TbMonsterConfig[monsterCid];
-            ae = new AttrEffect.AttrEffect();
-            ae.AddAttr(new Attr(EAttrType.Atk, config.Atk));
-            ae.AddAttr(new Attr(EAttrType.Def, config.Def));
-            ae.AddAttr(new Attr(EAttrType.Hp, config.Hp));
-            ae.AddAttr(new Attr(EAttrType.MaxDaze, config.MaxDaze));
-            ae.AddAttr(new Attr(EAttrType.StunDuration, config.StunDuration));
-            ae.AddAttr(new Attr(EAttrType.StunDmgMultiplier, config.StunDmgMultiplier));
+            Model.AttrSet[EAttrType.CurrHp] = Math.Max(0, Model.AttrSet[EAttrType.CurrHp] - damage);
 
-            ae.AddAttr(new Attr(EAttrType.CurrHp, config.Hp));
-            ae.AddAttr(new Attr(EAttrType.CurrDaze, 0f));
-        }
-
-        private void HandleNumeric(float damage, float daze)
-        {
-            var currHpAttr = ae.GetAttr(EAttrType.CurrHp);
-            currHpAttr.BaseValue = Mathf.Max(0f, currHpAttr.BaseValue - damage);
-
-            var dazeAttr = ae.GetAttr(EAttrType.CurrDaze);
-            var maxDazeAttr = ae.GetAttr(EAttrType.MaxDaze);
-            dazeAttr.BaseValue = Mathf.Min(dazeAttr.BaseValue + daze, maxDazeAttr.Evaluate());
+            Model.AttrSet[EAttrType.CurrDaze] = Math.Min(
+                Model.AttrSet[EAttrType.CurrDaze] + daze, Model.AttrSet[EAttrType.MaxDaze]);
 
             NetFn.Send(new MsgMonsterTakeDamage
             {
-                MonsterId = monsterId,
-                Damage = damage
+                MonsterId = Model.MonsterId,
+                Damage = (float)damage
             });
         }
 
-        public void TakeEffect(float damage, float daze)
+        public void TakeEffect(double damage, double daze)
         {
             HandleNumeric(damage, daze);
         }
 
-        public void TakeEffect(float damage, float daze, Vector3 from)
+        public void TakeEffect(double damage, double daze, Vector3 from)
         {
             HandleNumeric(damage, daze);
 
-            monsterAICtrl.GetHit(from);
+            MonsterAICtrl.GetHit(from);
         }
 
         public void Die()
@@ -100,23 +73,23 @@ namespace Kirara
         {
             if (duration <= 0f) return;
 
-            actionPlayer.Speed = speed;
+            ActionPlayer.Speed = speed;
             await UniTask.WaitForSeconds(duration);
-            actionPlayer.Speed = 1f;
+            ActionPlayer.Speed = 1f;
         }
 
         public async UniTaskVoid EnterParried()
         {
             const float duration = 0.5f;
-            actionPlayer.Speed = 0f;
+            ActionPlayer.Speed = 0f;
             await UniTask.WaitForSeconds(duration);
-            actionPlayer.Speed = 1f;
-            monsterAICtrl.EnterState(MonsterAICtrl.State.Hit);
+            ActionPlayer.Speed = 1f;
+            MonsterAICtrl.EnterState(MonsterAICtrl.State.Hit);
         }
 
         public void Move(Vector3 value)
         {
-            characterController.Move(value);
+            CharacterController.Move(value);
         }
     }
 }

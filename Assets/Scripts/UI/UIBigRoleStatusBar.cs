@@ -32,7 +32,7 @@ namespace Kirara.UI
         public Color energyLackColor = Color.white;
         public Color energyEnoughColor = Color.white;
 
-        private Role role;
+        private Role Role { get; set; }
         private AssetHandle handle;
 
         private void Awake()
@@ -47,37 +47,37 @@ namespace Kirara.UI
 
         private void Clear()
         {
-            if (role != null)
+            if (Role != null)
             {
-                role.ae.GetAttr(EAttrType.CurrHp).OnBaseValueChanged -= SetHP;
-                role.ae.GetAttr(EAttrType.CurrEnergy).OnBaseValueChanged -= SetEnergy;
+                Role.AttrSet.GetAttr(EAttrType.CurrHp).OnBaseValueChanged -= SetHP;
+                Role.AttrSet.GetAttr(EAttrType.CurrEnergy).OnBaseValueChanged -= SetEnergy;
             }
             handle?.Release();
             handle = null;
-            role = null;
+            Role = null;
         }
 
-        public void Set(Role ch)
+        public void Set(Role role)
         {
             Clear();
-            this.role = ch;
+            this.Role = role;
 
-            var currHpAttr = ch.ae.GetAttr(EAttrType.CurrHp);
-            var currEnergyAttr = ch.ae.GetAttr(EAttrType.CurrEnergy);
+            var currHpAttr = role.AttrSet.GetAttr(EAttrType.CurrHp);
+            var currEnergyAttr = role.AttrSet.GetAttr(EAttrType.CurrEnergy);
             SetHP(currHpAttr.Evaluate());
             SetEnergy(currEnergyAttr.Evaluate());
             currHpAttr.OnBaseValueChanged += SetHP;
             currEnergyAttr.OnBaseValueChanged += SetEnergy;
 
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(ch.config.IconLoc);
+            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.config.IconLoc);
             CharacterIcon.sprite = handle.AssetObject as Sprite;
         }
 
-        private void SetHP(float hp)
+        private void SetHP(double hp)
         {
-            float maxHP = role.ae.GetAttr(EAttrType.Hp).Evaluate();
+            double maxHP = Role.AttrSet[EAttrType.Hp];
 
-            HPBar.fillAmount = hp / maxHP;
+            HPBar.fillAmount = (float)(hp / maxHP);
 
             if (HPText != null)
             {
@@ -92,7 +92,7 @@ namespace Kirara.UI
         private void SetEnergy(float energy)
         {
             // todo)) 有点太脏了
-            int actionId = role.config.Id * 100;
+            int actionId = Role.config.Id * 100;
             var chNumeric = ConfigMgr.tb.TbChActionNumericConfig[actionId];
 
             float exSpecialEnergy = chNumeric.EnergyCost;

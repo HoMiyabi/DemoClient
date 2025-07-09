@@ -1,0 +1,74 @@
+local config =
+{
+    {
+        name = "ShenHaiFangKe",
+        attrs = {
+            IceDmgPct = 0.25,
+        },
+        onAttackLanded = function(self, ctx)
+            if ctx.attackType == "NormalAttack" then
+                self:attachAbility("ShenHaiFangKe_1")
+            elseif ctx.attackType == "DashAttack" then
+                self:attachAbility("ShenHaiFangKe_2")
+            end
+        end,
+    },
+    {
+        name = "ShenHaiFangKe_1",
+        duration = 8,
+        attrs = {
+            CritRate = 0
+        },
+        init = function(self)
+            self.attrs.CritRate = self:inject("Rate")
+        end
+    },
+    {
+        name = "ShenHaiFangKe_2",
+        duration = 15,
+        attrs = {
+            CritRate = 0.1
+        }
+    },
+    {
+        name = "LiuHuangShi",
+        onAttackLanded = function(self, ctx)
+            if ctx.attackType == "NormalAttack"
+                    or ctx.attackType == "DashAttack"
+                    or ctx.attackType == "ShanBiFanJi" then
+                if not self:hasTimer("LiuHuangShi_Timer") then
+                    self:setTimer("LiuHuangShi_Timer", 0.5)
+                    self:attachAbility("LiuHuangShi_1")
+                end
+            end
+        end
+    },
+    {
+        name = "LiuHuangShi_1",
+        duration = 8,
+        stackLimit = 8,
+        attrs = {
+            AttackPct = 0.035
+        }
+    },
+    {
+        name = "DeMaLaDianChi2Xing",
+        attrs = {
+            ElectricDmgPct = 0.15
+        },
+        onAttackLanded = function(self, ctx)
+            if ctx.attackType == "ShanBiFanJi" or ctx.attackType == "ZhiYuanGongJi" then
+                self:attachAbility("DeMaLaDianChi2Xing_1")
+            end
+        end
+    },
+    {
+        name = "DeMaLaDianChi2Xing_1",
+        duration = 8,
+        attrs = {
+            NengLiangHuoDeXiaoLv = 0.18
+        }
+    },
+}
+
+return config

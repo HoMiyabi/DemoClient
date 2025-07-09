@@ -119,8 +119,8 @@ namespace Kirara.TimelineAction
                     var col = cols[i];
                     if (col.TryGetComponent<RoleCtrl>(out var roleCtrl))
                     {
-                        var invAttr = roleCtrl.Role.ae.GetAttr(EAttrType.Invincible);
-                        if (invAttr.BaseValue == 0f)
+                        var invAttr = roleCtrl.Role.AttrSet[EAttrType.Invincible];
+                        if (invAttr == 0)
                         {
                             Debug.Log($"Monster命中{roleCtrl.Role.config.Name}");
                         }

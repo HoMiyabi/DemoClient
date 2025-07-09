@@ -4,6 +4,7 @@ using cfg.main;
 using Cysharp.Threading.Tasks;
 using Kirara.AttrEffect;
 using Manager;
+using UnityEngine;
 
 namespace Kirara.Model
 {
@@ -38,7 +39,8 @@ namespace Kirara.Model
         }
         public event Action OnWeaponChanged;
 
-        public readonly AttrEffect.AttrEffect ae = new();
+        public AttrSet AttrSet { get; private set; } = new();
+        public AbilitySet AbilitySet { get; private set; } = new();
 
         private readonly Dictionary<int, int> discCidToCount = new();
 
@@ -63,13 +65,13 @@ namespace Kirara.Model
 
             foreach (var attr in chBaseAttrs)
             {
-                ae.AddAttr(new Attr(attr.AttrType, attr.Value));
+                AttrSet[attr.AttrType] = attr.Value;
             }
 
-            foreach (var type in ConfigMgr.tb.TbGlobalConfig.ChAttrTypes)
-            {
-                ae.TryAddAttr(new Attr(type, 0f));
-            }
+            // foreach (var type in ConfigMgr.tb.TbGlobalConfig.ChAttrTypes)
+            // {
+            //     AttrSet.TryAddAttr(new Attr(type, 0f));
+            // }
 
             // 设置武器
             Weapon = player.Weapons.Find(it => it.Id == role.WeaponId);
@@ -81,7 +83,19 @@ namespace Kirara.Model
                 SetDisc(pos, player.Discs.Find(it => it.Id == role.DiscIds[pos - 1]));
             }
 
-            ae.GetAttr(EAttrType.CurrHp).BaseValue = ae.EvaluateAttr(EAttrType.Hp);
+            AttrSet[EAttrType.CurrHp] = AttrSet[EAttrType.Hp];
+        }
+
+        // 更新能量恢复
+        public void UpdateEnergyRegen(float dt)
+        {
+            const float mul = 8f;
+            double maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
+
+            if (AttrSet[EAttrType.CurrEnergy] >= maxEnergy) return;
+
+            double regen = AttrSet[EAttrType.EnergyRegen] * mul;
+            AttrSet[EAttrType.CurrEnergy] = Math.Min(AttrSet[EAttrType.CurrEnergy] + dt * regen, maxEnergy);
         }
 
         #region 武器 Weapon
@@ -119,12 +133,12 @@ namespace Kirara.Model
         {
             // 移除主动能力
             string effName = weapon.Name + "主动";
-            ae.RemoveAbility(effName);
+            AbilitySet.RemoveAbility(effName);
 
             // 移除被动能力
             foreach (var abilityConfig in weapon.Config.PassiveAbilities)
             {
-                ae.RemoveAbility(abilityConfig.Name);
+                AbilitySet.RemoveAbility(abilityConfig.Name);
             }
         }
 
@@ -139,12 +153,12 @@ namespace Kirara.Model
                 weapon.AdvancedAttr.GetModifier()
             };
             string name = weapon.Name + "主动";
-            ae.AddAbility(new Ability(name));
+            AbilitySet.AttachAbility(new Ability(name));
 
             // 添加被动能力
             foreach (var abilityConfig in weapon.Config.PassiveAbilities)
             {
-                ae.AddAbility(abilityConfig.GetRuntime());
+                AbilitySet.AttachAbility(abilityConfig.GetRuntime());
             }
         }
 
@@ -205,7 +219,7 @@ namespace Kirara.Model
 
         private void RemoveDiscAbilities(int pos)
         {
-            ae.RemoveAbility($"驱动盘{pos}");
+            AbilitySet.RemoveAbility($"驱动盘{pos}");
         }
 
         private void AddDiscAbilities(int pos)
@@ -221,7 +235,7 @@ namespace Kirara.Model
                 modifiers.Add(nIdModifier.GetModifier());
             }
 
-            ae.AddAbility(new Ability($"驱动盘{pos}"));
+            AbilitySet.AddAbility(new Ability($"驱动盘{pos}"));
         }
 
         private bool IsDiscSameConfig(DiscItem disc1, DiscItem disc2)
@@ -242,14 +256,14 @@ namespace Kirara.Model
                 {
                     foreach (var effCfg in oldDisc.Config.SetAbilities4)
                     {
-                        ae.RemoveAbility(effCfg.Name);
+                        AttrSet.RemoveAbility(effCfg.Name);
                     }
                 }
                 else if (cnt == 2)
                 {
                     foreach (var effCfg in oldDisc.Config.SetAbilities2)
                     {
-                        ae.RemoveAbility(effCfg.Name);
+                        AttrSet.RemoveAbility(effCfg.Name);
                     }
                 }
                 cnt--;
@@ -270,14 +284,14 @@ namespace Kirara.Model
                 {
                     foreach (var effCfg in newDisc.Config.SetAbilities4)
                     {
-                        ae.AddAbility(effCfg.GetRuntime());
+                        AbilitySet.AddAbility(effCfg.GetRuntime());
                     }
                 }
                 else if (cnt == 2)
                 {
                     foreach (var effCfg in newDisc.Config.SetAbilities2)
                     {
-                        ae.AddAbility(effCfg.GetRuntime());
+                        AbilitySet.AddAbility(effCfg.GetRuntime());
                     }
                 }
                 discCidToCount[newDisc.Cid] = cnt;

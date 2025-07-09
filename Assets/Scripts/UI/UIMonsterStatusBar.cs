@@ -30,38 +30,38 @@ namespace Kirara.UI
 
             monster.onDie += () => Destroy(gameObject);
 
-            var currHpAttr = monster.ae.GetAttr(EAttrType.CurrHp);
-            var hpAttr = monster.ae.GetAttr(EAttrType.Hp);
-            SetHpRatioImmediate(currHpAttr.Evaluate() / hpAttr.Evaluate());
+            var currHp = monster.Model.AttrSet[EAttrType.CurrHp];
+            var hp = monster.Model.AttrSet[EAttrType.Hp];
+            SetHpRatioImmediate(currHp / hp);
 
-            var dazeAttr = monster.ae.GetAttr(EAttrType.CurrDaze);
-            var maxDazeAttr = monster.ae.GetAttr(EAttrType.MaxDaze);
-            SetDazeRatio(dazeAttr.Evaluate() / maxDazeAttr.Evaluate());
+            var daze = monster.Model.AttrSet[EAttrType.CurrDaze];
+            var maxDaze = monster.Model.AttrSet[EAttrType.MaxDaze];
+            SetDazeRatio(daze / maxDaze);
 
-            currHpAttr.OnBaseValueChanged += value =>
+            monster.Model.AttrSet.GetAttr(EAttrType.CurrHp).OnBaseValueChanged += value =>
             {
-                SetHpRatio(value / hpAttr.Evaluate());
+                SetHpRatio(value / monster.Model.AttrSet[EAttrType.Hp]);
             };
-            dazeAttr.OnBaseValueChanged += value =>
+            monster.Model.AttrSet.GetAttr(EAttrType.CurrDaze).OnBaseValueChanged += value =>
             {
-                SetDazeRatio(value / maxDazeAttr.Evaluate());
+                SetDazeRatio(value / monster.Model.AttrSet[EAttrType.MaxDaze]);
             };
         }
 
-        private void SetHpRatioImmediate(float ratio)
+        private void SetHpRatioImmediate(double ratio)
         {
-            HPBar.fillAmount = ratio;
-            delayHPBar.fillAmount = ratio;
+            HPBar.fillAmount = (float)ratio;
+            delayHPBar.fillAmount = (float)ratio;
         }
 
-        public void SetHpRatio(float ratio)
+        public void SetHpRatio(double ratio)
         {
-            HPBar.fillAmount = ratio;
+            HPBar.fillAmount = (float)ratio;
         }
 
-        public void SetDazeRatio(float ratio)
+        public void SetDazeRatio(double ratio)
         {
-            dazeBar.fillAmount = ratio;
+            dazeBar.fillAmount = (float)ratio;
 
             dazeText.text = (ratio * 100).ToString("F0");
         }

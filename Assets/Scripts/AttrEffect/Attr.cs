@@ -7,80 +7,50 @@ namespace Kirara.AttrEffect
 {
     public class Attr
     {
-        public EAttrType type;
+        public int type;
 
-        private float baseValue;
-        public float BaseValue
+        private double baseValue;
+        public double BaseValue
         {
             get => baseValue;
             set
             {
-                if (Mathf.Approximately(baseValue, value)) return;
+                if (baseValue == value) return;
 
                 baseValue = value;
                 OnBaseValueChanged?.Invoke(value);
             }
         }
-        public event Action<float> OnBaseValueChanged;
+        public event Action<double> OnBaseValueChanged;
 
-        private float currentValue;
-        public float CurrentValue
-        {
-            get => currentValue;
-            set
-            {
-                currentValue = value;
-            }
-        }
+        public readonly List<ILuaAbility> abilities = new();
+        public AttrSet set;
 
-        public readonly List<Modifier> modifiers = new();
-        public AttrEffect ae;
-        public float deltaValue;
-
-        public Attr(EAttrType type, float defaultValue)
+        public Attr(int type, double baseValue)
         {
             this.type = type;
-            baseValue = defaultValue;
-            currentValue = defaultValue;
+            this.baseValue = baseValue;
         }
 
-        protected void Clear()
+        public double Evaluate()
         {
-            deltaValue = 0f;
-        }
-
-        protected void Apply()
-        {
-            foreach (var modifier in modifiers)
+            double delta = 0;
+            foreach (var ability in abilities)
             {
-                modifier.Apply(this);
+                delta += ability.stackCount * ability.attrs.Get<double>(type.ToString());
             }
-        }
 
-        protected float Calc()
-        {
-            if ((int)type % 100 == 0)
+            if (type % 100 == 0)
             {
                 // 为一级属性
-                int i = (int)type;
-                float a = ae.EvaluateAttr((EAttrType)(i + 1));
-                float b = ae.EvaluateAttr((EAttrType)(i + 2));
-                float c = ae.EvaluateAttr((EAttrType)(i + 3));
-                CurrentValue = BaseValue + deltaValue + a * (1f + b) + c;
+                int i = type;
+                double bas = set[i + 1];
+                double pct = set[i + 2];
+                double fix = set[i + 3];
+                return BaseValue + delta + bas * (1f + pct) + fix;
             }
-            else
-            {
-                // 为二级属性
-                CurrentValue = BaseValue + deltaValue;
-            }
-            return CurrentValue;
-        }
-
-        public float Evaluate()
-        {
-            Clear();
-            Apply();
-            return Calc();
+            // 为二级属性
+            return BaseValue + delta;
         }
     }
 }

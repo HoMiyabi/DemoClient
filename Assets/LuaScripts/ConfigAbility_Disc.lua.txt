@@ -1,0 +1,17 @@
+local config =
+{
+    {
+        name = "JiDiZhongJinShu_2",
+        attrs = {
+            IceDmgPct = 0.1
+        },
+    },
+    {
+        name = "JiDiZhongJinShu_4"
+        attrs = {
+
+        }
+    }
+}
+
+return config

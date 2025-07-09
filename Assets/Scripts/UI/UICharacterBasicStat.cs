@@ -33,16 +33,16 @@ namespace Kirara.UI
         }
         #endregion
 
-        private Role ch;
+        private Role Role { get; set; }
 
         private void Awake()
         {
             InitUI();
         }
 
-        public void Set(Role ch)
+        public void Set(Role role)
         {
-            this.ch = ch;
+            Role = role;
             UpdateInfo();
         }
 
@@ -53,18 +53,18 @@ namespace Kirara.UI
 
         private void UpdateInfo()
         {
-            if (ch == null) return;
+            if (Role == null) return;
 
-            ATKStatBar.Set(ch.ae, EAttrType.Atk);
-            DEFStatBar.Set(ch.ae, EAttrType.Def);
-            ImpactStatBar.Set(ch.ae, EAttrType.Impact);
-            CRIT_RateStatBar.Set(ch.ae, EAttrType.CritRate);
-            CRIT_DMGStatBar.Set(ch.ae, EAttrType.CritDmg);
-            AnomalyMasteryStatBar.Set(ch.ae, EAttrType.AnomalyMastery);
-            AnomalyProficiencyStatBar.Set(ch.ae, EAttrType.AnomalyProficiency);
-            PEN_RatioStatBar.Set(ch.ae, EAttrType.PenRatio);
-            EnergyRegenStatBar.Set(ch.ae, EAttrType.EnergyRegen);
-            HPStatBar.Set(ch.ae, EAttrType.Hp);
+            ATKStatBar.Set(EAttrType.Atk, Role.AttrSet[EAttrType.Atk]);
+            DEFStatBar.Set(EAttrType.Def, Role.AttrSet[EAttrType.Def]);
+            ImpactStatBar.Set(EAttrType.Impact, Role.AttrSet[EAttrType.Impact]);
+            CRIT_RateStatBar.Set(EAttrType.CritRate, Role.AttrSet[EAttrType.CritRate]);
+            CRIT_DMGStatBar.Set(EAttrType.CritDmg, Role.AttrSet[EAttrType.CritDmg]);
+            AnomalyMasteryStatBar.Set(EAttrType.AnomalyMastery, Role.AttrSet[EAttrType.AnomalyMastery]);
+            AnomalyProficiencyStatBar.Set(EAttrType.AnomalyProficiency, Role.AttrSet[EAttrType.AnomalyProficiency]);
+            PEN_RatioStatBar.Set(EAttrType.PenRatio, Role.AttrSet[EAttrType.PenRatio]);
+            EnergyRegenStatBar.Set(EAttrType.EnergyRegen, Role.AttrSet[EAttrType.EnergyRegen]);
+            HPStatBar.Set(EAttrType.Hp, Role.AttrSet[EAttrType.Hp]);
         }
     }
 }

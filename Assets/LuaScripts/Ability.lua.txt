@@ -1,0 +1,9 @@
+function getAbility(_abilitySet, configAbility)
+    local ability = {
+        abilitySet = _abilitySet,
+        stackCount = 0,
+        remainingTimes = {},
+    }
+    setmetatable(ability, {__index = configAbility})
+    return ability
+end

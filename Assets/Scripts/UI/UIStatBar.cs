@@ -1,5 +1,5 @@
 ﻿using cfg.main;
-
+using Kirara.AttrEffect;
 using Manager;
 using TMPro;
 using UnityEngine;
@@ -60,7 +60,7 @@ namespace Kirara.UI
             }
         }
 
-        public UIStatBar Set(string nameText, float value, bool isPercentage, int upgradeTime = 0)
+        public UIStatBar Set(string nameText, double value, bool isPercentage, int upgradeTime = 0)
         {
             StatNameText.text = nameText;
             StatValueText.text = isPercentage ? $"{value:0.#%}" : $"{value:0.#}";
@@ -77,10 +77,10 @@ namespace Kirara.UI
             return this;
         }
 
-        public void Set(AttrEffect.AttrEffect ae, EAttrType attrType)
+        public void Set(EAttrType attrType, double value)
         {
             var config = ConfigMgr.tb.TbAttrShowConfig[attrType];
-            Set(config.ShowName, ae.GetAttr(attrType).Evaluate(), config.ShowPct);
+            Set(config.ShowName, value, config.ShowPct);
         }
     }
 }

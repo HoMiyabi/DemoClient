@@ -53,8 +53,8 @@ namespace Kirara
 
         private void Update()
         {
-            UpdateEnergyRegen();
-            Role.ae.Update();
+            Role.UpdateEnergyRegen(Time.deltaTime);
+            Role.AbilitySet.Update(Time.deltaTime);
 
             if (EnableRotation)
             {
@@ -300,19 +300,6 @@ namespace Kirara
             ActionCtrl.ActionPlayer.Speed = 0f;
             await UniTask.WaitForSeconds(duration);
             ActionCtrl.ActionPlayer.Speed = 1f;
-        }
-
-        // 更新能量恢复
-        private void UpdateEnergyRegen()
-        {
-            const float mul = 8f;
-            float maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
-
-            var currEnergyAttr = Role.ae.GetAttr(EAttrType.CurrEnergy);
-            if (currEnergyAttr.Evaluate() >= maxEnergy) return;
-
-            float regen = Role.ae.GetAttr(EAttrType.EnergyRegen).Evaluate() * mul;
-            currEnergyAttr.BaseValue = Mathf.Min(currEnergyAttr.BaseValue + Time.deltaTime * regen, maxEnergy);
         }
     }
 }

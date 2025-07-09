@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kirara.Model;
 using Kirara.UI;
 using Manager;
 using UnityEngine;
@@ -31,7 +32,7 @@ namespace Kirara
             go.transform.rotation = rot;
 
             var monster = go.GetComponent<Monster>();
-            monster.Set(monsterCid, monsterId);
+            monster.Set(new MonsterModel(monsterCid, monsterId));
             monsters.Add(monsterId, monster);
 
             UIMgr.Instance.AddHUD<UIMonsterStatusBar>().Set(monster);

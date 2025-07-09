@@ -11,34 +11,34 @@ namespace Kirara
     {
         private static bool GetIsCrit(Role ch)
         {
-            return Random.Range(0f, 1f) <= ch.ae.GetAttr(EAttrType.CritRate).Evaluate();
+            return Random.Range(0f, 1f) <= ch.AttrSet[EAttrType.CritRate];
         }
 
-        private static float CalcDamage(Role ch, float dmgMult, bool isCrit)
+        private static double CalcDamage(Role ch, double dmgMult, bool isCrit)
         {
-            float dmg = ch.ae.GetAttr(EAttrType.Atk).Evaluate() * dmgMult;
+            double dmg = ch.AttrSet[EAttrType.Atk] * dmgMult;
             if (isCrit)
             {
-                dmg *= 1f + ch.ae.GetAttr(EAttrType.CritDmg).Evaluate();
+                dmg *= 1f + ch.AttrSet[EAttrType.CritDmg];
             }
             return dmg;
         }
 
-        private static float CalcDaze(Role ch, float dazeMult)
+        private static double CalcDaze(Role ch, double dazeMult)
         {
-            float daze = ch.ae.GetAttr(EAttrType.Impact).Evaluate() * dazeMult;
+            double daze = ch.AttrSet[EAttrType.Impact] * dazeMult;
             return daze;
         }
 
-        private static void CalcNumeric(Role ch, float dmgMult, float dazeMult,
-            out float dmg, out float daze, out bool isCrit)
+        private static void CalcNumeric(Role ch, double dmgMult, double dazeMult,
+            out double dmg, out double daze, out bool isCrit)
         {
             isCrit = GetIsCrit(ch);
             dmg = CalcDamage(ch, dmgMult, isCrit);
             daze = CalcDaze(ch, dazeMult);
         }
 
-        private static void PlayVisual(RoleCtrl role, Monster target, float dmg, bool isCrit, BoxPlayableAsset box)
+        private static void PlayVisual(RoleCtrl role, Monster target, double dmg, bool isCrit, BoxPlayableAsset box)
         {
             // 命中特效
             // Debug.Log($"prefab={box.particlePrefab}, setRot={box.setRot}, rotValue={box.rotValue}");
@@ -74,7 +74,7 @@ namespace Kirara
             var config = ConfigMgr.tb.TbChHitNumericConfig[box.hitId];
 
             CalcNumeric(role.Role, config.DmgMult, config.DazeMult,
-                out float dmg, out float daze, out bool isCrit);
+                out double dmg, out double daze, out bool isCrit);
 
             target.TakeEffect(dmg, daze, (role.transform.position - target.transform.position).normalized);
 

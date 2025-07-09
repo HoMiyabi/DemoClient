@@ -31,20 +31,22 @@ namespace Kirara.UI
         {
             sb.Clear();
 
-            var aet = PlayerSystem.Instance.FrontRoleCtrl.Role.ae;
+            var frontRole = PlayerSystem.Instance.FrontRoleCtrl.Role;
+            var attrSet = frontRole.AttrSet;
 
             sb.AppendLine("属性：");
             foreach (var type in attrTypes)
             {
-                float value = aet.GetAttr(type).Evaluate();
-                sb.AppendFormat("{0}: {1}\n", ConfigMgr.tb.TbAttrShowConfig[type].ShowName, value);
+                sb.AppendFormat("{0}: {1}\n", ConfigMgr.tb.TbAttrShowConfig[type].ShowName, attrSet[type]);
             }
 
+            var abilitySet = frontRole.AbilitySet;
+
             sb.AppendLine("效果：");
-            var effs = aet.effects.Values;
-            foreach (var eff in effs)
+            var abilities = abilitySet.Abilities;
+            foreach (var ability in abilities.Values)
             {
-                sb.AppendFormat("{0}: {1}/{2}层\n", eff.name, eff.StackCount, eff.StackLimit);
+                sb.AppendFormat("{0}: {1}/{2}层\n", ability.name, ability.stackCount, ability.stackLimit);
             }
             string text = sb.ToString();
             if (text != cacheText)
