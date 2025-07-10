@@ -23,17 +23,6 @@ namespace Manager
             LuaEnv = new LuaEnv();
             LuaEnv.AddLoader(LuaLoader);
             LuaEnv.DoString("require('main')");
-
-            // LuaEnv.DoString("weaponAbilities = require('ConfigAbility_Weapon_Setup')");
-            // var weaponAbilitiesTable = LuaEnv.Global.Get<LuaTable>("weaponAbilities");
-            // var list = new List<Ability>();
-            // int len = weaponAbilitiesTable.Length;
-            // for (int i = 1; i <= len; i++)
-            // {
-            //     var ability = weaponAbilitiesTable.Get<int, Ability>(i);
-            //     list.Add(ability);
-            // }
-            // Debug.Log("ability.name = " + list[0].name);
         }
 
         private byte[] LuaLoader(ref string filepath)

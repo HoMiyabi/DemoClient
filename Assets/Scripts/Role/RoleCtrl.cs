@@ -42,7 +42,17 @@ namespace Kirara
 
         private void Awake()
         {
-            InitRef();
+            Cam = Camera.main.transform;
+            Animator = GetComponent<Animator>();
+
+            // combatStateMachine = GetComponent<CombatStateMachine>();
+            CharacterController = GetComponent<CharacterController>();
+            ChGravity = GetComponent<ChGravity>();
+
+            ActionCtrl = GetComponent<ActionCtrl1>();
+
+            leftAssistVCam.enabled = false;
+            rightAssistVCam.enabled = false;
         }
 
         public void Set(Role role)
@@ -76,21 +86,6 @@ namespace Kirara
             EnableRecenter = actionParams.enableRecenter;
             lookAtMonster = actionParams.lookAtMonster;
             SetShowState(actionParams.roleShowState);
-        }
-
-        private void InitRef()
-        {
-            Cam = Camera.main.transform;
-            Animator = GetComponent<Animator>();
-
-            // combatStateMachine = GetComponent<CombatStateMachine>();
-            CharacterController = GetComponent<CharacterController>();
-            ChGravity = GetComponent<ChGravity>();
-
-            ActionCtrl = GetComponent<ActionCtrl1>();
-
-            leftAssistVCam.enabled = false;
-            rightAssistVCam.enabled = false;
         }
 
         private void Recenter()

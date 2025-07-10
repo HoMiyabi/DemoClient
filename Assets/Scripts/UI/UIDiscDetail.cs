@@ -131,7 +131,7 @@ namespace Kirara.UI
                 return;
             }
             var role = PlayerService.Player.Roles.First(it => it.Id == roleId);
-            wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.config.IconLoc);
+            wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
             WearerIcon.sprite = wearerIconHandle.AssetObject as Sprite;
         }
     }

@@ -8,9 +8,8 @@ public class GridScroller : Scroller
     public Vector2 size = new(100f, 100f);
     public Vector2 spacing = new(10f, 10f);
 
-    // 裁切时，把它当做size + cullingPadding的大小来看
-    [Header("Culling Padding Left Right Top Bottom")]
-    public Vector4 cullingPadding = Vector4.zero;
+    // 裁切时，把当做size + cullingPadding的大小来看
+    public Padding cullingPadding;
 
     public int columnCount = 3;
 
@@ -114,7 +113,7 @@ public class GridScroller : Scroller
     {
         get
         {
-            int minLine = Mathf.FloorToInt((Pos - CullingBottom + UsefulSpacing) / LineWidth);
+            int minLine = Mathf.FloorToInt((Pos - CullingBottom + CullingSpacing) / LineWidth);
             int idx = minLine * columnCount;
             return isInfinite ? idx : Mathf.Max(idx, 0);
         }
@@ -132,19 +131,19 @@ public class GridScroller : Scroller
 
     private float CullingBottom => direction switch
     {
-        EDirection.Vertical => cullingPadding.w,
-        EDirection.Horizontal => cullingPadding.y,
+        EDirection.Vertical => cullingPadding.bottom,
+        EDirection.Horizontal => cullingPadding.right,
         _ => throw new ArgumentOutOfRangeException()
     };
 
     private float CullingTop => direction switch
     {
-        EDirection.Vertical => cullingPadding.z,
-        EDirection.Horizontal => cullingPadding.x,
+        EDirection.Vertical => cullingPadding.top,
+        EDirection.Horizontal => cullingPadding.left,
         _ => throw new ArgumentOutOfRangeException()
     };
 
-    private float UsefulSpacing => direction switch
+    private float CullingSpacing => direction switch
     {
         EDirection.Vertical => spacing.y,
         EDirection.Horizontal => spacing.x,

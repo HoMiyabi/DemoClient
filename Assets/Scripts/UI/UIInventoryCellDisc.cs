@@ -106,7 +106,7 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
         }
         WearerIconImg.gameObject.SetActive(true);
         var role = PlayerService.Player.Roles.First(it => it.Id == _disc.RoleId);
-        wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.config.IconLoc);
+        wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
         WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
     }
 

@@ -1,3 +1,15 @@
 print('hello world')
 
 require("Ability")
+
+print("--加载ConfigAbility--")
+local configAbility_Weapon = require("ConfigAbility_Weapon")
+local configAbility_Disc = require("ConfigAbility_Disc")
+
+configAbilities = {}
+for _, value in ipairs(configAbility_Weapon) do
+    configAbilities[value.name] = value
+end
+for _, value in ipairs(configAbility_Disc) do
+    configAbilities[value.name] = value
+end

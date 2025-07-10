@@ -20,9 +20,6 @@ public abstract class Scroller : MonoBehaviour,
     // 阻尼率
     public float dampingRatio = 7f;
 
-    // 减速率
-    public float decelerationRate = 0.135f;
-
     // 回弹时长，用于鼠标释放时超出范围，回弹到边界
     public float elasticDuration = 0.3f;
 

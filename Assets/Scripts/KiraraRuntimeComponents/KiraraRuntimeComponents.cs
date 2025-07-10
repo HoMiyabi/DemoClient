@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Kirara.UI
 {
     [ExecuteAlways]
-    public partial class KiraraRuntimeComponents : MonoBehaviour
+    public class KiraraRuntimeComponents : MonoBehaviour
     {
         [Serializable]
         public class Item
         {
             public string fieldName;
             public Component component;
+
+            public Item()
+            {
+            }
 
             public Item(string fieldName, Component component)
             {

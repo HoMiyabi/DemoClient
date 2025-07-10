@@ -10,7 +10,7 @@ namespace Kirara.Model
 {
     public class Role
     {
-        public readonly CharacterConfig config;
+        public CharacterConfig Config { get; private set; }
         public string Id { get; set; }
         public int Level { get; set; }
         public int Exp { get; set; }
@@ -44,7 +44,7 @@ namespace Kirara.Model
 
         private readonly Dictionary<int, int> discCidToCount = new();
 
-        public NSyncRole SyncRole => new NSyncRole
+        public NSyncRole SyncRole => new()
         {
             Id = Id,
             Movement = new NMovement
@@ -58,20 +58,20 @@ namespace Kirara.Model
 
         public Role(NRole role, Player player)
         {
-            config = ConfigMgr.tb.TbCharacterConfig[role.Cid];
+            Config = ConfigMgr.tb.TbCharacterConfig[role.Cid];
             Id = role.Id;
 
             var chBaseAttrs = ConfigMgr.tb.TbCharacterBaseAttrConfig[role.Cid].ChBaseAttrs;
+
+            foreach (var type in ConfigMgr.tb.TbGlobalConfig.ChAttrTypes)
+            {
+                AttrSet[type] = 0f;
+            }
 
             foreach (var attr in chBaseAttrs)
             {
                 AttrSet[attr.AttrType] = attr.Value;
             }
-
-            // foreach (var type in ConfigMgr.tb.TbGlobalConfig.ChAttrTypes)
-            // {
-            //     AttrSet.TryAddAttr(new Attr(type, 0f));
-            // }
 
             // 设置武器
             Weapon = player.Weapons.Find(it => it.Id == role.WeaponId);
@@ -122,8 +122,8 @@ namespace Kirara.Model
         private void RemoveWeaponAbilities(WeaponItem weapon)
         {
             // 移除属性能力
-            string effName = weapon.Name + "属性";
-            AbilitySet.RemoveAbility(effName);
+            string attrName = weapon.Name + "属性";
+            AbilitySet.RemoveAbility(attrName);
 
             // 移除被动能力
             AbilitySet.RemoveAbility(weapon.Config.PassiveAbilityName);

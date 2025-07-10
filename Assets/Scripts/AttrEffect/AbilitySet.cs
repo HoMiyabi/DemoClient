@@ -9,12 +9,15 @@ namespace Kirara.AttrEffect
     public class AbilitySet
     {
         public Dictionary<string, ILuaAbility> Abilities { get; private set; } = new();
-        private readonly List<(string handle, float time)> timers = new();
+        private List<(string handle, float time)> Timers { get; set; } = new();
 
-        public static Dictionary<string, LuaTable> configs = new();
-        public delegate ILuaAbility newAbilityDel();
+        private static readonly Dictionary<string, LuaTable> configAbilities =
+            LuaMgr.Instance.LuaEnv.Global.Get<Dictionary<string, LuaTable>>("configAbilities");
 
-        public static newAbilityDel newAbility = LuaMgr.Instance.LuaEnv.Global.GetInPath<newAbilityDel>("Ability.new");
+        private delegate ILuaAbility newAbilityDel();
+
+        private static readonly newAbilityDel newAbility =
+            LuaMgr.Instance.LuaEnv.Global.GetInPath<newAbilityDel>("Ability.new");
 
         public void Update(float dt)
         {
@@ -24,18 +27,18 @@ namespace Kirara.AttrEffect
 
         private void UpdateTimers(float dt)
         {
-            for (int i = 0; i < timers.Count;)
+            for (int i = 0; i < Timers.Count;)
             {
-                (string handle, float time) = timers[i];
+                (string handle, float time) = Timers[i];
                 time -= dt;
                 if (time > 0)
                 {
-                    timers[i] = (handle, time);
+                    Timers[i] = (handle, time);
                     i++;
                 }
                 else
                 {
-                    timers.RemoveAt(i);
+                    Timers.RemoveAt(i);
                 }
             }
         }
@@ -55,20 +58,20 @@ namespace Kirara.AttrEffect
 
         public void SetTimer(string handle, float time)
         {
-            int i = timers.FindIndex(x => x.handle == handle);
+            int i = Timers.FindIndex(x => x.handle == handle);
             if (i >= 0)
             {
-                timers[i] = (handle, time);
+                Timers[i] = (handle, time);
             }
             else
             {
-                timers.Add((handle, time));
+                Timers.Add((handle, time));
             }
         }
 
         public bool HasTimer(string handle)
         {
-            return timers.FindIndex(x => x.handle == handle) >= 0;
+            return Timers.FindIndex(x => x.handle == handle) >= 0;
         }
 
         public void AttachAbility(string name, Dictionary<string, double> attrs)
@@ -98,7 +101,7 @@ namespace Kirara.AttrEffect
             {
                 ability = newAbility();
                 ability.abilitySet = this;
-                ability.setConfig(configs[name]);
+                ability.setConfig(configAbilities[name]);
                 ability.onAttached();
             }
         }

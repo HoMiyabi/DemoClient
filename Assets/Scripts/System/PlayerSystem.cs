@@ -269,8 +269,8 @@ namespace Kirara
             foreach (string roleId in teamRoleIds)
             {
                 var role = roles.Find(it => it.Id == roleId);
-                Debug.Log($"加载角色 {role.config.Name}");
-                var go = AssetMgr.Instance.InstantiateGO(role.config.PrefabLoc, characterParent);
+                Debug.Log($"加载角色 {role.Config.Name}");
+                var go = AssetMgr.Instance.InstantiateGO(role.Config.PrefabLoc, characterParent);
                 var roleCtrl = go.GetComponent<RoleCtrl>();
                 roleCtrl.Set(role);
 

@@ -55,7 +55,7 @@ namespace Kirara.UI
             UpdateHP();
             UpdateEnergy();
 
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.config.IconLoc);
+            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
             CharacterIcon.sprite = handle.AssetObject as Sprite;
         }
 
@@ -72,7 +72,7 @@ namespace Kirara.UI
             double currEnergy = Role.AttrSet[EAttrType.CurrEnergy];
 
             // todo)) 有点太脏了
-            int actionId = Role.config.Id * 100;
+            int actionId = Role.Config.Id * 100;
             var chNumeric = ConfigMgr.tb.TbChActionNumericConfig[actionId];
 
             float exSpecialEnergy = chNumeric.EnergyCost;

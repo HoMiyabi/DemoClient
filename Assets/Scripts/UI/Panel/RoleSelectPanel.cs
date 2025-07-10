@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using cfg.main;
 using Kirara;
 using Kirara.UI;
 using Kirara.UI.Panel;
@@ -27,20 +28,30 @@ public class RoleSelectPanel : BasePanel
     public float offset;
     private readonly Stack<GameObject> pool = new();
     private readonly Bindable<int> selected = new(0);
+    private List<CharacterConfig> list;
 
     private void Awake()
     {
         InitUI();
 
-        UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
+        list = ConfigMgr.tb.TbCharacterConfig.DataList;
 
-        var list = ConfigMgr.tb.TbCharacterConfig.DataList;
+        UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
+        SelectBtn.onClick.AddListener(() =>
+        {
+            var roleConfig = list[selected.Value];
+            var role = PlayerService.Player.Roles.Find(x => x.Config.Id == roleConfig.Id);
+            if (role == null)
+            {
+                return;
+            }
+            UIMgr.Instance.PushPanel<RoleDetailPanel>().Set(role);
+        });
 
         LoopScroll.totalCount = list.Count;
         LoopScroll.SetPoolFunc(GetObject, ReturnObject);
         LoopScroll.provideData = ProvideData;
         LoopScroll.updateCell = UpdatePos;
-        Init();
     }
 
     private void UpdatePos(RectTransform rectTransform, int arg2)
@@ -80,17 +91,5 @@ public class RoleSelectPanel : BasePanel
         go.transform.SetParent(transform, false);
         go.SetActive(false);
         pool.Push(go);
-    }
-
-    private void Init()
-    {
-        // foreach (var character in PlayerSystem.Instance.ChCtrls)
-        // {
-        //     var go = handle.InstantiateSync(Content);
-        //     go.GetComponent<SelectCharacterCell>().Set(character.ChModel, () =>
-        //     {
-        //         UIMgr.Instance.PushPanel<CharacterDetailPanel>().Set(character.ChModel);
-        //     });
-        // }
     }
 }

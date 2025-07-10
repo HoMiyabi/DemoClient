@@ -31,7 +31,10 @@ namespace Kirara.AttrEffect
                 }
                 else
                 {
-                    dict[type] = new Attr(type, value);
+                    dict[type] = new Attr(type, value)
+                    {
+                        set = this
+                    };
                 }
             }
         }

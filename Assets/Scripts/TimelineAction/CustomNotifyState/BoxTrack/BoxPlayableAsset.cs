@@ -122,7 +122,7 @@ namespace Kirara.TimelineAction
                         var invAttr = roleCtrl.Role.AttrSet[EAttrType.Invincible];
                         if (invAttr == 0)
                         {
-                            Debug.Log($"Monster命中{roleCtrl.Role.config.Name}");
+                            Debug.Log($"Monster命中{roleCtrl.Role.Config.Name}");
                         }
                     }
                 }
