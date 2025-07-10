@@ -18,6 +18,7 @@ namespace Kirara.UI
         private RectTransform rectTransform;
 
         private Transform wsFollow;
+        private Monster Monster { get; set; }
 
         private void Awake()
         {
@@ -26,41 +27,37 @@ namespace Kirara.UI
 
         public void Set(Monster monster)
         {
+            Monster = monster;
+
             wsFollow = monster.statusBarFollow;
 
             monster.onDie += () => Destroy(gameObject);
 
-            var currHp = monster.Model.AttrSet[EAttrType.CurrHp];
-            var hp = monster.Model.AttrSet[EAttrType.Hp];
-            SetHpRatioImmediate(currHp / hp);
-
-            var daze = monster.Model.AttrSet[EAttrType.CurrDaze];
-            var maxDaze = monster.Model.AttrSet[EAttrType.MaxDaze];
-            SetDazeRatio(daze / maxDaze);
-
-            monster.Model.AttrSet.GetAttr(EAttrType.CurrHp).OnBaseValueChanged += value =>
-            {
-                SetHpRatio(value / monster.Model.AttrSet[EAttrType.Hp]);
-            };
-            monster.Model.AttrSet.GetAttr(EAttrType.CurrDaze).OnBaseValueChanged += value =>
-            {
-                SetDazeRatio(value / monster.Model.AttrSet[EAttrType.MaxDaze]);
-            };
+            SetHpRatioImmediate();
+            UpdateDazeRatio();
         }
 
-        private void SetHpRatioImmediate(double ratio)
+        private void SetHpRatioImmediate()
         {
-            HPBar.fillAmount = (float)ratio;
-            delayHPBar.fillAmount = (float)ratio;
+            double currHp = Monster.Model.AttrSet[EAttrType.CurrHp];
+            double maxHp = Monster.Model.AttrSet[EAttrType.Hp];
+            HPBar.fillAmount = (float)(currHp / maxHp);
+            delayHPBar.fillAmount = (float)(currHp / maxHp);
         }
 
-        public void SetHpRatio(double ratio)
+        public void UpdateHpRatio()
         {
-            HPBar.fillAmount = (float)ratio;
+            double currHp = Monster.Model.AttrSet[EAttrType.CurrHp];
+            double maxHp = Monster.Model.AttrSet[EAttrType.Hp];
+            HPBar.fillAmount = (float)(currHp / maxHp);
         }
 
-        public void SetDazeRatio(double ratio)
+        public void UpdateDazeRatio()
         {
+            double currDaze = Monster.Model.AttrSet[EAttrType.CurrDaze];
+            double maxDaze = Monster.Model.AttrSet[EAttrType.MaxDaze];
+
+            double ratio = currDaze / maxDaze;
             dazeBar.fillAmount = (float)ratio;
 
             dazeText.text = (ratio * 100).ToString("F0");
@@ -68,12 +65,15 @@ namespace Kirara.UI
 
         public void Update()
         {
-            if (wsFollow == null)
+            if (!wsFollow)
             {
                 Destroy(gameObject);
                 return;
             }
             RectUtils.SetRectWorldPos(rectTransform, wsFollow.position);
+
+            UpdateHpRatio();
+            UpdateDazeRatio();
 
             // 缓降
             if (HPBar.fillAmount < delayHPBar.fillAmount)

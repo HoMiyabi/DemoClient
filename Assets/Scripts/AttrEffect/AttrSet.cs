@@ -27,7 +27,7 @@ namespace Kirara.AttrEffect
             {
                 if (dict.TryGetValue(type, out var attr))
                 {
-                    attr.BaseValue = value;
+                    attr.baseValue = value;
                 }
                 else
                 {

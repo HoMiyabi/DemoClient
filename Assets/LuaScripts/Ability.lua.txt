@@ -1,9 +1,96 @@
-function getAbility(_abilitySet, configAbility)
-    local ability = {
-        abilitySet = _abilitySet,
-        stackCount = 0,
-        remainingTimes = {},
-    }
-    setmetatable(ability, {__index = configAbility})
-    return ability
+Ability = {}
+Ability.__index = Ability
+
+function Ability:refreshPolicy_RefreshMin()
+    local minIdx = 1
+    local min = self.remainingTimes[1]
+    for i = 2, #self.remainingTimes do
+        if self.remainingTimes[i] < min then
+            minIdx = i
+            min = self.remainingTimes[i]
+        end
+    end
+    self.remainingTimes[minIdx] = self.duration
+end
+
+function Ability:refreshPolicy_RefreshAll()
+    for i = 1, #self.remainingTimes do
+        self.remainingTimes[i] = self.duration
+    end
+end
+
+function Ability:inject(varName)
+    return CS.Kirara.AttrEffect.AbilitySet.Inject(self.name, varName)
+end
+
+function Ability:setTimer(handle, time)
+    self.abilitySet:SetTimer(handle, time)
+end
+
+function Ability:hasTimer(handle)
+    return self.abilitySet:HasTimer(handle)
+end
+
+function Ability:attachAbility(abilityName)
+    self.abilitySet:AttachAbility(abilityName)
+end
+
+function Ability:update(dt)
+    local i = 1
+    while i <= #self.remainingTimes do
+        self.remainingTimes[i] = self.remainingTimes[i] - dt
+        if self.remainingTimes[i] <= 0 then
+            table.remove(self.remainingTimes, i)
+            self.stackCount = self.stackCount - 1
+        else
+            i = i + 1
+        end
+    end
+end
+
+function Ability:onAttached(self)
+    if self.stackCount < self.stackLimit then
+        table.insert(self.remainingTimes, self.duration)
+        self.stackCount = self.stackCount + 1
+        if self.stackRefreshPolicy ~= nil then
+            self:stackRefreshPolicy()
+        end
+    else
+        if self.overflowRefreshPolicy ~= nil then
+            self:overflowRefreshPolicy()
+        end
+    end
+end
+
+function Ability.new()
+    local obj = {}
+    setmetatable(obj, Ability)
+    obj.abilitySet = nil
+    -- 名字
+    obj.name = ""
+    -- 持续时间
+    obj.duration = 1 / 0
+    -- 最大层数
+    obj.stackLimit = 1
+    -- 属性
+    obj.attrs = {}
+    -- 堆叠刷新策略
+    obj.stackRefreshPolicy = nil
+    -- 堆叠移除刷新策略
+    obj.overflowRefreshPolicy = Ability.refreshPolicy_RefreshMin
+
+    -- 当前层数
+    obj.stackCount = 0
+    -- 每层剩余时间
+    obj.remainingTimes = {}
+    return obj
+end
+
+function Ability:setConfig(abilityConfig)
+    for key, value in pairs(abilityConfig) do
+        self[key] = value
+    end
+    if self.init ~= nil then
+        self:init()
+    end
 end

@@ -47,11 +47,6 @@ namespace Kirara.UI
 
         private void Clear()
         {
-            if (Role != null)
-            {
-                Role.AttrSet.GetAttr(EAttrType.CurrHp).OnBaseValueChanged -= SetHP;
-                Role.AttrSet.GetAttr(EAttrType.CurrEnergy).OnBaseValueChanged -= SetEnergy;
-            }
             handle?.Release();
             handle = null;
             Role = null;
@@ -60,53 +55,52 @@ namespace Kirara.UI
         public void Set(Role role)
         {
             Clear();
-            this.Role = role;
+            Role = role;
 
-            var currHpAttr = role.AttrSet.GetAttr(EAttrType.CurrHp);
-            var currEnergyAttr = role.AttrSet.GetAttr(EAttrType.CurrEnergy);
-            SetHP(currHpAttr.Evaluate());
-            SetEnergy(currEnergyAttr.Evaluate());
-            currHpAttr.OnBaseValueChanged += SetHP;
-            currEnergyAttr.OnBaseValueChanged += SetEnergy;
+            UpdateHP();
+            UpdateEnergy();
 
             handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.config.IconLoc);
             CharacterIcon.sprite = handle.AssetObject as Sprite;
         }
 
-        private void SetHP(double hp)
+        private void UpdateHP()
         {
+            double currHP = Role.AttrSet[EAttrType.CurrHp];
             double maxHP = Role.AttrSet[EAttrType.Hp];
 
-            HPBar.fillAmount = (float)(hp / maxHP);
+            HPBar.fillAmount = (float)(currHP / maxHP);
 
-            if (HPText != null)
-            {
-                HPText.text = hp.ToString("F0");
-            }
-            if (MaxHPText != null)
-            {
-                MaxHPText.text = maxHP.ToString("F0");
-            }
+            HPText.text = currHP.ToString("F0");
+            MaxHPText.text = maxHP.ToString("F0");
         }
 
-        private void SetEnergy(float energy)
+        private void UpdateEnergy()
         {
+            double currEnergy = Role.AttrSet[EAttrType.CurrEnergy];
+
             // todo)) 有点太脏了
             int actionId = Role.config.Id * 100;
             var chNumeric = ConfigMgr.tb.TbChActionNumericConfig[actionId];
 
             float exSpecialEnergy = chNumeric.EnergyCost;
-            EnergyBar.color = energy < exSpecialEnergy ? energyLackColor : energyEnoughColor;
+            EnergyBar.color = currEnergy < exSpecialEnergy ? energyLackColor : energyEnoughColor;
 
-            float maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
+            double maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
 
-            EnergyBar.fillAmount = energy / maxEnergy;
+            EnergyBar.fillAmount = (float)(currEnergy / maxEnergy);
         }
 
         private void SetDecibel(float decibel)
         {
             float maxDecibel = 3000;
             DecibelBar.fillAmount = decibel / maxDecibel;
+        }
+
+        private void Update()
+        {
+            UpdateHP();
+            UpdateEnergy();
         }
     }
 }

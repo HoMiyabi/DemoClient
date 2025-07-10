@@ -35,15 +35,15 @@ namespace Kirara
             self.Z = v.z;
             return self;
         }
-
-        public static Modifier GetModifier(this NWeaponAttr weaponAttr)
-        {
-            return new Modifier((EAttrType)weaponAttr.AttrTypeId, weaponAttr.Value);
-        }
-
-        public static Modifier GetModifier(this NDiscAttr discAttr)
-        {
-            return new Modifier((EAttrType)discAttr.AttrTypeId, discAttr.Value);
-        }
+        //
+        // public static Modifier GetModifier(this NWeaponAttr weaponAttr)
+        // {
+        //     return new Modifier((EAttrType)weaponAttr.AttrTypeId, weaponAttr.Value);
+        // }
+        //
+        // public static Modifier GetModifier(this NDiscAttr discAttr)
+        // {
+        //     return new Modifier((EAttrType)discAttr.AttrTypeId, discAttr.Value);
+        // }
     }
 }

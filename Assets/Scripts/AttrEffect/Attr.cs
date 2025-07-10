@@ -9,19 +9,19 @@ namespace Kirara.AttrEffect
     {
         public int type;
 
-        private double baseValue;
-        public double BaseValue
-        {
-            get => baseValue;
-            set
-            {
-                if (baseValue == value) return;
-
-                baseValue = value;
-                OnBaseValueChanged?.Invoke(value);
-            }
-        }
-        public event Action<double> OnBaseValueChanged;
+        public double baseValue;
+        // public double BaseValue
+        // {
+        //     get => baseValue;
+        //     set
+        //     {
+        //         if (baseValue == value) return;
+        //
+        //         baseValue = value;
+        //         OnBaseValueChanged?.Invoke(value);
+        //     }
+        // }
+        // public event Action<double> OnBaseValueChanged;
 
         public readonly List<ILuaAbility> abilities = new();
         public AttrSet set;
@@ -47,10 +47,10 @@ namespace Kirara.AttrEffect
                 double bas = set[i + 1];
                 double pct = set[i + 2];
                 double fix = set[i + 3];
-                return BaseValue + delta + bas * (1f + pct) + fix;
+                return baseValue + delta + bas * (1f + pct) + fix;
             }
             // 为二级属性
-            return BaseValue + delta;
+            return baseValue + delta;
         }
     }
 }

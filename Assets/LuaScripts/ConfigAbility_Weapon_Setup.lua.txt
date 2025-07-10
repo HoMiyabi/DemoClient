@@ -1,9 +1,0 @@
-local Ability = require("ConfigAbility")
-local config = require("ConfigAbility_Weapon")
-for _, v in ipairs(config) do
-    setmetatable(v, {__index = ConfigAbility})
-    if v.init ~= nil then
-        v:init()
-    end
-end
-return config

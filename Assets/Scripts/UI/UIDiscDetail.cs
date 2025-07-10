@@ -93,8 +93,8 @@ namespace Kirara.UI
             UpdateSubAttrsView();
             disc.OnSubAttrsChanged += UpdateSubAttrsView;
 
-            EffDescContentText.text = $"2件套: {disc.Config.SetEffect2Desc}\n" +
-                                      $"4件套: {disc.Config.SetEffect4Desc}";
+            EffDescContentText.text = $"2件套: {disc.Config.SetAbility2Desc}\n" +
+                                      $"4件套: {disc.Config.SetAbility4Desc}";
 
             UIDiscPosIcon.Set(disc.Pos);
             SetRole(disc.RoleId);

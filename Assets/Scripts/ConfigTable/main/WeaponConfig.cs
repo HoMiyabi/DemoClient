@@ -28,7 +28,7 @@ public sealed partial class WeaponConfig : Luban.BeanBase
         MaxLevelBaseAttrValue = (float)_obj.GetValue("max_level_base_attr_value");
         MaxLevelAdvancedAttrType = (main.EAttrType)(int)_obj.GetValue("max_level_advanced_attr_type");
         MaxLevelAdvancedAttrValue = (float)_obj.GetValue("max_level_advanced_attr_value");
-        { var __json0 = _obj.GetValue("passive_abilities"); PassiveAbilities = new System.Collections.Generic.List<main.AbilityConfig>((__json0 as JArray).Count); foreach(JToken __e0 in __json0) { main.AbilityConfig __v0;  __v0 = main.AbilityConfig.DeserializeAbilityConfig(__e0);  PassiveAbilities.Add(__v0); }   }
+        PassiveAbilityName = (string)_obj.GetValue("passive_ability_name");
         PassiveDesc = (string)_obj.GetValue("passive_desc");
         Desc = (string)_obj.GetValue("desc");
     }
@@ -67,7 +67,10 @@ public sealed partial class WeaponConfig : Luban.BeanBase
     /// 最大等级进阶属性值
     /// </summary>
     public readonly float MaxLevelAdvancedAttrValue;
-    public readonly System.Collections.Generic.List<main.AbilityConfig> PassiveAbilities;
+    /// <summary>
+    /// 被动效果名
+    /// </summary>
+    public readonly string PassiveAbilityName;
     /// <summary>
     /// 被动描述
     /// </summary>
@@ -83,7 +86,6 @@ public sealed partial class WeaponConfig : Luban.BeanBase
 
     public  void ResolveRef(Tables tables)
     {
-        foreach (var _e in PassiveAbilities) { _e?.ResolveRef(tables); }
     }
 
     public override string ToString()
@@ -97,7 +99,7 @@ public sealed partial class WeaponConfig : Luban.BeanBase
         + "maxLevelBaseAttrValue:" + MaxLevelBaseAttrValue + ","
         + "maxLevelAdvancedAttrType:" + MaxLevelAdvancedAttrType + ","
         + "maxLevelAdvancedAttrValue:" + MaxLevelAdvancedAttrValue + ","
-        + "passiveAbilities:" + Luban.StringUtil.CollectionToString(PassiveAbilities) + ","
+        + "passiveAbilityName:" + PassiveAbilityName + ","
         + "passiveDesc:" + PassiveDesc + ","
         + "desc:" + Desc + ","
         + "}";

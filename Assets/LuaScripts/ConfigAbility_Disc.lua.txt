@@ -7,7 +7,7 @@ local config =
         },
     },
     {
-        name = "JiDiZhongJinShu_4"
+        name = "JiDiZhongJinShu_4",
         attrs = {
 
         }

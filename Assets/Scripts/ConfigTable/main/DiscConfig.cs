@@ -24,10 +24,10 @@ public sealed partial class DiscConfig : Luban.BeanBase
         Name = (string)_obj.GetValue("name");
         Rank = (string)_obj.GetValue("rank");
         IconLoc = (string)_obj.GetValue("icon_loc");
-        { var __json0 = _obj.GetValue("set_abilities_2"); SetAbilities2 = new System.Collections.Generic.List<main.AbilityConfig>((__json0 as JArray).Count); foreach(JToken __e0 in __json0) { main.AbilityConfig __v0;  __v0 = main.AbilityConfig.DeserializeAbilityConfig(__e0);  SetAbilities2.Add(__v0); }   }
-        { var __json0 = _obj.GetValue("set_abilities_4"); SetAbilities4 = new System.Collections.Generic.List<main.AbilityConfig>((__json0 as JArray).Count); foreach(JToken __e0 in __json0) { main.AbilityConfig __v0;  __v0 = main.AbilityConfig.DeserializeAbilityConfig(__e0);  SetAbilities4.Add(__v0); }   }
-        SetEffect2Desc = (string)_obj.GetValue("set_effect_2_desc");
-        SetEffect4Desc = (string)_obj.GetValue("set_effect_4_desc");
+        SetAbility2Name = (string)_obj.GetValue("set_ability_2_name");
+        SetAbility4Name = (string)_obj.GetValue("set_ability_4_name");
+        SetAbility2Desc = (string)_obj.GetValue("set_ability_2_desc");
+        SetAbility4Desc = (string)_obj.GetValue("set_ability_4_desc");
         Desc = (string)_obj.GetValue("desc");
     }
 
@@ -37,13 +37,37 @@ public sealed partial class DiscConfig : Luban.BeanBase
     }
 
     public readonly int Id;
+    /// <summary>
+    /// 名称
+    /// </summary>
     public readonly string Name;
+    /// <summary>
+    /// 级别
+    /// </summary>
     public readonly string Rank;
+    /// <summary>
+    /// 图标路径
+    /// </summary>
     public readonly string IconLoc;
-    public readonly System.Collections.Generic.List<main.AbilityConfig> SetAbilities2;
-    public readonly System.Collections.Generic.List<main.AbilityConfig> SetAbilities4;
-    public readonly string SetEffect2Desc;
-    public readonly string SetEffect4Desc;
+    /// <summary>
+    /// 2件套效果名
+    /// </summary>
+    public readonly string SetAbility2Name;
+    /// <summary>
+    /// 4件套效果名
+    /// </summary>
+    public readonly string SetAbility4Name;
+    /// <summary>
+    /// 2件套描述
+    /// </summary>
+    public readonly string SetAbility2Desc;
+    /// <summary>
+    /// 4件套描述
+    /// </summary>
+    public readonly string SetAbility4Desc;
+    /// <summary>
+    /// 描述
+    /// </summary>
     public readonly string Desc;
 
 
@@ -52,8 +76,6 @@ public sealed partial class DiscConfig : Luban.BeanBase
 
     public  void ResolveRef(Tables tables)
     {
-        foreach (var _e in SetAbilities2) { _e?.ResolveRef(tables); }
-        foreach (var _e in SetAbilities4) { _e?.ResolveRef(tables); }
     }
 
     public override string ToString()
@@ -63,10 +85,10 @@ public sealed partial class DiscConfig : Luban.BeanBase
         + "name:" + Name + ","
         + "rank:" + Rank + ","
         + "iconLoc:" + IconLoc + ","
-        + "setAbilities2:" + Luban.StringUtil.CollectionToString(SetAbilities2) + ","
-        + "setAbilities4:" + Luban.StringUtil.CollectionToString(SetAbilities4) + ","
-        + "setEffect2Desc:" + SetEffect2Desc + ","
-        + "setEffect4Desc:" + SetEffect4Desc + ","
+        + "setAbility2Name:" + SetAbility2Name + ","
+        + "setAbility4Name:" + SetAbility4Name + ","
+        + "setAbility2Desc:" + SetAbility2Desc + ","
+        + "setAbility4Desc:" + SetAbility4Desc + ","
         + "desc:" + Desc + ","
         + "}";
     }

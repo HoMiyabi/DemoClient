@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Manager;
+using UnityEngine;
 using XLua;
 
 namespace Kirara.AttrEffect
@@ -8,10 +9,12 @@ namespace Kirara.AttrEffect
     public class AbilitySet
     {
         public Dictionary<string, ILuaAbility> Abilities { get; private set; } = new();
-        private List<(string handle, float time)> timers = new();
+        private readonly List<(string handle, float time)> timers = new();
 
-        public Dictionary<string, LuaTable> configs = new();
-        public delegate ILuaAbility getAbility(AbilitySet set, LuaTable configAbility);
+        public static Dictionary<string, LuaTable> configs = new();
+        public delegate ILuaAbility newAbilityDel();
+
+        public static newAbilityDel newAbility = LuaMgr.Instance.LuaEnv.Global.GetInPath<newAbilityDel>("Ability.new");
 
         public void Update(float dt)
         {
@@ -68,6 +71,23 @@ namespace Kirara.AttrEffect
             return timers.FindIndex(x => x.handle == handle) >= 0;
         }
 
+        public void AttachAbility(string name, Dictionary<string, double> attrs)
+        {
+            if (Abilities.ContainsKey(name))
+            {
+                Debug.LogWarning($"Ability已存在 name: {name}");
+                return;
+            }
+            var ability = newAbility();
+            ability.abilitySet = this;
+            foreach (var kv in attrs)
+            {
+                ability.attrs.Set(kv.Key, kv.Value);
+            }
+            Abilities.Add(name, ability);
+            ability.onAttached();
+        }
+
         public void AttachAbility(string name)
         {
             if (Abilities.TryGetValue(name, out var ability))
@@ -76,8 +96,9 @@ namespace Kirara.AttrEffect
             }
             else
             {
-                var getAbilityFunc = LuaMgr.Instance.LuaEnv.Global.Get<getAbility>("getAbility");
-                ability = getAbilityFunc.Invoke(this, configs[name]);
+                ability = newAbility();
+                ability.abilitySet = this;
+                ability.setConfig(configs[name]);
                 ability.onAttached();
             }
         }
