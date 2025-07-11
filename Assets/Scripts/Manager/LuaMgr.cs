@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kirara;
-using Kirara.AttrEffect;
-using NUnit.Framework;
 using UnityEngine;
 using XLua;
 

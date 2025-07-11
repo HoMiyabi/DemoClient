@@ -11,22 +11,22 @@ namespace Kirara
     {
         private static bool GetIsCrit(Role ch)
         {
-            return Random.Range(0f, 1f) <= ch.AttrSet[EAttrType.CritRate];
+            return Random.Range(0f, 1f) <= ch.Set[EAttrType.CritRate];
         }
 
         private static double CalcDamage(Role ch, double dmgMult, bool isCrit)
         {
-            double dmg = ch.AttrSet[EAttrType.Atk] * dmgMult;
+            double dmg = ch.Set[EAttrType.Atk] * dmgMult;
             if (isCrit)
             {
-                dmg *= 1f + ch.AttrSet[EAttrType.CritDmg];
+                dmg *= 1f + ch.Set[EAttrType.CritDmg];
             }
             return dmg;
         }
 
         private static double CalcDaze(Role ch, double dazeMult)
         {
-            double daze = ch.AttrSet[EAttrType.Impact] * dazeMult;
+            double daze = ch.Set[EAttrType.Impact] * dazeMult;
             return daze;
         }
 

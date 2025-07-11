@@ -1,10 +1,11 @@
-﻿using cfg.main;
+﻿using System;
+using cfg.main;
 using Kirara.Model;
 using UnityEngine;
 
 namespace Kirara.UI
 {
-    public class UICharacterBasicStat : MonoBehaviour
+    public class UIRoleBasicStat : MonoBehaviour
     {
         #region View
         private UIStatBar HPStatBar;
@@ -55,16 +56,21 @@ namespace Kirara.UI
         {
             if (Role == null) return;
 
-            ATKStatBar.Set(EAttrType.Atk, Role.AttrSet[EAttrType.Atk]);
-            DEFStatBar.Set(EAttrType.Def, Role.AttrSet[EAttrType.Def]);
-            ImpactStatBar.Set(EAttrType.Impact, Role.AttrSet[EAttrType.Impact]);
-            CRIT_RateStatBar.Set(EAttrType.CritRate, Role.AttrSet[EAttrType.CritRate]);
-            CRIT_DMGStatBar.Set(EAttrType.CritDmg, Role.AttrSet[EAttrType.CritDmg]);
-            AnomalyMasteryStatBar.Set(EAttrType.AnomalyMastery, Role.AttrSet[EAttrType.AnomalyMastery]);
-            AnomalyProficiencyStatBar.Set(EAttrType.AnomalyProficiency, Role.AttrSet[EAttrType.AnomalyProficiency]);
-            PEN_RatioStatBar.Set(EAttrType.PenRatio, Role.AttrSet[EAttrType.PenRatio]);
-            EnergyRegenStatBar.Set(EAttrType.EnergyRegen, Role.AttrSet[EAttrType.EnergyRegen]);
-            HPStatBar.Set(EAttrType.Hp, Role.AttrSet[EAttrType.Hp]);
+            ATKStatBar.Set(EAttrType.Atk, Role.Set[EAttrType.Atk]);
+            DEFStatBar.Set(EAttrType.Def, Role.Set[EAttrType.Def]);
+            ImpactStatBar.Set(EAttrType.Impact, Role.Set[EAttrType.Impact]);
+            CRIT_RateStatBar.Set(EAttrType.CritRate, Role.Set[EAttrType.CritRate]);
+            CRIT_DMGStatBar.Set(EAttrType.CritDmg, Role.Set[EAttrType.CritDmg]);
+            AnomalyMasteryStatBar.Set(EAttrType.AnomalyMastery, Role.Set[EAttrType.AnomalyMastery]);
+            AnomalyProficiencyStatBar.Set(EAttrType.AnomalyProficiency, Role.Set[EAttrType.AnomalyProficiency]);
+            PEN_RatioStatBar.Set(EAttrType.PenRatio, Role.Set[EAttrType.PenRatio]);
+            EnergyRegenStatBar.Set(EAttrType.EnergyRegen, Role.Set[EAttrType.EnergyRegen]);
+            HPStatBar.Set(EAttrType.Hp, Role.Set[EAttrType.Hp]);
+        }
+
+        private void Update()
+        {
+            UpdateInfo();
         }
     }
 }

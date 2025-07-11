@@ -1,15 +1,37 @@
 local config =
 {
     {
-        name = "JiDiZhongJinShu_2",
+        name = "ZhenXingDiSiKe_2",
         attrs = {
-            IceDmgPct = 0.1
-        },
+            ImpactPct = 0.06
+        }
     },
     {
-        name = "JiDiZhongJinShu_4",
+        name = "ZhenXingDiSiKe_4"
+    }
+    {
+        name = "YaoBaiJueShi_2",
         attrs = {
+            EnergyRegenPct = 0.2
         }
+    },
+    {
+        name = "YaoBaiJueShi_4"
+    },
+    {
+        name = "YanYuZhongJinShu_2"
+    },
+    {
+        name = "YanYuZhongJinShu_4"
+    },
+    {
+        name = "HeTunDianYin_2"
+        attrs = {
+            PenRatio = 0.08
+        }
+    },
+    {
+        name = "HeTunDianYin_4"
     }
 }
 

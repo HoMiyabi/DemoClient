@@ -8,34 +8,36 @@ using UnityEngine.UI;
 
 namespace Kirara.UI
 {
-    public class UISelectEquipmentWeapon : MonoBehaviour, LoopScrollDataSource
+    public class UISelectEquipmentWeapon : MonoBehaviour
     {
         #region View
-        private UIWeaponDetail         UIWeaponDetail;
-        private Button                 EquipBtn;
-        private LoopVerticalScrollRect LoopScroll;
-        private TextMeshProUGUI        EquipBtnText;
+        private UIWeaponDetail  UIWeaponDetail;
+        private Button          EquipBtn;
+        private TextMeshProUGUI EquipBtnText;
+        private GridScroller    Scroller;
         private void InitUI()
         {
             var c          = GetComponent<KiraraRuntimeComponents>();
             UIWeaponDetail = c.Q<UIWeaponDetail>(0, "UIWeaponDetail");
             EquipBtn       = c.Q<Button>(1, "EquipBtn");
-            LoopScroll     = c.Q<LoopVerticalScrollRect>(2, "LoopScroll");
-            EquipBtnText   = c.Q<TextMeshProUGUI>(3, "EquipBtnText");
+            EquipBtnText   = c.Q<TextMeshProUGUI>(2, "EquipBtnText");
+            Scroller       = c.Q<GridScroller>(3, "Scroller");
         }
         #endregion
+
+        [SerializeField] private GameObject UIInventoryCellWeaponPrefab;
+        private LoopScrollGOPool Pool { get; set; }
 
         private void Awake()
         {
             InitUI();
 
-            LoopScroll.prefabSource = new LoopScrollPool(UIInventoryCellWeaponPrefab, transform);
-            LoopScroll.dataSource = this;
+            Pool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
+            Scroller.SetPoolFunc(Pool.GetObject, Pool.ReturnObject);
+            Scroller.provideData = ProvideData;
         }
 
-        [SerializeField] private GameObject UIInventoryCellWeaponPrefab;
-
-        private Role ch;
+        private Role Role { get; set; }
         private List<WeaponItem> weapons;
         private WeaponItem _selectedWeapon;
         private WeaponItem SelectedWeapon
@@ -57,23 +59,22 @@ namespace Kirara.UI
 
         private void Clear()
         {
-            if (ch != null)
+            if (Role != null)
             {
-                ch.OnWeaponChanged -= UpdateEquipBtnView;
+                Role.OnWeaponChanged -= UpdateEquipBtnView;
             }
         }
 
-        public void Set(Role ch)
+        public void Set(Role role)
         {
             Clear();
-            this.ch = ch;
+            Role = role;
 
-            ch.OnWeaponChanged += UpdateEquipBtnView;
+            role.OnWeaponChanged += UpdateEquipBtnView;
 
             weapons = GetWeapons();
 
-            LoopScroll.totalCount = weapons.Count;
-            LoopScroll.RefillCells();
+            Scroller.totalCount = weapons.Count;
 
             if (weapons.Count > 0)
             {
@@ -84,9 +85,9 @@ namespace Kirara.UI
         private List<WeaponItem> GetWeapons()
         {
             var l = PlayerService.Player.Weapons.ToList();
-            if (l.Count > 0 && ch.Weapon != null)
+            if (l.Count > 0 && Role.Weapon != null)
             {
-                int idx = l.FindIndex(item => item.Id == ch.Weapon.Id);
+                int idx = l.FindIndex(item => item.Id == Role.Weapon.Id);
                 if (idx != -1)
                 {
                     (l[0], l[idx]) = (l[idx], l[0]);
@@ -99,11 +100,11 @@ namespace Kirara.UI
 
         private void UpdateEquipBtnView()
         {
-            if (ch.Weapon == null && SelectedWeapon.RoleId == "")
+            if (Role.Weapon == null && SelectedWeapon.RoleId == "")
             {
                 SetEquipBtnEquip();
             }
-            else if (ch.Weapon != null && SelectedWeapon.RoleId == ch.Id)
+            else if (Role.Weapon != null && SelectedWeapon.RoleId == Role.Id)
             {
                 SetEquipBtnRemove();
             }
@@ -124,7 +125,7 @@ namespace Kirara.UI
             EquipBtnText.text = "卸下";
             EquipBtn.interactable = true;
             EquipBtn.onClick.RemoveAllListeners();
-            EquipBtn.onClick.AddListener(() => ch.RemoveWeapon().Forget());
+            EquipBtn.onClick.AddListener(() => Role.RemoveWeapon().Forget());
         }
 
         private void SetEquipBtnEquip()
@@ -132,18 +133,17 @@ namespace Kirara.UI
             EquipBtnText.text = "装备";
             EquipBtn.interactable = true;
             EquipBtn.onClick.RemoveAllListeners();
-            EquipBtn.onClick.AddListener(() => ch.EquipWeapon(SelectedWeapon).Forget());
+            EquipBtn.onClick.AddListener(() => Role.EquipWeapon(SelectedWeapon).Forget());
         }
 
         #endregion
 
-        public void ProvideData(Transform tra, int idx)
+        private void ProvideData(GameObject go, int idx)
         {
-            // todo))
-            // tra.GetComponent<UIInventoryCellWeapon>().Set(weapons[idx], () =>
-            // {
-            //     SelectedWeapon = weapons[idx];
-            // });
+            go.GetComponent<UIInventoryCellWeapon>().Set(weapons[idx], () =>
+            {
+                SelectedWeapon = weapons[idx];
+            });
         }
     }
 }

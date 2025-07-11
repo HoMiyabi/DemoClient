@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Kirara.UI
 {
-    public class UI_GMEffInfo : MonoBehaviour
+    public class UIAbilityInfo : MonoBehaviour
     {
         #region View
         private TextMeshProUGUI Text;
@@ -32,21 +32,20 @@ namespace Kirara.UI
             sb.Clear();
 
             var frontRole = PlayerSystem.Instance.FrontRoleCtrl.Role;
-            var attrSet = frontRole.AttrSet;
+            var set = frontRole.Set;
 
             sb.AppendLine("属性：");
             foreach (var type in attrTypes)
             {
-                sb.AppendFormat("{0}: {1}\n", ConfigMgr.tb.TbAttrShowConfig[type].ShowName, attrSet[type]);
+                sb.AppendFormat("{0}: {1:F4}\n", ConfigMgr.tb.TbAttrShowConfig[type].ShowName, set[type]);
             }
 
-            var abilitySet = frontRole.AbilitySet;
-
             sb.AppendLine("效果：");
-            var abilities = abilitySet.Abilities;
-            foreach (var ability in abilities.Values)
+            foreach (var ability in set.Abilities)
             {
-                sb.AppendFormat("{0}: {1}/{2}层\n", ability.name, ability.stackCount, ability.stackLimit);
+                sb.AppendFormat("{0}: {1}/{2}层, 剩余{3:F2}/{4:F2}秒\n",
+                    ability.name, ability.stackCount, ability.stackLimit,
+                    ability.getMinRemainingTime(), ability.duration);
             }
             string text = sb.ToString();
             if (text != cacheText)

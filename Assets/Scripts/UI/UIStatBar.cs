@@ -1,5 +1,4 @@
 ﻿using cfg.main;
-using Kirara.AttrEffect;
 using Manager;
 using TMPro;
 using UnityEngine;

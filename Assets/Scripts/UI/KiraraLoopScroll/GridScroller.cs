@@ -11,15 +11,35 @@ public class GridScroller : Scroller
     // 裁切时，把当做size + cullingPadding的大小来看
     public Padding cullingPadding;
 
-    public int columnCount = 3;
+    public int countInLine = 3;
 
     // 左闭右开
-    private int _minIdx;
-    private int _maxIdx;
+    private int presentMinIdx;
+    private int presentMaxIdx;
     public readonly Dictionary<int, RectTransform> cells = new();
     private readonly Stack<RectTransform> pool = new();
 
     public Action<RectTransform, int> updateCell;
+
+    private void HidePoolingCells()
+    {
+        foreach (var cell in pool)
+        {
+            cell.gameObject.SetActive(false);
+        }
+    }
+
+    public void Refresh()
+    {
+        for (int i = presentMinIdx; i < presentMaxIdx; i++)
+        {
+            ReturnObjectAt(i);
+        }
+        presentMinIdx = 0;
+        presentMaxIdx = 0;
+        CullCells();
+        UpdateCellsPos();
+    }
 
     private void ReturnObjectAt(int idx)
     {
@@ -35,17 +55,17 @@ public class GridScroller : Scroller
 
     private void CheckReturnObjects(int currMinIdx, int currMaxIdx)
     {
-        if (currMinIdx > _minIdx)
+        if (currMinIdx > presentMinIdx)
         {
-            for (int idx = _minIdx; idx < Mathf.Min(currMinIdx, _maxIdx); idx++)
+            for (int idx = presentMinIdx; idx < Mathf.Min(currMinIdx, presentMaxIdx); idx++)
             {
                 ReturnObjectAt(idx);
             }
         }
 
-        if (currMaxIdx < _maxIdx)
+        if (currMaxIdx < presentMaxIdx)
         {
-            for (int idx = Mathf.Max(currMaxIdx, _minIdx); idx < _maxIdx; idx++)
+            for (int idx = Mathf.Max(currMaxIdx, presentMinIdx); idx < presentMaxIdx; idx++)
             {
                 ReturnObjectAt(idx);
             }
@@ -74,16 +94,16 @@ public class GridScroller : Scroller
 
     private void CheckGetObjects(int currMinIdx, int currMaxIdx)
     {
-        if (currMinIdx < _minIdx)
+        if (currMinIdx < presentMinIdx)
         {
-            for (int idx = currMinIdx; idx < Mathf.Min(currMaxIdx, _minIdx); idx++)
+            for (int idx = currMinIdx; idx < Mathf.Min(currMaxIdx, presentMinIdx); idx++)
             {
                 GetObjectAt(idx);
             }
         }
-        if (currMaxIdx > _maxIdx)
+        if (currMaxIdx > presentMaxIdx)
         {
-            for (int idx = Mathf.Max(currMinIdx, _maxIdx); idx < currMaxIdx; idx++)
+            for (int idx = Mathf.Max(currMinIdx, presentMaxIdx); idx < currMaxIdx; idx++)
             {
                 GetObjectAt(idx);
             }
@@ -92,40 +112,39 @@ public class GridScroller : Scroller
 
     protected override void CullCells()
     {
-        int currMinIdx = MinIdx;
-        int currMaxIdx = MaxIdx;
-        CheckReturnObjects(currMinIdx, currMaxIdx);
-        CheckGetObjects(currMinIdx, currMaxIdx);
-        foreach (var cell in pool)
-        {
-            cell.gameObject.SetActive(false);
-        }
-        _minIdx = currMinIdx;
-        _maxIdx = currMaxIdx;
+        int windowMinIdx = WindowMinIdx;
+        int windowMaxIdx = WindowMaxIdx;
+        CheckReturnObjects(windowMinIdx, windowMaxIdx);
+        CheckGetObjects(windowMinIdx, windowMaxIdx);
+        HidePoolingCells();
+        presentMinIdx = windowMinIdx;
+        presentMaxIdx = windowMaxIdx;
     }
 
-    private int GetIdx(int row, int col)
-    {
-        return row * columnCount + col;
-    }
+    // private int GetIdx(int row, int col)
+    // {
+    //     return row * countInLine + col;
+    // }
 
-    private int MinIdx
+    // 窗口内的最小Idx
+    private int WindowMinIdx
     {
         get
         {
-            int minLine = Mathf.FloorToInt((Pos - CullingBottom + CullingSpacing) / LineWidth);
-            int idx = minLine * columnCount;
-            return isInfinite ? idx : Mathf.Max(idx, 0);
+            int minLine = Mathf.FloorToInt((Pos -  CullingBottom + CullingSpacing) / LineWidth);
+            int idx = minLine * countInLine;
+            return isInfinite ? idx : Mathf.Clamp(idx, 0, totalCount);
         }
     }
 
-    private int MaxIdx
+    // 窗口内的最大Idx
+    private int WindowMaxIdx
     {
         get
         {
             int maxLine = Mathf.CeilToInt((Pos + WindowLength + CullingTop) / LineWidth);
-            int idx = maxLine * columnCount;
-            return isInfinite ? idx : Mathf.Min(idx, totalCount);
+            int idx = maxLine * countInLine;
+            return isInfinite ? idx : Mathf.Clamp(idx, 0, totalCount);
         }
     }
 
@@ -152,7 +171,7 @@ public class GridScroller : Scroller
 
     protected override void UpdateCellsPos()
     {
-        for (int idx = _minIdx; idx < _maxIdx; idx++)
+        for (int idx = presentMinIdx; idx < presentMaxIdx; idx++)
         {
             var cell = cells[idx];
             cell.anchorMin = new Vector2(0f, 1f);
@@ -179,12 +198,12 @@ public class GridScroller : Scroller
 
     private int GetRow(int idx)
     {
-        return Mathf.FloorToInt(idx / (float)columnCount);
+        return Mathf.FloorToInt(idx / (float)countInLine);
     }
 
     private int GetCol(int idx)
     {
-        return (idx % columnCount + columnCount) % columnCount;
+        return (idx % countInLine + countInLine) % countInLine;
     }
 
     private float LineWidth => direction switch
@@ -194,7 +213,7 @@ public class GridScroller : Scroller
         _ => throw new ArgumentOutOfRangeException()
     };
 
-    private int LineCount => Mathf.CeilToInt(totalCount / (float)columnCount);
+    private int LineCount => Mathf.CeilToInt(totalCount / (float)countInLine);
 
     protected override float GetSnapPos(float pos)
     {

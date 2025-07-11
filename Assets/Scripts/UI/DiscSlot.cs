@@ -25,8 +25,8 @@ namespace Kirara.UI
             InitUI();
         }
 
-        private Role ch;
-        private int pos;
+        private Role Role { get; set; }
+        private int Pos { get; set; }
         private AssetHandle icon;
 
         private void OnDestroy()
@@ -36,9 +36,9 @@ namespace Kirara.UI
 
         private void Clear()
         {
-            if (ch != null)
+            if (Role != null)
             {
-                ch.OnDiscChanged -= UpdateView;
+                Role.OnDiscChanged -= UpdateView;
             }
             icon?.Release();
             icon = null;
@@ -49,15 +49,15 @@ namespace Kirara.UI
             set
             {
                 Btn.onClick.RemoveAllListeners();
-                Btn.onClick.AddListener(() => value?.Invoke(pos));
+                Btn.onClick.AddListener(() => value?.Invoke(Pos));
             }
         }
 
         private void UpdateView(int pos1)
         {
-            if (pos1 != pos) return;
+            if (pos1 != Pos) return;
 
-            var disc = ch.Disc(pos);
+            var disc = Role.Disc(Pos);
 
             if (disc != null)
             {
@@ -68,17 +68,17 @@ namespace Kirara.UI
             else
             {
                 Img.sprite = null;
-                Img.color = Color.clear;
+                Img.color = Color.white;
             }
         }
 
-        public DiscSlot Set(Role ch, int pos, Action<int> onClick)
+        public DiscSlot Set(Role role, int pos, Action<int> onClick)
         {
             Clear();
-            this.ch = ch;
-            this.pos = pos;
+            Role = role;
+            Pos = pos;
             UpdateView(pos);
-            ch.OnDiscChanged += UpdateView;
+            role.OnDiscChanged += UpdateView;
 
             OnClick = onClick;
             return this;

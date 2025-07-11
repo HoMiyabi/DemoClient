@@ -8,14 +8,14 @@ namespace Kirara.UI.Panel
         #region View
         private Button               UIBackBtn;
         private UITabController      UITabController;
-        private UICharacterBasicStat UICharacterBasicStat;
+        private UIRoleBasicStat UICharacterBasicStat;
         private UICharacterEquipment UICharacterEquipment;
         private void InitUI()
         {
             var c                = GetComponent<KiraraRuntimeComponents>();
             UIBackBtn            = c.Q<Button>(0, "UIBackBtn");
             UITabController      = c.Q<UITabController>(1, "UITabController");
-            UICharacterBasicStat = c.Q<UICharacterBasicStat>(2, "UICharacterBasicStat");
+            UICharacterBasicStat = c.Q<UIRoleBasicStat>(2, "UICharacterBasicStat");
             UICharacterEquipment = c.Q<UICharacterEquipment>(3, "UICharacterEquipment");
         }
         #endregion

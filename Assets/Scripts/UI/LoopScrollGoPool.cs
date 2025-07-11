@@ -8,7 +8,7 @@ public class LoopScrollGOPool
     private readonly Stack<GameObject> pool = new();
     private readonly int max;
 
-    public LoopScrollGOPool(GameObject prefab, Transform poolPlace, int max = 100)
+    public LoopScrollGOPool(GameObject prefab, Transform poolPlace, int max = 128)
     {
         this.prefab = prefab;
         this.poolPlace = poolPlace;

@@ -8,24 +8,27 @@ using UnityEngine.UI;
 
 namespace Kirara.UI
 {
-    public class UISelectEquipmentDisc : MonoBehaviour, LoopScrollDataSource
+    public class UISelectEquipmentDisc : MonoBehaviour
     {
         #region View
-        private UIDiscDetail           UIDiscDetail;
-        private Button                 UpgradeBtn;
-        private Button                 EquipBtn;
-        private LoopVerticalScrollRect LoopScroll;
-        private TextMeshProUGUI        EquipBtnText;
+        private UIDiscDetail    UIDiscDetail;
+        private Button          UpgradeBtn;
+        private Button          EquipBtn;
+        private TextMeshProUGUI EquipBtnText;
+        private GridScroller    Scroller;
         private void InitUI()
         {
             var c        = GetComponent<KiraraRuntimeComponents>();
             UIDiscDetail = c.Q<UIDiscDetail>(0, "UIDiscDetail");
             UpgradeBtn   = c.Q<Button>(1, "UpgradeBtn");
             EquipBtn     = c.Q<Button>(2, "EquipBtn");
-            LoopScroll   = c.Q<LoopVerticalScrollRect>(3, "LoopScroll");
-            EquipBtnText = c.Q<TextMeshProUGUI>(4, "EquipBtnText");
+            EquipBtnText = c.Q<TextMeshProUGUI>(3, "EquipBtnText");
+            Scroller     = c.Q<GridScroller>(4, "Scroller");
         }
         #endregion
+
+        [SerializeField] private GameObject UIInventoryCellDiscPrefab;
+        private LoopScrollGOPool Pool { get; set; }
 
         private void Awake()
         {
@@ -36,11 +39,10 @@ namespace Kirara.UI
                 UIMgr.Instance.PushPanel<UpgradeDiscDialogPanel>().Set(SelectedDisc);
             });
 
-            LoopScroll.prefabSource = new LoopScrollPool(UIInventoryCellDiscPrefab, transform);
-            LoopScroll.dataSource = this;
+            Pool = new LoopScrollGOPool(UIInventoryCellDiscPrefab, transform);
+            Scroller.SetPoolFunc(Pool.GetObject, Pool.ReturnObject);
+            Scroller.provideData = ProvideData;
         }
-
-        [SerializeField] private GameObject UIInventoryCellDiscPrefab;
 
         private List<DiscItem> discs;
         private int _pos;
@@ -58,7 +60,7 @@ namespace Kirara.UI
             }
         }
 
-        private Role _role;
+        private Role Role { get; set; }
 
         private void OnDestroy()
         {
@@ -67,27 +69,27 @@ namespace Kirara.UI
 
         private void Clear()
         {
-            if (_role != null)
+            if (Role != null)
             {
-                _role.OnDiscChanged -= OnRoleDiscChanged;
+                Role.OnDiscChanged -= OnRoleDiscChanged;
             }
         }
 
         public void Set(Role role, int pos)
         {
             Clear();
-            _role = role;
+            Role = role;
             _pos = pos;
 
-            _role.OnDiscChanged += OnRoleDiscChanged;
+            Role.OnDiscChanged += OnRoleDiscChanged;
 
             discs = PlayerService.Player.Discs
                 .Where(it => it.Pos == pos)
                 .ToList();
             ReorderDisc();
 
-            LoopScroll.totalCount = discs.Count;
-            LoopScroll.RefillCells();
+            Scroller.totalCount = discs.Count;
+            Scroller.Refresh();
 
             if (discs.Count > 0)
             {
@@ -103,9 +105,9 @@ namespace Kirara.UI
 
         private void ReorderDisc()
         {
-            if (_role.Disc(_pos) != null)
+            if (Role.Disc(_pos) != null)
             {
-                int idx = discs.FindIndex(item => item.Id == _role.Disc(_pos).Id);
+                int idx = discs.FindIndex(item => item.Id == Role.Disc(_pos).Id);
                 (discs[0], discs[idx]) = (discs[idx], discs[0]);
             }
         }
@@ -114,11 +116,11 @@ namespace Kirara.UI
 
         private void UpdateEquipBtn()
         {
-            if (_role.Disc(_pos) == null && SelectedDisc.RoleId == "")
+            if (Role.Disc(_pos) == null && SelectedDisc.RoleId == "")
             {
                 EquipBtnSwitchEquip();
             }
-            else if (_role.Disc(_pos) != null && SelectedDisc.RoleId == _role.Id)
+            else if (Role.Disc(_pos) != null && SelectedDisc.RoleId == Role.Id)
             {
                 EquipBtnSwitchRemove();
             }
@@ -139,7 +141,7 @@ namespace Kirara.UI
             EquipBtnText.text = "卸下";
             EquipBtn.interactable = true;
             EquipBtn.onClick.RemoveAllListeners();
-            EquipBtn.onClick.AddListener(() => _role.RemoveDisc(_pos).Forget());
+            EquipBtn.onClick.AddListener(() => Role.RemoveDisc(_pos).Forget());
         }
 
         private void EquipBtnSwitchEquip()
@@ -147,18 +149,17 @@ namespace Kirara.UI
             EquipBtnText.text = "装备";
             EquipBtn.interactable = true;
             EquipBtn.onClick.RemoveAllListeners();
-            EquipBtn.onClick.AddListener(() => _role.EquipDisc(_pos, SelectedDisc).Forget());
+            EquipBtn.onClick.AddListener(() => Role.EquipDisc(_pos, SelectedDisc).Forget());
         }
 
         #endregion
 
-        public void ProvideData(Transform tra, int idx)
+        private void ProvideData(GameObject go, int idx)
         {
-            // todo))
-            // tra.GetComponent<UIInventoryCellDisc>().Set(discs[idx], () =>
-            // {
-            //     SelectedDisc = discs[idx];
-            // });
+            go.GetComponent<UIInventoryCellDisc>().Set(discs[idx], () =>
+            {
+                SelectedDisc = discs[idx];
+            });
         }
     }
 }

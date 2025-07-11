@@ -1,8 +1,4 @@
-﻿using cfg.main;
-
-using Kirara.AttrEffect;
-using Manager;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Kirara
 {

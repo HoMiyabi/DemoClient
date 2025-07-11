@@ -61,15 +61,15 @@ namespace Kirara.UI
 
         private void UpdateHP()
         {
-            double currHP = Role.AttrSet[EAttrType.CurrHp];
-            double maxHP = Role.AttrSet[EAttrType.Hp];
+            double currHP = Role.Set[EAttrType.CurrHp];
+            double maxHP = Role.Set[EAttrType.Hp];
 
             HPBar.fillAmount = (float)(currHP / maxHP);
         }
 
         private void UpdateEnergy()
         {
-            double currEnergy = Role.AttrSet[EAttrType.CurrEnergy];
+            double currEnergy = Role.Set[EAttrType.CurrEnergy];
 
             // todo)) 有点太脏了
             int actionId = Role.Config.Id * 100;

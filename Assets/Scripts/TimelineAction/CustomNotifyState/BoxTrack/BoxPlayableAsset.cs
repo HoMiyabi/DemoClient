@@ -119,7 +119,7 @@ namespace Kirara.TimelineAction
                     var col = cols[i];
                     if (col.TryGetComponent<RoleCtrl>(out var roleCtrl))
                     {
-                        var invAttr = roleCtrl.Role.AttrSet[EAttrType.Invincible];
+                        var invAttr = roleCtrl.Role.Set[EAttrType.Invincible];
                         if (invAttr == 0)
                         {
                             Debug.Log($"Monster命中{roleCtrl.Role.Config.Name}");

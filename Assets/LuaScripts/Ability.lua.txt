@@ -19,22 +19,30 @@ function Ability:refreshPolicy_RefreshAll()
     end
 end
 
+---@param varName string
+---@return number
 function Ability:inject(varName)
-    return CS.Kirara.AttrEffect.AbilitySet.Inject(self.name, varName)
+    return CS.Kirara.AttrEffect.AttrAbilitySet.Inject(self.name, varName)
 end
 
+---@param handle string
+---@param time number
 function Ability:setTimer(handle, time)
-    self.abilitySet:SetTimer(handle, time)
+    self.set:SetTimer(handle, time)
 end
 
+---@param handle string
+---@return boolean
 function Ability:hasTimer(handle)
-    return self.abilitySet:HasTimer(handle)
+    return self.set:HasTimer(handle)
 end
 
+---@param abilityName string
 function Ability:attachAbility(abilityName)
-    self.abilitySet:AttachAbility(abilityName)
+    self.set:AttachAbility(abilityName)
 end
 
+---@param dt number
 function Ability:update(dt)
     local i = 1
     while i <= #self.remainingTimes do
@@ -48,7 +56,7 @@ function Ability:update(dt)
     end
 end
 
-function Ability:onAttached(self)
+function Ability:onAttached()
     if self.stackCount < self.stackLimit then
         table.insert(self.remainingTimes, self.duration)
         self.stackCount = self.stackCount + 1
@@ -62,30 +70,7 @@ function Ability:onAttached(self)
     end
 end
 
-function Ability.new()
-    local obj = {}
-    setmetatable(obj, Ability)
-    obj.abilitySet = nil
-    -- 名字
-    obj.name = ""
-    -- 持续时间
-    obj.duration = 1 / 0
-    -- 最大层数
-    obj.stackLimit = 1
-    -- 属性
-    obj.attrs = {}
-    -- 堆叠刷新策略
-    obj.stackRefreshPolicy = nil
-    -- 堆叠移除刷新策略
-    obj.overflowRefreshPolicy = Ability.refreshPolicy_RefreshMin
-
-    -- 当前层数
-    obj.stackCount = 0
-    -- 每层剩余时间
-    obj.remainingTimes = {}
-    return obj
-end
-
+---@param abilityConfig table
 function Ability:setConfig(abilityConfig)
     for key, value in pairs(abilityConfig) do
         self[key] = value
@@ -93,4 +78,59 @@ function Ability:setConfig(abilityConfig)
     if self.init ~= nil then
         self:init()
     end
+end
+
+---@return number
+function Ability:getMinRemainingTime()
+    if #self.remainingTimes == 0 then
+        return 0
+    end
+
+    local min = 1 / 0
+    for _, value in ipairs(self.remainingTimes) do
+        if value < min then
+            min = value
+        end
+    end
+    return min
+end
+
+function Ability.new()
+    local obj = {}
+    setmetatable(obj, Ability)
+    -- 属性能力集
+    ---@type userdata
+    obj.set = nil
+
+    -- 名字
+    ---@type string
+    obj.name = ""
+
+    -- 持续时间
+    ---@type number
+    obj.duration = 1 / 0
+
+    -- 最大层数
+    ---@type number
+    obj.stackLimit = 1
+
+    -- 属性
+    ---@type table
+    obj.attrs = {}
+
+    -- 堆叠刷新策略
+    ---@type function
+    obj.stackRefreshPolicy = nil
+
+    -- 堆叠移除刷新策略
+    obj.overflowRefreshPolicy = Ability.refreshPolicy_RefreshMin
+
+    -- 当前层数
+    ---@type number
+    obj.stackCount = 0
+
+    -- 每层剩余时间
+    ---@type table
+    obj.remainingTimes = {}
+    return obj
 end

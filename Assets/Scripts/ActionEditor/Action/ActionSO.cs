@@ -8,18 +8,19 @@ namespace Kirara.ActionEditor
     public class ActionSO : ScriptableObject
     {
         public string animName;
-        public List<ActionTrack> tracks = new();
+        public List<ActionTrackSO> tracks = new();
 
         private string GetTrackName()
         {
             return (tracks.Count + 1).ToString();
         }
 
-        public ActionTrack AddTrack()
+        public ActionTrackSO AddTrack()
         {
+            var track = CreateInstance<ActionTrackSO>();
+            track.name = GetTrackName();
             Undo.RecordObject(this, "添加轨道");
-
-            var track = CreateInstance<ActionTrack>();
+            AssetDatabase.AddObjectToAsset(track, this);
             tracks.Add(track);
             EditorUtility.SetDirty(this);
             return track;
@@ -28,7 +29,7 @@ namespace Kirara.ActionEditor
         public void RemoveTrackAt(int index)
         {
             Undo.RecordObject(this, "删除轨道");
-
+            AssetDatabase.RemoveObjectFromAsset(tracks[index]);
             tracks.RemoveAt(index);
             EditorUtility.SetDirty(this);
         }
