@@ -10,7 +10,7 @@ public static class MsgCmdId
     public const uint NCurrencyItem = 405364627;
     public const uint NWeaponItem = 568993744;
     public const uint NDiscItem = 1657633930;
-    public const uint NFloat3 = 1622357853;
+    public const uint NVector3 = 1639474717;
     public const uint NMovement = 3995046013;
     public const uint NWeaponAttr = 1039573298;
     public const uint NDiscAttr = 1921576065;
@@ -24,12 +24,9 @@ public static class MsgCmdId
     public const uint RspGetPlayerData = 1985654133;
     public const uint NSyncRole = 1896108177;
     public const uint NSyncPlayer = 2581999385;
-    public const uint NSimRole = 2041623307;
-    public const uint NSimPlayer = 2087244937;
     public const uint MsgEnterRoom = 771954010;
     public const uint MsgUpdateFromAutonomous = 2137892365;
     public const uint NotifyUpdateFromAuthority = 1564144334;
-    public const uint NotifyAddSimulatedPlayers = 1549218113;
     public const uint NotifyRemoveSimulatedPlayers = 3591296783;
     public const uint MsgRolePlayAction = 4186466295;
     public const uint NotifyOtherRolePlayAction = 1049513126;
@@ -72,7 +69,10 @@ public static class MsgCmdId
     public const uint MsgMonsterTakeDamage = 3304804109;
     public const uint NotifyMonsterTakeDamage = 1734271160;
     public const uint NotifyMonsterDie = 1248714921;
+    public const uint NQuaternion = 859992609;
+    public const uint NSyncMonster = 3331984043;
     public const uint NotifyMonsterRepMovement = 2254557434;
+    public const uint NotifyMonsterPlayAction = 2476071734;
     public const uint ReqStartQuest = 233243126;
     public const uint RspStartQuest = 33942814;
     public const uint ReqUpgradeDisc = 2081491270;

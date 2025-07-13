@@ -19,7 +19,7 @@ namespace Kirara.UI
         private Button          Btn;
         private void InitUI()
         {
-            var c             = GetComponent<KiraraRuntimeComponents>();
+            var c             = GetComponent<KiraraDirectBinder>();
             ToItemNameText    = c.Q<TextMeshProUGUI>(0, "ToItemNameText");
             FromItemIcon      = c.Q<Image>(1, "FromItemIcon");
             FromItemCountText = c.Q<TextMeshProUGUI>(2, "FromItemCountText");

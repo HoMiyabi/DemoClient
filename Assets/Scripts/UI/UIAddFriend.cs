@@ -13,7 +13,7 @@ namespace Kirara.UI
         private Button          SearchBtn;
         private void InitUI()
         {
-            var c                  = GetComponent<KiraraRuntimeComponents>();
+            var c                  = GetComponent<KiraraDirectBinder>();
             FriendRequestCountText = c.Q<TextMeshProUGUI>(0, "FriendRequestCountText");
             SearchInput            = c.Q<TMP_InputField>(1, "SearchInput");
             SearchBtn              = c.Q<Button>(2, "SearchBtn");

@@ -22,7 +22,7 @@ namespace Kirara.UI
         private Image              SelectBorder;
         private void InitUI()
         {
-            var c              = GetComponent<KiraraRuntimeComponents>();
+            var c              = GetComponent<KiraraDirectBinder>();
             InfoText           = c.Q<TextMeshProUGUI>(0, "InfoText");
             UIItemStar         = c.Q<UIItemStar>(1, "UIItemStar");
             LockedImg          = c.Q<Image>(2, "LockedImg");

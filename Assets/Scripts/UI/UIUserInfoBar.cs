@@ -19,7 +19,7 @@ namespace Kirara.UI
         private TextMeshProUGUI UIUserOnlineStatus;
         private void InitUI()
         {
-            var c              = GetComponent<KiraraRuntimeComponents>();
+            var c              = GetComponent<KiraraDirectBinder>();
             AvatarBtn          = c.Q<Button>(0, "AvatarBtn");
             AvatarImg          = c.Q<Image>(1, "AvatarImg");
             ChatBtn            = c.Q<Button>(2, "ChatBtn");

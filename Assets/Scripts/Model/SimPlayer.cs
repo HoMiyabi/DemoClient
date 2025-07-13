@@ -10,7 +10,7 @@ namespace Kirara.Model
         private Dictionary<string, SimRole> SimRoles { get; set; } = new();
         private Dictionary<string, SimRoleCtrl> SimRoleCtrls { get; set; } = new();
 
-        public SimPlayer(NSimPlayer simPlayer)
+        public SimPlayer(NSyncPlayer simPlayer)
         {
             Uid = simPlayer.Uid;
 

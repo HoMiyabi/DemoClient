@@ -14,7 +14,7 @@ namespace Kirara.UI
         private SimpleLoopScrollPrefabSource LoopScrollPrefabSource;
         private void InitUI()
         {
-            var c                  = GetComponent<KiraraRuntimeComponents>();
+            var c                  = GetComponent<KiraraDirectBinder>();
             FriendCountText        = c.Q<TextMeshProUGUI>(0, "FriendCountText");
             LoopScroll             = c.Q<LoopVerticalScrollRect>(1, "LoopScroll");
             LoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(2, "LoopScrollPrefabSource");

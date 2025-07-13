@@ -4,12 +4,13 @@ namespace Kirara
 {
     public class AnimRootMotion
     {
-        public List<AnimKeyframe> tx = new();
-        public List<AnimKeyframe> ty = new();
-        public List<AnimKeyframe> tz = new();
-        public List<AnimKeyframe> qx = new();
-        public List<AnimKeyframe> qy = new();
-        public List<AnimKeyframe> qz = new();
-        public List<AnimKeyframe> qw = new();
+        public float length;
+        public List<float> tx = new();
+        public List<float> ty = new();
+        public List<float> tz = new();
+        public List<float> qx = new();
+        public List<float> qy = new();
+        public List<float> qz = new();
+        public List<float> qw = new();
     }
 }

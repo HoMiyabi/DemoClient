@@ -13,7 +13,7 @@ namespace Kirara.UI
         private CanvasGroup     CanvasGroup;
         private void InitUI()
         {
-            var c       = GetComponent<KiraraRuntimeComponents>();
+            var c       = GetComponent<KiraraDirectBinder>();
             Text        = c.Q<TextMeshProUGUI>(0, "Text");
             CanvasGroup = c.Q<CanvasGroup>(1, "CanvasGroup");
         }

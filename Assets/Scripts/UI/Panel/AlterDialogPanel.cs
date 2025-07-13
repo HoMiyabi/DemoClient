@@ -18,7 +18,7 @@ namespace Kirara.UI.Panel
         private CanvasGroup CanvasGroup;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
+            var c = GetComponent<KiraraDirectBinder>();
             BoxBgImg = c.Q<Image>(0, "BoxBgImg");
             TitleText = c.Q<TextMeshProUGUI>(1, "TitleText");
             ContentText = c.Q<TextMeshProUGUI>(2, "ContentText");

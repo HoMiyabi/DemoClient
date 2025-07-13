@@ -16,7 +16,7 @@ namespace Kirara.UI
         private SimpleLoopScrollPrefabSource SelectStickerLoopScrollPrefabSource;
         private void InitUI()
         {
-            var c                               = GetComponent<KiraraRuntimeComponents>();
+            var c                               = GetComponent<KiraraDirectBinder>();
             SelectStickerLoopScroll             = c.Q<LoopVerticalScrollRect>(0, "SelectStickerLoopScroll");
             SelectStickerLoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(1, "SelectStickerLoopScrollPrefabSource");
         }

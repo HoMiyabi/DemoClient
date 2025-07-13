@@ -15,7 +15,7 @@ namespace Kirara.UI.Panel
         private Button RegisterBtn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
+            var c = GetComponent<KiraraDirectBinder>();
             UICloseBtn = c.Q<Button>(0, "UICloseBtn");
             UsernameInput = c.Q<TMP_InputField>(1, "UsernameInput");
             PasswordInput = c.Q<TMP_InputField>(2, "PasswordInput");

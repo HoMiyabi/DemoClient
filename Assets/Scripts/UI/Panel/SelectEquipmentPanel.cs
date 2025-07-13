@@ -13,7 +13,7 @@ namespace Kirara.UI.Panel
         private UISelectEquipmentWeapon UISelectEquipmentWeapon;
         private void InitUI()
         {
-            var c                   = GetComponent<KiraraRuntimeComponents>();
+            var c                   = GetComponent<KiraraDirectBinder>();
             UIBackBtn               = c.Q<Button>(0, "UIBackBtn");
             UISelectEquipmentDisc   = c.Q<UISelectEquipmentDisc>(1, "UISelectEquipmentDisc");
             UISelectEquipmentWeapon = c.Q<UISelectEquipmentWeapon>(2, "UISelectEquipmentWeapon");

@@ -21,7 +21,7 @@ namespace Kirara.UI.Panel
         private LoopVerticalScrollRect LoopScroll;
         private void InitUI()
         {
-            var c              = GetComponent<KiraraRuntimeComponents>();
+            var c              = GetComponent<KiraraDirectBinder>();
             UIBackBtn          = c.Q<Button>(0, "UIBackBtn");
             TrackTargetBtn     = c.Q<Button>(1, "TrackTargetBtn");
             QuestChainNameText = c.Q<TextMeshProUGUI>(2, "QuestChainNameText");

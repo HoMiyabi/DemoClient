@@ -9,7 +9,7 @@ namespace Kirara
         [SerializeField] public Transform simulateCharacterParent;
         private readonly Dictionary<string, SimPlayer> simPlayers = new();
 
-        public void AddSimPlayer(NSimPlayer simPlayer)
+        public void AddSimPlayer(NSyncPlayer simPlayer)
         {
             var player = new SimPlayer(simPlayer);
             simPlayers.Add(simPlayer.Uid, player);

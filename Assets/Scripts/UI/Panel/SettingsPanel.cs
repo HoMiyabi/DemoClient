@@ -11,7 +11,7 @@ namespace Kirara.UI.Panel
         private RectTransform Content;
         private void InitUI()
         {
-            var c     = GetComponent<KiraraRuntimeComponents>();
+            var c     = GetComponent<KiraraDirectBinder>();
             UIBackBtn = c.Q<Button>(0, "UIBackBtn");
             Content   = c.Q<RectTransform>(1, "Content");
         }

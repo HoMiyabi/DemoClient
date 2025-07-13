@@ -20,7 +20,7 @@ namespace Kirara.UI
         private UIStatBar EnergyRegenStatBar;
         private void InitUI()
         {
-            var c                     = GetComponent<KiraraRuntimeComponents>();
+            var c                     = GetComponent<KiraraDirectBinder>();
             HPStatBar                 = c.Q<UIStatBar>(0, "HPStatBar");
             ATKStatBar                = c.Q<UIStatBar>(1, "ATKStatBar");
             DEFStatBar                = c.Q<UIStatBar>(2, "DEFStatBar");

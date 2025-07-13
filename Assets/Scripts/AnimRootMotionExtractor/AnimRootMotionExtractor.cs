@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using UnityEditor;
@@ -9,13 +10,13 @@ namespace Kirara
 {
     public class AnimRootMotionExtractor : EditorWindow
     {
-        [MenuItem("Window/动画RootMotion提取器")]
+        [MenuItem("Kirara/动画RootMotion提取器")]
         private static void GetWindow()
         {
             GetWindow<AnimRootMotionExtractor>();
         }
 
-        private static List<AnimKeyframe> GetKeys(AnimRootMotion motion, string bindingPropertyName)
+        private static List<float> GetKeys(AnimRootMotion motion, string bindingPropertyName)
         {
             return bindingPropertyName switch
             {
@@ -33,14 +34,17 @@ namespace Kirara
         private static AnimRootMotion ExtractRootMotion(AnimationClip clip)
         {
             var motion = new AnimRootMotion();
+            motion.length = clip.length;
             foreach (var binding in AnimationUtility.GetCurveBindings(clip))
             {
                 if (binding.path == "" && binding.propertyName.StartsWith("Root"))
                 {
                     var curve = AnimationUtility.GetEditorCurve(clip, binding);
                     var keys = GetKeys(motion, binding.propertyName);
-                    keys.AddRange(curve.keys
-                        .Select(x => new AnimKeyframe(x.time, x.value)));
+                    for (float time = 0f; time < clip.length; time += 1f / 60f)
+                    {
+                        keys.Add(curve.Evaluate(time));
+                    }
                 }
             }
             return motion;
@@ -56,12 +60,13 @@ namespace Kirara
                 foreach (var clip in clips)
                 {
                     var motion = ExtractRootMotion(clip);
-                    string json = JsonConvert.SerializeObject(motion);
+                    string json = JsonConvert.SerializeObject(motion, Formatting.Indented);
                     string path = AssetDatabase.GetAssetPath(clip);
-                    Debug.Log($"path:{path}");
-                    // AssetDatabase.CreateAsset(new TextAsset(json), path);
+                    path = Path.ChangeExtension(path, "json");
+                    Debug.Log($"{clip.name}输出: {path}");
+                    File.WriteAllText(path, json);
                 }
-                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
             }
 
             // clip = EditorGUILayout.ObjectField("Clip", clip, typeof(AnimationClip), false) as AnimationClip;

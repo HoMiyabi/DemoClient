@@ -1,4 +1,5 @@
 ﻿using Kirara.Network;
+using UnityEngine;
 
 namespace Kirara.NetHandler
 {
@@ -6,9 +7,21 @@ namespace Kirara.NetHandler
     {
         protected override void Run(Session session, NotifyUpdateFromAuthority msg)
         {
-            if (!SimPlayerSystem.Instance.TryGetSimPlayer(msg.Player.Uid, out var simPlayer)) return;
-
-            simPlayer.Update(msg.Player);
+            foreach (var syncPlayer in msg.Players)
+            {
+                if (syncPlayer.Uid == PlayerService.Player.Uid)
+                {
+                    continue;
+                }
+                if (SimPlayerSystem.Instance.TryGetSimPlayer(syncPlayer.Uid, out var simPlayer))
+                {
+                    simPlayer.Update(syncPlayer);
+                }
+                else
+                {
+                    SimPlayerSystem.Instance.AddSimPlayer(syncPlayer);
+                }
+            }
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Kirara.ActionEditor
         public ActionTrackSO Track { get; set; }
         public Color ClipColor { get; set; } = Color.green;
         public static float FrameRate = 60f;
+        private Color32 backgroundColor = new(170, 170, 170, 255);
+        private Color32 trackColor = new(153, 153, 153, 255);
 
         private float trackHeight = 20f;
         private float frameWidth = 10f;
@@ -300,59 +302,78 @@ namespace Kirara.ActionEditor
 
         private void DrawTrackHead()
         {
-            using var scope = new GUI.GroupScope(TrackHeadRect);
+            EditorGUI.DrawRect(TrackHeadRect, backgroundColor);
+            if (!Action) return;
+            GUILayout.BeginArea(TrackHeadRect);
 
-            if (Action == null) return;
-
-            var vLayout = new MyVLayout(TrackHeadRect.width, TrackHeadRect.height, trackHeight, trackSpacing);
             int i = 0;
             for (int idx = viewMinTrackIdx; idx < Action.tracks.Count; idx++, i++)
             {
                 var track = Action.tracks[idx];
 
-                if (!vLayout.TryRect(i, out var rect)) break;
-
+                GUILayout.BeginHorizontal();
                 var style = new GUIStyle(EditorStyles.toolbarButton)
                 {
                     alignment = TextAnchor.MiddleLeft,
                 };
                 MyGUIUtils.BeginHighlight(style, track == Track);
-                if (GUI.Button(rect, track.name, style))
+                if (GUILayout.Button(track.name, style))
                 {
                     Track = track;
                 }
                 MyGUIUtils.EndHighlight();
-                EditorGUI.DrawRect(vLayout.Spacing(i), Color.gray);
+
+                if (GUILayout.Button("...", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+                {
+                    var menu = new GenericMenu();
+                    menu.AddItem(new GUIContent("删除"), false, () =>
+                    {
+                        Action.RemoveTrack(track);
+                    });
+                    menu.ShowAsContext();
+                }
+
+                GUILayout.EndHorizontal();
+                GUILayout.Space(1);
             }
+
+            GUILayout.EndArea();
         }
 
         private void DrawTrackAndClip()
         {
+            EditorGUI.DrawRect(TracksRect, backgroundColor);
             if (!Action) return;
-
-            GUI.BeginGroup(TracksRect);
-            for (int i = 0; i < Action.tracks.Count; i++)
-            {
-                var track = Action.tracks[i];
-                GUITrackItem.Draw(new Rect(0, i * (trackHeight + trackSpacing), TracksRect.width, trackHeight), track);
-            }
-            GUI.EndGroup();
-
-            GUI.BeginClip(TracksRect, scrollPos, Vector2.zero, false);
+            GUILayout.BeginArea(TracksRect);
 
             for (int i = 0; i < Action.tracks.Count; i++)
             {
                 var track = Action.tracks[i];
-                for (int j = 0; j < track.notifies.Count; j++)
+                if (GUITrackItem.Draw(track, trackHeight, trackColor))
                 {
-                    var notify = track.notifies[j];
-                    float x = notify.time * FrameRate * frameWidth;
-                    float width = 100f;
-                    GUIClipItem.Draw(new Rect(x, 0, width, trackHeight), ClipColor);
+                    Track = track;
                 }
+                GUILayout.Space(1);
             }
 
-            GUI.EndClip();
+            GUILayout.EndArea();
+
+            // GUILayout.BeginArea(TracksRect);
+            // GUI.BeginClip(TracksRect, scrollPos, Vector2.zero, false);
+
+            // for (int i = 0; i < Action.tracks.Count; i++)
+            // {
+            //     var track = Action.tracks[i];
+            //     for (int j = 0; j < track.notifies.Count; j++)
+            //     {
+            //         var notify = track.notifies[j];
+            //         float x = notify.time * FrameRate * frameWidth;
+            //         float width = 100f;
+            //         GUIClipItem.Draw(new Rect(x, 0, width, trackHeight), ClipColor);
+            //     }
+            // }
+
+            // GUI.EndClip();
 
 
             // for (int idx = viewMinTrackIdx; idx < Action.tracks.Count; idx++, i++)

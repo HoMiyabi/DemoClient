@@ -9,7 +9,7 @@ namespace Kirara.UI.Panel
         private Button UIBackBtn;
         private void InitUI()
         {
-            var c     = GetComponent<KiraraRuntimeComponents>();
+            var c     = GetComponent<KiraraDirectBinder>();
             UIBackBtn = c.Q<Button>(0, "UIBackBtn");
         }
         #endregion

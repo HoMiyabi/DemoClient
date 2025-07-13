@@ -13,7 +13,7 @@ namespace Kirara.UI
         private TextMeshProUGUI UpgradeTimeText;
         private void InitUI()
         {
-            var c           = GetComponent<KiraraRuntimeComponents>();
+            var c           = GetComponent<KiraraDirectBinder>();
             StatNameText    = c.Q<TextMeshProUGUI>(0, "StatNameText");
             StatValueText   = c.Q<TextMeshProUGUI>(1, "StatValueText");
             UpgradeTimeText = c.Q<TextMeshProUGUI>(2, "UpgradeTimeText");

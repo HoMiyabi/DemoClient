@@ -13,7 +13,7 @@ namespace Kirara.UI
         private TextMeshProUGUI Text;
         private void InitUI()
         {
-            var c = GetComponent<KiraraRuntimeComponents>();
+            var c = GetComponent<KiraraDirectBinder>();
             Btn   = c.Q<Button>(0, "Btn");
             Text  = c.Q<TextMeshProUGUI>(1, "Text");
         }

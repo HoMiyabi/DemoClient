@@ -27,7 +27,7 @@ namespace Kirara.UI.Panel
         private UIUpgradeDiscExpBar UIUpgradeDiscExpBar;
         private void InitUI()
         {
-            var c               = GetComponent<KiraraRuntimeComponents>();
+            var c               = GetComponent<KiraraDirectBinder>();
             UICloseBtn          = c.Q<Button>(0, "UICloseBtn");
             UIDiscPosIcon       = c.Q<UIDiscPosIcon>(1, "UIDiscPosIcon");
             UIMainStatBar       = c.Q<UIStatBar>(2, "UIMainStatBar");

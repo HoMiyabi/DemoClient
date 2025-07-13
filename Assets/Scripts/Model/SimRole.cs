@@ -9,12 +9,12 @@ namespace Kirara.Model
         public Vector3 Pos { get; set; }
         public Quaternion Rot { get; set; }
 
-        public SimRole(NSimRole simRole)
+        public SimRole(NSyncRole syncRole)
         {
-            Id = simRole.Id;
-            Cid = simRole.Cid;
-            Pos = simRole.Movement.Pos();
-            Rot = simRole.Movement.Rot();
+            Id = syncRole.Id;
+            Cid = syncRole.Cid;
+            Pos = syncRole.Movement.Pos();
+            Rot = syncRole.Movement.Rot();
         }
 
         public void Update(NSyncRole syncRole)

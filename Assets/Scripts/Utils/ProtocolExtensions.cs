@@ -4,12 +4,12 @@ namespace Kirara
 {
     public static class ProtoExtensions
     {
-        public static Vector3 Unity(this NFloat3 v)
+        public static Vector3 Unity(this NVector3 v)
         {
             return new Vector3(v.X, v.Y, v.Z);
         }
 
-        public static Quaternion Quat(this NFloat3 v)
+        public static Quaternion Quat(this NVector3 v)
         {
             return Quaternion.Euler(v.X, v.Y, v.Z);
         }
@@ -24,7 +24,7 @@ namespace Kirara
             return movement.Rot.Quat();
         }
 
-        public static NFloat3 Set(this NFloat3 self, Vector3 v)
+        public static NVector3 Set(this NVector3 self, Vector3 v)
         {
             self.X = v.x;
             self.Y = v.y;

@@ -18,7 +18,7 @@ namespace Kirara.UI
         private GridScroller    Scroller;
         private void InitUI()
         {
-            var c        = GetComponent<KiraraRuntimeComponents>();
+            var c        = GetComponent<KiraraDirectBinder>();
             UIDiscDetail = c.Q<UIDiscDetail>(0, "UIDiscDetail");
             UpgradeBtn   = c.Q<Button>(1, "UpgradeBtn");
             EquipBtn     = c.Q<Button>(2, "EquipBtn");

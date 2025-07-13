@@ -16,7 +16,7 @@ public class RoleSelectPanel : BasePanel
     private SelectController SelectController;
     private void InitUI()
     {
-        var c            = GetComponent<KiraraRuntimeComponents>();
+        var c            = GetComponent<KiraraDirectBinder>();
         UIBackBtn        = c.Q<Button>(0, "UIBackBtn");
         SelectBtn        = c.Q<Button>(1, "SelectBtn");
         LoopScroll       = c.Q<GridScroller>(2, "LoopScroll");

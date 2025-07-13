@@ -5,17 +5,13 @@ using UnityEngine;
 namespace Kirara.UI
 {
     [ExecuteAlways]
-    public class KiraraRuntimeComponents : MonoBehaviour
+    public class KiraraDirectBinder : MonoBehaviour
     {
         [Serializable]
-        public class Item
+        public struct Item
         {
             public string fieldName;
             public Component component;
-
-            public Item()
-            {
-            }
 
             public Item(string fieldName, Component component)
             {
@@ -94,9 +90,9 @@ namespace Kirara.UI
             var r = new Rect(selectionRect);
             r.position += rectOffset;
 
-            for (int i = 0; i < runtimeComponents.Count; i++)
+            for (int i = 0; i < binders.Count; i++)
             {
-                var coms = runtimeComponents[i];
+                var coms = binders[i];
                 foreach (var item in coms.items)
                 {
                     if (item.component)
@@ -114,22 +110,22 @@ namespace Kirara.UI
                     }
                     else
                     {
-                        Debug.LogWarning($"丢失引用, go: {runtimeComponents[i].name}, 字段名: {item.fieldName}");
+                        Debug.LogWarning($"丢失引用, go: {binders[i].name}, 字段名: {item.fieldName}");
                     }
                 }
             }
         }
 
-        private static readonly List<KiraraRuntimeComponents> runtimeComponents = new();
+        private static readonly List<KiraraDirectBinder> binders = new();
 
         private void OnEnable()
         {
-            runtimeComponents.Add(this);
+            binders.Add(this);
         }
 
         private void OnDisable()
         {
-            runtimeComponents.Remove(this);
+            binders.Remove(this);
         }
 
 #endif

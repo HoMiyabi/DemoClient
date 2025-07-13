@@ -12,7 +12,7 @@ namespace Kirara.UI.Panel
         private UICharacterEquipment UICharacterEquipment;
         private void InitUI()
         {
-            var c                = GetComponent<KiraraRuntimeComponents>();
+            var c                = GetComponent<KiraraDirectBinder>();
             UIBackBtn            = c.Q<Button>(0, "UIBackBtn");
             UITabController      = c.Q<UITabController>(1, "UITabController");
             UICharacterBasicStat = c.Q<UIRoleBasicStat>(2, "UICharacterBasicStat");

@@ -47,8 +47,8 @@ namespace Kirara.Model
             Id = Id,
             Movement = new NMovement
             {
-                Pos = new NFloat3().Set(RoleCtrl.transform.position),
-                Rot = new NFloat3().Set(RoleCtrl.transform.rotation.eulerAngles)
+                Pos = new NVector3().Set(RoleCtrl.transform.position),
+                Rot = new NVector3().Set(RoleCtrl.transform.rotation.eulerAngles)
             }
         };
 

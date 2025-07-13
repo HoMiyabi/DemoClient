@@ -18,7 +18,7 @@ namespace Kirara.UI
         private Image                 ChatStickerImg;
         private void InitUI()
         {
-            var c          = GetComponent<KiraraRuntimeComponents>();
+            var c          = GetComponent<KiraraDirectBinder>();
             AvatarImg      = c.Q<Image>(0, "AvatarImg");
             ChatText       = c.Q<TextMeshProUGUI>(1, "ChatText");
             Layout         = c.Q<HorizontalLayoutGroup>(2, "Layout");

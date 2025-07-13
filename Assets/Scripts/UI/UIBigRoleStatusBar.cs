@@ -19,7 +19,7 @@ namespace Kirara.UI
         private Image           DecibelBar;
         private void InitUI()
         {
-            var c         = GetComponent<KiraraRuntimeComponents>();
+            var c         = GetComponent<KiraraDirectBinder>();
             CharacterIcon = c.Q<Image>(0, "CharacterIcon");
             HPText        = c.Q<TextMeshProUGUI>(1, "HPText");
             MaxHPText     = c.Q<TextMeshProUGUI>(2, "MaxHPText");

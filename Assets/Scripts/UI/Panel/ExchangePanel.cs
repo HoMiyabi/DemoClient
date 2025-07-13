@@ -15,7 +15,7 @@ namespace Kirara.UI.Panel
         private LoopVerticalScrollRect ExchangeLoopScroll;
         private void InitUI()
         {
-            var c              = GetComponent<KiraraRuntimeComponents>();
+            var c              = GetComponent<KiraraDirectBinder>();
             UIBackBtn          = c.Q<Button>(0, "UIBackBtn");
             ExchangeLoopScroll = c.Q<LoopVerticalScrollRect>(1, "ExchangeLoopScroll");
         }

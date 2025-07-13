@@ -18,7 +18,7 @@ namespace Kirara.UI
         private CanvasGroup     Group;
         private void InitUI()
         {
-            var c     = GetComponent<KiraraRuntimeComponents>();
+            var c     = GetComponent<KiraraDirectBinder>();
             Icon      = c.Q<Image>(0, "Icon");
             NameText  = c.Q<TextMeshProUGUI>(1, "NameText");
             CountText = c.Q<TextMeshProUGUI>(2, "CountText");

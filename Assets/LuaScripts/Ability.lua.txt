@@ -114,15 +114,19 @@ function Ability.new()
     ---@type number
     obj.stackLimit = 1
 
+    -- 挂载间隔(0.5s内最多触发1次)
+    ---@type number
+    obj.attachInterval = 0
+
     -- 属性
     ---@type table
     obj.attrs = {}
 
-    -- 堆叠刷新策略
+    -- 叠层刷新策略
     ---@type function
     obj.stackRefreshPolicy = nil
 
-    -- 堆叠移除刷新策略
+    -- 叠层溢出刷新策略
     obj.overflowRefreshPolicy = Ability.refreshPolicy_RefreshMin
 
     -- 当前层数

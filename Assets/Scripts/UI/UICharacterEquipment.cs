@@ -17,7 +17,7 @@ namespace Kirara.UI
         private DiscSlot     UIDiscSlot5;
         private void InitUI()
         {
-            var c        = GetComponent<KiraraRuntimeComponents>();
+            var c        = GetComponent<KiraraDirectBinder>();
             UIWeaponSlot = c.Q<UIWeaponSlot>(0, "UIWeaponSlot");
             UIDiscSlot   = c.Q<DiscSlot>(1, "UIDiscSlot");
             UIDiscSlot1  = c.Q<DiscSlot>(2, "UIDiscSlot1");

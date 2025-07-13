@@ -33,5 +33,16 @@ namespace Kirara.ActionEditor
             tracks.RemoveAt(index);
             EditorUtility.SetDirty(this);
         }
+
+        public bool RemoveTrack(ActionTrackSO track)
+        {
+            int idx = tracks.IndexOf(track);
+            if (idx >= 0)
+            {
+                RemoveTrackAt(idx);
+                return true;
+            }
+            return false;
+        }
     }
 }
