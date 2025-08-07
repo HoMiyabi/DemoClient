@@ -4,7 +4,7 @@ using UnityEngine.Timeline;
 namespace Kirara.TimelineAction
 {
     [CreateAssetMenu(fileName = "TimelineActionSO", menuName = "Kirara/TimelineActionSO")]
-    public class KiraraActionSO : TimelineAsset
+    public class  KiraraActionSO : TimelineAsset
     {
         public int actionId;
         public EActionState actionState;

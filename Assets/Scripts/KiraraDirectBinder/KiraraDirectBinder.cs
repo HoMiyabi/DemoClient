@@ -63,9 +63,7 @@ namespace Kirara.UI
             UnityEditor.EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyWindowItemOnGUI;
         }
 
-        private static readonly string[] texts = {
-            "★",
-        };
+        private static readonly string text = "★";
 
         private static readonly Color[] colors = {
             Color.yellow,
@@ -92,18 +90,18 @@ namespace Kirara.UI
 
             for (int i = 0; i < binders.Count; i++)
             {
-                var coms = binders[i];
-                foreach (var item in coms.items)
+                var binder = binders[i];
+                foreach (var item in binder.items)
                 {
                     if (item.component)
                     {
                         if (item.component.gameObject == go)
                         {
-                            GUI.Label(r, texts[(i / colors.Length) % texts.Length], new GUIStyle()
+                            GUI.Label(r, text, new GUIStyle()
                             {
                                 normal = new GUIStyleState()
                                 {
-                                    textColor = colors[i % colors.Length]
+                                    textColor = GetColor(i)
                                 }
                             });
                         }
@@ -114,6 +112,29 @@ namespace Kirara.UI
                     }
                 }
             }
+
+            // 绘制Binder
+            var binderRect = new Rect(selectionRect);
+            binderRect.position += new Vector2(binderRect.width - 14, 0);
+            for (int i = 0; i < binders.Count; i++)
+            {
+                var binder = binders[i];
+                if (binder.gameObject == go)
+                {
+                    GUI.Label(binderRect, text, new GUIStyle()
+                    {
+                        normal = new GUIStyleState()
+                        {
+                            textColor = GetColor(i)
+                        }
+                    });
+                }
+            }
+        }
+
+        private static Color GetColor(int index)
+        {
+            return colors[index % colors.Length];
         }
 
         private static readonly List<KiraraDirectBinder> binders = new();

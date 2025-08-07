@@ -1,9 +1,8 @@
-﻿using System;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 
 namespace Kirara.UI.Panel
 {
-    public class FriendPanel : BasePanel
+    public class SocialPanel : BasePanel
     {
         #region View
         private Button UIBackBtn;

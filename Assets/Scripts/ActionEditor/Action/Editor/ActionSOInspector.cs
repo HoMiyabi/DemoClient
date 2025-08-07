@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Kirara.ActionEditor
 {
     [CustomEditor(typeof(ActionSO))]
-    public class ActionSOInspector : Editor
+    public class ActionSOInspector : UnityEditor.Editor
     {
         private SerializedProperty nameProp;
         private SerializedProperty aniNameProp;

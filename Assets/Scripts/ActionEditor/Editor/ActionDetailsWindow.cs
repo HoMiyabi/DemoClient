@@ -16,10 +16,10 @@ namespace Kirara.ActionEditor
 
                 _action = value;
                 Clear();
-                _editor = Editor.CreateEditor(_action);
+                _editor = UnityEditor.Editor.CreateEditor(_action);
             }
         }
-        private Editor _editor;
+        private UnityEditor.Editor _editor;
 
         private Vector2 scrollPos;
 

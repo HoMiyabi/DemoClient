@@ -62,15 +62,15 @@ namespace Kirara
 
         private void Start()
         {
-            attackNames = new[] {ActionName.Attack_01, ActionName.Attack_02};
-            attackActions = new[] {Attack_01, Attack_02};
-
-            EnterState(State.Idle);
+            // attackNames = new[] {ActionName.Attack_01, ActionName.Attack_02};
+            // attackActions = new[] {Attack_01, Attack_02};
+            //
+            // EnterState(State.Idle);
         }
 
         private void Update()
         {
-            UpdateState();
+            // UpdateState();
         }
 
         private void UpdateState()

@@ -26,9 +26,9 @@ namespace Kirara
             var go = handle.InstantiateSync(monsterParent);
             handle.Release();
 
-            go.GetComponent<CharacterController>().enabled = false;
+            // go.GetComponent<CharacterController>().enabled = false;
             go.transform.position = pos;
-            go.GetComponent<CharacterController>().enabled = true;
+            // go.GetComponent<CharacterController>().enabled = true;
             go.transform.rotation = rot;
 
             var monster = go.GetComponent<Monster>();

@@ -9,6 +9,11 @@ namespace Kirara
             return new Vector3(v.X, v.Y, v.Z);
         }
 
+        public static Quaternion Unity(this NQuaternion q)
+        {
+            return new Quaternion(q.X, q.Y, q.Z, q.W);
+        }
+
         public static Quaternion Quat(this NVector3 v)
         {
             return Quaternion.Euler(v.X, v.Y, v.Z);
@@ -31,6 +36,7 @@ namespace Kirara
             self.Z = v.z;
             return self;
         }
+
         //
         // public static Modifier GetModifier(this NWeaponAttr weaponAttr)
         // {

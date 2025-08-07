@@ -24,7 +24,7 @@ namespace Kirara.UI.Editor
             for (int i = 0; i < tabView.childCount; i++)
             {
                 var child = tabView.GetChild(i);
-                if (GUILayout.Button(child.name))
+                if (GUILayout.Button("激活 " + child.name))
                 {
                     for (int j = 0; j < tabView.childCount; j++)
                     {

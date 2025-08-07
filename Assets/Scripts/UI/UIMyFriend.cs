@@ -31,6 +31,7 @@ namespace Kirara.UI
         private void Start()
         {
             friends = PlayerService.Player.Friends;
+            Debug.Log("friends.Count = " + friends.Count);
 
             LoopScroll.prefabSource = LoopScrollPrefabSource;
             LoopScroll.dataSource = this;

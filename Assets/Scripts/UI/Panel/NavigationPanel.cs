@@ -28,7 +28,7 @@ namespace Kirara.UI.Panel
 
             SettingBtn.onClick.AddListener(() => UIMgr.Instance.PushPanel<SettingsPanel>());
             InventoryBtn.onClick.AddListener(() => UIMgr.Instance.PushPanel<InventoryPanel>());
-            FriendBtn.onClick.AddListener(() => UIMgr.Instance.PushPanel<FriendPanel>());
+            FriendBtn.onClick.AddListener(() => UIMgr.Instance.PushPanel<SocialPanel>());
         }
     }
 }

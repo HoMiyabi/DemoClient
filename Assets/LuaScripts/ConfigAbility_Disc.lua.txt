@@ -8,7 +8,7 @@ local config =
     },
     {
         name = "ZhenXingDiSiKe_4"
-    }
+    },
     {
         name = "YaoBaiJueShi_2",
         attrs = {
@@ -25,7 +25,7 @@ local config =
         name = "YanYuZhongJinShu_4"
     },
     {
-        name = "HeTunDianYin_2"
+        name = "HeTunDianYin_2",
         attrs = {
             PenRatio = 0.08
         }

@@ -16,7 +16,7 @@ namespace Kirara.Network
 
         public void Update()
         {
-            if (queue.TryDequeue(out var item))
+            while (queue.TryDequeue(out var item))
             {
                 try
                 {

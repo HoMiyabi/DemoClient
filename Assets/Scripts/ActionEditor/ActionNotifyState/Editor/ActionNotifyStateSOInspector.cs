@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Kirara.ActionEditor
 {
     [CustomEditor(typeof(ActionNotifyStateSO))]
-    public class ActionNotifyStateSOInspector : Editor
+    public class ActionNotifyStateSOInspector : UnityEditor.Editor
     {
         private ActionNotifyStateSO _target;
         private SerializedProperty nameProp;

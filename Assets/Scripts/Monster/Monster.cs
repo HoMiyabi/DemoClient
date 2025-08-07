@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using cfg.main;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
@@ -15,13 +16,15 @@ namespace Kirara
 
         public BoxCollider boxCollider;
         public SphereCollider sphereCollider;
+        public KiraraActionListSO actionList;
+        private Dictionary<string, KiraraActionSO> ActionDict;
 
         public event Action onDie;
 
         public RoleCtrl ParryingRole { get; set; }
 
         private MonsterAICtrl MonsterAICtrl { get; set; }
-        private ActionPlayer ActionPlayer { get; set; }
+        public ActionPlayer ActionPlayer { get; set; }
         private CharacterController CharacterController { get; set; }
         public MonsterModel Model { get; private set; }
 
@@ -30,6 +33,7 @@ namespace Kirara
             MonsterAICtrl = GetComponent<MonsterAICtrl>();
             ActionPlayer = GetComponent<ActionPlayer>();
             CharacterController = GetComponent<CharacterController>();
+            ActionDict = actionList.ActionDict;
         }
 
         public void Set(MonsterModel model)
@@ -60,7 +64,7 @@ namespace Kirara
         {
             HandleNumeric(damage, daze);
 
-            MonsterAICtrl.GetHit(from);
+            // MonsterAICtrl.GetHit(from);
         }
 
         public void Die()
@@ -90,6 +94,24 @@ namespace Kirara
         public void Move(Vector3 value)
         {
             CharacterController.Move(value);
+        }
+
+        public void RepMovement(NSyncMonster syncMonster)
+        {
+            transform.position = syncMonster.Pos.Unity();
+            transform.rotation = syncMonster.Rot.Unity();
+            // Debug.Log($"RepMovement, ThreadId: {Environment.CurrentManagedThreadId}, " +
+            //           $"Pos: {syncMonster.Pos}, transform.position: {transform.position}");
+        }
+
+        public void PlayAction(string actionName, float fadeDuration = 0f, Action onFinish = null)
+        {
+            ActionPlayer.Play(ActionDict[actionName], actionName, fadeDuration, onFinish);
+        }
+
+        private void OnAnimatorMove()
+        {
+
         }
     }
 }
