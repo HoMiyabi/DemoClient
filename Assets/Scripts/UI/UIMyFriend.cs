@@ -9,17 +9,17 @@ namespace Kirara.UI
     public class UIMyFriend : MonoBehaviour, LoopScrollDataSource
     {
         #region View
-        private TextMeshProUGUI              FriendCountText;
-        private LoopVerticalScrollRect       LoopScroll;
-        private SimpleLoopScrollPrefabSource LoopScrollPrefabSource;
+        private TextMeshProUGUI        FriendCountText;
+        private LoopVerticalScrollRect LoopScroll;
         private void InitUI()
         {
-            var c                  = GetComponent<KiraraDirectBinder>();
-            FriendCountText        = c.Q<TextMeshProUGUI>(0, "FriendCountText");
-            LoopScroll             = c.Q<LoopVerticalScrollRect>(1, "LoopScroll");
-            LoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(2, "LoopScrollPrefabSource");
+            var c           = GetComponent<KiraraDirectBinder>();
+            FriendCountText = c.Q<TextMeshProUGUI>(0, "FriendCountText");
+            LoopScroll      = c.Q<LoopVerticalScrollRect>(1, "LoopScroll");
         }
         #endregion
+
+        public GameObject UserInfoBarItemPrefab;
 
         private List<SocialPlayer> friends;
 
@@ -33,8 +33,21 @@ namespace Kirara.UI
             friends = PlayerService.Player.Friends;
             Debug.Log("friends.Count = " + friends.Count);
 
-            LoopScroll.prefabSource = LoopScrollPrefabSource;
+            LoopScroll.prefabSource = new LoopScrollPool(UserInfoBarItemPrefab, transform);
             LoopScroll.dataSource = this;
+            UpdateUI();
+            PlayerService.Player.OnFriendsChanged += UpdateUI;
+        }
+
+        private void OnDestroy()
+        {
+            PlayerService.Player.OnFriendsChanged -= UpdateUI;
+        }
+
+        private void UpdateUI()
+        {
+            FriendCountText.text = $"好友数量 {friends.Count}";
+
             LoopScroll.totalCount = friends.Count;
             LoopScroll.RefillCells();
         }

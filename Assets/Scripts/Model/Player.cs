@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Kirara.Model
@@ -10,7 +11,9 @@ namespace Kirara.Model
         public int AvatarCid { get; set; }
         public string Signature { get; set; }
         public List<SocialPlayer> Friends { get; set; }
+        public Action OnFriendsChanged;
         public List<SocialPlayer> FriendRequests { get; set; }
+        public Action OnFriendRequestsChanged;
         public List<MaterialItem> Materials { get; set; }
         public List<CurrencyItem> Currencies { get; set; }
         public List<WeaponItem> Weapons { get; set; }

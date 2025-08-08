@@ -1,7 +1,7 @@
 ﻿using Kirara.Network;
 using Kirara.Service;
 
-namespace Kirara.NetHandler.Chat
+namespace Kirara.NetHandler.Social
 {
     public class NotifyReceiveChatMsg_Handler : MsgHandler<NotifyReceiveChatMsg>
     {

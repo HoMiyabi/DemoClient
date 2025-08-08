@@ -43,9 +43,9 @@ public static partial class NetFn
     {
         return NetMgr.Instance.session.CallAsync<RspRefuseAddFriend>(MsgCmdId.ReqRefuseAddFriend, req);
     }
-    public static UniTask<RspDeleteFriend> ReqDeleteFriend(ReqDeleteFriend req)
+    public static UniTask<RspRemoveFriend> ReqRemoveFriend(ReqRemoveFriend req)
     {
-        return NetMgr.Instance.session.CallAsync<RspDeleteFriend>(MsgCmdId.ReqDeleteFriend, req);
+        return NetMgr.Instance.session.CallAsync<RspRemoveFriend>(MsgCmdId.ReqRemoveFriend, req);
     }
     public static UniTask<RspModifySignature> ReqModifySignature(ReqModifySignature req)
     {

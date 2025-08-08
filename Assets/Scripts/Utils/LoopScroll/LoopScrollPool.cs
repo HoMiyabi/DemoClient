@@ -11,7 +11,7 @@ namespace Kirara
         private readonly Stack<GameObject> pool = new();
         private readonly int max;
 
-        public LoopScrollPool(GameObject prefab, Transform poolPlace, int max = 100)
+        public LoopScrollPool(GameObject prefab, Transform poolPlace, int max = 128)
         {
             this.prefab = prefab;
             this.poolPlace = poolPlace;
