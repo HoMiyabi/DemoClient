@@ -42,7 +42,6 @@ namespace Kirara
         private T Init<T>(GameObject go) where T : BasePanel
         {
             var panel = go.GetComponent<T>();
-            panel.BindUI();
 
             if (stk.Count > 0)
             {

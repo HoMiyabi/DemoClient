@@ -14,6 +14,11 @@ namespace Kirara.UI.Panel
         {
         }
 
+        protected virtual void Awake()
+        {
+            BindUI();
+        }
+
         public virtual void PlayEnter()
         {
             onPlayEnterFinished?.Invoke();

@@ -1,22 +1,23 @@
-﻿using UnityEngine.UI;
+﻿using System;
 
 namespace Kirara.UI.Panel
 {
     public class SocialPanel : BasePanel
     {
         #region View
-        private Button UIBackBtn;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button UIBackBtn;
+        public override void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c     = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn = c.Q<Button>(0, "UIBackBtn");
+            UIBackBtn = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
         }
         #endregion
 
-        private void Awake()
+        private void Start()
         {
-            InitUI();
-
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
         }
     }

@@ -1,0 +1,18 @@
+{
+    "name": "KiraraDirectBinder.Editor",
+    "rootNamespace": "KiraraDirectBinder.Editor",
+    "references": [
+        "GUID:395253f42eb1dc34d9ada36b9a784027"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Kirara.Model;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,13 +8,16 @@ namespace Kirara.UI
     public class UIMyFriend : MonoBehaviour, LoopScrollDataSource
     {
         #region View
-        private TextMeshProUGUI        FriendCountText;
-        private LoopVerticalScrollRect LoopScroll;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI                 FriendCountText;
+        private UnityEngine.UI.LoopVerticalScrollRect LoopScroll;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c           = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            FriendCountText = c.Q<TextMeshProUGUI>(0, "FriendCountText");
-            LoopScroll      = c.Q<LoopVerticalScrollRect>(1, "LoopScroll");
+            FriendCountText = c.Q<TMPro.TextMeshProUGUI>(0, "FriendCountText");
+            LoopScroll      = c.Q<UnityEngine.UI.LoopVerticalScrollRect>(1, "LoopScroll");
         }
         #endregion
 
@@ -25,7 +27,7 @@ namespace Kirara.UI
 
         private void Awake()
         {
-            InitUI();
+            BindUI();
         }
 
         private void Start()
