@@ -5,23 +5,10 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
-namespace Kirara.UI.Editor
+namespace KiraraDirectBinder.Editor
 {
     public class KiraraDirectBinderWindow : EditorWindow
     {
-        private static readonly Dictionary<Type, List<string>> alias = new()
-        {
-            {typeof(RectTransform), new List<string>{ "Tra" }},
-            {typeof(UnityEngine.UI.Button), new List<string>{ "Btn" }},
-            {typeof(UnityEngine.UI.Image), new List<string>{ "Img", "Icon" }},
-            {typeof(TMPro.TMP_InputField), new List<string>{ "Input" }},
-            {typeof(TMPro.TextMeshProUGUI), new List<string>{ "Text" }},
-            {typeof(TMPro.TMP_Dropdown), new List<string>{ "Dd" }},
-            {typeof(UnityEngine.UI.LoopVerticalScrollRect), new List<string>{ "LoopScroll" }},
-            {typeof(UnityEngine.UI.LoopHorizontalScrollRect), new List<string>{ "LoopScroll" }},
-            {typeof(UnityEngine.UI.Slider), new List<string>{ "Slider" }}
-        };
-
         private KiraraDirectBinder _binder;
         private KiraraDirectBinder Binder
         {
@@ -124,7 +111,7 @@ namespace Kirara.UI.Editor
                 return 2;
             }
 
-            if (alias.TryGetValue(type, out var aliasNames)
+            if (KiraraDirectBinderAlias.alias.TryGetValue(type, out var aliasNames)
                 && aliasNames.Any(target.EndsWith))
             {
                 return 1;
@@ -135,7 +122,6 @@ namespace Kirara.UI.Editor
         /// <summary>
         /// 把匹配的组件放在前面
         /// </summary>
-        /// <param name="tra"></param>
         /// <returns></returns>
         private void UpdateComponents()
         {

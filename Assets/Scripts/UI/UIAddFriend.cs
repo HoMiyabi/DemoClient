@@ -1,26 +1,28 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
-using TMPro;
+using Kirara.UI.Panel;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI
 {
-    public class UIAddFriend : MonoBehaviour
+    public class UIAddFriend : BasePanel
     {
         #region View
-        private TextMeshProUGUI        FriendRequestCountText;
-        private TMP_InputField         SearchInput;
-        private Button                 SearchBtn;
-        private LoopVerticalScrollRect LoopVerticalScrollRect;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI                 FriendRequestCountText;
+        private TMPro.TMP_InputField                  SearchInput;
+        private UnityEngine.UI.Button                 SearchBtn;
+        private UnityEngine.UI.LoopVerticalScrollRect LoopVerticalScrollRect;
+        public override void BindUI()
         {
-            var c                  = GetComponent<KiraraDirectBinder>();
-            FriendRequestCountText = c.Q<TextMeshProUGUI>(0, "FriendRequestCountText");
-            SearchInput            = c.Q<TMP_InputField>(1, "SearchInput");
-            SearchBtn              = c.Q<Button>(2, "SearchBtn");
-            LoopVerticalScrollRect = c.Q<LoopVerticalScrollRect>(3, "LoopVerticalScrollRect");
+            if (_isBound) return;
+            _isBound = true;
+            var c                  = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            FriendRequestCountText = c.Q<TMPro.TextMeshProUGUI>(0, "FriendRequestCountText");
+            SearchInput            = c.Q<TMPro.TMP_InputField>(1, "SearchInput");
+            SearchBtn              = c.Q<UnityEngine.UI.Button>(2, "SearchBtn");
+            LoopVerticalScrollRect = c.Q<UnityEngine.UI.LoopVerticalScrollRect>(3, "LoopVerticalScrollRect");
         }
         #endregion
 
@@ -30,7 +32,7 @@ namespace Kirara.UI
 
         private void Awake()
         {
-            InitUI();
+            BindUI();
 
             friendRequests = PlayerService.Player.FriendRequests;
 

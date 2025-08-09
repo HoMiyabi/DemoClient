@@ -12,7 +12,7 @@ namespace Kirara.UI.Panel
         private Button FriendBtn;
         private void InitUI()
         {
-            var c        = GetComponent<KiraraDirectBinder>();
+            var c        = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             SettingBtn   = c.Q<Button>(0, "SettingBtn");
             InventoryBtn = c.Q<Button>(1, "InventoryBtn");
             UIBackBtn    = c.Q<Button>(2, "UIBackBtn");

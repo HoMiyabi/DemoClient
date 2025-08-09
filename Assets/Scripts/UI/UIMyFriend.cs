@@ -13,7 +13,7 @@ namespace Kirara.UI
         private LoopVerticalScrollRect LoopScroll;
         private void InitUI()
         {
-            var c           = GetComponent<KiraraDirectBinder>();
+            var c           = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             FriendCountText = c.Q<TextMeshProUGUI>(0, "FriendCountText");
             LoopScroll      = c.Q<LoopVerticalScrollRect>(1, "LoopScroll");
         }

@@ -16,7 +16,7 @@ namespace Kirara.UI
         private TextMeshProUGUI TitleText;
         private void InitUI()
         {
-            var c               = GetComponent<KiraraDirectBinder>();
+            var c               = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             NotificationsParent = c.Q<RectTransform>(0, "NotificationsParent");
             TitleText           = c.Q<TextMeshProUGUI>(1, "TitleText");
         }

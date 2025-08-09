@@ -17,7 +17,7 @@ namespace Kirara.UI
         private Button          Btn;
         private void InitUI()
         {
-            var c        = GetComponent<KiraraDirectBinder>();
+            var c        = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             AvatarImg    = c.Q<Image>(0, "AvatarImg");
             UsernameText = c.Q<TextMeshProUGUI>(1, "UsernameText");
             OnlineStatus = c.Q<TextMeshProUGUI>(2, "OnlineStatus");

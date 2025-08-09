@@ -15,7 +15,7 @@ namespace Kirara.UI.Panel
         private TextMeshProUGUI ProgressText;
         private void InitUI()
         {
-            var c          = GetComponent<KiraraDirectBinder>();
+            var c          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             ProgressBarImg = c.Q<Image>(0, "ProgressBarImg");
             ProgressText   = c.Q<TextMeshProUGUI>(1, "ProgressText");
         }

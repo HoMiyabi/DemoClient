@@ -12,7 +12,7 @@ namespace Kirara.UI
         private Image           RightArrowImg;
         private void InitUI()
         {
-            var c         = GetComponent<KiraraDirectBinder>();
+            var c         = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             LeftArrowImg  = c.Q<Image>(0, "LeftArrowImg");
             NameText      = c.Q<TextMeshProUGUI>(1, "NameText");
             RightArrowImg = c.Q<Image>(2, "RightArrowImg");

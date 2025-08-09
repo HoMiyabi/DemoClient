@@ -1,29 +1,24 @@
-﻿using System;
-using Kirara.Model;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using Kirara.Model;
 
 namespace Kirara.UI.Panel
 {
     public class SelectEquipmentPanel : BasePanel
     {
         #region View
-        private Button                  UIBackBtn;
-        private UISelectEquipmentDisc   UISelectEquipmentDisc;
-        private UISelectEquipmentWeapon UISelectEquipmentWeapon;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button             UIBackBtn;
+        private Kirara.UI.UISelectEquipmentDisc   UISelectEquipmentDisc;
+        private Kirara.UI.UISelectEquipmentWeapon UISelectEquipmentWeapon;
+        public override void BindUI()
         {
-            var c                   = GetComponent<KiraraDirectBinder>();
-            UIBackBtn               = c.Q<Button>(0, "UIBackBtn");
-            UISelectEquipmentDisc   = c.Q<UISelectEquipmentDisc>(1, "UISelectEquipmentDisc");
-            UISelectEquipmentWeapon = c.Q<UISelectEquipmentWeapon>(2, "UISelectEquipmentWeapon");
+            if (_isBound) return;
+            _isBound = true;
+            var c                   = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIBackBtn               = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            UISelectEquipmentDisc   = c.Q<Kirara.UI.UISelectEquipmentDisc>(1, "UISelectEquipmentDisc");
+            UISelectEquipmentWeapon = c.Q<Kirara.UI.UISelectEquipmentWeapon>(2, "UISelectEquipmentWeapon");
         }
         #endregion
-
-        private void Awake()
-        {
-            InitUI();
-        }
 
         private Role ch;
         private UICharacterEquipment equipment;

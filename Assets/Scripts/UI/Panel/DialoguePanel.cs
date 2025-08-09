@@ -17,7 +17,7 @@ namespace Kirara.UI.Panel
         private UIDialogueText UIDialogueText;
         private void InitUI()
         {
-            var c = GetComponent<KiraraDirectBinder>();
+            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             NameText = c.Q<TextMeshProUGUI>(0, "NameText");
             OptionParent = c.Q<RectTransform>(1, "OptionParent");
             Btn = c.Q<Button>(2, "Btn");

@@ -16,7 +16,7 @@ namespace Kirara.UI
         private Image CharacterIcon;
         private void InitUI()
         {
-            var c         = GetComponent<KiraraDirectBinder>();
+            var c         = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             HPBar         = c.Q<Image>(0, "HPBar");
             DecibelBar    = c.Q<Image>(1, "DecibelBar");
             EnergyBar     = c.Q<Image>(2, "EnergyBar");

@@ -17,7 +17,7 @@ namespace Kirara.UI.Panel
         private TextMeshProUGUI NameText;
         private void InitUI()
         {
-            var c           = GetComponent<KiraraDirectBinder>();
+            var c           = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             ConfirmBtn      = c.Q<Button>(0, "ConfirmBtn");
             ToItemCountText = c.Q<TextMeshProUGUI>(1, "ToItemCountText");
             Icon            = c.Q<Image>(2, "Icon");

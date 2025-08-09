@@ -14,7 +14,7 @@ namespace Kirara.UI.Panel
         private TextMeshProUGUI StatusText;
         private void InitUI()
         {
-            var c = GetComponent<KiraraDirectBinder>();
+            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             BgBtn = c.Q<Button>(0, "BgBtn");
             StatusText = c.Q<TextMeshProUGUI>(1, "StatusText");
         }

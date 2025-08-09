@@ -10,6 +10,10 @@ namespace Kirara.UI.Panel
         public Action onPlayEnterFinished;
         public Action onPlayExitFinished;
 
+        public virtual void BindUI()
+        {
+        }
+
         public virtual void PlayEnter()
         {
             onPlayEnterFinished?.Invoke();

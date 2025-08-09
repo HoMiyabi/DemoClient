@@ -13,7 +13,7 @@ namespace Kirara.UI
         private HorizontalLayoutGroup Layout;
         private void InitUI()
         {
-            var c       = GetComponent<KiraraDirectBinder>();
+            var c       = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             ContentText = c.Q<TextMeshProUGUI>(0, "ContentText");
             Layout      = c.Q<HorizontalLayoutGroup>(1, "Layout");
         }

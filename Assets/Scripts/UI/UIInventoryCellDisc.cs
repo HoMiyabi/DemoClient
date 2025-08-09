@@ -21,7 +21,7 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
     private Image              SelectBorder;
     private void InitUI()
     {
-        var c              = GetComponent<KiraraDirectBinder>();
+        var c              = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
         InfoText           = c.Q<TextMeshProUGUI>(0, "InfoText");
         WearerIconImg      = c.Q<Image>(1, "WearerIconImg");
         IconImg            = c.Q<Image>(2, "IconImg");

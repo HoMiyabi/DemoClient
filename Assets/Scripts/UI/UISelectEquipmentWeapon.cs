@@ -17,7 +17,7 @@ namespace Kirara.UI
         private GridScroller    Scroller;
         private void InitUI()
         {
-            var c          = GetComponent<KiraraDirectBinder>();
+            var c          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             UIWeaponDetail = c.Q<UIWeaponDetail>(0, "UIWeaponDetail");
             EquipBtn       = c.Q<Button>(1, "EquipBtn");
             EquipBtnText   = c.Q<TextMeshProUGUI>(2, "EquipBtnText");

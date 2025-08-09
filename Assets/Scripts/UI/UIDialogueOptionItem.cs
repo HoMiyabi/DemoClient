@@ -12,7 +12,7 @@ namespace Kirara.UI
         private Button          Btn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraDirectBinder>();
+            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             Text  = c.Q<TextMeshProUGUI>(0, "Text");
             Btn   = c.Q<Button>(1, "Btn");
         }

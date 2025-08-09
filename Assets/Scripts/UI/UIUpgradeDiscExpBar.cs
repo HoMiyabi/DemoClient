@@ -16,7 +16,7 @@ namespace Kirara.UI
         private TextMeshProUGUI ExpText;
         private void InitUI()
         {
-            var c             = GetComponent<KiraraDirectBinder>();
+            var c             = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             BgBar             = c.Q<Image>(0, "BgBar");
             Bar               = c.Q<Image>(1, "Bar");
             CurrentLevelText  = c.Q<TextMeshProUGUI>(2, "CurrentLevelText");

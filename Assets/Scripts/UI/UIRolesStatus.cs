@@ -10,7 +10,7 @@ namespace Kirara.UI
         private UISmallRoleStatusBar UISmallRoleStatusBar1;
         private void InitUI()
         {
-            var c                 = GetComponent<KiraraDirectBinder>();
+            var c                 = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             UIBigRoleStatusBar    = c.Q<UIBigRoleStatusBar>(0, "UIBigRoleStatusBar");
             UISmallRoleStatusBar  = c.Q<UISmallRoleStatusBar>(1, "UISmallRoleStatusBar");
             UISmallRoleStatusBar1 = c.Q<UISmallRoleStatusBar>(2, "UISmallRoleStatusBar1");

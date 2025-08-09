@@ -16,7 +16,7 @@ public class UITargetIndicator : MonoBehaviour
     private TextMeshProUGUI DistanceText;
     private void InitUI()
     {
-        var c        = GetComponent<KiraraDirectBinder>();
+        var c        = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
         RotTra       = c.Q<RectTransform>(0, "RotTra");
         ArrowImg     = c.Q<Image>(1, "ArrowImg");
         DistanceText = c.Q<TextMeshProUGUI>(2, "DistanceText");

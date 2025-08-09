@@ -13,7 +13,7 @@ namespace Kirara.UI
         private TextMeshProUGUI QuestText;
         private void InitUI()
         {
-            var c          = GetComponent<KiraraDirectBinder>();
+            var c          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             QuestChainText = c.Q<TextMeshProUGUI>(0, "QuestChainText");
             QuestText      = c.Q<TextMeshProUGUI>(1, "QuestText");
         }

@@ -22,8 +22,6 @@ namespace Kirara
 
         private List<BasePanel> stk;
 
-        public event Action onViewPushed;
-        public event Action onViewPopped;
 
         public int NormalCount => stk.Count;
 
@@ -44,13 +42,13 @@ namespace Kirara
         private T Init<T>(GameObject go) where T : BasePanel
         {
             var panel = go.GetComponent<T>();
+            panel.BindUI();
 
             if (stk.Count > 0)
             {
                 stk[^1].OnPause();
             }
             stk.Add(panel);
-            onViewPushed?.Invoke();
 
             panel.OnResume();
             panel.PlayEnter();
@@ -83,7 +81,6 @@ namespace Kirara
                 return;
             }
             stk.RemoveAt(stk.Count - 1);
-            onViewPopped?.Invoke();
 
             panel.OnPause();
             panel.onPlayExitFinished += () =>

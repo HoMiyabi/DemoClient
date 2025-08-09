@@ -26,7 +26,7 @@ namespace Kirara.UI.Panel
         private Button StickerBtn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraDirectBinder>();
+            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             UIOverlayBtn = c.Q<Button>(0, "UIOverlayBtn");
             UIBackBtn = c.Q<Button>(1, "UIBackBtn");
             ChatTextInput = c.Q<TMP_InputField>(2, "ChatTextInput");

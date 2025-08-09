@@ -25,7 +25,7 @@ namespace Kirara.UI.Panel
         private Image           ToIcon;
         private void InitUI()
         {
-            var c             = GetComponent<KiraraDirectBinder>();
+            var c             = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             TitleText         = c.Q<TextMeshProUGUI>(0, "TitleText");
             ToNameCountText   = c.Q<TextMeshProUGUI>(1, "ToNameCountText");
             ToDescText        = c.Q<TextMeshProUGUI>(2, "ToDescText");

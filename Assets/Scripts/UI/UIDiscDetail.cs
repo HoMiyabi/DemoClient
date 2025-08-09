@@ -25,7 +25,7 @@ namespace Kirara.UI
         private UIDiscPosIcon   UIDiscPosIcon;
         private void InitUI()
         {
-            var c              = GetComponent<KiraraDirectBinder>();
+            var c              = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             NameText           = c.Q<TextMeshProUGUI>(0, "NameText");
             WearerIcon         = c.Q<Image>(1, "WearerIcon");
             LevelText          = c.Q<TextMeshProUGUI>(2, "LevelText");

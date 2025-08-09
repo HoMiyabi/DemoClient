@@ -14,7 +14,7 @@ namespace Kirara.UI
         private Button Btn;
         private void InitUI()
         {
-            var c = GetComponent<KiraraDirectBinder>();
+            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             Img   = c.Q<Image>(0, "Img");
             Btn   = c.Q<Button>(1, "Btn");
         }

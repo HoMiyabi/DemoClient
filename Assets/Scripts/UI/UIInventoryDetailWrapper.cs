@@ -9,7 +9,7 @@ namespace Kirara.UI
         private RectTransform Viewport;
         private void InitUI()
         {
-            var c    = GetComponent<KiraraDirectBinder>();
+            var c    = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             Viewport = c.Q<RectTransform>(0, "Viewport");
         }
         #endregion

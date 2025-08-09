@@ -15,7 +15,7 @@ namespace Kirara.UI
         private Button          IncreaseBtn;
         private void InitUI()
         {
-            var c       = GetComponent<KiraraDirectBinder>();
+            var c       = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             DecreaseBtn = c.Q<Button>(0, "DecreaseBtn");
             MinText     = c.Q<TextMeshProUGUI>(1, "MinText");
             Slider      = c.Q<Slider>(2, "Slider");

@@ -22,7 +22,7 @@ namespace Kirara.UI.Panel
         private GridScroller    DiscLoopScroll;
         private void InitUI()
         {
-            var c             = GetComponent<KiraraDirectBinder>();
+            var c             = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             UIBackBtn         = c.Q<Button>(0, "UIBackBtn");
             CoinText          = c.Q<TextMeshProUGUI>(1, "CoinText");
             CoinIconImg       = c.Q<Image>(2, "CoinIconImg");

@@ -13,7 +13,7 @@ namespace Kirara.UI
         private Slider          Slider;
         private void InitUI()
         {
-            var c     = GetComponent<KiraraDirectBinder>();
+            var c     = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             NameText  = c.Q<TextMeshProUGUI>(0, "NameText");
             ValueText = c.Q<TextMeshProUGUI>(1, "ValueText");
             Slider    = c.Q<Slider>(2, "Slider");
