@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -122,7 +123,7 @@ namespace Kirara.UI
                 {
                     EDirection.Horizontal => new Vector2(-(pos - Pos), 0f),
                     EDirection.Vertical => new Vector2(0f, -(pos - Pos)),
-                    _ => throw new System.NotImplementedException(),
+                    _ => throw new IndexOutOfRangeException()
                 };
                 pos += item.size + spacing;
             }
