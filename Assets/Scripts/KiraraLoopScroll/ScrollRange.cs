@@ -21,6 +21,11 @@ namespace Kirara.UI
             this.max = max;
         }
 
+        /// <summary>
+        /// 获取离pos最近的边界
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         public float GetNearEdge(float pos)
         {
             float len1 = Mathf.Abs(pos - min);
@@ -28,6 +33,11 @@ namespace Kirara.UI
             return len1 < len2 ? min : max;
         }
 
+        /// <summary>
+        /// 判断pos是否在范围内
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         public bool Contains(float pos)
         {
             return pos >= min && pos <= max;

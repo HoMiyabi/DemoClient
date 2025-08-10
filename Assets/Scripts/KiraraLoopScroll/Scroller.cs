@@ -13,63 +13,105 @@ public abstract class Scroller : MonoBehaviour,
     // 滚动条
     public Scrollbar scrollbar;
 
-    // 滚动方向
+    /// <summary>
+    /// 滚动方向
+    /// </summary>
     public EDirection direction = EDirection.Vertical;
 
     // 一阶粘性阻尼
     // 阻尼率
     public float dampingRatio = 7f;
 
-    // 回弹时长，用于鼠标释放时超出范围，回弹到边界
+    /// <summary>
+    /// 回弹时长，用于鼠标释放时超出范围，回弹到边界
+    /// </summary>
     public float elasticDuration = 0.3f;
 
-    // 鼠标滚轮灵敏度
+    /// <summary>
+    /// 鼠标滚轮灵敏度，用于控制滚动距离
+    /// </summary>
     public float wheelSensitivity = 0.1f;
 
-    // 鼠标滚轮滚动时长
+    /// <summary>
+    /// 鼠标滚轮滚动时长
+    /// </summary>
     public float wheelScrollDuration = 0.3f;
 
-    // 是否为无限滚动
+    /// <summary>
+    /// 是否为无限滚动
+    /// </summary>
     public bool isInfinite;
 
     // 对齐功能
-    public Snap snap = new()
+    public bool enableSnap;
+
+    #region 抽象方法区
+
+    /// <summary>
+    /// 当前位置是否超出内容
+    /// </summary>
+    protected abstract bool CurrentPosOutOfContent { get; }
+
+    /// <summary>
+    /// 存放Item的内容区域大小，如果大小不易获得，请返回-1
+    /// </summary>
+    protected abstract float ContentSize { get; }
+
+    /// <summary>
+    /// 更新Items
+    /// </summary>
+    protected abstract void UpdateItems();
+    #endregion
+
+    /// <summary>
+    /// 视口大小
+    /// </summary>
+    protected float ViewSize
     {
-        enable = false,
-        duration = 0.3f,
-        speedThreshold = 50f
-    };
+        get
+        {
+            return direction switch
+            {
+                EDirection.Vertical => content.rect.height,
+                EDirection.Horizontal => content.rect.width,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+    }
 
     // 状态
     private EScrollerState state = EScrollerState.Idle;
 
+    /// <summary>
+    /// 获取对齐后位置，默认实现为不变
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
     protected virtual float GetSnapPos(float pos) => pos;
-
-    // 内容长度
-    protected abstract float ContentLength { get; }
-
-    // 窗口长度
-    protected abstract float WindowLength { get; }
 
     // Idle状态下，Pos可以在的范围
     protected ScrollRange ValidRange => isInfinite ?
-        ScrollRange.Infinity : new ScrollRange(0f, Mathf.Max(0f, ContentLength - WindowLength));
+        ScrollRange.Infinity : new ScrollRange(0f, Mathf.Max(0f, ContentSize - ViewSize));
 
-    // 窗口中的内容长度，因为窗口可能超出内容，比如滑到了边缘外，窗口有部分没有内容
-    protected float ContentLengthInWindow
+    // 视口中的内容大小，因为窗口可能超出内容，比如滑到了边缘外，视口有部分没有内容
+    protected float ContentSizeInView
     {
         get
         {
-            if (isInfinite) return WindowLength;
+            if (isInfinite) return ViewSize;
+
+            if (ContentSize < 0f) return 0f;
 
             float l = Mathf.Max(Pos, 0f);
-            float r = Mathf.Min(Pos + WindowLength, ContentLength);
+            float r = Mathf.Min(Pos + ViewSize, ContentSize);
             return Mathf.Max(r - l, 0f);
         }
     }
 
-    // 滚动位置
     private float _pos;
+    /// <summary>
+    /// 滚动位置
+    /// </summary>
     protected float Pos
     {
         get => _pos;
@@ -88,9 +130,9 @@ public abstract class Scroller : MonoBehaviour,
 
     #region Pooling
     public int totalCount;
-    public delegate GameObject GetObject(int idx);
+    public delegate GameObject GetObject(int index);
     public delegate void ReturnObject(GameObject go);
-    public delegate void ProvideData(GameObject go, int idx);
+    public delegate void ProvideData(GameObject go, int index);
 
     public GetObject getObject;
     public ReturnObject returnObject;
@@ -103,10 +145,6 @@ public abstract class Scroller : MonoBehaviour,
     }
     #endregion
 
-
-    protected abstract void CullCells();
-    protected abstract void UpdateCellsPos();
-
     private void SetPos(float scrollPos, bool updateScrollbar)
     {
         _pos = scrollPos;
@@ -114,8 +152,7 @@ public abstract class Scroller : MonoBehaviour,
         {
             scrollbar.SetValueWithoutNotify(scrollPos / ValidRange.Length);
         }
-        CullCells();
-        UpdateCellsPos();
+        UpdateItems();
     }
 
     private void Awake()
@@ -144,10 +181,10 @@ public abstract class Scroller : MonoBehaviour,
 
     private void UpdateScrollBarSize()
     {
-        if (scrollbar)
+        if (scrollbar && ContentSize >= 0)
         {
             // 滚动条的手柄长 = 可见内容长度 / 内容总长度
-            scrollbar.size = ContentLengthInWindow / ContentLength;
+            scrollbar.size = ContentSizeInView / ContentSize;
         }
     }
 
@@ -182,7 +219,7 @@ public abstract class Scroller : MonoBehaviour,
         else
         {
             // 释放位置在范围内
-            if (snap.enable)
+            if (enableSnap)
             {
                 // 计算停止点
                 AnimState.CalcInertiaEndPos(Pos, out float endPos, scrollVelocity, dampingRatio);
@@ -225,7 +262,7 @@ public abstract class Scroller : MonoBehaviour,
         float deltaProj = CalcDeltaProj(delta);
         scrollVelocity = deltaProj / Time.deltaTime;
 
-        if (!isInfinite && (_pos < 0f || _pos > ContentLength - WindowLength))
+        if (!isInfinite && CurrentPosOutOfContent)
         {
             deltaProj *= 0.25f;
         }
@@ -233,15 +270,17 @@ public abstract class Scroller : MonoBehaviour,
         Pos += deltaProj;
     }
 
-    // 鼠标按下，强制停止
+    // 鼠标按下
     public void OnPointerDown(PointerEventData eventData)
     {
         if (eventData.button != PointerEventData.InputButton.Left) return;
 
+        // 鼠标按下，强制停止，保证跟手
         scrollVelocity = 0f;
         state = EScrollerState.Idle;
     }
 
+    // 鼠标抬起
     public void OnPointerUp(PointerEventData eventData)
     {
         if (eventData.button != PointerEventData.InputButton.Left) return;

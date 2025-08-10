@@ -38,7 +38,7 @@ namespace Kirara.Service
                 ReceiverUid = receiver.Uid,
                 UnixTimeMs = 0,
                 MsgType = 1,
-                Text = null,
+                Text = "",
                 StickerCid = stickerCid
             };
 

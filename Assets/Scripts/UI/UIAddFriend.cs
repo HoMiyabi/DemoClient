@@ -30,9 +30,9 @@ namespace Kirara.UI
 
         private List<SocialPlayer> friendRequests;
 
-        private void Awake()
+        protected override void Awake()
         {
-            BindUI();
+            base.Awake();
 
             friendRequests = PlayerService.Player.FriendRequests;
 
@@ -41,8 +41,13 @@ namespace Kirara.UI
             LoopVerticalScrollRect.prefabSource = new LoopScrollPool(UserItemPrefab, transform);
             LoopVerticalScrollRect.dataSource = new LoopScrollDataSourceHandler(ProvideData);
 
-            UpdateUI();
             PlayerService.Player.OnFriendRequestsChanged += UpdateUI;
+            UpdateUI();
+        }
+
+        private void OnDestroy()
+        {
+            PlayerService.Player.OnFriendRequestsChanged -= UpdateUI;
         }
 
         private void ProvideData(Transform trans, int idx)

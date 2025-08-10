@@ -2,7 +2,7 @@
 {
     public enum EDirection
     {
-        Vertical,
-        Horizontal
+        Horizontal,
+        Vertical
     }
 }

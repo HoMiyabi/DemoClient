@@ -17,6 +17,7 @@ public class GridScroller : Scroller
     private int presentMinIdx;
     private int presentMaxIdx;
     public readonly Dictionary<int, RectTransform> cells = new();
+    private readonly Deque<RectTransform> items = new();
     private readonly Stack<RectTransform> pool = new();
 
     public Action<RectTransform, int> updateCell;
@@ -37,8 +38,7 @@ public class GridScroller : Scroller
         }
         presentMinIdx = 0;
         presentMaxIdx = 0;
-        CullCells();
-        UpdateCellsPos();
+        UpdateItems();
     }
 
     private void ReturnObjectAt(int idx)
@@ -110,24 +110,13 @@ public class GridScroller : Scroller
         }
     }
 
-    protected override void CullCells()
-    {
-        int windowMinIdx = WindowMinIdx;
-        int windowMaxIdx = WindowMaxIdx;
-        CheckReturnObjects(windowMinIdx, windowMaxIdx);
-        CheckGetObjects(windowMinIdx, windowMaxIdx);
-        HidePoolingCells();
-        presentMinIdx = windowMinIdx;
-        presentMaxIdx = windowMaxIdx;
-    }
-
     // private int GetIdx(int row, int col)
     // {
     //     return row * countInLine + col;
     // }
 
-    // 窗口内的最小Idx
-    private int WindowMinIdx
+    // 可见最小Idx
+    private int ViewMinIdx
     {
         get
         {
@@ -137,12 +126,12 @@ public class GridScroller : Scroller
         }
     }
 
-    // 窗口内的最大Idx
-    private int WindowMaxIdx
+    // 可见最大Idx
+    private int ViewMaxIdx
     {
         get
         {
-            int maxLine = Mathf.CeilToInt((Pos + WindowLength + CullingTop) / LineWidth);
+            int maxLine = Mathf.CeilToInt((Pos + ViewSize + CullingTop) / LineWidth);
             int idx = maxLine * countInLine;
             return isInfinite ? idx : Mathf.Clamp(idx, 0, totalCount);
         }
@@ -168,21 +157,6 @@ public class GridScroller : Scroller
         EDirection.Horizontal => spacing.x,
         _ => throw new ArgumentOutOfRangeException()
     };
-
-    protected override void UpdateCellsPos()
-    {
-        for (int idx = presentMinIdx; idx < presentMaxIdx; idx++)
-        {
-            var cell = cells[idx];
-            cell.anchorMin = new Vector2(0f, 1f);
-            cell.anchorMax = new Vector2(0f, 1f);
-            cell.pivot = new Vector2(0f, 1f);
-
-            var v = GetCellPosInUGUISpace(GetRow(idx), GetCol(idx));
-            cell.anchoredPosition = v;
-            updateCell?.Invoke(cell, idx);
-        }
-    }
 
     private Vector2 GetCellPos(int row, int col)
     {
@@ -220,17 +194,30 @@ public class GridScroller : Scroller
         return Mathf.Round(pos / LineWidth) * LineWidth;
     }
 
-    protected override float ContentLength => isInfinite ? float.PositiveInfinity : LineWidth * LineCount;
-    protected override float WindowLength
+    protected override bool CurrentPosOutOfContent => !isInfinite && (Pos < 0 || Pos > Mathf.Max(0f, ContentSize - ViewSize));
+
+
+    protected override float ContentSize => isInfinite ? float.PositiveInfinity : LineWidth * LineCount;
+    protected override void UpdateItems()
     {
-        get
+        int viewMinIdx = ViewMinIdx;
+        int viewMaxIdx = ViewMaxIdx;
+        CheckReturnObjects(viewMinIdx, viewMaxIdx);
+        CheckGetObjects(viewMinIdx, viewMaxIdx);
+        HidePoolingCells();
+        presentMinIdx = viewMinIdx;
+        presentMaxIdx = viewMaxIdx;
+
+        for (int idx = presentMinIdx; idx < presentMaxIdx; idx++)
         {
-            return direction switch
-            {
-                EDirection.Vertical => content.rect.height,
-                EDirection.Horizontal => content.rect.width,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+            var cell = cells[idx];
+            cell.anchorMin = new Vector2(0f, 1f);
+            cell.anchorMax = new Vector2(0f, 1f);
+            cell.pivot = new Vector2(0f, 1f);
+
+            var v = GetCellPosInUGUISpace(GetRow(idx), GetCol(idx));
+            cell.anchoredPosition = v;
+            updateCell?.Invoke(cell, idx);
         }
     }
 }
