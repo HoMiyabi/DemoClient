@@ -188,6 +188,7 @@ namespace Kirara.UI
 
         public void Refresh()
         {
+            Debug.Log("Refresh");
             while (items.Count > 0)
             {
                 PopBack();

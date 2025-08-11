@@ -6,7 +6,7 @@ namespace Kirara.Service
 {
     public static class SocialService
     {
-        public static event Action<NChatMsg> OnAddChatMsg;
+        public static event Action<NChatMsg> OnChatMsgsAdd;
 
         public static async UniTask SendText(SocialPlayer receiver, string text)
         {
@@ -27,7 +27,7 @@ namespace Kirara.Service
             chatMsg.UnixTimeMs = rsp.UnixTimeMs;
 
             receiver.ChatMsgs.Add(chatMsg);
-            OnAddChatMsg?.Invoke(chatMsg);
+            OnChatMsgsAdd?.Invoke(chatMsg);
         }
 
         public static async UniTask SendSticker(SocialPlayer receiver, int stickerCid)
@@ -49,7 +49,7 @@ namespace Kirara.Service
             chatMsg.UnixTimeMs = rsp.UnixTimeMs;
 
             receiver.ChatMsgs.Add(chatMsg);
-            OnAddChatMsg?.Invoke(chatMsg);
+            OnChatMsgsAdd?.Invoke(chatMsg);
         }
 
         public static void NotifyReceiveChatMsg(NChatMsg chatMsg)
@@ -57,7 +57,7 @@ namespace Kirara.Service
             var player = PlayerService.Player.Friends
                 .Find(x => x.Uid == chatMsg.SenderUid);
             player.ChatMsgs.Add(chatMsg);
-            OnAddChatMsg?.Invoke(chatMsg);
+            OnChatMsgsAdd?.Invoke(chatMsg);
         }
     }
 }

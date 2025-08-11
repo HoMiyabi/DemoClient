@@ -118,15 +118,15 @@ namespace Kirara.UI.Panel
 
             ChattingPlayer = friends.FirstOrDefault();
 
-            SocialService.OnAddChatMsg += OnAddChatMsg;
+            SocialService.OnChatMsgsAdd += OnChatMsgsAdd;
         }
 
         private void OnDestroy()
         {
-            SocialService.OnAddChatMsg -= OnAddChatMsg;
+            SocialService.OnChatMsgsAdd -= OnChatMsgsAdd;
         }
 
-        private void OnAddChatMsg(NChatMsg msg)
+        private void OnChatMsgsAdd(NChatMsg msg)
         {
             if (ChattingPlayer != null &&
                 (ChattingPlayer.Uid == msg.SenderUid ||
