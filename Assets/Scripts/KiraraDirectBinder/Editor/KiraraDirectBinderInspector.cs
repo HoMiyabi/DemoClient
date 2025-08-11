@@ -22,6 +22,7 @@ namespace KiraraDirectBinder.Editor
             {
                 drawHeaderCallback = ReList_DrawHeader,
                 drawElementCallback = ReList_DrawElement,
+                drawElementBackgroundCallback = ReList_DrawElementBackground,
                 onAddCallback = ReList_OnAdd,
                 onRemoveCallback = ReList_OnRemove,
                 onReorderCallbackWithDetails = ReList_OnReorder,
@@ -44,12 +45,6 @@ namespace KiraraDirectBinder.Editor
             rect.y += 2;
             rect.height = EditorGUIUtility.singleLineHeight;
 
-            // 如果引用为空，警告
-            if (!componentProp.objectReferenceValue)
-            {
-                EditorGUI.DrawRect(rect, Color.yellow);
-            }
-
             float hSpacing = 4f;
 
             var rect1 = rect;
@@ -62,6 +57,28 @@ namespace KiraraDirectBinder.Editor
             EditorGUI.PropertyField(rect1, fieldNameProp, new GUIContent("变量名"));
             EditorGUI.PropertyField(rect2, componentProp, new GUIContent("组件"));
             EditorGUIUtility.labelWidth = defaultWidth;
+        }
+
+        private void ReList_DrawElementBackground(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            // 如果引用为空，警告
+            var itemProp = itemsProp.GetArrayElementAtIndex(index);
+            var componentProp = itemProp.FindPropertyRelative("component");
+            if (componentProp.objectReferenceValue)
+            {
+                ReorderableList.defaultBehaviours.DrawElementBackground(rect, index, isActive, isFocused, reList.draggable);
+            }
+            else
+            {
+                if (isActive || isFocused)
+                {
+                    EditorGUI.DrawRect(rect, Color.yellow);
+                }
+                else
+                {
+                    EditorGUI.DrawRect(rect, Color.yellow * 0.9f);
+                }
+            }
         }
 
         private void ReList_OnAdd(ReorderableList list)
