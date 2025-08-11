@@ -13,11 +13,11 @@ public class GridScroller : Scroller
 
     public int countInLine = 3;
 
-    // 左闭右开
-    private int presentMinIdx;
-    private int presentMaxIdx;
-    public readonly Dictionary<int, RectTransform> cells = new();
     private readonly Deque<RectTransform> items = new();
+    // 左闭右开
+    private int itemStartIndex;
+    private int itemEndIndex;
+    public readonly Dictionary<int, RectTransform> cells = new();
     private readonly Stack<RectTransform> pool = new();
 
     public Action<RectTransform, int> updateCell;
@@ -32,12 +32,12 @@ public class GridScroller : Scroller
 
     public void Refresh()
     {
-        for (int i = presentMinIdx; i < presentMaxIdx; i++)
+        for (int i = itemStartIndex; i < itemEndIndex; i++)
         {
             ReturnObjectAt(i);
         }
-        presentMinIdx = 0;
-        presentMaxIdx = 0;
+        itemStartIndex = 0;
+        itemEndIndex = 0;
         UpdateItems();
     }
 
@@ -55,17 +55,17 @@ public class GridScroller : Scroller
 
     private void CheckReturnObjects(int currMinIdx, int currMaxIdx)
     {
-        if (currMinIdx > presentMinIdx)
+        if (currMinIdx > itemStartIndex)
         {
-            for (int idx = presentMinIdx; idx < Mathf.Min(currMinIdx, presentMaxIdx); idx++)
+            for (int idx = itemStartIndex; idx < Mathf.Min(currMinIdx, itemEndIndex); idx++)
             {
                 ReturnObjectAt(idx);
             }
         }
 
-        if (currMaxIdx < presentMaxIdx)
+        if (currMaxIdx < itemEndIndex)
         {
-            for (int idx = Mathf.Max(currMaxIdx, presentMinIdx); idx < presentMaxIdx; idx++)
+            for (int idx = Mathf.Max(currMaxIdx, itemStartIndex); idx < itemEndIndex; idx++)
             {
                 ReturnObjectAt(idx);
             }
@@ -94,16 +94,16 @@ public class GridScroller : Scroller
 
     private void CheckGetObjects(int currMinIdx, int currMaxIdx)
     {
-        if (currMinIdx < presentMinIdx)
+        if (currMinIdx < itemStartIndex)
         {
-            for (int idx = currMinIdx; idx < Mathf.Min(currMaxIdx, presentMinIdx); idx++)
+            for (int idx = currMinIdx; idx < Mathf.Min(currMaxIdx, itemStartIndex); idx++)
             {
                 GetObjectAt(idx);
             }
         }
-        if (currMaxIdx > presentMaxIdx)
+        if (currMaxIdx > itemEndIndex)
         {
-            for (int idx = Mathf.Max(currMinIdx, presentMaxIdx); idx < currMaxIdx; idx++)
+            for (int idx = Mathf.Max(currMinIdx, itemEndIndex); idx < currMaxIdx; idx++)
             {
                 GetObjectAt(idx);
             }
@@ -221,10 +221,10 @@ public class GridScroller : Scroller
         CheckReturnObjects(viewMinIdx, viewMaxIdx);
         CheckGetObjects(viewMinIdx, viewMaxIdx);
         HidePoolingCells();
-        presentMinIdx = viewMinIdx;
-        presentMaxIdx = viewMaxIdx;
+        itemStartIndex = viewMinIdx;
+        itemEndIndex = viewMaxIdx;
 
-        for (int idx = presentMinIdx; idx < presentMaxIdx; idx++)
+        for (int idx = itemStartIndex; idx < itemEndIndex; idx++)
         {
             var cell = cells[idx];
             cell.anchorMin = new Vector2(0f, 1f);
