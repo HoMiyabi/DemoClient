@@ -194,7 +194,23 @@ public class GridScroller : Scroller
         return Mathf.Round(pos / LineWidth) * LineWidth;
     }
 
-    protected override bool CurrentPosOutOfContent => !isInfinite && (Pos < 0 || Pos > Mathf.Max(0f, ContentSize - ViewSize));
+    protected override float PosToEdge
+    {
+        get
+        {
+            if (isInfinite) return 0f;
+
+            if (Pos < 0f)
+            {
+                return -Pos;
+            }
+            if (ContentSize - (Pos + ViewSize) < 0)
+            {
+                return ContentSize - (Pos + ViewSize);
+            }
+            return 0f;
+        }
+    }
 
 
     protected override float ContentSize => isInfinite ? float.PositiveInfinity : LineWidth * LineCount;

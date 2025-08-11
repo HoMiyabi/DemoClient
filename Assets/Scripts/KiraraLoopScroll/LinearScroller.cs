@@ -21,57 +21,79 @@ namespace Kirara.UI
         }
         private readonly Deque<Item> items = new();
         private int itemStartIndex; // 第一个Item的索引
-        private int itemEndIndex; // 最后一个Item的索引(左闭右闭区间)
+        private int itemEndIndex; // 最后一个Item的索引(左闭右开区间)
         private float itemStartPos; // 第一个Item的起始位置
-        private float itemEndPos; // 最后一个Item的结束位置(外侧没有spacing)
+        private float itemEndPos; // 最后一个Item的结束位置
+        // (spacing只在每个Item之间，外侧没有)
 
-        protected override bool CurrentPosOutOfContent { get; } = false;
-        protected override float ContentSize { get; } = 1000f;
+        protected override float PosToEdge
+        {
+            get
+            {
+                if (items.Count == 0) return 0f;
+
+                if (itemStartIndex == 0)
+                {
+                    float dist = itemStartPos - Pos;
+                    if (dist > 0f)
+                    {
+                        return dist;
+                    }
+                }
+
+                if (itemEndIndex == items.Count - 1)
+                {
+                    float dist = itemEndPos - (Pos + ViewSize);
+                    if (dist < 0f)
+                    {
+                        return dist;
+                    }
+                }
+
+                return 0f;
+            }
+        }
+        protected override float ContentSize => -1f;
+
         protected override void UpdateItems()
         {
             // 裁剪
             const int maxIterations = 1000;
             int i = 0;
 
-            while (Pos > itemStartPos && items.Count > 0 && i < maxIterations)
+            while (items.Count > 0 && Pos > itemStartPos + items.Front.size && i < maxIterations)
             {
                 var item = items.Front;
-                if (Pos > itemStartPos + item.size)
-                {
-                    returnObject(item.rectTransform.gameObject);
+                returnObject(item.rectTransform.gameObject);
 
-                    items.PopFront();
-                    itemStartPos += item.size + spacing;
-                    itemStartIndex++;
-                }
-                else
+                items.PopFront();
+                itemStartPos += item.size;
+                if (items.Count > 0)
                 {
-                    break;
+                    itemStartPos += spacing;
                 }
+                itemStartIndex++;
 
                 i++;
             }
 
-            while (Pos + ViewSize < itemEndPos && items.Count > 0 && i < maxIterations)
+            while (items.Count > 0 && Pos + ViewSize < itemEndPos - items.Back.size && i < maxIterations)
             {
                 var item = items.Back;
-                if (Pos + ViewSize < itemEndPos - item.size)
-                {
-                    returnObject(item.rectTransform.gameObject);
+                returnObject(item.rectTransform.gameObject);
 
-                    items.PopBack();
-                    itemEndPos -= item.size + spacing;
-                    itemEndIndex--;
-                }
-                else
+                items.PopBack();
+                itemEndPos -= item.size;
+                if (items.Count > 0)
                 {
-                    break;
+                    itemEndPos -= spacing;
                 }
+                itemEndIndex--;
 
                 i++;
             }
 
-            while (Pos < itemStartPos - spacing && itemStartIndex > 0 && i < maxIterations)
+            while (itemStartIndex > 0 && Pos < itemStartPos - spacing && i < maxIterations)
             {
                 var go = getObject(itemStartIndex - 1);
                 provideData?.Invoke(go, itemStartIndex - 1);
@@ -81,23 +103,31 @@ namespace Kirara.UI
                 float size = LayoutUtility.GetPreferredSize(rectTransform, (int)direction);
 
                 items.PushFront(new Item(rectTransform, size));
-                itemStartPos -= size + spacing;
+                if (items.Count > 1)
+                {
+                    itemStartPos -= spacing;
+                }
+                itemStartPos -= size;
                 itemStartIndex--;
 
                 i++;
             }
 
-            while (Pos + ViewSize > itemEndPos + spacing && itemEndIndex < totalCount - 1 && i < maxIterations)
+            while (itemEndIndex < totalCount && Pos + ViewSize > itemEndPos + spacing && i < maxIterations)
             {
-                var go = getObject(itemEndIndex + 1);
-                provideData?.Invoke(go, itemEndIndex + 1);
+                var go = getObject(itemEndIndex);
+                provideData?.Invoke(go, itemEndIndex);
                 go.transform.SetParent(content, false);
 
                 var rectTransform = (RectTransform)go.transform;
                 float size = LayoutUtility.GetPreferredSize(rectTransform, (int)direction);
 
                 items.PushBack(new Item(rectTransform, size));
-                itemEndPos += size + spacing;
+                if (items.Count > 1)
+                {
+                    itemEndPos += spacing;
+                }
+                itemEndPos += size;
                 itemEndIndex++;
 
                 i++;

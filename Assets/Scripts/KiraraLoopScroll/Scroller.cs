@@ -47,10 +47,7 @@ public abstract class Scroller : MonoBehaviour,
 
     #region 抽象方法区
 
-    /// <summary>
-    /// 当前位置是否超出内容
-    /// </summary>
-    protected abstract bool CurrentPosOutOfContent { get; }
+    protected abstract float PosToEdge { get; }
 
     /// <summary>
     /// 存放Item的内容区域大小，如果大小不易获得，请返回-1
@@ -90,7 +87,7 @@ public abstract class Scroller : MonoBehaviour,
     protected virtual float GetSnapPos(float pos) => pos;
 
     // Idle状态下，Pos可以在的范围
-    protected ScrollRange ValidRange => isInfinite ?
+    protected ScrollRange ValidRange => (isInfinite || ContentSize < 0) ?
         ScrollRange.Infinity : new ScrollRange(0f, Mathf.Max(0f, ContentSize - ViewSize));
 
     // 视口中的内容大小，因为窗口可能超出内容，比如滑到了边缘外，视口有部分没有内容
@@ -212,9 +209,9 @@ public abstract class Scroller : MonoBehaviour,
         scrollVelocity = offset / Time.unscaledDeltaTime;
 
         // 如果释放位置超出合法范围，滚动到合法边界
-        if (!ValidRange.Contains(Pos))
+        if (!isInfinite && !Mathf.Approximately(PosToEdge, 0f))
         {
-            ScrollTo(ValidRange.GetNearEdge(Pos), elasticDuration);
+            ScrollTo(Pos + PosToEdge, elasticDuration);
         }
         else
         {
@@ -262,7 +259,7 @@ public abstract class Scroller : MonoBehaviour,
         float deltaProj = CalcDeltaProj(delta);
         scrollVelocity = deltaProj / Time.deltaTime;
 
-        if (!isInfinite && CurrentPosOutOfContent)
+        if (!isInfinite && !Mathf.Approximately(PosToEdge, 0f))
         {
             deltaProj *= 0.25f;
         }

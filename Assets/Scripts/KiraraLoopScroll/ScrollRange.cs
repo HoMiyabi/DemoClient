@@ -7,7 +7,7 @@ namespace Kirara.UI
         public float min;
         public float max;
 
-        public static readonly ScrollRange Infinity = new ScrollRange(float.NegativeInfinity, float.PositiveInfinity);
+        public static readonly ScrollRange Infinity = new(float.NegativeInfinity, float.PositiveInfinity);
 
         public float Length => max - min;
 

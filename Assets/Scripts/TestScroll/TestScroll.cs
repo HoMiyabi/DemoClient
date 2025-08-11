@@ -8,13 +8,17 @@ namespace Kirara.TestScroll
     {
         #region View
         private bool _isBound;
-        private Kirara.UI.LinearScroller Scroller;
+        private Kirara.UI.LinearScroller  Scroller;
+        private UnityEngine.UI.RectMask2D Mask;
+        private UnityEngine.UI.Toggle     EnableMask;
         public void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
-            var c    = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            Scroller = c.Q<Kirara.UI.LinearScroller>(0, "Scroller");
+            var c      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            Scroller   = c.Q<Kirara.UI.LinearScroller>(0, "Scroller");
+            Mask       = c.Q<UnityEngine.UI.RectMask2D>(1, "Mask");
+            EnableMask = c.Q<UnityEngine.UI.Toggle>(2, "EnableMask");
         }
         #endregion
 
@@ -29,7 +33,13 @@ namespace Kirara.TestScroll
             Scroller.SetPoolFunc(pool.GetObject, pool.ReturnObject);
             Scroller.provideData = ProvideData;
 
-            Scroller.totalCount = 100;
+            Scroller.totalCount = 20;
+
+            EnableMask.onValueChanged.AddListener((value) =>
+            {
+                Mask.enabled = value;
+            });
+            Mask.enabled = EnableMask.isOn;
         }
 
         private void ProvideData(GameObject go, int index)
