@@ -1,46 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
 using Kirara.Service;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI.Panel
 {
     public class ChatPanel : BasePanel
     {
         #region View
-        private Button UIOverlayBtn;
-        private Button UIBackBtn;
-        private TMP_InputField ChatTextInput;
-        private Button SendBtn;
-        private TextMeshProUGUI UsernameText;
-        private LoopVerticalScrollRect ChatFriendLoopScroll;
-        private LoopVerticalScrollRect ChatLoopScroll;
-        private SimpleLoopScrollPrefabSource ChatFriendPrefabSource;
-        private SimpleLoopScrollPrefabSource ChatPrefabSource;
-        private Button UISelectStickerOverlay;
-        private UISelectSticker UISelectSticker;
-        private Button StickerBtn;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button                  UIOverlayBtn;
+        private UnityEngine.UI.Button                  UIBackBtn;
+        private TMPro.TMP_InputField                   ChatTextInput;
+        private UnityEngine.UI.Button                  SendBtn;
+        private TMPro.TextMeshProUGUI                  UsernameText;
+        private UnityEngine.UI.LoopVerticalScrollRect  ChatFriendLoopScroll;
+        private Kirara.UI.SimpleLoopScrollPrefabSource ChatFriendPrefabSource;
+        private UnityEngine.UI.Button                  UISelectStickerOverlay;
+        private Kirara.UI.UISelectSticker              UISelectSticker;
+        private UnityEngine.UI.Button                  StickerBtn;
+        private Kirara.UI.LinearScroller               ChatLoopScroll;
+        public override void BindUI()
         {
-            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIOverlayBtn = c.Q<Button>(0, "UIOverlayBtn");
-            UIBackBtn = c.Q<Button>(1, "UIBackBtn");
-            ChatTextInput = c.Q<TMP_InputField>(2, "ChatTextInput");
-            SendBtn = c.Q<Button>(3, "SendBtn");
-            UsernameText = c.Q<TextMeshProUGUI>(4, "UsernameText");
-            ChatFriendLoopScroll = c.Q<LoopVerticalScrollRect>(5, "ChatFriendLoopScroll");
-            ChatLoopScroll = c.Q<LoopVerticalScrollRect>(6, "ChatLoopScroll");
-            ChatFriendPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(7, "ChatFriendPrefabSource");
-            ChatPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(8, "ChatPrefabSource");
-            UISelectStickerOverlay = c.Q<Button>(9, "UISelectStickerOverlay");
-            UISelectSticker = c.Q<UISelectSticker>(10, "UISelectSticker");
-            StickerBtn = c.Q<Button>(11, "StickerBtn");
+            if (_isBound) return;
+            _isBound = true;
+            var c                  = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIOverlayBtn           = c.Q<UnityEngine.UI.Button>(0, "UIOverlayBtn");
+            UIBackBtn              = c.Q<UnityEngine.UI.Button>(1, "UIBackBtn");
+            ChatTextInput          = c.Q<TMPro.TMP_InputField>(2, "ChatTextInput");
+            SendBtn                = c.Q<UnityEngine.UI.Button>(3, "SendBtn");
+            UsernameText           = c.Q<TMPro.TextMeshProUGUI>(4, "UsernameText");
+            ChatFriendLoopScroll   = c.Q<UnityEngine.UI.LoopVerticalScrollRect>(5, "ChatFriendLoopScroll");
+            ChatFriendPrefabSource = c.Q<Kirara.UI.SimpleLoopScrollPrefabSource>(6, "ChatFriendPrefabSource");
+            UISelectStickerOverlay = c.Q<UnityEngine.UI.Button>(7, "UISelectStickerOverlay");
+            UISelectSticker        = c.Q<Kirara.UI.UISelectSticker>(8, "UISelectSticker");
+            StickerBtn             = c.Q<UnityEngine.UI.Button>(9, "StickerBtn");
+            ChatLoopScroll         = c.Q<Kirara.UI.LinearScroller>(10, "ChatLoopScroll");
         }
         #endregion
+
+        public GameObject ChatItemPrefab;
 
         private List<SocialPlayer> friends;
 
@@ -58,7 +60,7 @@ namespace Kirara.UI.Panel
                     UsernameText.text = "Empty";
 
                     ChatLoopScroll.totalCount = 0;
-                    ChatLoopScroll.RefillCellsFromEnd();
+                    ChatLoopScroll.Refresh();
 
                     StickerBtn.interactable = false;
                     ChatTextInput.interactable = false;
@@ -69,7 +71,7 @@ namespace Kirara.UI.Panel
                     UsernameText.text = _chattingPlayer.Username;
 
                     ChatLoopScroll.totalCount = _chattingPlayer.ChatMsgs.Count;
-                    ChatLoopScroll.RefillCellsFromEnd();
+                    ChatLoopScroll.Refresh();
 
                     StickerBtn.interactable = true;
                     ChatTextInput.interactable = true;
@@ -78,10 +80,9 @@ namespace Kirara.UI.Panel
             }
         }
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
-
+            base.Awake();
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             UIOverlayBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             SendBtn.onClick.AddListener(SendBtn_onClick);
@@ -102,30 +103,25 @@ namespace Kirara.UI.Panel
                 UISelectStickerOverlay.gameObject.SetActive(false);
                 UISelectSticker.gameObject.SetActive(false);
             });
-        }
 
-        private void Start()
-        {
-            // 选择栏
+            // 聊天人选择列表
             friends = PlayerService.Player.Friends;
             ChatFriendLoopScroll.prefabSource = ChatFriendPrefabSource;
             ChatFriendLoopScroll.dataSource = new LoopScrollDataSourceHandler(ProvideFriendData);
             ChatFriendLoopScroll.totalCount = friends.Count;
             ChatFriendLoopScroll.RefillCells();
 
-            // 聊天栏
-            ChatLoopScroll.prefabSource = ChatPrefabSource;
-            ChatLoopScroll.dataSource = new LoopScrollDataSourceHandler(ProvideChatData);
+            // 聊天列表
+            var chatPool = new LoopScrollGOPool(ChatItemPrefab, transform);
+            ChatLoopScroll.SetPoolFunc(chatPool.GetObject, chatPool.ReturnObject);
+            ChatLoopScroll.provideData = ProvideChatData;
 
             ChattingPlayer = friends.FirstOrDefault();
-        }
 
-        private void OnEnable()
-        {
             SocialService.OnAddChatMsg += OnAddChatMsg;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             SocialService.OnAddChatMsg -= OnAddChatMsg;
         }
@@ -137,7 +133,7 @@ namespace Kirara.UI.Panel
                  ChattingPlayer.Uid == msg.ReceiverUid))
             {
                 ChatLoopScroll.totalCount = ChattingPlayer.ChatMsgs.Count;
-                ChatLoopScroll.RefillCellsFromEnd();
+                ChatLoopScroll.Refresh();
             }
         }
 
@@ -154,9 +150,9 @@ namespace Kirara.UI.Panel
             item.Set(friends[idx], () => ChattingPlayer = friends[idx]);
         }
 
-        private void ProvideChatData(Transform tra, int idx)
+        private void ProvideChatData(GameObject go, int idx)
         {
-            var item = tra.GetComponent<UIChatItem>();
+            var item = go.GetComponent<UIChatItem>();
             item.Set(ChattingPlayer.ChatMsgs[idx], ChattingPlayer);
         }
     }

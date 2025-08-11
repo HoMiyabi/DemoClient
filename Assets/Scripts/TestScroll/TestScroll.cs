@@ -44,10 +44,13 @@ namespace Kirara.TestScroll
 
         private void ProvideData(GameObject go, int index)
         {
-            var layout = go.GetComponent<LayoutElement>();
+            var rectTransform = go.GetComponent<RectTransform>();
             var text = go.GetComponentInChildren<TextMeshProUGUI>();
-            layout.preferredHeight = Random.Range(50, 150);
-            text.text = $"index: {index}\nheight: {layout.preferredHeight}";
+            var size = rectTransform.sizeDelta;
+            size.y = Random.Range(50, 150);
+            rectTransform.sizeDelta = size;
+            text.text = $"index: {index}\nheight: {size.y}";
+            go.name = $"index: {index} height: {size.y}";
         }
     }
 }

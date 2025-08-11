@@ -1,54 +1,35 @@
 ﻿using Kirara.Model;
 using Manager;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using YooAsset;
 
 namespace Kirara.UI
 {
     public class UIChatFriendItem : MonoBehaviour
     {
         #region View
-        private Image           AvatarImg;
-        private TextMeshProUGUI UsernameText;
-        private TextMeshProUGUI OnlineStatus;
-        private Button          Btn;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Image  AvatarImg;
+        private TMPro.TextMeshProUGUI UsernameText;
+        private TMPro.TextMeshProUGUI OnlineStatus;
+        private UnityEngine.UI.Button Btn;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c        = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            AvatarImg    = c.Q<Image>(0, "AvatarImg");
-            UsernameText = c.Q<TextMeshProUGUI>(1, "UsernameText");
-            OnlineStatus = c.Q<TextMeshProUGUI>(2, "OnlineStatus");
-            Btn          = c.Q<Button>(3, "Btn");
+            AvatarImg    = c.Q<UnityEngine.UI.Image>(0, "AvatarImg");
+            UsernameText = c.Q<TMPro.TextMeshProUGUI>(1, "UsernameText");
+            OnlineStatus = c.Q<TMPro.TextMeshProUGUI>(2, "OnlineStatus");
+            Btn          = c.Q<UnityEngine.UI.Button>(3, "Btn");
         }
         #endregion
 
-        private AssetHandle avatarHandle;
-
-        private void Awake()
-        {
-            InitUI();
-        }
-
-        private void OnDestroy()
-        {
-            Clear();
-        }
-
-        private void Clear()
-        {
-            avatarHandle?.Release();
-            avatarHandle = null;
-        }
-
         public void Set(SocialPlayer player, UnityAction onClick)
         {
-            Clear();
-
-            avatarHandle = ConfigAsset.GetIconInterKnotRole(player.AvatarCid);
-            AvatarImg.sprite = avatarHandle.AssetObject as Sprite;
+            BindUI();
+            var handle = ConfigAsset.GetIconInterKnotRole(player.AvatarCid);
+            AvatarImg.sprite = handle.AssetObject as Sprite;
 
             UsernameText.text = player.Username;
             OnlineStatus.text = player.IsOnline ? "在线" : "离线";
