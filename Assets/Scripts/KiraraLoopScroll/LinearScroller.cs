@@ -32,6 +32,13 @@ namespace Kirara.UI
             {
                 if (items.Count == 0) return 0f;
 
+                if (itemFrontIndex == 0 && itemBackIndex == totalCount &&
+                    itemBackPos - itemFrontPos < ViewSize)
+                {
+                    // 所有Item都在视口内
+                    return itemFrontPos - Pos;
+                }
+
                 if (itemFrontIndex == 0)
                 {
                     float dist = itemFrontPos - Pos;
@@ -46,6 +53,7 @@ namespace Kirara.UI
                     float dist = itemBackPos - (Pos + ViewSize);
                     if (dist < 0f)
                     {
+                        // 说明视口尾部超出内容
                         return dist;
                     }
                 }

@@ -33,7 +33,7 @@ namespace Kirara.TestScroll
             Scroller.SetPoolFunc(pool.GetObject, pool.ReturnObject);
             Scroller.provideData = ProvideData;
 
-            Scroller.totalCount = 20;
+            Scroller.totalCount = 3;
 
             EnableMask.onValueChanged.AddListener((value) =>
             {
@@ -44,13 +44,11 @@ namespace Kirara.TestScroll
 
         private void ProvideData(GameObject go, int index)
         {
-            var rectTransform = go.GetComponent<RectTransform>();
+            var layout = go.GetComponent<LayoutElement>();
             var text = go.GetComponentInChildren<TextMeshProUGUI>();
-            var size = rectTransform.sizeDelta;
-            size.y = Random.Range(50, 150);
-            rectTransform.sizeDelta = size;
-            text.text = $"index: {index}\nheight: {size.y}";
-            go.name = $"index: {index} height: {size.y}";
+            layout.preferredHeight = Random.Range(50, 150);
+            text.text = $"index: {index}\nheight: {layout.preferredHeight}";
+            go.name = $"index: {index} height: {layout.preferredHeight}";
         }
     }
 }
