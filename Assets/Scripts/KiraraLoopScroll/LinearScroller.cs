@@ -41,7 +41,7 @@ namespace Kirara.UI
                     }
                 }
 
-                if (itemEndIndex == items.Count - 1)
+                if (itemEndIndex == totalCount)
                 {
                     float dist = itemEndPos - (Pos + ViewSize);
                     if (dist < 0f)
