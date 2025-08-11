@@ -224,19 +224,19 @@ public abstract class Scroller : MonoBehaviour,
                 {
                     // 对齐停止点
                     endPos = GetSnapPos(endPos);
-                    state = EScrollerState.Anim;
+                    state = EScrollerState.Inertia;
                     animState.SetInertia(Pos, endPos, scrollVelocity, dampingRatio);
                 }
                 else
                 {
                     // 停止点超出范围，不对齐
-                    state = EScrollerState.Anim;
+                    state = EScrollerState.Inertia;
                     animState.SetInertiaV0DampingRatio(Pos, scrollVelocity, dampingRatio);
                 }
             }
             else
             {
-                state = EScrollerState.Anim;
+                state = EScrollerState.Inertia;
                 animState.SetInertiaV0DampingRatio(Pos, scrollVelocity, dampingRatio);
             }
         }
@@ -309,19 +309,30 @@ public abstract class Scroller : MonoBehaviour,
 
     private void Update()
     {
-        if (state == EScrollerState.Anim)
+        if (state == EScrollerState.Inertia)
         {
             if (!animState.IsComplete)
             {
-                float pos1 = Pos;
                 Pos = animState.Update(Time.unscaledDeltaTime);
-                if (ValidRange.Contains(pos1) && !ValidRange.Contains(Pos))
+                if (!Mathf.Approximately(PosToEdge, 0f))
                 {
                     // 动画从边缘滑出
+                    animState._outOfContent = true;
                     animState.Kill();
-                    Pos = ValidRange.GetNearEdge(Pos);
+                    Pos += PosToEdge;
                     state = EScrollerState.Idle;
                 }
+            }
+            else
+            {
+                state = EScrollerState.Idle;
+            }
+        }
+        else if (state == EScrollerState.Anim)
+        {
+            if (!animState.IsComplete)
+            {
+                Pos = animState.Update(Time.unscaledDeltaTime);
             }
             else
             {

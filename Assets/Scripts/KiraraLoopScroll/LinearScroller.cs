@@ -53,6 +53,7 @@ namespace Kirara.UI
                 return 0f;
             }
         }
+
         protected override float ContentSize => -1f;
 
         protected override void UpdateItems()

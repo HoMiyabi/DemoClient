@@ -14,6 +14,7 @@ public class AnimState
     public float _duration;
 
     public float _dampingRatio;
+    public bool _outOfContent;
 
     public void Kill()
     {
@@ -35,6 +36,7 @@ public class AnimState
         _onComplete = onComplete;
 
         _duration = duration;
+        _outOfContent = false;
     }
 
     public void SetInertiaV0DampingRatio(float startPos, float v0, float dampingRatio)
@@ -52,6 +54,7 @@ public class AnimState
         IsComplete = false;
         _onComplete = null;
         _dampingRatio = dampingRatio;
+        _outOfContent = false;
     }
 
     public void SetInertia(float startPos, float endPos, float v0, float dampingRatio)
@@ -74,27 +77,26 @@ public class AnimState
         if (IsComplete) return _endPos;
 
         _time += dt;
+        float pos;
         if (isInertia)
         {
-            float pos = _startPos + (_endPos - _startPos) * (1f - Mathf.Exp(-_dampingRatio * _time));
+            pos = _startPos + (_endPos - _startPos) * (1f - Mathf.Exp(-_dampingRatio * _time));
             if (Mathf.Abs(pos - _endPos) < 1f)
             {
                 IsComplete = true;
                 _onComplete?.Invoke();
             }
-            return pos;
         }
         else
         {
+            pos = Mathf.Lerp(_startPos, _endPos, EaseOutCubic(Mathf.Clamp01(_time / _duration)));
             if (_time >= _duration)
             {
                 IsComplete = true;
                 _onComplete?.Invoke();
-                return _endPos;
             }
-            float pos = Mathf.Lerp(_startPos, _endPos, EaseOutCubic(Mathf.Clamp01(_time / _duration)));
-            return pos;
         }
+        return pos;
     }
 
     public static float EaseOutCubic(float x)
