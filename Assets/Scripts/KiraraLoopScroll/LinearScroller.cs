@@ -20,10 +20,10 @@ namespace Kirara.UI
             }
         }
         private readonly Deque<Item> items = new();
-        private int itemStartIndex; // 第一个Item的索引
-        private int itemEndIndex; // 最后一个Item的索引(左闭右开区间)
-        private float itemStartPos; // 第一个Item的起始位置
-        private float itemEndPos; // 最后一个Item的结束位置
+        private int itemFrontIndex; // 第一个Item的索引
+        private int itemBackIndex; // 最后一个Item的索引(左闭右开区间)
+        private float itemFrontPos; // 第一个Item的起始位置
+        private float itemBackPos; // 最后一个Item的结束位置
         // (spacing只在每个Item之间，外侧没有)
 
         protected override float PosToEdge
@@ -32,18 +32,18 @@ namespace Kirara.UI
             {
                 if (items.Count == 0) return 0f;
 
-                if (itemStartIndex == 0)
+                if (itemFrontIndex == 0)
                 {
-                    float dist = itemStartPos - Pos;
+                    float dist = itemFrontPos - Pos;
                     if (dist > 0f)
                     {
                         return dist;
                     }
                 }
 
-                if (itemEndIndex == totalCount)
+                if (itemBackIndex == totalCount)
                 {
-                    float dist = itemEndPos - (Pos + ViewSize);
+                    float dist = itemBackPos - (Pos + ViewSize);
                     if (dist < 0f)
                     {
                         return dist;
@@ -62,75 +62,27 @@ namespace Kirara.UI
             const int maxIterations = 1000;
             int i = 0;
 
-            while (items.Count > 0 && Pos > itemStartPos + items.Front.size && i < maxIterations)
+            while (items.Count > 0 && Pos > itemFrontPos + items.Front.size && i < maxIterations)
             {
-                var item = items.Front;
-                returnObject(item.rectTransform.gameObject);
-
-                items.PopFront();
-                itemStartPos += item.size;
-                if (items.Count > 0)
-                {
-                    itemStartPos += spacing;
-                }
-                itemStartIndex++;
-
+                PopFront();
                 i++;
             }
 
-            while (items.Count > 0 && Pos + ViewSize < itemEndPos - items.Back.size && i < maxIterations)
+            while (items.Count > 0 && Pos + ViewSize < itemBackPos - items.Back.size && i < maxIterations)
             {
-                var item = items.Back;
-                returnObject(item.rectTransform.gameObject);
-
-                items.PopBack();
-                itemEndPos -= item.size;
-                if (items.Count > 0)
-                {
-                    itemEndPos -= spacing;
-                }
-                itemEndIndex--;
-
+                PopBack();
                 i++;
             }
 
-            while (itemStartIndex > 0 && Pos < itemStartPos - spacing && i < maxIterations)
+            while (itemFrontIndex > 0 && Pos < itemFrontPos - spacing && i < maxIterations)
             {
-                var go = getObject(itemStartIndex - 1);
-                provideData?.Invoke(go, itemStartIndex - 1);
-                go.transform.SetParent(content, false);
-
-                var rectTransform = (RectTransform)go.transform;
-                float size = LayoutUtility.GetPreferredSize(rectTransform, (int)direction);
-
-                items.PushFront(new Item(rectTransform, size));
-                if (items.Count > 1)
-                {
-                    itemStartPos -= spacing;
-                }
-                itemStartPos -= size;
-                itemStartIndex--;
-
+                PushFront();
                 i++;
             }
 
-            while (itemEndIndex < totalCount && Pos + ViewSize > itemEndPos + spacing && i < maxIterations)
+            while (itemBackIndex < totalCount && Pos + ViewSize > itemBackPos + spacing && i < maxIterations)
             {
-                var go = getObject(itemEndIndex);
-                provideData?.Invoke(go, itemEndIndex);
-                go.transform.SetParent(content, false);
-
-                var rectTransform = (RectTransform)go.transform;
-                float size = LayoutUtility.GetPreferredSize(rectTransform, (int)direction);
-
-                items.PushBack(new Item(rectTransform, size));
-                if (items.Count > 1)
-                {
-                    itemEndPos += spacing;
-                }
-                itemEndPos += size;
-                itemEndIndex++;
-
+                PushBack();
                 i++;
             }
 
@@ -140,7 +92,7 @@ namespace Kirara.UI
             }
 
             // 设置位置
-            float pos = itemStartPos;
+            float pos = itemFrontPos;
             for (i = 0; i < items.Count; i++)
             {
                 var item = items[i];
@@ -158,6 +110,81 @@ namespace Kirara.UI
                 };
                 pos += item.size + spacing;
             }
+        }
+
+        private void PopFront()
+        {
+            var item = items.Front;
+            returnObject(item.rectTransform.gameObject);
+
+            items.PopFront();
+            itemFrontPos += item.size;
+            if (items.Count > 0)
+            {
+                itemFrontPos += spacing;
+            }
+            itemFrontIndex++;
+        }
+
+        private void PopBack()
+        {
+            var item = items.Back;
+            returnObject(item.rectTransform.gameObject);
+
+            items.PopBack();
+            itemBackPos -= item.size;
+            if (items.Count > 0)
+            {
+                itemBackPos -= spacing;
+            }
+            itemBackIndex--;
+        }
+
+        private void PushFront()
+        {
+            var go = getObject(itemFrontIndex - 1);
+            provideData?.Invoke(go, itemFrontIndex - 1);
+            go.transform.SetParent(content, false);
+
+            var rectTransform = (RectTransform)go.transform;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+            float size = LoopScrollSizeUtils.GetPreferredSize(rectTransform, (int)direction);
+
+            items.PushFront(new Item(rectTransform, size));
+            if (items.Count > 1)
+            {
+                itemFrontPos -= spacing;
+            }
+            itemFrontPos -= size;
+            itemFrontIndex--;
+        }
+
+        private void PushBack()
+        {
+            var go = getObject(itemBackIndex);
+            provideData?.Invoke(go, itemBackIndex);
+            go.transform.SetParent(content, false);
+
+            var rectTransform = (RectTransform)go.transform;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+            float size = LoopScrollSizeUtils.GetPreferredSize(rectTransform, (int)direction);
+
+            items.PushBack(new Item(rectTransform, size));
+            if (items.Count > 1)
+            {
+                itemBackPos += spacing;
+            }
+            itemBackPos += size;
+            itemBackIndex++;
+        }
+
+        public void Refresh()
+        {
+            while (items.Count > 0)
+            {
+                PopBack();
+            }
+            UpdateItems();
         }
     }
 }

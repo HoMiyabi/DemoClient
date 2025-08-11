@@ -15,7 +15,7 @@ public class LoopScrollGOPool
         this.max = max;
     }
 
-    public GameObject GetObject(int idx)
+    public GameObject GetObject(int index)
     {
         if (pool.Count > 0)
         {
