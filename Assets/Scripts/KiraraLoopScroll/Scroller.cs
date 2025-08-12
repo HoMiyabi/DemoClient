@@ -142,7 +142,7 @@ public abstract class Scroller : MonoBehaviour,
     }
     #endregion
 
-    private void SetPos(float scrollPos, bool updateScrollbar)
+    protected void SetPos(float scrollPos, bool updateScrollbar)
     {
         _pos = scrollPos;
         if (updateScrollbar && scrollbar)

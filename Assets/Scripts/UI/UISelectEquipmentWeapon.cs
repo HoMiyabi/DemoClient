@@ -14,14 +14,14 @@ namespace Kirara.UI
         private UIWeaponDetail  UIWeaponDetail;
         private Button          EquipBtn;
         private TextMeshProUGUI EquipBtnText;
-        private GridScroller    Scroller;
+        private GridScrollView    Scroller;
         private void InitUI()
         {
             var c          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             UIWeaponDetail = c.Q<UIWeaponDetail>(0, "UIWeaponDetail");
             EquipBtn       = c.Q<Button>(1, "EquipBtn");
             EquipBtnText   = c.Q<TextMeshProUGUI>(2, "EquipBtnText");
-            Scroller       = c.Q<GridScroller>(3, "Scroller");
+            Scroller       = c.Q<GridScrollView>(3, "Scroller");
         }
         #endregion
 

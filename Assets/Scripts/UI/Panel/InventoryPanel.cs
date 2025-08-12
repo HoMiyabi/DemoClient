@@ -18,8 +18,8 @@ namespace Kirara.UI.Panel
         private UIDiscDetail    UIDiscDetail;
         private UITabController UITabController;
         private UIWeaponDetail  UIWeaponDetail;
-        private GridScroller    WeaponLoopScroll;
-        private GridScroller    DiscLoopScroll;
+        private GridScrollView    WeaponLoopScroll;
+        private GridScrollView    DiscLoopScroll;
         private void InitUI()
         {
             var c             = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
@@ -30,8 +30,8 @@ namespace Kirara.UI.Panel
             UIDiscDetail      = c.Q<UIDiscDetail>(4, "UIDiscDetail");
             UITabController   = c.Q<UITabController>(5, "UITabController");
             UIWeaponDetail    = c.Q<UIWeaponDetail>(6, "UIWeaponDetail");
-            WeaponLoopScroll  = c.Q<GridScroller>(7, "WeaponLoopScroll");
-            DiscLoopScroll    = c.Q<GridScroller>(8, "DiscLoopScroll");
+            WeaponLoopScroll  = c.Q<GridScrollView>(7, "WeaponLoopScroll");
+            DiscLoopScroll    = c.Q<GridScrollView>(8, "DiscLoopScroll");
         }
         #endregion
 

@@ -12,14 +12,14 @@ public class RoleSelectPanel : BasePanel
     #region View
     private Button           UIBackBtn;
     private Button           SelectBtn;
-    private GridScroller     LoopScroll;
+    private GridScrollView     LoopScroll;
     private SelectController SelectController;
     private void InitUI()
     {
         var c            = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
         UIBackBtn        = c.Q<Button>(0, "UIBackBtn");
         SelectBtn        = c.Q<Button>(1, "SelectBtn");
-        LoopScroll       = c.Q<GridScroller>(2, "LoopScroll");
+        LoopScroll       = c.Q<GridScrollView>(2, "LoopScroll");
         SelectController = c.Q<SelectController>(3, "SelectController");
     }
     #endregion

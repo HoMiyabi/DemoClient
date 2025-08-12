@@ -56,7 +56,7 @@ namespace Kirara.UI
 
         public void ProvideData(Transform tra, int idx)
         {
-            var bar = tra.GetComponent<UIUserInfoBar>();
+            var bar = tra.GetComponent<UIUserInfoItem>();
             bar.Set(friends[idx]);
         }
     }

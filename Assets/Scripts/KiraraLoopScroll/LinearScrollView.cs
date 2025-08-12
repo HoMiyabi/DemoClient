@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Kirara.UI
 {
-    public class LinearScroller : Scroller
+    public class LinearScrollView : Scroller
     {
         public float spacing;
 
@@ -186,14 +186,32 @@ namespace Kirara.UI
             itemBackIndex++;
         }
 
-        public void Refresh()
+        public void RefreshToStart()
         {
-            Debug.Log("Refresh");
+            Debug.Log("Refresh To Start");
             while (items.Count > 0)
             {
                 PopBack();
             }
-            UpdateItems();
+            itemFrontPos = 0;
+            itemBackPos = 0;
+            itemFrontIndex = 0;
+            itemBackIndex = 0;
+            SetPos(0, true);
+        }
+
+        public void RefreshToEnd()
+        {
+            Debug.Log("Refresh To End");
+            while (items.Count > 0)
+            {
+                PopFront();
+            }
+            itemFrontPos = ViewSize;
+            itemBackPos = ViewSize;
+            itemFrontIndex = totalCount;
+            itemBackIndex = totalCount;
+            SetPos(0, true);
         }
     }
 }

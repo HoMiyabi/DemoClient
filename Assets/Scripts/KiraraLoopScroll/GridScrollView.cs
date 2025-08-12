@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Kirara.UI;
 using UnityEngine;
 
-public class GridScroller : Scroller
+public class GridScrollView : Scroller
 {
     public Vector2 size = new(100f, 100f);
     public Vector2 spacing = new(10f, 10f);
@@ -49,7 +49,7 @@ public class GridScroller : Scroller
         }
         else
         {
-            Debug.LogError($"{nameof(GridScroller)}: Cell not found for index {idx}");
+            Debug.LogError($"{nameof(GridScrollView)}: Cell not found for index {idx}");
         }
     }
 

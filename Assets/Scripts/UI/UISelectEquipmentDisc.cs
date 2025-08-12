@@ -15,7 +15,7 @@ namespace Kirara.UI
         private Button          UpgradeBtn;
         private Button          EquipBtn;
         private TextMeshProUGUI EquipBtnText;
-        private GridScroller    Scroller;
+        private GridScrollView    Scroller;
         private void InitUI()
         {
             var c        = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
@@ -23,7 +23,7 @@ namespace Kirara.UI
             UpgradeBtn   = c.Q<Button>(1, "UpgradeBtn");
             EquipBtn     = c.Q<Button>(2, "EquipBtn");
             EquipBtnText = c.Q<TextMeshProUGUI>(3, "EquipBtnText");
-            Scroller     = c.Q<GridScroller>(4, "Scroller");
+            Scroller     = c.Q<GridScrollView>(4, "Scroller");
         }
         #endregion
 
