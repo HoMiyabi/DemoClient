@@ -33,7 +33,7 @@ namespace KiraraLoopScroll
             }
         }
 
-        public void Refresh()
+        public void RefreshToStart()
         {
             for (int i = itemStartIndex; i < itemEndIndex; i++)
             {

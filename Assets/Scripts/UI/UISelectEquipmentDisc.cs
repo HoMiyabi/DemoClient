@@ -90,7 +90,7 @@ namespace Kirara.UI
             ReorderDisc();
 
             Scroller._totalCount = discs.Count;
-            Scroller.Refresh();
+            Scroller.RefreshToStart();
 
             if (discs.Count > 0)
             {
