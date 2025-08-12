@@ -167,10 +167,38 @@ namespace KiraraLoopScroll
                 throw new InvalidOperationException("Deque is empty.");
             }
             _back = GetPrev(_back);
-            Count--;
             var item = _data[_back];
             _data[_back] = default;
+            Count--;
             return item;
+        }
+
+        public bool TryPopFront(out T item)
+        {
+            if (Count > 0)
+            {
+                item = _data[_front];
+                _data[_front] = default;
+                _front = GetNext(_front);
+                Count--;
+                return true;
+            }
+            item = default;
+            return false;
+        }
+
+        public bool TryPopBack(out T item)
+        {
+            if (Count > 0)
+            {
+                _back = GetPrev(_back);
+                item = _data[_back];
+                _data[_back] = default;
+                Count--;
+                return true;
+            }
+            item = default;
+            return false;
         }
 
         #endregion
