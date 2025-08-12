@@ -18,14 +18,11 @@ namespace KiraraDirectBinder.Editor
             _target = (KiraraDirectBinder)target;
             itemsProp = serializedObject.FindProperty(nameof(_target.items));
 
-            reList = new ReorderableList(_target.items, typeof(KiraraDirectBinder.Item))
+            reList = new ReorderableList(serializedObject, itemsProp)
             {
                 drawHeaderCallback = ReList_DrawHeader,
                 drawElementCallback = ReList_DrawElement,
                 drawElementBackgroundCallback = ReList_DrawElementBackground,
-                onAddCallback = ReList_OnAdd,
-                onRemoveCallback = ReList_OnRemove,
-                onReorderCallbackWithDetails = ReList_OnReorder,
             };
         }
 
@@ -85,21 +82,6 @@ namespace KiraraDirectBinder.Editor
                     EditorGUI.DrawRect(rect, Color.yellow * 0.9f);
                 }
             }
-        }
-
-        private void ReList_OnAdd(ReorderableList list)
-        {
-            itemsProp.InsertArrayElementAtIndex(list.index);
-        }
-
-        private void ReList_OnRemove(ReorderableList list)
-        {
-            itemsProp.DeleteArrayElementAtIndex(list.index);
-        }
-
-        private void ReList_OnReorder(ReorderableList list, int oldIndex, int newIndex)
-        {
-            itemsProp.MoveArrayElement(oldIndex, newIndex);
         }
 
         #endregion
