@@ -50,8 +50,8 @@ public class RoleSelectPanel : BasePanel
             UIMgr.Instance.PushPanel<RoleDetailPanel>().Set(role);
         });
 
-        LoopScroll.totalCount = list.Count;
-        LoopScroll.SetPoolFunc(GetObject, ReturnObject);
+        LoopScroll._totalCount = list.Count;
+        LoopScroll.SetGOSourceFunc(GetObject, ReturnObject);
         LoopScroll.provideData = ProvideData;
         LoopScroll.updateCell = UpdatePos;
     }

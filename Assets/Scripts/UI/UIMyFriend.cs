@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
 using Kirara.Model;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI
 {
-    public class UIMyFriend : MonoBehaviour, LoopScrollDataSource
+    public class UIMyFriend : MonoBehaviour
     {
         #region View
         private bool _isBound;
-        private TMPro.TextMeshProUGUI                 FriendCountText;
-        private UnityEngine.UI.LoopVerticalScrollRect LoopScroll;
+        private TMPro.TextMeshProUGUI             FriendCountText;
+        private KiraraLoopScroll.LinearScrollView ScrollView;
         public void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
             var c           = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             FriendCountText = c.Q<TMPro.TextMeshProUGUI>(0, "FriendCountText");
-            LoopScroll      = c.Q<UnityEngine.UI.LoopVerticalScrollRect>(1, "LoopScroll");
+            ScrollView      = c.Q<KiraraLoopScroll.LinearScrollView>(1, "ScrollView");
         }
         #endregion
 
@@ -28,15 +27,12 @@ namespace Kirara.UI
         private void Awake()
         {
             BindUI();
-        }
 
-        private void Start()
-        {
             friends = PlayerService.Player.Friends;
             Debug.Log("friends.Count = " + friends.Count);
 
-            LoopScroll.prefabSource = new LoopScrollPool(UserInfoBarItemPrefab, transform);
-            LoopScroll.dataSource = this;
+            ScrollView.SetGOSource(new LoopScrollGOPool(UserInfoBarItemPrefab, transform));
+            ScrollView.provideData = ProvideData;
             UpdateUI();
             PlayerService.Player.OnFriendsChanged += UpdateUI;
         }
@@ -50,13 +46,12 @@ namespace Kirara.UI
         {
             FriendCountText.text = $"好友数量 {friends.Count}";
 
-            LoopScroll.totalCount = friends.Count;
-            LoopScroll.RefillCells();
+            ScrollView._totalCount = friends.Count;
         }
 
-        public void ProvideData(Transform tra, int idx)
+        private void ProvideData(GameObject go, int idx)
         {
-            var bar = tra.GetComponent<UIUserInfoItem>();
+            var bar = go.GetComponent<UIUserInfoItem>();
             bar.Set(friends[idx]);
         }
     }

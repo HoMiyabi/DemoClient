@@ -76,7 +76,7 @@ namespace Kirara.UI.Panel
 
         private void ScrollReturnObject(Transform trans)
         {
-            trans.GetComponent<UIExchangeCell>().Clear();
+            trans.GetComponent<UIExchangeItem>().Clear();
             trans.gameObject.SetActive(false);
             pool.Push(trans);
         }
@@ -84,7 +84,7 @@ namespace Kirara.UI.Panel
         private void ScrollProvideData(Transform trans, int idx)
         {
             var item = items[idx];
-            trans.GetComponent<UIExchangeCell>()
+            trans.GetComponent<UIExchangeItem>()
                 .Set(item)
                 .OnClick(() =>
                 {

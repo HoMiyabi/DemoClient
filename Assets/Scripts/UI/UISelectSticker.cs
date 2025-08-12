@@ -32,9 +32,7 @@ namespace Kirara.UI
         {
             BindUI();
             stickerConfigIds = ListPool<int>.Get();
-            stickerConfigIds.Clear();
             stickerSprites = ListPool<Sprite>.Get();
-            stickerSprites.Clear();
 
             foreach (var item in ConfigMgr.tb.TbIconSticker.DataList)
             {

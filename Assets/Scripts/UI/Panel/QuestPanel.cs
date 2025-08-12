@@ -1,36 +1,36 @@
-﻿using System;
-using Kirara.Quest;
+﻿using Kirara.Quest;
 using Manager;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI.Panel
 {
     public class QuestPanel : BasePanel
     {
         #region View
-        private Button                 UIBackBtn;
-        private Button                 TrackTargetBtn;
-        private TextMeshProUGUI        QuestChainNameText;
-        private TextMeshProUGUI        QuestNameText;
-        private TextMeshProUGUI        QuestDescText;
-        private TextMeshProUGUI        TrackTargetBtnText;
-        private TextMeshProUGUI        QuestProgressText;
-        private UIQuestRewordBar       UIQuestRewordBar;
-        private LoopVerticalScrollRect LoopScroll;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button             UIBackBtn;
+        private UnityEngine.UI.Button             TrackTargetBtn;
+        private TMPro.TextMeshProUGUI             QuestChainNameText;
+        private TMPro.TextMeshProUGUI             QuestNameText;
+        private TMPro.TextMeshProUGUI             QuestDescText;
+        private TMPro.TextMeshProUGUI             TrackTargetBtnText;
+        private TMPro.TextMeshProUGUI             QuestProgressText;
+        private Kirara.UI.UIQuestRewordBar        UIQuestRewordBar;
+        private KiraraLoopScroll.LinearScrollView ScrollView;
+        public override void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c              = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn          = c.Q<Button>(0, "UIBackBtn");
-            TrackTargetBtn     = c.Q<Button>(1, "TrackTargetBtn");
-            QuestChainNameText = c.Q<TextMeshProUGUI>(2, "QuestChainNameText");
-            QuestNameText      = c.Q<TextMeshProUGUI>(3, "QuestNameText");
-            QuestDescText      = c.Q<TextMeshProUGUI>(4, "QuestDescText");
-            TrackTargetBtnText = c.Q<TextMeshProUGUI>(5, "TrackTargetBtnText");
-            QuestProgressText  = c.Q<TextMeshProUGUI>(6, "QuestProgressText");
-            UIQuestRewordBar   = c.Q<UIQuestRewordBar>(7, "UIQuestRewordBar");
-            LoopScroll         = c.Q<LoopVerticalScrollRect>(8, "LoopScroll");
+            UIBackBtn          = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            TrackTargetBtn     = c.Q<UnityEngine.UI.Button>(1, "TrackTargetBtn");
+            QuestChainNameText = c.Q<TMPro.TextMeshProUGUI>(2, "QuestChainNameText");
+            QuestNameText      = c.Q<TMPro.TextMeshProUGUI>(3, "QuestNameText");
+            QuestDescText      = c.Q<TMPro.TextMeshProUGUI>(4, "QuestDescText");
+            TrackTargetBtnText = c.Q<TMPro.TextMeshProUGUI>(5, "TrackTargetBtnText");
+            QuestProgressText  = c.Q<TMPro.TextMeshProUGUI>(6, "QuestProgressText");
+            UIQuestRewordBar   = c.Q<Kirara.UI.UIQuestRewordBar>(7, "UIQuestRewordBar");
+            ScrollView         = c.Q<KiraraLoopScroll.LinearScrollView>(8, "ScrollView");
         }
         #endregion
 
@@ -49,22 +49,21 @@ namespace Kirara.UI.Panel
             }
         }
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
+            base.Awake();
 
             QuestSystem.Instance.OnTrackingChainChanged += UpdateTrackTargetBtnView;
 
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
 
-            LoopScroll.prefabSource = new LoopScrollPool(UIQuestChainItemPrefab, transform);
-            LoopScroll.dataSource = new LoopScrollDataSourceHandler(ProvideData);
+            ScrollView.SetGOSource(new LoopScrollGOPool(UIQuestChainItemPrefab, transform));
+            ScrollView.provideData = ProvideData;
+            ScrollView._totalCount = QuestSystem.Instance.chains.Count;
         }
 
         private void Start()
         {
-            LoopScroll.totalCount = QuestSystem.Instance.chains.Count;
-            LoopScroll.RefillCells();
             InitSelected();
         }
 
@@ -73,10 +72,10 @@ namespace Kirara.UI.Panel
             QuestSystem.Instance.OnTrackingChainChanged -= UpdateTrackTargetBtnView;
         }
 
-        private void ProvideData(Transform tra, int idx)
+        private void ProvideData(GameObject go, int index)
         {
-            var item = tra.GetComponent<UIQuestChainItem>();
-            var chain = QuestSystem.Instance.chains[idx];
+            var item = go.GetComponent<UIQuestChainItem>();
+            var chain = QuestSystem.Instance.chains[index];
             item.Set(chain.Name, () => SelectedQuestChain = chain);
         }
 

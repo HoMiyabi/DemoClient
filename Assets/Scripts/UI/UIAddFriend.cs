@@ -10,10 +10,10 @@ namespace Kirara.UI
     {
         #region View
         private bool _isBound;
-        private TMPro.TextMeshProUGUI                 FriendRequestCountText;
-        private TMPro.TMP_InputField                  SearchInput;
-        private UnityEngine.UI.Button                 SearchBtn;
-        private UnityEngine.UI.LoopVerticalScrollRect LoopVerticalScrollRect;
+        private TMPro.TextMeshProUGUI             FriendRequestCountText;
+        private TMPro.TMP_InputField              SearchInput;
+        private UnityEngine.UI.Button             SearchBtn;
+        private KiraraLoopScroll.LinearScrollView ScrollView;
         public override void BindUI()
         {
             if (_isBound) return;
@@ -22,7 +22,7 @@ namespace Kirara.UI
             FriendRequestCountText = c.Q<TMPro.TextMeshProUGUI>(0, "FriendRequestCountText");
             SearchInput            = c.Q<TMPro.TMP_InputField>(1, "SearchInput");
             SearchBtn              = c.Q<UnityEngine.UI.Button>(2, "SearchBtn");
-            LoopVerticalScrollRect = c.Q<UnityEngine.UI.LoopVerticalScrollRect>(3, "LoopVerticalScrollRect");
+            ScrollView             = c.Q<KiraraLoopScroll.LinearScrollView>(3, "ScrollView");
         }
         #endregion
 
@@ -38,8 +38,8 @@ namespace Kirara.UI
 
             SearchBtn.onClick.AddListener(UniTask.UnityAction(SearchBtn_onClick));
 
-            LoopVerticalScrollRect.prefabSource = new LoopScrollPool(UserItemPrefab, transform);
-            LoopVerticalScrollRect.dataSource = new LoopScrollDataSourceHandler(ProvideData);
+            ScrollView.SetGOSource(new LoopScrollGOPool(UserItemPrefab, transform));
+            ScrollView.provideData = ProvideData;
 
             PlayerService.Player.OnFriendRequestsChanged += UpdateUI;
             UpdateUI();
@@ -50,18 +50,17 @@ namespace Kirara.UI
             PlayerService.Player.OnFriendRequestsChanged -= UpdateUI;
         }
 
-        private void ProvideData(Transform trans, int idx)
+        private void ProvideData(GameObject go, int index)
         {
-            var item = trans.GetComponent<SP_UserFriendReqBar>();
-            item.Set(friendRequests[idx]);
+            var item = go.GetComponent<SP_UserFriendReqBar>();
+            item.Set(friendRequests[index]);
         }
 
         private void UpdateUI()
         {
             FriendRequestCountText.text = $"好友请求数量 {friendRequests.Count}";
 
-            LoopVerticalScrollRect.totalCount = friendRequests.Count;
-            LoopVerticalScrollRect.RefillCells();
+            ScrollView._totalCount = friendRequests.Count;
         }
 
         private async UniTaskVoid SearchBtn_onClick()
