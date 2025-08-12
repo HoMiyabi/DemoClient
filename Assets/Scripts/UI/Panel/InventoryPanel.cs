@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Kirara.Model;
-using Kirara.Service;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI.Panel
 {

@@ -1,58 +1,49 @@
 ﻿using System.Linq;
 using Kirara.Model;
 using Manager;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using YooAsset;
 
 namespace Kirara.UI
 {
     public class UIDiscDetail : MonoBehaviour
     {
         #region View
-        private TextMeshProUGUI NameText;
-        private Image           WearerIcon;
-        private TextMeshProUGUI LevelText;
-        private Image           Icon;
-        private UIStatBar       MainAttrBar;
-        private TextMeshProUGUI EffDescContentText;
-        private UIStatBar       SubAttrBar;
-        private UIStatBar       SubAttrBar1;
-        private UIStatBar       SubAttrBar2;
-        private UIStatBar       SubAttrBar3;
-        private Image           BackIcon;
-        private UIDiscPosIcon   UIDiscPosIcon;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI   NameText;
+        private UnityEngine.UI.Image    WearerIcon;
+        private TMPro.TextMeshProUGUI   LevelText;
+        private UnityEngine.UI.Image    Icon;
+        private Kirara.UI.UIStatBar     MainAttrBar;
+        private TMPro.TextMeshProUGUI   EffDescContentText;
+        private Kirara.UI.UIStatBar     SubAttrBar;
+        private Kirara.UI.UIStatBar     SubAttrBar1;
+        private Kirara.UI.UIStatBar     SubAttrBar2;
+        private Kirara.UI.UIStatBar     SubAttrBar3;
+        private UnityEngine.UI.Image    BackIcon;
+        private Kirara.UI.UIDiscPosIcon UIDiscPosIcon;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c              = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            NameText           = c.Q<TextMeshProUGUI>(0, "NameText");
-            WearerIcon         = c.Q<Image>(1, "WearerIcon");
-            LevelText          = c.Q<TextMeshProUGUI>(2, "LevelText");
-            Icon               = c.Q<Image>(3, "Icon");
-            MainAttrBar        = c.Q<UIStatBar>(4, "MainAttrBar");
-            EffDescContentText = c.Q<TextMeshProUGUI>(5, "EffDescContentText");
-            SubAttrBar         = c.Q<UIStatBar>(6, "SubAttrBar");
-            SubAttrBar1        = c.Q<UIStatBar>(7, "SubAttrBar1");
-            SubAttrBar2        = c.Q<UIStatBar>(8, "SubAttrBar2");
-            SubAttrBar3        = c.Q<UIStatBar>(9, "SubAttrBar3");
-            BackIcon           = c.Q<Image>(10, "BackIcon");
-            UIDiscPosIcon      = c.Q<UIDiscPosIcon>(11, "UIDiscPosIcon");
+            NameText           = c.Q<TMPro.TextMeshProUGUI>(0, "NameText");
+            WearerIcon         = c.Q<UnityEngine.UI.Image>(1, "WearerIcon");
+            LevelText          = c.Q<TMPro.TextMeshProUGUI>(2, "LevelText");
+            Icon               = c.Q<UnityEngine.UI.Image>(3, "Icon");
+            MainAttrBar        = c.Q<Kirara.UI.UIStatBar>(4, "MainAttrBar");
+            EffDescContentText = c.Q<TMPro.TextMeshProUGUI>(5, "EffDescContentText");
+            SubAttrBar         = c.Q<Kirara.UI.UIStatBar>(6, "SubAttrBar");
+            SubAttrBar1        = c.Q<Kirara.UI.UIStatBar>(7, "SubAttrBar1");
+            SubAttrBar2        = c.Q<Kirara.UI.UIStatBar>(8, "SubAttrBar2");
+            SubAttrBar3        = c.Q<Kirara.UI.UIStatBar>(9, "SubAttrBar3");
+            BackIcon           = c.Q<UnityEngine.UI.Image>(10, "BackIcon");
+            UIDiscPosIcon      = c.Q<Kirara.UI.UIDiscPosIcon>(11, "UIDiscPosIcon");
         }
         #endregion
 
         private DiscItem _disc;
-        private AssetHandle discIconHandle;
-        private AssetHandle posIconHandle;
-        private AssetHandle wearerIconHandle;
 
         private UIStatBar[] subAttrBars;
-
-        private void Awake()
-        {
-            InitUI();
-            subAttrBars = new[] { SubAttrBar, SubAttrBar1, SubAttrBar2, SubAttrBar3 };
-        }
 
         private void OnDestroy()
         {
@@ -66,16 +57,16 @@ namespace Kirara.UI
                 _disc.OnLevelChanged -= UpdateLevelView;
                 _disc.OnSubAttrsChanged -= UpdateSubAttrsView;
             }
-            discIconHandle?.Release();
-            discIconHandle = null;
-            posIconHandle?.Release();
-            posIconHandle = null;
-            wearerIconHandle?.Release();
-            wearerIconHandle = null;
         }
 
         public UIDiscDetail Set(DiscItem disc)
         {
+            BindUI();
+            if (subAttrBars == null)
+            {
+                subAttrBars = new[] { SubAttrBar, SubAttrBar1, SubAttrBar2, SubAttrBar3 };
+            }
+
             Clear();
             _disc = disc;
 
@@ -83,7 +74,7 @@ namespace Kirara.UI
             UpdateLevelView();
             disc.OnLevelChanged += UpdateLevelView;
 
-            discIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(disc.IconLoc);
+            var discIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(disc.IconLoc);
             var discSprite = discIconHandle.AssetObject as Sprite;
 
             BackIcon.sprite = discSprite;
@@ -131,7 +122,7 @@ namespace Kirara.UI
                 return;
             }
             var role = PlayerService.Player.Roles.First(it => it.Id == roleId);
-            wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
+            var wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
             WearerIcon.sprite = wearerIconHandle.AssetObject as Sprite;
         }
     }

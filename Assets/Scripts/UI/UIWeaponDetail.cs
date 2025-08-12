@@ -1,62 +1,52 @@
-﻿using System;
-
-using Kirara.Model;
+﻿using Kirara.Model;
 using Manager;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using YooAsset;
 
 namespace Kirara.UI
 {
     public class UIWeaponDetail : MonoBehaviour
     {
         #region View
-        private TextMeshProUGUI NameText;
-        private Image           WearerIconImg;
-        private TextMeshProUGUI LevelText;
-        private Image           BackIconImg;
-        private Image           IconImg;
-        private UIItemStar      UIItemStar;
-        private TextMeshProUGUI EffContentText;
-        private UIStatBar       BaseStatBar;
-        private UIStatBar       AdvancedStatBar;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI NameText;
+        private UnityEngine.UI.Image  WearerIconImg;
+        private TMPro.TextMeshProUGUI LevelText;
+        private UnityEngine.UI.Image  BackIconImg;
+        private UnityEngine.UI.Image  IconImg;
+        private Kirara.UI.UIItemStar  UIItemStar;
+        private TMPro.TextMeshProUGUI EffContentText;
+        private Kirara.UI.UIStatBar   BaseStatBar;
+        private Kirara.UI.UIStatBar   AdvancedStatBar;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c           = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            NameText        = c.Q<TextMeshProUGUI>(0, "NameText");
-            WearerIconImg   = c.Q<Image>(1, "WearerIconImg");
-            LevelText       = c.Q<TextMeshProUGUI>(2, "LevelText");
-            BackIconImg     = c.Q<Image>(3, "BackIconImg");
-            IconImg         = c.Q<Image>(4, "IconImg");
-            UIItemStar      = c.Q<UIItemStar>(5, "UIItemStar");
-            EffContentText  = c.Q<TextMeshProUGUI>(6, "EffContentText");
-            BaseStatBar     = c.Q<UIStatBar>(7, "BaseStatBar");
-            AdvancedStatBar = c.Q<UIStatBar>(8, "AdvancedStatBar");
+            NameText        = c.Q<TMPro.TextMeshProUGUI>(0, "NameText");
+            WearerIconImg   = c.Q<UnityEngine.UI.Image>(1, "WearerIconImg");
+            LevelText       = c.Q<TMPro.TextMeshProUGUI>(2, "LevelText");
+            BackIconImg     = c.Q<UnityEngine.UI.Image>(3, "BackIconImg");
+            IconImg         = c.Q<UnityEngine.UI.Image>(4, "IconImg");
+            UIItemStar      = c.Q<Kirara.UI.UIItemStar>(5, "UIItemStar");
+            EffContentText  = c.Q<TMPro.TextMeshProUGUI>(6, "EffContentText");
+            BaseStatBar     = c.Q<Kirara.UI.UIStatBar>(7, "BaseStatBar");
+            AdvancedStatBar = c.Q<Kirara.UI.UIStatBar>(8, "AdvancedStatBar");
         }
         #endregion
-
-        private AssetHandle iconHandle;
-
-        private void Awake()
-        {
-            InitUI();
-        }
 
         private void OnDestroy()
         {
             Clear();
         }
 
-        public UIWeaponDetail Clear()
+        private void Clear()
         {
-            iconHandle?.Release();
-            iconHandle = null;
-            return this;
         }
 
         public UIWeaponDetail Set(WeaponItem weapon)
         {
+            BindUI();
+
             Clear();
 
             NameText.text = weapon.Name;
@@ -64,7 +54,7 @@ namespace Kirara.UI
 
             LevelText.text = $"等级{weapon.Level}/{WeaponItem.MaxLevel}";
 
-            iconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(weapon.IconLoc);
+            var iconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(weapon.IconLoc);
             var sprite = iconHandle.AssetObject as Sprite;
 
             BackIconImg.sprite = sprite;
