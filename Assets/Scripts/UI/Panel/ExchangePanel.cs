@@ -1,57 +1,39 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Manager;
 using UnityEngine;
-using UnityEngine.UI;
-using YooAsset;
 
 namespace Kirara.UI.Panel
 {
     public class ExchangePanel : BasePanel
     {
         #region View
-        private Button                 UIBackBtn;
-        private LoopVerticalScrollRect ExchangeLoopScroll;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button           UIBackBtn;
+        private KiraraLoopScroll.GridScrollView ScrollView;
+        public override void BindUI()
         {
-            var c              = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn          = c.Q<Button>(0, "UIBackBtn");
-            ExchangeLoopScroll = c.Q<LoopVerticalScrollRect>(1, "ExchangeLoopScroll");
+            if (_isBound) return;
+            _isBound = true;
+            var c      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIBackBtn  = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            ScrollView = c.Q<KiraraLoopScroll.GridScrollView>(1, "ScrollView");
         }
         #endregion
 
-        private AssetHandle cellHandle;
+        [SerializeField] private GameObject ExchangeItemPrefab;
 
-        private Stack<Transform> pool;
         private List<NExchangeItem> items;
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
+            base.Awake();
 
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
-            pool = new Stack<Transform>();
-            cellHandle = AssetMgr.Instance.package.LoadAssetSync<GameObject>("UIExchangeCell");
-        }
 
-        public void Clear()
-        {
-            cellHandle?.Release();
-            cellHandle = null;
-        }
+            ScrollView.SetGOSource(new LoopScrollGOPool(ExchangeItemPrefab, transform));
+            ScrollView.provideData = ProvideData;
 
-        private void OnDestroy()
-        {
-            Clear();
-        }
-
-        private void Start()
-        {
-            var scrollHandler = new UILoopScrollHandler(ScrollGetObject, ScrollReturnObject, ScrollProvideData);
-
-            ExchangeLoopScroll.prefabSource = scrollHandler;
-            ExchangeLoopScroll.dataSource = scrollHandler;
             UpdateItems().Forget();
         }
 
@@ -59,32 +41,14 @@ namespace Kirara.UI.Panel
         {
             var rsp = await NetFn.ReqGetExchangeItems(new ReqGetExchangeItems());
             items = rsp.Items.ToList();
-            ExchangeLoopScroll.totalCount = items.Count;
-            ExchangeLoopScroll.RefillCells();
+            ScrollView._totalCount = items.Count;
+            ScrollView.RefreshToStart();
         }
 
-        private GameObject ScrollGetObject(int _)
-        {
-            if (pool.Count == 0)
-            {
-                return Instantiate(cellHandle.AssetObject as GameObject);
-            }
-            var trans = pool.Pop();
-            trans.gameObject.SetActive(true);
-            return trans.gameObject;
-        }
-
-        private void ScrollReturnObject(Transform trans)
-        {
-            trans.GetComponent<UIExchangeItem>().Clear();
-            trans.gameObject.SetActive(false);
-            pool.Push(trans);
-        }
-
-        private void ScrollProvideData(Transform trans, int idx)
+        private void ProvideData(GameObject go, int idx)
         {
             var item = items[idx];
-            trans.GetComponent<UIExchangeItem>()
+            go.GetComponent<UIExchangeItem>()
                 .Set(item)
                 .OnClick(() =>
                 {

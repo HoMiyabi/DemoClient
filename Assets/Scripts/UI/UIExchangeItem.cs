@@ -33,7 +33,7 @@ namespace Kirara.UI
             Btn.onClick.RemoveAllListeners();
         }
 
-        public UIExchangeItem SetFromItem(NExchangeItem item)
+        private UIExchangeItem SetFromItem(NExchangeItem item)
         {
             var fromConfig = ConfigMgr.tb.TbCurrencyItemConfig[item.FromConfigId];
 
@@ -45,7 +45,7 @@ namespace Kirara.UI
             return this;
         }
 
-        public UIExchangeItem SetToItem(NExchangeItem item)
+        private UIExchangeItem SetToItem(NExchangeItem item)
         {
             var toConfig = ConfigMgr.tb.TbWeaponConfig[item.ToConfigId];
 
@@ -67,6 +67,7 @@ namespace Kirara.UI
 
         public UIExchangeItem Set(NExchangeItem item)
         {
+            BindUI();
             Clear();
 
             SetFromItem(item);
