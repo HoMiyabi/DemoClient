@@ -8,15 +8,15 @@ namespace Kirara.TestScroll
     {
         #region View
         private bool _isBound;
-        private Kirara.UI.LinearScrollView  Scroller;
-        private UnityEngine.UI.RectMask2D Mask;
-        private UnityEngine.UI.Toggle     EnableMask;
+        private KiraraLoopScroll.LinearScrollView Scroller;
+        private UnityEngine.UI.RectMask2D  Mask;
+        private UnityEngine.UI.Toggle      EnableMask;
         public void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
             var c      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            Scroller   = c.Q<Kirara.UI.LinearScrollView>(0, "Scroller");
+            Scroller   = c.Q<KiraraLoopScroll.LinearScrollView>(0, "Scroller");
             Mask       = c.Q<UnityEngine.UI.RectMask2D>(1, "Mask");
             EnableMask = c.Q<UnityEngine.UI.Toggle>(2, "EnableMask");
         }

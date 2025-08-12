@@ -1,4 +1,4 @@
-﻿namespace Kirara.UI
+﻿namespace KiraraLoopScroll
 {
     internal enum EScrollerState
     {

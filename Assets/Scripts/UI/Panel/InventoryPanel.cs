@@ -11,27 +11,30 @@ namespace Kirara.UI.Panel
     public class InventoryPanel : BasePanel
     {
         #region View
-        private Button          UIBackBtn;
-        private TextMeshProUGUI CoinText;
-        private Image           CoinIconImg;
-        private TextMeshProUGUI InventoryNameText;
-        private UIDiscDetail    UIDiscDetail;
-        private UITabController UITabController;
-        private UIWeaponDetail  UIWeaponDetail;
-        private GridScrollView    WeaponLoopScroll;
-        private GridScrollView    DiscLoopScroll;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button     UIBackBtn;
+        private TMPro.TextMeshProUGUI     CoinText;
+        private UnityEngine.UI.Image      CoinIconImg;
+        private TMPro.TextMeshProUGUI     InventoryNameText;
+        private Kirara.UI.UIDiscDetail    UIDiscDetail;
+        private Kirara.UI.UITabController UITabController;
+        private Kirara.UI.UIWeaponDetail  UIWeaponDetail;
+        private KiraraLoopScroll.GridScrollView            WeaponLoopScroll;
+        private KiraraLoopScroll.GridScrollView            DiscLoopScroll;
+        public override void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c             = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn         = c.Q<Button>(0, "UIBackBtn");
-            CoinText          = c.Q<TextMeshProUGUI>(1, "CoinText");
-            CoinIconImg       = c.Q<Image>(2, "CoinIconImg");
-            InventoryNameText = c.Q<TextMeshProUGUI>(3, "InventoryNameText");
-            UIDiscDetail      = c.Q<UIDiscDetail>(4, "UIDiscDetail");
-            UITabController   = c.Q<UITabController>(5, "UITabController");
-            UIWeaponDetail    = c.Q<UIWeaponDetail>(6, "UIWeaponDetail");
-            WeaponLoopScroll  = c.Q<GridScrollView>(7, "WeaponLoopScroll");
-            DiscLoopScroll    = c.Q<GridScrollView>(8, "DiscLoopScroll");
+            UIBackBtn         = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            CoinText          = c.Q<TMPro.TextMeshProUGUI>(1, "CoinText");
+            CoinIconImg       = c.Q<UnityEngine.UI.Image>(2, "CoinIconImg");
+            InventoryNameText = c.Q<TMPro.TextMeshProUGUI>(3, "InventoryNameText");
+            UIDiscDetail      = c.Q<Kirara.UI.UIDiscDetail>(4, "UIDiscDetail");
+            UITabController   = c.Q<Kirara.UI.UITabController>(5, "UITabController");
+            UIWeaponDetail    = c.Q<Kirara.UI.UIWeaponDetail>(6, "UIWeaponDetail");
+            WeaponLoopScroll  = c.Q<KiraraLoopScroll.GridScrollView>(7, "WeaponLoopScroll");
+            DiscLoopScroll    = c.Q<KiraraLoopScroll.GridScrollView>(8, "DiscLoopScroll");
         }
         #endregion
 
@@ -94,9 +97,10 @@ namespace Kirara.UI.Panel
         private LoopScrollGOPool weaponPool;
         private LoopScrollGOPool discPool;
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
+            base.Awake();
+
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             pool = new Stack<Transform>();
 

@@ -2,26 +2,27 @@
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI
 {
     public class UISelectEquipmentWeapon : MonoBehaviour
     {
         #region View
-        private UIWeaponDetail  UIWeaponDetail;
-        private Button          EquipBtn;
-        private TextMeshProUGUI EquipBtnText;
-        private GridScrollView    Scroller;
-        private void InitUI()
+        private bool _isBound;
+        private Kirara.UI.UIWeaponDetail UIWeaponDetail;
+        private UnityEngine.UI.Button    EquipBtn;
+        private TMPro.TextMeshProUGUI    EquipBtnText;
+        private KiraraLoopScroll.GridScrollView           Scroller;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIWeaponDetail = c.Q<UIWeaponDetail>(0, "UIWeaponDetail");
-            EquipBtn       = c.Q<Button>(1, "EquipBtn");
-            EquipBtnText   = c.Q<TextMeshProUGUI>(2, "EquipBtnText");
-            Scroller       = c.Q<GridScrollView>(3, "Scroller");
+            UIWeaponDetail = c.Q<Kirara.UI.UIWeaponDetail>(0, "UIWeaponDetail");
+            EquipBtn       = c.Q<UnityEngine.UI.Button>(1, "EquipBtn");
+            EquipBtnText   = c.Q<TMPro.TextMeshProUGUI>(2, "EquipBtnText");
+            Scroller       = c.Q<KiraraLoopScroll.GridScrollView>(3, "Scroller");
         }
         #endregion
 
@@ -30,7 +31,7 @@ namespace Kirara.UI
 
         private void Awake()
         {
-            InitUI();
+            BindUI();
 
             Pool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
             Scroller.SetPoolFunc(Pool.GetObject, Pool.ReturnObject);

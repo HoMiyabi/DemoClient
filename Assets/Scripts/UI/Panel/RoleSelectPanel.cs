@@ -5,21 +5,23 @@ using Kirara.UI;
 using Kirara.UI.Panel;
 using Manager;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RoleSelectPanel : BasePanel
 {
     #region View
-    private Button           UIBackBtn;
-    private Button           SelectBtn;
-    private GridScrollView     LoopScroll;
-    private SelectController SelectController;
-    private void InitUI()
+    private bool _isBound;
+    private UnityEngine.UI.Button UIBackBtn;
+    private UnityEngine.UI.Button SelectBtn;
+    private KiraraLoopScroll.GridScrollView        LoopScroll;
+    private SelectController      SelectController;
+    public override void BindUI()
     {
+        if (_isBound) return;
+        _isBound = true;
         var c            = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-        UIBackBtn        = c.Q<Button>(0, "UIBackBtn");
-        SelectBtn        = c.Q<Button>(1, "SelectBtn");
-        LoopScroll       = c.Q<GridScrollView>(2, "LoopScroll");
+        UIBackBtn        = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+        SelectBtn        = c.Q<UnityEngine.UI.Button>(1, "SelectBtn");
+        LoopScroll       = c.Q<KiraraLoopScroll.GridScrollView>(2, "LoopScroll");
         SelectController = c.Q<SelectController>(3, "SelectController");
     }
     #endregion
@@ -30,9 +32,9 @@ public class RoleSelectPanel : BasePanel
     private readonly Bindable<int> selected = new(0);
     private List<CharacterConfig> list;
 
-    private void Awake()
+    protected override void Awake()
     {
-        InitUI();
+        base.Awake();
 
         list = ConfigMgr.tb.TbCharacterConfig.DataList;
 

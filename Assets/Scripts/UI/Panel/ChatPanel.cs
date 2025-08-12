@@ -22,7 +22,7 @@ namespace Kirara.UI.Panel
         private UnityEngine.UI.Button                  UISelectStickerOverlay;
         private Kirara.UI.UISelectSticker              UISelectSticker;
         private UnityEngine.UI.Button                  StickerBtn;
-        private Kirara.UI.LinearScrollView               ChatLoopScroll;
+        private KiraraLoopScroll.LinearScrollView               ChatLoopScroll;
         public override void BindUI()
         {
             if (_isBound) return;
@@ -38,7 +38,7 @@ namespace Kirara.UI.Panel
             UISelectStickerOverlay = c.Q<UnityEngine.UI.Button>(7, "UISelectStickerOverlay");
             UISelectSticker        = c.Q<Kirara.UI.UISelectSticker>(8, "UISelectSticker");
             StickerBtn             = c.Q<UnityEngine.UI.Button>(9, "StickerBtn");
-            ChatLoopScroll         = c.Q<Kirara.UI.LinearScrollView>(10, "ChatLoopScroll");
+            ChatLoopScroll         = c.Q<KiraraLoopScroll.LinearScrollView>(10, "ChatLoopScroll");
         }
         #endregion
 

@@ -1,4 +1,4 @@
-namespace Kirara.UI
+namespace KiraraLoopScroll
 {
     [System.Serializable]
     public struct Padding

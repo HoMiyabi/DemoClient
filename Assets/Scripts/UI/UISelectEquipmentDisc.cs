@@ -2,28 +2,29 @@
 using System.Linq;
 using Kirara.Model;
 using Kirara.UI.Panel;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI
 {
     public class UISelectEquipmentDisc : MonoBehaviour
     {
         #region View
-        private UIDiscDetail    UIDiscDetail;
-        private Button          UpgradeBtn;
-        private Button          EquipBtn;
-        private TextMeshProUGUI EquipBtnText;
-        private GridScrollView    Scroller;
-        private void InitUI()
+        private bool _isBound;
+        private Kirara.UI.UIDiscDetail UIDiscDetail;
+        private UnityEngine.UI.Button  UpgradeBtn;
+        private UnityEngine.UI.Button  EquipBtn;
+        private TMPro.TextMeshProUGUI  EquipBtnText;
+        private KiraraLoopScroll.GridScrollView         Scroller;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c        = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIDiscDetail = c.Q<UIDiscDetail>(0, "UIDiscDetail");
-            UpgradeBtn   = c.Q<Button>(1, "UpgradeBtn");
-            EquipBtn     = c.Q<Button>(2, "EquipBtn");
-            EquipBtnText = c.Q<TextMeshProUGUI>(3, "EquipBtnText");
-            Scroller     = c.Q<GridScrollView>(4, "Scroller");
+            UIDiscDetail = c.Q<Kirara.UI.UIDiscDetail>(0, "UIDiscDetail");
+            UpgradeBtn   = c.Q<UnityEngine.UI.Button>(1, "UpgradeBtn");
+            EquipBtn     = c.Q<UnityEngine.UI.Button>(2, "EquipBtn");
+            EquipBtnText = c.Q<TMPro.TextMeshProUGUI>(3, "EquipBtnText");
+            Scroller     = c.Q<KiraraLoopScroll.GridScrollView>(4, "Scroller");
         }
         #endregion
 
@@ -32,7 +33,7 @@ namespace Kirara.UI
 
         private void Awake()
         {
-            InitUI();
+            BindUI();
 
             UpgradeBtn.onClick.AddListener(() =>
             {

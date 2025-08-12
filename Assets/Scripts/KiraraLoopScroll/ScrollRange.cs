@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kirara.UI
+namespace KiraraLoopScroll
 {
     public struct ScrollRange
     {

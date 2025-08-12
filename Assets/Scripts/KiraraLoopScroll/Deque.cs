@@ -1,6 +1,6 @@
 using System;
 
-namespace Kirara.UI
+namespace KiraraLoopScroll
 {
     /// <summary>
     /// 数组实现的简易双端队列

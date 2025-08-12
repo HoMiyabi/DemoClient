@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Kirara.UI
+namespace KiraraLoopScroll
 {
     public class LinearScrollView : Scroller
     {
