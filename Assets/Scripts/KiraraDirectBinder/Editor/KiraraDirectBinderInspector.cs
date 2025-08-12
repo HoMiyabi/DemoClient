@@ -61,6 +61,12 @@ namespace KiraraDirectBinder.Editor
 
         private void ReList_DrawElementBackground(Rect rect, int index, bool isActive, bool isFocused)
         {
+            if (index < 0)
+            {
+                ReorderableList.defaultBehaviours.DrawElementBackground(rect, index, isActive, isFocused, reList.draggable);
+                return;
+            }
+
             // 如果引用为空，警告
             var itemProp = itemsProp.GetArrayElementAtIndex(index);
             var componentProp = itemProp.FindPropertyRelative("component");
