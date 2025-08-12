@@ -16,6 +16,10 @@ namespace KiraraLoopScroll
             {
                 result = item.rect.height;
             }
+            if (Mathf.Approximately(result, 0f))
+            {
+                result = item.rect.height;
+            }
 
             return result;
         }
@@ -28,6 +32,10 @@ namespace KiraraLoopScroll
             var preferredWidth = LayoutUtility.GetLayoutProperty(item, e => e.preferredWidth, 0, out preferredLayoutElement);
             var result = Mathf.Max(minWidth, preferredWidth);
             if (preferredLayoutElement == null && minLayoutElement == null)
+            {
+                result = item.rect.width;
+            }
+            if (Mathf.Approximately(result, 0f))
             {
                 result = item.rect.width;
             }
