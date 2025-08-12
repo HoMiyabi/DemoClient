@@ -1,48 +1,40 @@
 ﻿using System.Linq;
 using Kirara.Model;
 using Manager;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using YooAsset;
 
 namespace Kirara.UI
 {
     public class UIInventoryCellWeapon : MonoBehaviour, ISelectItem
     {
         #region View
-        private TextMeshProUGUI    InfoText;
-        private UIItemStar         UIItemStar;
-        private Image              LockedImg;
-        private Image              WearerIconImg;
-        private Image              IconImg;
-        private Button             Btn;
-        private UIInventoryRankBar UIInventoryRankBar;
-        private Image              SelectBorder;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI        InfoText;
+        private Kirara.UI.UIItemStar         UIItemStar;
+        private UnityEngine.UI.Image         LockedImg;
+        private UnityEngine.UI.Image         WearerIconImg;
+        private UnityEngine.UI.Image         IconImg;
+        private UnityEngine.UI.Button        Btn;
+        private Kirara.UI.UIInventoryRankBar UIInventoryRankBar;
+        private UnityEngine.UI.Image         SelectBorder;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c              = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            InfoText           = c.Q<TextMeshProUGUI>(0, "InfoText");
-            UIItemStar         = c.Q<UIItemStar>(1, "UIItemStar");
-            LockedImg          = c.Q<Image>(2, "LockedImg");
-            WearerIconImg      = c.Q<Image>(3, "WearerIconImg");
-            IconImg            = c.Q<Image>(4, "IconImg");
-            Btn                = c.Q<Button>(5, "Btn");
-            UIInventoryRankBar = c.Q<UIInventoryRankBar>(6, "UIInventoryRankBar");
-            SelectBorder       = c.Q<Image>(7, "SelectBorder");
+            InfoText           = c.Q<TMPro.TextMeshProUGUI>(0, "InfoText");
+            UIItemStar         = c.Q<Kirara.UI.UIItemStar>(1, "UIItemStar");
+            LockedImg          = c.Q<UnityEngine.UI.Image>(2, "LockedImg");
+            WearerIconImg      = c.Q<UnityEngine.UI.Image>(3, "WearerIconImg");
+            IconImg            = c.Q<UnityEngine.UI.Image>(4, "IconImg");
+            Btn                = c.Q<UnityEngine.UI.Button>(5, "Btn");
+            UIInventoryRankBar = c.Q<Kirara.UI.UIInventoryRankBar>(6, "UIInventoryRankBar");
+            SelectBorder       = c.Q<UnityEngine.UI.Image>(7, "SelectBorder");
         }
         #endregion
 
-        private AssetHandle itemIconHandle;
-        private AssetHandle wearerIconHandle;
-        private AssetHandle posIconHandle;
         private SelectController selectController;
-
-        private void Awake()
-        {
-            InitUI();
-        }
 
         private void OnDestroy()
         {
@@ -55,13 +47,6 @@ namespace Kirara.UI
             {
                 _weapon.OnRoleIdChanged -= SetRole;
             }
-
-            itemIconHandle?.Release();
-            itemIconHandle = null;
-            wearerIconHandle?.Release();
-            wearerIconHandle = null;
-            posIconHandle?.Release();
-            posIconHandle = null;
         }
 
         private WeaponItem _weapon;
@@ -86,6 +71,8 @@ namespace Kirara.UI
 
         public UIInventoryCellWeapon Set(WeaponItem weapon, UnityAction onClick)
         {
+            BindUI();
+
             Weapon = weapon;
             Btn.onClick.RemoveAllListeners();
             Btn.onClick.AddListener(onClick);
@@ -94,16 +81,18 @@ namespace Kirara.UI
 
         private void SetRole(string roleId)
         {
-            if (roleId == null)
+            if (string.IsNullOrEmpty(roleId))
             {
                 WearerIconImg.sprite = null;
                 WearerIconImg.gameObject.SetActive(false);
-                return;
             }
-            WearerIconImg.gameObject.SetActive(true);
-            var chModel = PlayerService.Player.Roles.First(it => it.Id == roleId);
-            wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chModel.Config.IconLoc);
-            WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
+            else
+            {
+                WearerIconImg.gameObject.SetActive(true);
+                var role = PlayerService.Player.Roles.First(it => it.Id == roleId);
+                var wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
+                WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
+            }
         }
 
         private void SetLocked(bool locked)
@@ -113,7 +102,7 @@ namespace Kirara.UI
 
         private void SetIcon(string iconLocation)
         {
-            itemIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(iconLocation);
+            var itemIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(iconLocation);
             IconImg.sprite = itemIconHandle.AssetObject as Sprite;
         }
 

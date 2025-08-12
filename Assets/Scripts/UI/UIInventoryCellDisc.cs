@@ -1,66 +1,50 @@
 ﻿using System.Linq;
 using Kirara;
 using Kirara.Model;
-using Kirara.UI;
 using Manager;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using YooAsset;
 
 public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
 {
     #region View
-    private TextMeshProUGUI    InfoText;
-    private Image              WearerIconImg;
-    private Image              IconImg;
-    private Button             Btn;
-    private UIInventoryRankBar UIInventoryRankBar;
-    private UIDiscPosIcon      UIDiscPosIcon;
-    private Image              SelectBorder;
-    private void InitUI()
+    private bool _isBound;
+    private TMPro.TextMeshProUGUI        InfoText;
+    private UnityEngine.UI.Image         WearerIconImg;
+    private UnityEngine.UI.Image         IconImg;
+    private UnityEngine.UI.Button        Btn;
+    private Kirara.UI.UIInventoryRankBar UIInventoryRankBar;
+    private Kirara.UI.UIDiscPosIcon      UIDiscPosIcon;
+    private UnityEngine.UI.Image         SelectBorder;
+    public void BindUI()
     {
+        if (_isBound) return;
+        _isBound = true;
         var c              = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-        InfoText           = c.Q<TextMeshProUGUI>(0, "InfoText");
-        WearerIconImg      = c.Q<Image>(1, "WearerIconImg");
-        IconImg            = c.Q<Image>(2, "IconImg");
-        Btn                = c.Q<Button>(3, "Btn");
-        UIInventoryRankBar = c.Q<UIInventoryRankBar>(4, "UIInventoryRankBar");
-        UIDiscPosIcon      = c.Q<UIDiscPosIcon>(5, "UIDiscPosIcon");
-        SelectBorder       = c.Q<Image>(6, "SelectBorder");
+        InfoText           = c.Q<TMPro.TextMeshProUGUI>(0, "InfoText");
+        WearerIconImg      = c.Q<UnityEngine.UI.Image>(1, "WearerIconImg");
+        IconImg            = c.Q<UnityEngine.UI.Image>(2, "IconImg");
+        Btn                = c.Q<UnityEngine.UI.Button>(3, "Btn");
+        UIInventoryRankBar = c.Q<Kirara.UI.UIInventoryRankBar>(4, "UIInventoryRankBar");
+        UIDiscPosIcon      = c.Q<Kirara.UI.UIDiscPosIcon>(5, "UIDiscPosIcon");
+        SelectBorder       = c.Q<UnityEngine.UI.Image>(6, "SelectBorder");
     }
     #endregion
 
-    private AssetHandle itemIconHandle;
-    private AssetHandle wearerIconHandle;
-    private AssetHandle posIconHandle;
     private SelectController selectController;
-
-    private void Awake()
-    {
-        InitUI();
-    }
 
     private void OnDestroy()
     {
         Clear();
     }
 
-    public void Clear()
+    private void Clear()
     {
         if (_disc != null)
         {
             _disc.OnRoleIdChanged -= UpdateRole;
             _disc.OnLevelChanged -= UpdateLevel;
         }
-
-        itemIconHandle?.Release();
-        itemIconHandle = null;
-        wearerIconHandle?.Release();
-        wearerIconHandle = null;
-        posIconHandle?.Release();
-        posIconHandle = null;
     }
 
     private DiscItem _disc;
@@ -91,6 +75,8 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
 
     public void Set(DiscItem disc, UnityAction onClick)
     {
+        BindUI();
+
         Disc = disc;
         Btn.onClick.RemoveAllListeners();
         Btn.onClick.AddListener(onClick);
@@ -102,17 +88,19 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
         {
             WearerIconImg.sprite = null;
             WearerIconImg.gameObject.SetActive(false);
-            return;
         }
-        WearerIconImg.gameObject.SetActive(true);
-        var role = PlayerService.Player.Roles.First(it => it.Id == _disc.RoleId);
-        wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
-        WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
+        else
+        {
+            WearerIconImg.gameObject.SetActive(true);
+            var role = PlayerService.Player.Roles.First(it => it.Id == _disc.RoleId);
+            var wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
+            WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
+        }
     }
 
     private void SetIcon(string iconLocation)
     {
-        itemIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(iconLocation);
+        var itemIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(iconLocation);
         IconImg.sprite = itemIconHandle.AssetObject as Sprite;
     }
 

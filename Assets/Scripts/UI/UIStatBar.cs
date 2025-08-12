@@ -1,6 +1,5 @@
 ﻿using cfg.main;
 using Manager;
-using TMPro;
 using UnityEngine;
 
 namespace Kirara.UI
@@ -8,25 +7,25 @@ namespace Kirara.UI
     public class UIStatBar : MonoBehaviour
     {
         #region View
-        private TextMeshProUGUI StatNameText;
-        private TextMeshProUGUI StatValueText;
-        private TextMeshProUGUI UpgradeTimeText;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI StatNameText;
+        private TMPro.TextMeshProUGUI StatValueText;
+        private TMPro.TextMeshProUGUI UpgradeTimeText;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c           = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            StatNameText    = c.Q<TextMeshProUGUI>(0, "StatNameText");
-            StatValueText   = c.Q<TextMeshProUGUI>(1, "StatValueText");
-            UpgradeTimeText = c.Q<TextMeshProUGUI>(2, "UpgradeTimeText");
+            StatNameText    = c.Q<TMPro.TextMeshProUGUI>(0, "StatNameText");
+            StatValueText   = c.Q<TMPro.TextMeshProUGUI>(1, "StatValueText");
+            UpgradeTimeText = c.Q<TMPro.TextMeshProUGUI>(2, "UpgradeTimeText");
         }
         #endregion
 
-        private void Awake()
-        {
-            InitUI();
-        }
-
         public void Set(NWeaponAttr attr, int upgradeTime = 0)
         {
+            BindUI();
+
             var config = ConfigMgr.tb.TbAttrShowConfig[(EAttrType)attr.AttrTypeId];
             StatNameText.text = config.ShowName;
             StatValueText.text = config.ShowPct ? $"{attr.Value:0.#%}" : $"{attr.Value:0.#}";
@@ -44,6 +43,8 @@ namespace Kirara.UI
 
         public void Set(NDiscAttr attr)
         {
+            BindUI();
+
             var config = ConfigMgr.tb.TbAttrShowConfig[(EAttrType)attr.AttrTypeId];
             StatNameText.text = config.ShowName;
             StatValueText.text = config.ShowPct ? $"{attr.Value:0.#%}" : $"{attr.Value:0.#}";
@@ -61,6 +62,8 @@ namespace Kirara.UI
 
         public UIStatBar Set(string nameText, double value, bool isPercentage, int upgradeTime = 0)
         {
+            BindUI();
+
             StatNameText.text = nameText;
             StatValueText.text = isPercentage ? $"{value:0.#%}" : $"{value:0.#}";
 
