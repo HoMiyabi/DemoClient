@@ -100,7 +100,7 @@ namespace KiraraDirectBinder.Editor
         {
             var type = com.GetType();
             string name = type.Name;
-            if (target.EndsWith(name))
+            if (target.EndsWith(name) || name.EndsWith(target))
             {
                 return 3;
             }
