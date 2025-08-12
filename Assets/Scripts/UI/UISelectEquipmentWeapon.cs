@@ -34,7 +34,7 @@ namespace Kirara.UI
             BindUI();
 
             Pool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
-            Scroller.SetPoolFunc(Pool.GetObject, Pool.ReturnObject);
+            Scroller.SetGOSourceFunc(Pool.GetObject, Pool.ReturnObject);
             Scroller.provideData = ProvideData;
         }
 
@@ -75,7 +75,7 @@ namespace Kirara.UI
 
             weapons = GetWeapons();
 
-            Scroller.totalCount = weapons.Count;
+            Scroller._totalCount = weapons.Count;
 
             if (weapons.Count > 0)
             {

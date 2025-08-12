@@ -33,7 +33,7 @@ namespace KiraraLoopScroll
             {
                 if (items.Count == 0) return 0f;
 
-                if (itemFrontIndex == 0 && itemBackIndex == totalCount &&
+                if (itemFrontIndex == 0 && itemBackIndex == _totalCount &&
                     itemBackPos - itemFrontPos < ViewSize)
                 {
                     // 所有Item都在视口内
@@ -49,7 +49,7 @@ namespace KiraraLoopScroll
                     }
                 }
 
-                if (itemBackIndex == totalCount)
+                if (itemBackIndex == _totalCount)
                 {
                     float dist = itemBackPos - (Pos + ViewSize);
                     if (dist < 0f)
@@ -89,7 +89,7 @@ namespace KiraraLoopScroll
                 i++;
             }
 
-            while (itemBackIndex < totalCount && Pos + ViewSize > itemBackPos + spacing && i < maxIterations)
+            while (itemBackIndex < _totalCount && Pos + ViewSize > itemBackPos + spacing && i < maxIterations)
             {
                 PushBack();
                 i++;
@@ -189,7 +189,7 @@ namespace KiraraLoopScroll
 
         public void RefreshToStart()
         {
-            Debug.Log("Refresh To Start");
+            // Debug.Log("Refresh To Start");
             while (items.Count > 0)
             {
                 PopBack();
@@ -203,15 +203,15 @@ namespace KiraraLoopScroll
 
         public void RefreshToEnd()
         {
-            Debug.Log("Refresh To End");
+            // Debug.Log("Refresh To End");
             while (items.Count > 0)
             {
                 PopFront();
             }
             itemFrontPos = ViewSize;
             itemBackPos = ViewSize;
-            itemFrontIndex = totalCount;
-            itemBackIndex = totalCount;
+            itemFrontIndex = _totalCount;
+            itemBackIndex = _totalCount;
             SetPos(0, true);
         }
     }

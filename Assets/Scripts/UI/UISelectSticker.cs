@@ -44,9 +44,9 @@ namespace Kirara.UI
                 stickerSprites.Add(handle.AssetObject as Sprite);
             }
 
-            SelectStickerLoopScroll.SetGOPool(new LoopScrollGOPool(SelectStickerItemPrefab, transform));
+            SelectStickerLoopScroll.SetGOSource(new LoopScrollGOPool(SelectStickerItemPrefab, transform));
             SelectStickerLoopScroll.provideData = ProvideData;
-            SelectStickerLoopScroll.totalCount = stickerConfigIds.Count;
+            SelectStickerLoopScroll._totalCount = stickerConfigIds.Count;
         }
 
         public void Set(ChatPanel chatPanel)

@@ -125,7 +125,7 @@ namespace KiraraLoopScroll
             {
                 int minLine = Mathf.FloorToInt((Pos - CullingBottom + CullingSpacing) / LineWidth);
                 int idx = minLine * countInLine;
-                return isInfinite ? idx : Mathf.Clamp(idx, 0, totalCount);
+                return isInfinite ? idx : Mathf.Clamp(idx, 0, _totalCount);
             }
         }
 
@@ -136,7 +136,7 @@ namespace KiraraLoopScroll
             {
                 int maxLine = Mathf.CeilToInt((Pos + ViewSize + CullingTop) / LineWidth);
                 int idx = maxLine * countInLine;
-                return isInfinite ? idx : Mathf.Clamp(idx, 0, totalCount);
+                return isInfinite ? idx : Mathf.Clamp(idx, 0, _totalCount);
             }
         }
 
@@ -190,7 +190,7 @@ namespace KiraraLoopScroll
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        private int LineCount => Mathf.CeilToInt(totalCount / (float)countInLine);
+        private int LineCount => Mathf.CeilToInt(_totalCount / (float)countInLine);
 
         protected override float GetSnapPos(float pos)
         {

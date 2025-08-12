@@ -116,16 +116,16 @@ namespace Kirara.UI.Panel
             weapons = PlayerService.Player.Weapons;
 
             weaponPool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
-            WeaponLoopScroll.SetPoolFunc(weaponPool.GetObject, weaponPool.ReturnObject);
+            WeaponLoopScroll.SetGOSourceFunc(weaponPool.GetObject, weaponPool.ReturnObject);
             WeaponLoopScroll.provideData = ProvideWeaponData;
-            WeaponLoopScroll.totalCount = weapons.Count;
+            WeaponLoopScroll._totalCount = weapons.Count;
 
             discs = PlayerService.Player.Discs;
 
             discPool = new LoopScrollGOPool(UIInventoryCellDiscPrefab, transform);
-            DiscLoopScroll.SetPoolFunc(discPool.GetObject, discPool.ReturnObject);
+            DiscLoopScroll.SetGOSourceFunc(discPool.GetObject, discPool.ReturnObject);
             DiscLoopScroll.provideData = ProvideDiscData;
-            DiscLoopScroll.totalCount = discs.Count;
+            DiscLoopScroll._totalCount = discs.Count;
         }
 
         private void SetTab()

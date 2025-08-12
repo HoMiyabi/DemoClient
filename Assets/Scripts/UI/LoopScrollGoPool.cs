@@ -2,7 +2,7 @@
 using KiraraLoopScroll;
 using UnityEngine;
 
-public class LoopScrollGOPool : IGOPool
+public class LoopScrollGOPool : IGOSource
 {
     private readonly GameObject prefab;
     private readonly Transform poolPlace;

@@ -41,7 +41,7 @@ namespace Kirara.UI
             });
 
             Pool = new LoopScrollGOPool(UIInventoryCellDiscPrefab, transform);
-            Scroller.SetPoolFunc(Pool.GetObject, Pool.ReturnObject);
+            Scroller.SetGOSourceFunc(Pool.GetObject, Pool.ReturnObject);
             Scroller.provideData = ProvideData;
         }
 
@@ -89,7 +89,7 @@ namespace Kirara.UI
                 .ToList();
             ReorderDisc();
 
-            Scroller.totalCount = discs.Count;
+            Scroller._totalCount = discs.Count;
             Scroller.Refresh();
 
             if (discs.Count > 0)

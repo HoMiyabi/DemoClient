@@ -131,7 +131,7 @@ namespace KiraraLoopScroll
 
         #region Pooling
 
-        public int totalCount;
+        public int _totalCount;
 
         public delegate GameObject GetObject(int index);
 
@@ -143,15 +143,15 @@ namespace KiraraLoopScroll
         public ReturnObject returnObject;
         public ProvideData provideData;
 
-        public void SetPoolFunc(GetObject getObject, ReturnObject returnObject)
+        public void SetGOSourceFunc(GetObject getObject, ReturnObject returnObject)
         {
             this.getObject = getObject;
             this.returnObject = returnObject;
         }
 
-        public void SetGOPool(IGOPool pool)
+        public void SetGOSource(IGOSource source)
         {
-            SetPoolFunc(pool.GetObject, pool.ReturnObject);
+            SetGOSourceFunc(source.GetObject, source.ReturnObject);
         }
 
         #endregion

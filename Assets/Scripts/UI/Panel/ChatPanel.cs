@@ -58,7 +58,7 @@ namespace Kirara.UI.Panel
                     // 聊天对象为空
                     UsernameText.text = "Empty";
 
-                    ChatLoopScroll.totalCount = 0;
+                    ChatLoopScroll._totalCount = 0;
                     ChatLoopScroll.RefreshToEnd();
 
                     StickerBtn.interactable = false;
@@ -69,7 +69,7 @@ namespace Kirara.UI.Panel
                 {
                     UsernameText.text = _chattingPlayer.Username;
 
-                    ChatLoopScroll.totalCount = _chattingPlayer.ChatMsgs.Count;
+                    ChatLoopScroll._totalCount = _chattingPlayer.ChatMsgs.Count;
                     ChatLoopScroll.RefreshToEnd();
 
                     StickerBtn.interactable = true;
@@ -105,12 +105,12 @@ namespace Kirara.UI.Panel
 
             // 聊天人选择列表
             friends = PlayerService.Player.Friends;
-            ChatFriendScrollView.SetGOPool(new LoopScrollGOPool(ChatFriendItemPrefab, transform));
+            ChatFriendScrollView.SetGOSource(new LoopScrollGOPool(ChatFriendItemPrefab, transform));
             ChatFriendScrollView.provideData = ProvideFriendData;
-            ChatFriendScrollView.totalCount = friends.Count;
+            ChatFriendScrollView._totalCount = friends.Count;
 
             // 聊天列表
-            ChatLoopScroll.SetGOPool(new LoopScrollGOPool(ChatItemPrefab, transform));
+            ChatLoopScroll.SetGOSource(new LoopScrollGOPool(ChatItemPrefab, transform));
             ChatLoopScroll.provideData = ProvideChatData;
 
             ChattingPlayer = friends.FirstOrDefault();
@@ -129,7 +129,7 @@ namespace Kirara.UI.Panel
                 (ChattingPlayer.Uid == msg.SenderUid ||
                  ChattingPlayer.Uid == msg.ReceiverUid))
             {
-                ChatLoopScroll.totalCount = ChattingPlayer.ChatMsgs.Count;
+                ChatLoopScroll._totalCount = ChattingPlayer.ChatMsgs.Count;
                 ChatLoopScroll.RefreshToEnd();
             }
         }

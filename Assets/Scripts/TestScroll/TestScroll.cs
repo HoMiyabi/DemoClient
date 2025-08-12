@@ -30,10 +30,10 @@ namespace Kirara.TestScroll
 
             var pool = new LoopScrollGOPool(Prefab, transform);
 
-            Scroller.SetPoolFunc(pool.GetObject, pool.ReturnObject);
+            Scroller.SetGOSourceFunc(pool.GetObject, pool.ReturnObject);
             Scroller.provideData = ProvideData;
 
-            Scroller.totalCount = 3;
+            Scroller._totalCount = 3;
 
             EnableMask.onValueChanged.AddListener((value) =>
             {
