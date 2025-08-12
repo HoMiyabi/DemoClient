@@ -12,17 +12,16 @@ namespace Kirara.UI.Panel
     {
         #region View
         private bool _isBound;
-        private UnityEngine.UI.Button                  UIOverlayBtn;
-        private UnityEngine.UI.Button                  UIBackBtn;
-        private TMPro.TMP_InputField                   ChatTextInput;
-        private UnityEngine.UI.Button                  SendBtn;
-        private TMPro.TextMeshProUGUI                  UsernameText;
-        private UnityEngine.UI.LoopVerticalScrollRect  ChatFriendLoopScroll;
-        private Kirara.UI.SimpleLoopScrollPrefabSource ChatFriendPrefabSource;
-        private UnityEngine.UI.Button                  UISelectStickerOverlay;
-        private Kirara.UI.UISelectSticker              UISelectSticker;
-        private UnityEngine.UI.Button                  StickerBtn;
-        private KiraraLoopScroll.LinearScrollView               ChatLoopScroll;
+        private UnityEngine.UI.Button             UIOverlayBtn;
+        private UnityEngine.UI.Button             UIBackBtn;
+        private TMPro.TMP_InputField              ChatTextInput;
+        private UnityEngine.UI.Button             SendBtn;
+        private TMPro.TextMeshProUGUI             UsernameText;
+        private UnityEngine.UI.Button             UISelectStickerOverlay;
+        private Kirara.UI.UISelectSticker         UISelectSticker;
+        private UnityEngine.UI.Button             StickerBtn;
+        private KiraraLoopScroll.LinearScrollView ChatLoopScroll;
+        private KiraraLoopScroll.LinearScrollView ChatFriendScrollView;
         public override void BindUI()
         {
             if (_isBound) return;
@@ -33,15 +32,15 @@ namespace Kirara.UI.Panel
             ChatTextInput          = c.Q<TMPro.TMP_InputField>(2, "ChatTextInput");
             SendBtn                = c.Q<UnityEngine.UI.Button>(3, "SendBtn");
             UsernameText           = c.Q<TMPro.TextMeshProUGUI>(4, "UsernameText");
-            ChatFriendLoopScroll   = c.Q<UnityEngine.UI.LoopVerticalScrollRect>(5, "ChatFriendLoopScroll");
-            ChatFriendPrefabSource = c.Q<Kirara.UI.SimpleLoopScrollPrefabSource>(6, "ChatFriendPrefabSource");
-            UISelectStickerOverlay = c.Q<UnityEngine.UI.Button>(7, "UISelectStickerOverlay");
-            UISelectSticker        = c.Q<Kirara.UI.UISelectSticker>(8, "UISelectSticker");
-            StickerBtn             = c.Q<UnityEngine.UI.Button>(9, "StickerBtn");
-            ChatLoopScroll         = c.Q<KiraraLoopScroll.LinearScrollView>(10, "ChatLoopScroll");
+            UISelectStickerOverlay = c.Q<UnityEngine.UI.Button>(5, "UISelectStickerOverlay");
+            UISelectSticker        = c.Q<Kirara.UI.UISelectSticker>(6, "UISelectSticker");
+            StickerBtn             = c.Q<UnityEngine.UI.Button>(7, "StickerBtn");
+            ChatLoopScroll         = c.Q<KiraraLoopScroll.LinearScrollView>(8, "ChatLoopScroll");
+            ChatFriendScrollView   = c.Q<KiraraLoopScroll.LinearScrollView>(9, "ChatFriendScrollView");
         }
         #endregion
 
+        public GameObject ChatFriendItemPrefab;
         public GameObject ChatItemPrefab;
 
         private List<SocialPlayer> friends;
@@ -106,14 +105,12 @@ namespace Kirara.UI.Panel
 
             // 聊天人选择列表
             friends = PlayerService.Player.Friends;
-            ChatFriendLoopScroll.prefabSource = ChatFriendPrefabSource;
-            ChatFriendLoopScroll.dataSource = new LoopScrollDataSourceHandler(ProvideFriendData);
-            ChatFriendLoopScroll.totalCount = friends.Count;
-            ChatFriendLoopScroll.RefillCells();
+            ChatFriendScrollView.SetGOPool(new LoopScrollGOPool(ChatFriendItemPrefab, transform));
+            ChatFriendScrollView.provideData = ProvideFriendData;
+            ChatFriendScrollView.totalCount = friends.Count;
 
             // 聊天列表
-            var chatPool = new LoopScrollGOPool(ChatItemPrefab, transform);
-            ChatLoopScroll.SetPoolFunc(chatPool.GetObject, chatPool.ReturnObject);
+            ChatLoopScroll.SetGOPool(new LoopScrollGOPool(ChatItemPrefab, transform));
             ChatLoopScroll.provideData = ProvideChatData;
 
             ChattingPlayer = friends.FirstOrDefault();
@@ -144,16 +141,16 @@ namespace Kirara.UI.Panel
             SocialService.SendText(ChattingPlayer, text).Forget();
         }
 
-        private void ProvideFriendData(Transform tra, int idx)
+        private void ProvideFriendData(GameObject go, int index)
         {
-            var item = tra.GetComponent<UIChatFriendItem>();
-            item.Set(friends[idx], () => ChattingPlayer = friends[idx]);
+            var item = go.GetComponent<UIChatFriendItem>();
+            item.Set(friends[index], () => ChattingPlayer = friends[index]);
         }
 
-        private void ProvideChatData(GameObject go, int idx)
+        private void ProvideChatData(GameObject go, int index)
         {
             var item = go.GetComponent<UIChatItem>();
-            item.Set(ChattingPlayer.ChatMsgs[idx], ChattingPlayer);
+            item.Set(ChattingPlayer.ChatMsgs[index], ChattingPlayer);
         }
     }
 }

@@ -4,40 +4,49 @@ using Kirara.Service;
 using Kirara.UI.Panel;
 using Manager;
 using UnityEngine;
-using UnityEngine.UI;
-using YooAsset;
+using UnityEngine.Pool;
 
 namespace Kirara.UI
 {
-    public class UISelectSticker : MonoBehaviour, LoopScrollDataSource
+    public class UISelectSticker : MonoBehaviour
     {
         #region View
-        private LoopVerticalScrollRect       SelectStickerLoopScroll;
-        private SimpleLoopScrollPrefabSource SelectStickerLoopScrollPrefabSource;
-        private void InitUI()
+        private bool _isBound;
+        private KiraraLoopScroll.GridScrollView SelectStickerLoopScroll;
+        public void BindUI()
         {
-            var c                               = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            SelectStickerLoopScroll             = c.Q<LoopVerticalScrollRect>(0, "SelectStickerLoopScroll");
-            SelectStickerLoopScrollPrefabSource = c.Q<SimpleLoopScrollPrefabSource>(1, "SelectStickerLoopScrollPrefabSource");
+            if (_isBound) return;
+            _isBound = true;
+            var c                   = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            SelectStickerLoopScroll = c.Q<KiraraLoopScroll.GridScrollView>(0, "SelectStickerLoopScroll");
         }
         #endregion
 
+        public GameObject SelectStickerItemPrefab;
+
         private ChatPanel chatPanel;
         private List<int> stickerConfigIds;
-        private List<AssetHandle> stickerHandles;
+        private List<Sprite> stickerSprites;
 
         private void Awake()
         {
-            InitUI();
-        }
+            BindUI();
+            stickerConfigIds = ListPool<int>.Get();
+            stickerConfigIds.Clear();
+            stickerSprites = ListPool<Sprite>.Get();
+            stickerSprites.Clear();
 
-        private void OnDestroy()
-        {
-            for (int i = 0; i < stickerHandles.Count; i++)
+            foreach (var item in ConfigMgr.tb.TbIconSticker.DataList)
             {
-                stickerHandles[i].Release();
-                stickerHandles[i] = null;
+                stickerConfigIds.Add(item.Id);
+
+                var handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(item.Location);
+                stickerSprites.Add(handle.AssetObject as Sprite);
             }
+
+            SelectStickerLoopScroll.SetGOPool(new LoopScrollGOPool(SelectStickerItemPrefab, transform));
+            SelectStickerLoopScroll.provideData = ProvideData;
+            SelectStickerLoopScroll.totalCount = stickerConfigIds.Count;
         }
 
         public void Set(ChatPanel chatPanel)
@@ -45,29 +54,16 @@ namespace Kirara.UI
             this.chatPanel = chatPanel;
         }
 
-        private void Start()
+        private void OnDestroy()
         {
-            stickerConfigIds = new List<int>(ConfigMgr.tb.TbIconSticker.DataList.Count);
-            stickerHandles = new List<AssetHandle>(ConfigMgr.tb.TbIconSticker.DataList.Count);
-
-            foreach (var item in ConfigMgr.tb.TbIconSticker.DataList)
-            {
-                stickerConfigIds.Add(item.Id);
-
-                var handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(item.Location);
-                stickerHandles.Add(handle);
-            }
-
-            SelectStickerLoopScroll.prefabSource = SelectStickerLoopScrollPrefabSource;
-            SelectStickerLoopScroll.dataSource = this;
-            SelectStickerLoopScroll.totalCount = stickerHandles.Count;
-            SelectStickerLoopScroll.RefillCells();
+            ListPool<int>.Release(stickerConfigIds);
+            ListPool<Sprite>.Release(stickerSprites);
         }
 
-        public void ProvideData(Transform tra, int idx)
+        public void ProvideData(GameObject go, int index)
         {
-            var cell = tra.GetComponent<UISelectStickerCell>();
-            cell.Set(stickerHandles[idx].AssetObject as Sprite, () => Cell_onClick(idx));
+            var cell = go.GetComponent<UISelectStickerItem>();
+            cell.Set(stickerSprites[index], () => Cell_onClick(index));
         }
 
         private void Cell_onClick(int idx)
