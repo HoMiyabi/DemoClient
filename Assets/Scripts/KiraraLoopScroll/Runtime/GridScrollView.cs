@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace KiraraLoopScroll
 {
+    [AddComponentMenu("Kirara Loop Scroll/Grid Scroll View")]
     public class GridScrollView : Scroller
     {
         public Vector2 size = new(100f, 100f);

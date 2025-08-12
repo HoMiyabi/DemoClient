@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 namespace KiraraLoopScroll
 {
+    [AddComponentMenu("Kirara Loop Scroll/Linear Scroll View")]
     public class LinearScrollView : Scroller
     {
         public float spacing;

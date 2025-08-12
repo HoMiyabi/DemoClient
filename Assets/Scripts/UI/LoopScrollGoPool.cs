@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using KiraraLoopScroll;
 using UnityEngine;
 
-public class LoopScrollGOPool
+public class LoopScrollGOPool : IGOPool
 {
     private readonly GameObject prefab;
     private readonly Transform poolPlace;

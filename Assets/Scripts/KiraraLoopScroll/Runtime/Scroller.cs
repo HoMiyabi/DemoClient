@@ -149,6 +149,11 @@ namespace KiraraLoopScroll
             this.returnObject = returnObject;
         }
 
+        public void SetGOPool(IGOPool pool)
+        {
+            SetPoolFunc(pool.GetObject, pool.ReturnObject);
+        }
+
         #endregion
 
         protected void SetPos(float scrollPos, bool updateScrollbar)
