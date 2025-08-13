@@ -106,16 +106,12 @@ namespace KiraraDirectBinder
                             });
                         }
                     }
-                    else
-                    {
-                        Debug.LogWarning($"丢失引用, go: {binders[i].name}, 字段名: {item.fieldName}");
-                    }
                 }
             }
 
             // 绘制Binder
             var binderRect = new Rect(selectionRect);
-            binderRect.position += new Vector2(binderRect.width - 14, 0);
+            binderRect.position += new Vector2(binderRect.width - GUI.skin.label.CalcSize(new GUIContent(text)).x, 0);
             for (int i = 0; i < binders.Count; i++)
             {
                 var binder = binders[i];
@@ -128,6 +124,13 @@ namespace KiraraDirectBinder
                             textColor = GetColor(i)
                         }
                     });
+                    if (binder.items.FindIndex(item => item.component == null) >= 0)
+                    {
+                        var v = GUI.skin.label.CalcSize(new GUIContent("丢失引用"));
+                        binderRect.position -= new Vector2(v.x, 0);
+                        binderRect.position += new Vector2(0, (binderRect.height - v.y) * 0.5f);
+                        GUI.Label(binderRect, "丢失引用");
+                    }
                 }
             }
         }
