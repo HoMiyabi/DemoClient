@@ -1,6 +1,8 @@
+using System;
+
 namespace KiraraLoopScroll
 {
-    [System.Serializable]
+    [Serializable]
     public struct Padding
     {
         public float left;

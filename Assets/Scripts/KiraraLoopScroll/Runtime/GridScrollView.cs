@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace KiraraLoopScroll
@@ -7,157 +6,55 @@ namespace KiraraLoopScroll
     [AddComponentMenu("Kirara Loop Scroll/Grid Scroll View")]
     public class GridScrollView : Scroller
     {
+        public Padding padding;
         public Vector2 size = new(100f, 100f);
         public Vector2 spacing = new(10f, 10f);
-
-        // 裁切时，把当做size + cullingPadding的大小来看
-        public Padding cullingPadding;
 
         public int countInLine = 3;
 
         private readonly Deque<RectTransform> items = new();
-
-        // 左闭右开
-        private int itemStartIndex;
-        private int itemEndIndex;
-        public readonly Dictionary<int, RectTransform> cells = new();
-        private readonly Stack<RectTransform> pool = new();
+        private int itemFrontIndex;
+        private int itemBackIndex; // 左闭右开
 
         public Action<RectTransform, int> updateCell;
 
-        private void HidePoolingCells()
-        {
-            foreach (var cell in pool)
-            {
-                cell.gameObject.SetActive(false);
-            }
-        }
-
         public void RefreshToStart()
         {
-            for (int i = itemStartIndex; i < itemEndIndex; i++)
+            while (items.Count > 0)
             {
-                ReturnObjectAt(i);
+                PopBack();
             }
-            itemStartIndex = 0;
-            itemEndIndex = 0;
+            itemFrontIndex = 0;
+            itemBackIndex = 0;
             UpdateItems();
         }
 
-        private void ReturnObjectAt(int idx)
-        {
-            if (cells.Remove(idx, out var cell))
-            {
-                pool.Push(cell);
-            }
-            else
-            {
-                Debug.LogError($"{nameof(GridScrollView)}: Cell not found for index {idx}");
-            }
-        }
-
-        private void CheckReturnObjects(int currMinIdx, int currMaxIdx)
-        {
-            if (currMinIdx > itemStartIndex)
-            {
-                for (int idx = itemStartIndex; idx < Mathf.Min(currMinIdx, itemEndIndex); idx++)
-                {
-                    ReturnObjectAt(idx);
-                }
-            }
-
-            if (currMaxIdx < itemEndIndex)
-            {
-                for (int idx = Mathf.Max(currMaxIdx, itemStartIndex); idx < itemEndIndex; idx++)
-                {
-                    ReturnObjectAt(idx);
-                }
-            }
-        }
-
-        private void GetObjectAt(int idx)
-        {
-            GameObject go;
-            if (pool.Count > 0)
-            {
-                go = pool.Pop().gameObject;
-                go.SetActive(true);
-            }
-            else
-            {
-                go = getObject(idx);
-            }
-            provideData?.Invoke(go, idx);
-            go.transform.SetParent(content, false);
-            if (!cells.TryAdd(idx, (RectTransform)go.transform))
-            {
-                Debug.LogError($"KiraraLoopScroll: Cell already exists. Index: {idx}");
-            }
-        }
-
-        private void CheckGetObjects(int currMinIdx, int currMaxIdx)
-        {
-            if (currMinIdx < itemStartIndex)
-            {
-                for (int idx = currMinIdx; idx < Mathf.Min(currMaxIdx, itemStartIndex); idx++)
-                {
-                    GetObjectAt(idx);
-                }
-            }
-            if (currMaxIdx > itemEndIndex)
-            {
-                for (int idx = Mathf.Max(currMinIdx, itemEndIndex); idx < currMaxIdx; idx++)
-                {
-                    GetObjectAt(idx);
-                }
-            }
-        }
-
-        // private int GetIdx(int row, int col)
-        // {
-        //     return row * countInLine + col;
-        // }
-
         // 可见最小Idx
-        private int ViewMinIdx
+        private int ViewFrontIndex
         {
             get
             {
-                int minLine = Mathf.FloorToInt((Pos - CullingBottom + CullingSpacing) / LineWidth);
-                int idx = minLine * countInLine;
-                return isInfinite ? idx : Mathf.Clamp(idx, 0, _totalCount);
+                int minLine = Mathf.FloorToInt((Pos - padding.top + CullingSpacing) / (LineWidth + CullingSpacing));
+                int index = minLine * countInLine;
+                return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
 
         // 可见最大Idx
-        private int ViewMaxIdx
+        private int ViewBackIndex
         {
             get
             {
-                int maxLine = Mathf.CeilToInt((Pos + ViewSize + CullingTop) / LineWidth);
-                int idx = maxLine * countInLine;
-                return isInfinite ? idx : Mathf.Clamp(idx, 0, _totalCount);
+                int maxLine = Mathf.CeilToInt((Pos + ViewSize - padding.top) / (LineWidth + CullingSpacing));
+                int index = maxLine * countInLine;
+                return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
 
-        private float CullingBottom => direction switch
-        {
-            EDirection.Vertical => cullingPadding.bottom,
-            EDirection.Horizontal => cullingPadding.right,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-        private float CullingTop => direction switch
-        {
-            EDirection.Vertical => cullingPadding.top,
-            EDirection.Horizontal => cullingPadding.left,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
         private float CullingSpacing => direction switch
         {
-            EDirection.Vertical => spacing.y,
             EDirection.Horizontal => spacing.x,
+            EDirection.Vertical => spacing.y,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -170,23 +67,23 @@ namespace KiraraLoopScroll
 
         private Vector2 GetCellPosInUGUISpace(int row, int col)
         {
-            return GetCellPos(row, col) - new Vector2(0, -Pos);
+            return GetCellPos(row, col) - new Vector2(0, -Pos) + new Vector2(padding.left, -padding.top);
         }
 
-        private int GetRow(int idx)
+        private int GetRow(int index)
         {
-            return Mathf.FloorToInt(idx / (float)countInLine);
+            return Mathf.FloorToInt(index / (float)countInLine);
         }
 
-        private int GetCol(int idx)
+        private int GetCol(int index)
         {
-            return (idx % countInLine + countInLine) % countInLine;
+            return (index % countInLine + countInLine) % countInLine;
         }
 
         private float LineWidth => direction switch
         {
-            EDirection.Vertical => size.y + spacing.y,
-            EDirection.Horizontal => size.x + spacing.x,
+            EDirection.Horizontal => size.x,
+            EDirection.Vertical => size.y,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -215,29 +112,107 @@ namespace KiraraLoopScroll
             }
         }
 
+        private void PopFront()
+        {
+            var item = items.Front;
+            returnObject(item.gameObject);
 
-        protected override float ContentSize => isInfinite ? float.PositiveInfinity : LineWidth * LineCount;
+            items.PopFront();
+            itemFrontIndex++;
+        }
+
+        private void PopBack()
+        {
+            var item = items.Back;
+            returnObject(item.gameObject);
+
+            items.PopBack();
+            itemBackIndex--;
+        }
+
+        private void PushFront()
+        {
+            var go = getObject(itemFrontIndex - 1);
+            provideData?.Invoke(go, itemFrontIndex - 1);
+            go.transform.SetParent(content, false);
+
+            items.PushFront((RectTransform)go.transform);
+            itemFrontIndex--;
+        }
+
+        private void PushBack()
+        {
+            var go = getObject(itemBackIndex);
+            provideData?.Invoke(go, itemBackIndex);
+            go.transform.SetParent(content, false);
+
+            items.PushBack((RectTransform)go.transform);
+            itemBackIndex++;
+        }
+
+
+        protected override float ContentSize
+        {
+            get
+            {
+                if (isInfinite) return float.PositiveInfinity;
+
+                float lineCount = LineCount;
+                float ans = LineWidth * lineCount;
+                if (lineCount > 0)
+                {
+                    ans += CullingSpacing * (lineCount - 1);
+                }
+                ans += padding.top + padding.bottom;
+                return ans;
+            }
+        }
 
         protected override void UpdateItems()
         {
-            int viewMinIdx = ViewMinIdx;
-            int viewMaxIdx = ViewMaxIdx;
-            CheckReturnObjects(viewMinIdx, viewMaxIdx);
-            CheckGetObjects(viewMinIdx, viewMaxIdx);
-            HidePoolingCells();
-            itemStartIndex = viewMinIdx;
-            itemEndIndex = viewMaxIdx;
+            // 裁剪
+            const int maxIterations = 1000;
+            int i = 0;
 
-            for (int idx = itemStartIndex; idx < itemEndIndex; idx++)
+            int viewFrontIndex = ViewFrontIndex;
+            int viewBackIndex = ViewBackIndex;
+            while (items.Count > 0 && itemFrontIndex < viewFrontIndex && i < maxIterations)
             {
-                var cell = cells[idx];
-                cell.anchorMin = new Vector2(0f, 1f);
-                cell.anchorMax = new Vector2(0f, 1f);
-                cell.pivot = new Vector2(0f, 1f);
+                PopFront();
+                i++;
+            }
+            while (items.Count > 0 && itemBackIndex > viewBackIndex && i < maxIterations)
+            {
+                PopBack();
+                i++;
+            }
+            while (itemFrontIndex > viewFrontIndex && i < maxIterations)
+            {
+                PushFront();
+                i++;
+            }
+            while (itemBackIndex < viewBackIndex && i < maxIterations)
+            {
+                PushBack();
+                i++;
+            }
+            if (i == maxIterations)
+            {
+                Debug.LogWarning("循环滚动: UpdateItems()迭代次数过多");
+            }
 
-                var v = GetCellPosInUGUISpace(GetRow(idx), GetCol(idx));
-                cell.anchoredPosition = v;
-                updateCell?.Invoke(cell, idx);
+            // 设置位置
+            for (i = 0; i < items.Count; i++)
+            {
+                int index = itemFrontIndex + i;
+                var item = items[i];
+                item.anchorMin = new Vector2(0f, 1f);
+                item.anchorMax = new Vector2(0f, 1f);
+                item.pivot = new Vector2(0f, 1f);
+
+                var v = GetCellPosInUGUISpace(GetRow(index), GetCol(index));
+                item.anchoredPosition = v;
+                updateCell?.Invoke(item, index);
             }
         }
     }
