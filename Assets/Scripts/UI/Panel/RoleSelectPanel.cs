@@ -53,19 +53,19 @@ public class RoleSelectPanel : BasePanel
         LoopScroll._totalCount = list.Count;
         LoopScroll.SetGOSourceFunc(GetObject, ReturnObject);
         LoopScroll.provideData = ProvideData;
-        LoopScroll.updateCell = UpdatePos;
+        LoopScroll.updateItem = UpdateItem;
     }
 
-    private void UpdatePos(RectTransform rectTransform, int arg2)
+    private void UpdateItem(RectTransform item, int index)
     {
-        float y = rectTransform.anchoredPosition.y;
-        float x = rectTransform.anchoredPosition.x;
-        if (MathUtils.Repeat(arg2, 3) == 1)
+        float y = item.anchoredPosition.y;
+        float x = item.anchoredPosition.x;
+        if (MathUtils.Repeat(index, 3) == 1)
         {
             y -= offset;
         }
         x += -y * Mathf.Tan(16 * Mathf.Deg2Rad);
-        rectTransform.anchoredPosition = new Vector2(x, y);
+        item.anchoredPosition = new Vector2(x, y);
     }
 
     private void ProvideData(GameObject go, int idx)

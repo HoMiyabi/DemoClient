@@ -6,17 +6,27 @@ namespace KiraraLoopScroll
     [AddComponentMenu("Kirara Loop Scroll/Grid Scroll View")]
     public class GridScrollView : Scroller
     {
+        // 不可见阈值
+        public int invisibleThreshold;
+
+        // 内边距
         public Padding padding;
+
+        // Item的大小
         public Vector2 size = new(100f, 100f);
+
+        // Item的间距
         public Vector2 spacing = new(10f, 10f);
 
+        // 每一排的Item数量
         public int countInLine = 3;
 
         private readonly Deque<RectTransform> items = new();
         private int itemFrontIndex;
         private int itemBackIndex; // 左闭右开
 
-        public Action<RectTransform, int> updateCell;
+        public delegate void UpdateItem(RectTransform item, int index);
+        public UpdateItem updateItem;
 
         public void RefreshToStart()
         {
@@ -29,23 +39,25 @@ namespace KiraraLoopScroll
             UpdateItems();
         }
 
-        // 可见最小Idx
-        private int ViewFrontIndex
+        // 可见最小Index
+        private int VisibleFrontIndex
         {
             get
             {
                 int minLine = Mathf.FloorToInt((Pos - padding.top + CullingSpacing) / (LineWidth + CullingSpacing));
+                minLine -= invisibleThreshold;
                 int index = minLine * countInLine;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
 
-        // 可见最大Idx
-        private int ViewBackIndex
+        // 可见最大Index(不包含)
+        private int VisibleBackIndex
         {
             get
             {
                 int maxLine = Mathf.CeilToInt((Pos + ViewSize - padding.top) / (LineWidth + CullingSpacing));
+                maxLine += invisibleThreshold;
                 int index = maxLine * countInLine;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
@@ -58,16 +70,16 @@ namespace KiraraLoopScroll
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        private Vector2 GetCellPos(int row, int col)
+        private Vector2 GetItemPos(int row, int col)
         {
             float x = col * (size.x + spacing.x);
             float y = -row * (size.y + spacing.y);
             return new Vector2(x, y);
         }
 
-        private Vector2 GetCellPosInUGUISpace(int row, int col)
+        private Vector2 GetItemPosInUGUISpace(int row, int col)
         {
-            return GetCellPos(row, col) - new Vector2(0, -Pos) + new Vector2(padding.left, -padding.top);
+            return GetItemPos(row, col) - new Vector2(0, -Pos) + new Vector2(padding.left, -padding.top);
         }
 
         private int GetRow(int index)
@@ -78,6 +90,13 @@ namespace KiraraLoopScroll
         private int GetCol(int index)
         {
             return (index % countInLine + countInLine) % countInLine;
+        }
+
+        private Vector2 GetItemPosInUGUISpace(int index)
+        {
+            int row = GetRow(index);
+            int col = GetCol(index);
+            return GetItemPosInUGUISpace(row, col);
         }
 
         private float LineWidth => direction switch
@@ -174,24 +193,24 @@ namespace KiraraLoopScroll
             const int maxIterations = 1000;
             int i = 0;
 
-            int viewFrontIndex = ViewFrontIndex;
-            int viewBackIndex = ViewBackIndex;
-            while (items.Count > 0 && itemFrontIndex < viewFrontIndex && i < maxIterations)
+            int visibleFrontIndex = VisibleFrontIndex;
+            int visibleBackIndex = VisibleBackIndex;
+            while (items.Count > 0 && itemFrontIndex < visibleFrontIndex && i < maxIterations)
             {
                 PopFront();
                 i++;
             }
-            while (items.Count > 0 && itemBackIndex > viewBackIndex && i < maxIterations)
+            while (items.Count > 0 && itemBackIndex > visibleBackIndex && i < maxIterations)
             {
                 PopBack();
                 i++;
             }
-            while (itemFrontIndex > viewFrontIndex && i < maxIterations)
+            while (itemFrontIndex > visibleFrontIndex && i < maxIterations)
             {
                 PushFront();
                 i++;
             }
-            while (itemBackIndex < viewBackIndex && i < maxIterations)
+            while (itemBackIndex < visibleBackIndex && i < maxIterations)
             {
                 PushBack();
                 i++;
@@ -210,9 +229,8 @@ namespace KiraraLoopScroll
                 item.anchorMax = new Vector2(0f, 1f);
                 item.pivot = new Vector2(0f, 1f);
 
-                var v = GetCellPosInUGUISpace(GetRow(index), GetCol(index));
-                item.anchoredPosition = v;
-                updateCell?.Invoke(item, index);
+                item.anchoredPosition = GetItemPosInUGUISpace(index);
+                updateItem?.Invoke(item, index);
             }
         }
     }
