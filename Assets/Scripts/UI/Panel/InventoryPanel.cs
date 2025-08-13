@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Kirara.Model;
 using UnityEngine;
@@ -48,22 +49,11 @@ namespace Kirara.UI.Panel
             set
             {
                 if (_weaponIdx == value) return;
-                if (WeaponLoopScroll.cells.TryGetValue(_weaponIdx, out var r))
-                {
-                    var cell = r.GetComponent<UIInventoryCellWeapon>();
-                    cell.OnDeselect();
-                }
-
                 _weaponIdx = value;
-
-                UIWeaponDetail.GetComponent<UIWeaponDetail>().Set(weapons.ElementAtOrDefault(_weaponIdx));
-                if (WeaponLoopScroll.cells.TryGetValue(_weaponIdx, out r))
-                {
-                    var cell = r.GetComponent<UIInventoryCellWeapon>();
-                    cell.OnSelect();
-                }
+                OnWeaponSelect?.Invoke();
             }
         }
+        public Action OnWeaponSelect;
 
         private List<DiscItem> discs = new();
         private int _discIdx = -1;
@@ -74,22 +64,12 @@ namespace Kirara.UI.Panel
             set
             {
                 if (_discIdx == value) return;
-                if (DiscLoopScroll.cells.TryGetValue(_discIdx, out var r))
-                {
-                    var cell = r.GetComponent<UIInventoryCellDisc>();
-                    cell.OnDeselect();
-                }
 
                 _discIdx = value;
-
-                UIDiscDetail.Set(discs.ElementAtOrDefault(_discIdx));
-                if (DiscLoopScroll.cells.TryGetValue(_discIdx, out r))
-                {
-                    var cell = r.GetComponent<UIInventoryCellDisc>();
-                    cell.OnSelect();
-                }
+                OnDiscSelect?.Invoke();
             }
         }
+        public Action OnDiscSelect;
 
         private LoopScrollGOPool weaponPool;
         private LoopScrollGOPool discPool;
