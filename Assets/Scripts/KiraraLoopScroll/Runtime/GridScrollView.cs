@@ -39,12 +39,19 @@ namespace KiraraLoopScroll
             UpdateItems();
         }
 
+        private float FrontPadding => direction switch
+        {
+            EDirection.Horizontal => padding.left,
+            EDirection.Vertical => padding.top,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
         // 可见最小Index
         private int VisibleFrontIndex
         {
             get
             {
-                int minLine = Mathf.FloorToInt((Pos - padding.top + CullingSpacing) / (LineWidth + CullingSpacing));
+                int minLine = Mathf.FloorToInt((Pos - FrontPadding + DirectionSpacing) / (LineWidth + DirectionSpacing));
                 minLine -= invisibleThreshold;
                 int index = minLine * countInLine;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
@@ -56,47 +63,63 @@ namespace KiraraLoopScroll
         {
             get
             {
-                int maxLine = Mathf.CeilToInt((Pos + ViewSize - padding.top) / (LineWidth + CullingSpacing));
+                int maxLine = Mathf.CeilToInt((Pos + ViewSize - FrontPadding) / (LineWidth + DirectionSpacing));
                 maxLine += invisibleThreshold;
                 int index = maxLine * countInLine;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
 
-        private float CullingSpacing => direction switch
+        private float DirectionSpacing => direction switch
         {
             EDirection.Horizontal => spacing.x,
             EDirection.Vertical => spacing.y,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        private Vector2 GetItemPos(int row, int col)
+        private Vector2 GetItemPos(int lineNum, int subNum)
         {
-            float x = col * (size.x + spacing.x);
-            float y = -row * (size.y + spacing.y);
+            int row = lineNum;
+            int col = subNum;
+            if (direction == EDirection.Horizontal)
+            {
+                (row, col) = (col, row);
+            }
+            var delta = size + spacing;
+            float x = col * delta.x;
+            float y = row * delta.y;
             return new Vector2(x, y);
         }
 
-        private Vector2 GetItemPosInUGUISpace(int row, int col)
+        private Vector2 DirectionPos => direction switch
         {
-            return GetItemPos(row, col) - new Vector2(0, -Pos) + new Vector2(padding.left, -padding.top);
+            EDirection.Horizontal => new Vector2(Pos, 0),
+            EDirection.Vertical => new Vector2(0, Pos),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private Vector2 GetItemPosInUGUISpace(int lineNum, int subNum)
+        {
+            var pos = GetItemPos(lineNum, subNum) + new Vector2(padding.left, padding.top) - DirectionPos;
+            pos.y = -pos.y;
+            return pos;
         }
 
-        private int GetRow(int index)
+        private int GetLineNum(int index)
         {
             return Mathf.FloorToInt(index / (float)countInLine);
         }
 
-        private int GetCol(int index)
+        private int GetSubNum(int index)
         {
             return (index % countInLine + countInLine) % countInLine;
         }
 
         private Vector2 GetItemPosInUGUISpace(int index)
         {
-            int row = GetRow(index);
-            int col = GetCol(index);
-            return GetItemPosInUGUISpace(row, col);
+            int lineNum = GetLineNum(index);
+            int subNum = GetSubNum(index);
+            return GetItemPosInUGUISpace(lineNum, subNum);
         }
 
         private float LineWidth => direction switch
@@ -180,7 +203,7 @@ namespace KiraraLoopScroll
                 float ans = LineWidth * lineCount;
                 if (lineCount > 0)
                 {
-                    ans += CullingSpacing * (lineCount - 1);
+                    ans += DirectionSpacing * (lineCount - 1);
                 }
                 ans += padding.top + padding.bottom;
                 return ans;
