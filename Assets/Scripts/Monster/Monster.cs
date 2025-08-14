@@ -88,17 +88,39 @@ namespace Kirara
             ActionPlayer.Speed = 0f;
             await UniTask.WaitForSeconds(duration);
             ActionPlayer.Speed = 1f;
-            MonsterAICtrl.EnterState(MonsterAICtrl.State.Hit);
+            // todo)) 恢复进入Hit
+            // MonsterAICtrl.EnterState(MonsterAICtrl.State.Hit);
         }
 
         public void Move(Vector3 value)
         {
-            CharacterController.Move(value);
+            if (CharacterController)
+            {
+                CharacterController.Move(value);
+            }
+            else
+            {
+                transform.position += value;
+            }
+        }
+
+        public void SetPos(Vector3 pos)
+        {
+            if (CharacterController)
+            {
+                CharacterController.enabled = false;
+                transform.position = pos;
+                CharacterController.enabled = true;
+            }
+            else
+            {
+                transform.position = pos;
+            }
         }
 
         public void UpdateSync(NSyncMonster syncMonster)
         {
-            transform.position = syncMonster.Pos.Unity();
+            SetPos(syncMonster.Pos.Unity());
             transform.rotation = syncMonster.Rot.Unity();
             // Debug.Log($"RepMovement, ThreadId: {Environment.CurrentManagedThreadId}, " +
             //           $"Pos: {syncMonster.Pos}, transform.position: {transform.position}");
