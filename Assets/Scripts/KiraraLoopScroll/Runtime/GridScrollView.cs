@@ -38,10 +38,17 @@ namespace KiraraLoopScroll
             UpdateItems();
         }
 
-        private float FrontPadding => direction switch
+        private float StartPadding => direction switch
         {
             EDirection.Horizontal => padding.left,
             EDirection.Vertical => padding.top,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private float EndPadding => direction switch
+        {
+            EDirection.Horizontal => padding.right,
+            EDirection.Vertical => padding.bottom,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -50,7 +57,7 @@ namespace KiraraLoopScroll
         {
             get
             {
-                int minLine = Mathf.FloorToInt((Pos - FrontPadding + DirectionSpacing) / (LineWidth + DirectionSpacing));
+                int minLine = Mathf.FloorToInt((Pos - StartPadding + LineSpacing) / (LineWidth + LineSpacing));
                 minLine -= invisibleThreshold;
                 int index = minLine * countInLine;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
@@ -62,14 +69,14 @@ namespace KiraraLoopScroll
         {
             get
             {
-                int maxLine = Mathf.CeilToInt((Pos + ViewSize - FrontPadding) / (LineWidth + DirectionSpacing));
+                int maxLine = Mathf.CeilToInt((Pos + ViewSize - StartPadding) / (LineWidth + LineSpacing));
                 maxLine += invisibleThreshold;
                 int index = maxLine * countInLine;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
 
-        private float DirectionSpacing => direction switch
+        private float LineSpacing => direction switch
         {
             EDirection.Horizontal => spacing.x,
             EDirection.Vertical => spacing.y,
@@ -121,6 +128,7 @@ namespace KiraraLoopScroll
             return GetItemPosInUGUISpace(lineNum, subNum);
         }
 
+        // 排间距
         private float LineWidth => direction switch
         {
             EDirection.Horizontal => size.x,
@@ -200,11 +208,11 @@ namespace KiraraLoopScroll
 
                 float lineCount = LineCount;
                 float ans = LineWidth * lineCount;
-                if (lineCount > 0)
+                if (lineCount >= 2)
                 {
-                    ans += DirectionSpacing * (lineCount - 1);
+                    ans += LineSpacing * (lineCount - 1);
                 }
-                ans += padding.top + padding.bottom;
+                ans += StartPadding + EndPadding;
                 return ans;
             }
         }
