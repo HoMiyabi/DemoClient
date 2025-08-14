@@ -40,7 +40,11 @@ namespace Kirara.UI
             UIUserOnlineStatus.text = player.IsOnline ? "在线" : "离线";
 
             ChatBtn.onClick.RemoveAllListeners();
-            ChatBtn.onClick.AddListener(() => UIMgr.Instance.PushPanel<ChatPanel>());
+            ChatBtn.onClick.AddListener(() =>
+            {
+                var panel = UIMgr.Instance.PushPanel<ChatPanel>();
+                panel.ChattingPlayer = player;
+            });
         }
     }
 }

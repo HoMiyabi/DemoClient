@@ -49,7 +49,7 @@ namespace Kirara.UI.Panel
         public SocialPlayer ChattingPlayer
         {
             get => _chattingPlayer;
-            private set
+            set
             {
                 _chattingPlayer = value;
 
