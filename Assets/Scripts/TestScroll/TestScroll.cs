@@ -22,6 +22,7 @@ namespace Kirara.TestScroll
         }
         #endregion
 
+        public int count;
         public GameObject Prefab;
 
         private void Awake()
@@ -33,7 +34,7 @@ namespace Kirara.TestScroll
             Scroller.SetGOSourceFunc(pool.GetObject, pool.ReturnObject);
             Scroller.provideData = ProvideData;
 
-            Scroller._totalCount = 3;
+            Scroller._totalCount = count;
 
             EnableMask.onValueChanged.AddListener((value) =>
             {

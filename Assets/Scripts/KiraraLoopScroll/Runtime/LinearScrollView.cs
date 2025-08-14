@@ -7,6 +7,7 @@ namespace KiraraLoopScroll
     [AddComponentMenu("Kirara Loop Scroll/Linear Scroll View")]
     public class LinearScrollView : Scroller
     {
+        public Padding padding;
         public float spacing;
 
         private struct Item
@@ -27,6 +28,20 @@ namespace KiraraLoopScroll
         private float itemBackPos; // 最后一个Item的结束位置
         // (spacing只在每个Item之间，外侧没有)
 
+        private float StartPadding => direction switch
+        {
+            EDirection.Horizontal => padding.left,
+            EDirection.Vertical => padding.top,
+            _ => throw new IndexOutOfRangeException()
+        };
+
+        private float EndPadding => direction switch
+        {
+            EDirection.Horizontal => padding.right,
+            EDirection.Vertical => padding.bottom,
+            _ => throw new IndexOutOfRangeException()
+        };
+
         protected override float PosToEdge
         {
             get
@@ -42,7 +57,7 @@ namespace KiraraLoopScroll
 
                 if (itemFrontIndex == 0)
                 {
-                    float dist = itemFrontPos - Pos;
+                    float dist = itemFrontPos - StartPadding - Pos;
                     if (dist > 0f)
                     {
                         return dist;
@@ -51,7 +66,7 @@ namespace KiraraLoopScroll
 
                 if (itemBackIndex == _totalCount)
                 {
-                    float dist = itemBackPos - (Pos + ViewSize);
+                    float dist = itemBackPos + EndPadding - (Pos + ViewSize);
                     if (dist < 0f)
                     {
                         // 说明视口尾部超出内容
@@ -113,8 +128,8 @@ namespace KiraraLoopScroll
 
                 rectTransform.anchoredPosition = direction switch
                 {
-                    EDirection.Horizontal => new Vector2(-(pos - Pos), 0f),
-                    EDirection.Vertical => new Vector2(0f, -(pos - Pos)),
+                    EDirection.Horizontal => new Vector2(pos - Pos, padding.top),
+                    EDirection.Vertical => new Vector2(padding.left, -(pos - Pos)),
                     _ => throw new IndexOutOfRangeException()
                 };
                 pos += item.size + spacing;
