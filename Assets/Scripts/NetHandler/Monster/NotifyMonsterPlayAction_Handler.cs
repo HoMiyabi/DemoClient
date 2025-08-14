@@ -6,8 +6,11 @@ namespace Kirara.NetHandler.Monster
     {
         protected override void Run(Session session, NotifyMonsterPlayAction msg)
         {
-            var monster = MonsterSystem.Instance.monsters[msg.MonsterId];
-            monster.PlayAction(msg.ActionName, 0.15f);
+            if (string.IsNullOrEmpty(msg.ActionName)) return;
+            if (MonsterSystem.Instance.monsters.TryGetValue(msg.MonsterId, out var monster))
+            {
+                monster.PlayAction(msg.ActionName, 0.15f);
+            }
         }
     }
 }

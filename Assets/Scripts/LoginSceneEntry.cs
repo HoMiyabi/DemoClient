@@ -1,4 +1,4 @@
-﻿using Animancer;
+﻿
 using UnityEngine;
 
 namespace Kirara
@@ -7,7 +7,7 @@ namespace Kirara
     {
         private void Awake()
         {
-            Animancer.OptionalWarning.DuplicateEvent.Disable();
+            // Animancer.OptionalWarning.DuplicateEvent.Disable();
         }
     }
 }

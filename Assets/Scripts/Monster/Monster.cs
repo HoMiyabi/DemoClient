@@ -96,7 +96,7 @@ namespace Kirara
             CharacterController.Move(value);
         }
 
-        public void RepMovement(NSyncMonster syncMonster)
+        public void UpdateSync(NSyncMonster syncMonster)
         {
             transform.position = syncMonster.Pos.Unity();
             transform.rotation = syncMonster.Rot.Unity();

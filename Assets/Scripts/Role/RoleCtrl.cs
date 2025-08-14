@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
-using Animancer;
-using cfg.main;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Kirara.Model;
 using Kirara.TimelineAction;
-using Manager;
 
 namespace Kirara
 {
@@ -20,8 +17,6 @@ namespace Kirara
         public CinemachineVirtualCamera leftAssistVCam;
         public CinemachineVirtualCamera rightAssistVCam;
         public AudioClip[] hitClips;
-
-        public ClipTransition clip;
 
         public Transform Cam { get; private set; }
         private Animator Animator { get; set; }

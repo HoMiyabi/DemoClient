@@ -2,7 +2,7 @@
 
 namespace Kirara.NetHandler.Monster
 {
-    public class NotifySyncMonsterTakeDamage_Handler : MsgHandler<NotifyMonsterTakeDamage>
+    public class NotifyMonsterTakeDamage_Handler : MsgHandler<NotifyMonsterTakeDamage>
     {
         protected override void Run(Session session, NotifyMonsterTakeDamage msg)
         {

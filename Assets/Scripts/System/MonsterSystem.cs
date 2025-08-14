@@ -4,7 +4,6 @@ using Kirara.Model;
 using Kirara.UI;
 using Manager;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Kirara
 {
@@ -18,13 +17,12 @@ namespace Kirara
         public event Action<Monster> OnMonsterSpawn;
         public event Action<Monster> OnMonsterDie;
 
-        public void SpawnMonster(int monsterCid, int monsterId, Vector3 pos, Quaternion rot)
+        public void SpawnMonster(int monsterCid, int monsterId, Vector3 pos, Quaternion rot, string actionName)
         {
             var config = ConfigMgr.tb.TbMonsterConfig[monsterCid];
 
             var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(config.Location);
             var go = handle.InstantiateSync(monsterParent);
-            handle.Release();
 
             // go.GetComponent<CharacterController>().enabled = false;
             go.transform.position = pos;
@@ -34,6 +32,7 @@ namespace Kirara
             var monster = go.GetComponent<Monster>();
             monster.Set(new MonsterModel(monsterCid, monsterId));
             monsters.Add(monsterId, monster);
+            monster.PlayAction(actionName);
 
             UIMgr.Instance.AddHUD<UIMonsterStatusBar>().Set(monster);
 
