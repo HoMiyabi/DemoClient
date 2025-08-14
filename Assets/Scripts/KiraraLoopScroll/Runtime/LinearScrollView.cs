@@ -71,7 +71,7 @@ namespace KiraraLoopScroll
                     itemBackPos - itemFrontPos < ViewSize)
                 {
                     // 所有Item都在视口内
-                    return itemFrontPos - Pos;
+                    return itemFrontPos - StartPadding - Pos;
                 }
 
                 if (itemFrontIndex == 0)
@@ -262,6 +262,13 @@ namespace KiraraLoopScroll
             {
                 SetPos(itemFrontPos - StartPadding, true);
             }
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            itemFrontPos = StartPadding;
+            itemBackPos = StartPadding;
         }
     }
 }

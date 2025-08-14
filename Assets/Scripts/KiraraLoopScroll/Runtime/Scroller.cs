@@ -166,7 +166,7 @@ namespace KiraraLoopScroll
             UpdateItems();
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (!content)
             {
@@ -174,7 +174,7 @@ namespace KiraraLoopScroll
             }
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             if (scrollbar)
             {
@@ -320,7 +320,7 @@ namespace KiraraLoopScroll
             };
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (state == EScrollerState.Inertia)
             {
