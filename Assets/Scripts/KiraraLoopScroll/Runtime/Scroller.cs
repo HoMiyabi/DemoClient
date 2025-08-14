@@ -404,5 +404,10 @@ namespace KiraraLoopScroll
             scrollVelocity = 0f;
             animState.Set(Pos, pos, duration, onComplete);
         }
+
+        public void Scroll(float delta, float duration, Action onComplete = null)
+        {
+            ScrollTo(Pos + delta, duration, onComplete);
+        }
     }
 }

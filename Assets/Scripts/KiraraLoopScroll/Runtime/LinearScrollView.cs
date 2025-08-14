@@ -47,6 +47,20 @@ namespace KiraraLoopScroll
             _ => throw new IndexOutOfRangeException()
         };
 
+        // protected void ScrollToEdgeWhenOutside()
+        // {
+        //     if (itemFrontIndex == 0)
+        //     {
+        //         float dist = itemFrontPos - StartPadding - Pos;
+        //         if (dist > 0f)
+        //         {
+        //             Scroll(dist, elasticDuration);
+        //             return;
+        //         }
+        //     }
+        //     if ()
+        // }
+
         protected override float PosToEdge
         {
             get
@@ -83,7 +97,17 @@ namespace KiraraLoopScroll
             }
         }
 
-        protected override float ContentSize => -1f;
+        protected override float ContentSize
+        {
+            get
+            {
+                if (itemFrontIndex == 0 && itemBackIndex == _totalCount)
+                {
+                    return itemBackPos - itemFrontPos + StartPadding + EndPadding;
+                }
+                return -1;
+            }
+        }
 
         protected override void UpdateItems()
         {
@@ -234,6 +258,10 @@ namespace KiraraLoopScroll
             itemFrontIndex = _totalCount;
             itemBackIndex = _totalCount;
             SetPos(0, true);
+            if (itemFrontIndex == 0 && itemFrontPos > StartPadding)
+            {
+                SetPos(itemFrontPos - StartPadding, true);
+            }
         }
     }
 }
