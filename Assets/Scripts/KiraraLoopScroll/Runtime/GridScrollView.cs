@@ -25,8 +25,7 @@ namespace KiraraLoopScroll
         private int itemFrontIndex;
         private int itemBackIndex; // 左闭右开
 
-        public delegate void UpdateItem(RectTransform item, int index);
-        public UpdateItem updateItem;
+        public ScrollFunc.UpdateItem updateItem;
 
         public void RefreshToStart()
         {

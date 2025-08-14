@@ -129,7 +129,7 @@ namespace KiraraLoopScroll
 
         private readonly AnimState animState = new();
 
-        #region Pooling
+        #region 获取和返还
 
         public int _totalCount;
 

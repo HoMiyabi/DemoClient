@@ -7,8 +7,13 @@ namespace KiraraLoopScroll
     [AddComponentMenu("Kirara Loop Scroll/Linear Scroll View")]
     public class LinearScrollView : Scroller
     {
+        // 内边距
         public Padding padding;
+
+        // Item的间距
         public float spacing;
+
+        public ScrollFunc.UpdateItem updateItem;
 
         private struct Item
         {
@@ -132,6 +137,7 @@ namespace KiraraLoopScroll
                     EDirection.Vertical => new Vector2(padding.left, -(pos - Pos)),
                     _ => throw new IndexOutOfRangeException()
                 };
+                updateItem?.Invoke(rectTransform, itemFrontIndex + i);
                 pos += item.size + spacing;
             }
         }
