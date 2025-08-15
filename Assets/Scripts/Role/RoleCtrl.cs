@@ -31,7 +31,7 @@ namespace Kirara
         private bool EnableRecenter { get; set; }
         public bool EnableParryAid { get; set; }
 
-        public List<Monster> lastHitMonsters = new();
+        public List<MonsterCtrl> lastHitMonsters = new();
 
         public bool lookAtMonster;
 
@@ -54,6 +54,8 @@ namespace Kirara
         {
             Role = role;
             Role.RoleCtrl = this;
+            SetPos(role.Pos);
+            transform.rotation = Quaternion.Euler(role.Rot);
         }
 
         private void Update()
@@ -192,7 +194,7 @@ namespace Kirara
             ActionCtrl.PlayAction(ActionName.Background);
         }
 
-        private void SetPos(Vector3 pos)
+        public void SetPos(Vector3 pos)
         {
             if (CharacterController.enabled)
             {
@@ -206,7 +208,7 @@ namespace Kirara
             }
         }
 
-        private void AddPos(Vector3 delta)
+        public void AddPos(Vector3 delta)
         {
             if (CharacterController.enabled)
             {
@@ -219,7 +221,7 @@ namespace Kirara
         }
 
         // 格挡切入
-        public void SwitchInParryAid(Monster monster)
+        public void SwitchInParryAid(MonsterCtrl monster)
         {
             Debug.Log($"{name} 角色进入格挡");
             ChGravity.enabled = true;

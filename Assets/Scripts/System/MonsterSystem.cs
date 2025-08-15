@@ -10,29 +10,33 @@ namespace Kirara
     public class MonsterSystem : UnitySingleton<MonsterSystem>
     {
         [SerializeField] private Transform monsterParent;
-        public readonly Dictionary<int, Monster> monsters = new();
+        public readonly Dictionary<int, MonsterCtrl> monsters = new();
 
-        public List<Monster> AttackingMonsters { get; private set; } = new();
+        public List<MonsterCtrl> AttackingMonsters { get; private set; } = new();
 
-        public event Action<Monster> OnMonsterSpawn;
-        public event Action<Monster> OnMonsterDie;
+        public event Action<MonsterCtrl> OnMonsterSpawn;
+        public event Action<MonsterCtrl> OnMonsterDie;
 
-        public void SpawnMonster(int monsterCid, int monsterId, Vector3 pos, Quaternion rot, string actionName)
+        public void SpawnMonster(NSyncMonster syncMonster)
         {
-            var config = ConfigMgr.tb.TbMonsterConfig[monsterCid];
+            var config = ConfigMgr.tb.TbMonsterConfig[syncMonster.MonsterCid];
 
             var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(config.Location);
             var go = handle.InstantiateSync(monsterParent);
 
             // go.GetComponent<CharacterController>().enabled = false;
-            go.transform.position = pos;
+            go.transform.position = syncMonster.Pos.Unity();
             // go.GetComponent<CharacterController>().enabled = true;
-            go.transform.rotation = rot;
+            go.transform.rotation = syncMonster.Rot.Unity();
 
-            var monster = go.GetComponent<Monster>();
-            monster.Set(new MonsterModel(monsterCid, monsterId));
-            monsters.Add(monsterId, monster);
-            monster.PlayAction(actionName);
+            var monster = go.GetComponent<MonsterCtrl>();
+            monster.Set(new MonsterModel(syncMonster.MonsterCid, syncMonster.MonsterId, syncMonster.Hp));
+            monsters.Add(syncMonster.MonsterCid, monster);
+            if (!string.IsNullOrEmpty(syncMonster.ActionName))
+            {
+                monster.PlayAction(syncMonster.ActionName);
+            }
+
 
             UIMgr.Instance.AddHUD<UIMonsterStatusBar>().Set(monster);
 
@@ -52,19 +56,19 @@ namespace Kirara
             }
         }
 
-        public Monster ClosestMonster(Vector3 worldPos, out float dist)
+        public MonsterCtrl ClosestMonster(Vector3 worldPos, out float dist)
         {
             return ClosestMonster(worldPos, monsters.Values, out dist);
         }
 
-        public Monster ClosestAttackingMonster(Vector3 worldPos, out float dist)
+        public MonsterCtrl ClosestAttackingMonster(Vector3 worldPos, out float dist)
         {
             return ClosestMonster(worldPos, AttackingMonsters, out dist);
         }
 
-        private static Monster ClosestMonster(Vector3 worldPos, IEnumerable<Monster> monsters, out float dist)
+        private static MonsterCtrl ClosestMonster(Vector3 worldPos, IEnumerable<MonsterCtrl> monsters, out float dist)
         {
-            Monster ret = null;
+            MonsterCtrl ret = null;
             dist = float.MaxValue;
             foreach (var monster in monsters)
             {

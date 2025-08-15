@@ -2,24 +2,27 @@
 
 namespace Kirara.UI
 {
-    public class UIRolesStatus : MonoBehaviour
+    public class UIRolesStatusBar : MonoBehaviour
     {
         #region View
-        private UIBigRoleStatusBar   UIBigRoleStatusBar;
-        private UISmallRoleStatusBar UISmallRoleStatusBar;
-        private UISmallRoleStatusBar UISmallRoleStatusBar1;
-        private void InitUI()
+        private bool _isBound;
+        private Kirara.UI.UIBigRoleStatusBar   UIBigRoleStatusBar;
+        private Kirara.UI.UISmallRoleStatusBar UISmallRoleStatusBar;
+        private Kirara.UI.UISmallRoleStatusBar UISmallRoleStatusBar1;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c                 = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBigRoleStatusBar    = c.Q<UIBigRoleStatusBar>(0, "UIBigRoleStatusBar");
-            UISmallRoleStatusBar  = c.Q<UISmallRoleStatusBar>(1, "UISmallRoleStatusBar");
-            UISmallRoleStatusBar1 = c.Q<UISmallRoleStatusBar>(2, "UISmallRoleStatusBar1");
+            UIBigRoleStatusBar    = c.Q<Kirara.UI.UIBigRoleStatusBar>(0, "UIBigRoleStatusBar");
+            UISmallRoleStatusBar  = c.Q<Kirara.UI.UISmallRoleStatusBar>(1, "UISmallRoleStatusBar");
+            UISmallRoleStatusBar1 = c.Q<Kirara.UI.UISmallRoleStatusBar>(2, "UISmallRoleStatusBar1");
         }
         #endregion
 
         private void Awake()
         {
-            InitUI();
+            BindUI();
         }
 
         private void OnEnable()

@@ -6,7 +6,7 @@ namespace Kirara
 {
     public class SimPlayerSystem : UnitySingleton<SimPlayerSystem>
     {
-        [SerializeField] public Transform simulateCharacterParent;
+        [SerializeField] public Transform simRoleParent;
         private readonly Dictionary<string, SimPlayer> simPlayers = new();
 
         public void AddSimPlayer(NSyncPlayer simPlayer)

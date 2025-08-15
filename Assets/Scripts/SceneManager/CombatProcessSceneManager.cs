@@ -9,40 +9,40 @@ namespace Kirara
 {
     public class CombatProcessSceneManager
     {
-        private static bool GetIsCrit(Role ch)
+        private static bool GetIsCrit(Role role)
         {
-            return Random.Range(0f, 1f) <= ch.Set[EAttrType.CritRate];
+            return Random.Range(0f, 1f) <= role.Set[EAttrType.CritRate];
         }
 
-        private static double CalcDamage(Role ch, double dmgMult, bool isCrit)
+        private static double CalcDamage(Role role, double dmgMult, bool isCrit)
         {
-            double dmg = ch.Set[EAttrType.Atk] * dmgMult;
+            double damage = role.Set[EAttrType.Atk] * dmgMult;
             if (isCrit)
             {
-                dmg *= 1f + ch.Set[EAttrType.CritDmg];
+                damage *= 1f + role.Set[EAttrType.CritDmg];
             }
-            return dmg;
+            return damage;
         }
 
-        private static double CalcDaze(Role ch, double dazeMult)
+        private static double CalcDaze(Role role, double dazeMult)
         {
-            double daze = ch.Set[EAttrType.Impact] * dazeMult;
+            double daze = role.Set[EAttrType.Impact] * dazeMult;
             return daze;
         }
 
-        private static void CalcNumeric(Role ch, double dmgMult, double dazeMult,
-            out double dmg, out double daze, out bool isCrit)
+        private static void CalcNumeric(Role role, double dmgMult, double dazeMult,
+            out double damage, out double daze, out bool isCrit)
         {
-            isCrit = GetIsCrit(ch);
-            dmg = CalcDamage(ch, dmgMult, isCrit);
-            daze = CalcDaze(ch, dazeMult);
+            isCrit = GetIsCrit(role);
+            damage = CalcDamage(role, dmgMult, isCrit);
+            daze = CalcDaze(role, dazeMult);
         }
 
-        private static void PlayVisual(RoleCtrl role, Monster target, double dmg, bool isCrit, BoxPlayableAsset box)
+        private static void PlayVisual(RoleCtrl role, MonsterCtrl target, double dmg, bool isCrit, BoxPlayableAsset box)
         {
             // 命中特效
             // Debug.Log($"prefab={box.particlePrefab}, setRot={box.setRot}, rotValue={box.rotValue}");
-            if (box.particlePrefab != null)
+            if (box.particlePrefab)
             {
                 var vfxWPos = target.transform.position + new Vector3(0, 1f, 0);
                 if (box.setRot)
@@ -55,15 +55,9 @@ namespace Kirara
                     ParticleMgr.Instance.Play(box.particlePrefab, vfxWPos);
                 }
             }
-
-            // 伤害跳字
-            var popupTextLocalPos = new Vector3(0, 1.5f, 0) + Random.insideUnitSphere * 0.3f;
-
-            UIMgr.Instance.AddHUD<UIPopupText>().
-                SetDamage(target.transform, popupTextLocalPos, dmg, isCrit).Play();
         }
 
-        public static void HandleChSingleTarget(RoleCtrl role, Monster target, BoxPlayableAsset box)
+        public static void HandleRoleHitEachTarget(RoleCtrl role, MonsterCtrl target, BoxPlayableAsset box)
         {
             if (box.hitId == 0)
             {
@@ -76,26 +70,21 @@ namespace Kirara
             CalcNumeric(role.Role, config.DmgMult, config.DazeMult,
                 out double dmg, out double daze, out bool isCrit);
 
-            target.TakeEffect(dmg, daze, (role.transform.position - target.transform.position).normalized);
+            // target.TakeEffect(dmg, daze);
+            NetFn.Send(new MsgMonsterTakeDamage
+            {
+                MonsterId = target.Model.MonsterId,
+                Damage = (float)dmg,
+                IsCrit = isCrit,
+                Daze = (float)daze,
+                HitGatherDist = box.hitGatherDist,
+                CenterPos = role.transform.TransformPoint(box.center).Net(),
+            });
 
             PlayVisual(role, target, dmg, isCrit, box);
-
-            // 聚怪效果
-            if (box.hitGatherDist != 0f)
-            {
-                var worldCenter = role.transform.TransformPoint(box.center);
-
-                // 移动向量的水平投影，最长不能超过v
-                var v = (worldCenter - target.transform.position);
-                v.y = 0f;
-
-                float dist = Mathf.Min(box.hitGatherDist, v.magnitude); // 不能越过中心
-                var dir = v.normalized; // 方向
-                target.Move(dir * dist);
-            }
         }
 
-        public static void ChHit(RoleCtrl role, BoxPlayableAsset box)
+        public static void RoleAttack(RoleCtrl role, BoxPlayableAsset box)
         {
             int count = box.PhysicsOverlap(role.transform, LayerMask.GetMask("Monster"));
 
@@ -103,15 +92,15 @@ namespace Kirara
             for (int i = 0; i < count; i++)
             {
                 var col = box.cols[i];
-                var mon = col.GetComponent<Monster>();
-                if (mon != null)
+                var monster = col.GetComponent<MonsterCtrl>();
+                if (monster)
                 {
-                    HandleChSingleTarget(role, mon, box);
-                    role.lastHitMonsters.Add(mon);
+                    HandleRoleHitEachTarget(role, monster, box);
+                    role.lastHitMonsters.Add(monster);
                 }
                 else
                 {
-                    Debug.LogWarning("mon == null");
+                    Debug.LogWarning("monster == null");
                 }
             }
         }

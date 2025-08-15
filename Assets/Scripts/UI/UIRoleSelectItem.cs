@@ -1,23 +1,25 @@
 ﻿using cfg.main;
 using Manager;
 using UnityEngine;
-using UnityEngine.UI;
 using YooAsset;
 
 namespace Kirara.UI
 {
-    public class UIRoleSelectCell : MonoBehaviour, ISelectItem
+    public class UIRoleSelectItem : MonoBehaviour, ISelectItem
     {
         #region View
-        private Image  SelectBorder;
-        private Image  Icon;
-        private Button Btn;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Image  SelectBorder;
+        private UnityEngine.UI.Image  Icon;
+        private UnityEngine.UI.Button Btn;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c        = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            SelectBorder = c.Q<Image>(0, "SelectBorder");
-            Icon         = c.Q<Image>(1, "Icon");
-            Btn          = c.Q<Button>(2, "Btn");
+            SelectBorder = c.Q<UnityEngine.UI.Image>(0, "SelectBorder");
+            Icon         = c.Q<UnityEngine.UI.Image>(1, "Icon");
+            Btn          = c.Q<UnityEngine.UI.Button>(2, "Btn");
         }
         #endregion
 
@@ -28,7 +30,7 @@ namespace Kirara.UI
 
         private void Awake()
         {
-            InitUI();
+            BindUI();
         }
 
         private void Clear()
@@ -45,10 +47,10 @@ namespace Kirara.UI
             Clear();
         }
 
-        public void Set(CharacterConfig chConfig, int idx, Bindable<int> selected)
+        public void Set(RoleConfig roleConfig, int idx, Bindable<int> selected)
         {
             Clear();
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(chConfig.RoleSelectIconLoc);
+            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(roleConfig.RoleSelectIconLoc);
             Icon.sprite = handle.AssetObject as Sprite;
 
             _selected = selected;

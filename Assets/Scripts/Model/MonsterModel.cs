@@ -9,23 +9,23 @@ namespace Kirara.Model
         public int MonsterId { get; private set; }
         public int MonsterCid { get; private set; }
 
-        public AttrAbilitySet AttrSet { get; set; } = new();
+        public AttrAbilitySet Set { get; } = new();
 
-        public MonsterModel(int monsterCid, int monsterId)
+        public MonsterModel(int monsterCid, int monsterId, float hp)
         {
             MonsterId = monsterId;
             MonsterCid = monsterCid;
 
             var config = ConfigMgr.tb.TbMonsterConfig[monsterCid];
-            AttrSet[EAttrType.Atk] = config.Atk;
-            AttrSet[EAttrType.Def] = config.Def;
-            AttrSet[EAttrType.Hp] = config.Hp;
-            AttrSet[EAttrType.MaxDaze] = config.MaxDaze;
-            AttrSet[EAttrType.StunDuration] = config.StunDuration;
-            AttrSet[EAttrType.StunDmgMultiplier] = config.StunDmgMultiplier;
+            Set[EAttrType.Atk] = config.Atk;
+            Set[EAttrType.Def] = config.Def;
+            Set[EAttrType.Hp] = config.Hp;
+            Set[EAttrType.MaxDaze] = config.MaxDaze;
+            Set[EAttrType.StunDuration] = config.StunDuration;
+            Set[EAttrType.StunDmgMultiplier] = config.StunDmgMultiplier;
 
-            AttrSet[EAttrType.CurrHp] = config.Hp;
-            AttrSet[EAttrType.CurrDaze] = 0f;
+            Set[EAttrType.CurrHp] = hp;
+            Set[EAttrType.CurrDaze] = 0f;
         }
     }
 }

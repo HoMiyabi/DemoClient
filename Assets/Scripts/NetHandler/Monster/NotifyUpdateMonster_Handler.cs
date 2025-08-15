@@ -14,8 +14,7 @@ namespace Kirara.NetHandler.Monster
                 }
                 else
                 {
-                    MonsterSystem.Instance.SpawnMonster(syncMonster.MonsterCid, syncMonster.MonsterId,
-                            syncMonster.Pos.Unity(), syncMonster.Rot.Unity(), syncMonster.ActionName);
+                    MonsterSystem.Instance.SpawnMonster(syncMonster);
                 }
             }
         }

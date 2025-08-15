@@ -4,11 +4,13 @@ using cfg.main;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
 using Kirara.TimelineAction;
+using Kirara.UI;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Kirara
 {
-    public class Monster : MonoBehaviour
+    public class MonsterCtrl : MonoBehaviour
     {
         public Transform statusBarFollow;
         public Transform attackLightFollow;
@@ -23,14 +25,12 @@ namespace Kirara
 
         public RoleCtrl ParryingRole { get; set; }
 
-        private MonsterAICtrl MonsterAICtrl { get; set; }
         public ActionPlayer ActionPlayer { get; set; }
         private CharacterController CharacterController { get; set; }
         public MonsterModel Model { get; private set; }
 
         private void Awake()
         {
-            MonsterAICtrl = GetComponent<MonsterAICtrl>();
             ActionPlayer = GetComponent<ActionPlayer>();
             CharacterController = GetComponent<CharacterController>();
             ActionDict = actionList.ActionDict;
@@ -41,30 +41,20 @@ namespace Kirara
             Model = model;
         }
 
-        private void HandleNumeric(double damage, double daze)
+        public void HandleTakeDamage(NotifyMonsterTakeDamage msg)
         {
-            Model.AttrSet[EAttrType.CurrHp] = Math.Max(0, Model.AttrSet[EAttrType.CurrHp] - damage);
+            Model.Set[EAttrType.CurrHp] = msg.CurrHp;
 
-            Model.AttrSet[EAttrType.CurrDaze] = Math.Min(
-                Model.AttrSet[EAttrType.CurrDaze] + daze, Model.AttrSet[EAttrType.MaxDaze]);
+            // 伤害跳字
+            var popupTextLocalPos = new Vector3(0, 1.5f, 0) + Random.insideUnitSphere * 0.3f;
 
-            NetFn.Send(new MsgMonsterTakeDamage
-            {
-                MonsterId = Model.MonsterId,
-                Damage = (float)damage
-            });
-        }
+            UIMgr.Instance.AddHUD<UIPopupText>().
+                SetDamage(transform, popupTextLocalPos, msg.Damage, msg.IsCrit).Play();
 
-        public void TakeEffect(double damage, double daze)
-        {
-            HandleNumeric(damage, daze);
-        }
-
-        public void TakeEffect(double damage, double daze, Vector3 from)
-        {
-            HandleNumeric(damage, daze);
-
-            // MonsterAICtrl.GetHit(from);
+            // Model.AttrSet[EAttrType.CurrHp] = Math.Max(0, Model.AttrSet[EAttrType.CurrHp] - damage);
+            //
+            // Model.AttrSet[EAttrType.CurrDaze] = Math.Min(
+            //     Model.AttrSet[EAttrType.CurrDaze] + daze, Model.AttrSet[EAttrType.MaxDaze]);
         }
 
         public void Die()

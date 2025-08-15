@@ -14,7 +14,7 @@ namespace Kirara
 {
     public class PlayerSystem : UnitySingleton<PlayerSystem>
     {
-        [SerializeField] private Transform characterParent;
+        [SerializeField] private Transform RoleParent;
         [SerializeField] public CinemachineVirtualCamera vcam;
         [SerializeField] private GameObject playerPrefab;
         public GameObject Player { get; private set; }
@@ -22,8 +22,6 @@ namespace Kirara
         public GameInput input { get; private set; }
 
         private CancellationTokenSource cts;
-
-        private Player player;
 
         public List<RoleCtrl> RoleCtrls;
         public RoleCtrl FrontRoleCtrl => RoleCtrls[FrontRoleIdx];
@@ -52,7 +50,7 @@ namespace Kirara
             get => FrontRoleCtrl.Role.Id;
             set
             {
-                FrontRoleIdx = player.Roles.FindIndex(x => x.Id == value);
+                FrontRoleIdx = PlayerService.Player.Roles.FindIndex(x => x.Id == value);
             }
         }
 
@@ -63,8 +61,6 @@ namespace Kirara
         protected override void Awake()
         {
             base.Awake();
-
-            player = PlayerService.Player;
 
             RoleCtrls = new List<RoleCtrl>();
             input = new GameInput();
@@ -135,8 +131,8 @@ namespace Kirara
             Init();
 
             // 输入
-            input.Combat.SwitchCharactersNext.started += HandleSwitchCharacterNext;
-            input.Combat.SwitchCharactersPrevious.started += HandleSwitchCharacterPrev;
+            input.Combat.SwitchCharactersNext.started += HandleSwitchRoleNext;
+            input.Combat.SwitchCharactersPrevious.started += HandleSwitchRolePrev;
             foreach (var action in input.Combat.Get().actions)
             {
                 action.started += HandleStartedInputToFrontCommand;
@@ -222,7 +218,7 @@ namespace Kirara
             FrontRoleCtrl.ActionCtrl.Input(command, EActionCommandPhase.Up);
         }
 
-        private void HandleSwitchCharacterNext(InputAction.CallbackContext ctx)
+        private void HandleSwitchRoleNext(InputAction.CallbackContext ctx)
         {
             if (!switchEnabled) return;
 
@@ -230,7 +226,7 @@ namespace Kirara
             SwitchRole(idx, true);
         }
 
-        private void HandleSwitchCharacterPrev(InputAction.CallbackContext ctx)
+        private void HandleSwitchRolePrev(InputAction.CallbackContext ctx)
         {
             if (!switchEnabled) return;
 
@@ -270,7 +266,8 @@ namespace Kirara
             {
                 var role = roles.Find(it => it.Id == roleId);
                 Debug.Log($"加载角色 {role.Config.Name}");
-                var go = AssetMgr.Instance.InstantiateGO(role.Config.PrefabLoc, characterParent);
+                var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(role.Config.PrefabLoc);
+                var go = handle.InstantiateSync(RoleParent, false);
                 var roleCtrl = go.GetComponent<RoleCtrl>();
                 roleCtrl.Set(role);
 

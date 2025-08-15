@@ -12,7 +12,7 @@ namespace Kirara.TimelineAction
 
         public override void Notify(ActionPlayer player)
         {
-            var monster = player.GetComponent<Monster>();
+            var monster = player.GetComponent<MonsterCtrl>();
             if (monster == null)
             {
                 Debug.LogWarning("Monster is null");

@@ -19,12 +19,12 @@ namespace Kirara.Model
                 var simRole = new SimRole(nSimRole);
                 SimRoles.Add(simRole.Id, simRole);
 
-                string loc = ConfigMgr.tb.TbCharacterConfig[simRole.Cid].SimPrefabLoc;
-                var go = AssetMgr.Instance.InstantiateGO(loc, SimPlayerSystem.Instance.simulateCharacterParent);
+                string loc = ConfigMgr.tb.TbRoleConfig[simRole.Cid].SimPrefabLoc;
+                var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(loc);
+                var go = handle.InstantiateSync(SimPlayerSystem.Instance.simRoleParent);
 
                 var simRoleCtrl = go.GetComponent<SimRoleCtrl>();
                 simRoleCtrl.Set(simRole);
-                simRoleCtrl.UpdateImmediate();
                 SimRoleCtrls.Add(simRole.Id, simRoleCtrl);
             }
         }

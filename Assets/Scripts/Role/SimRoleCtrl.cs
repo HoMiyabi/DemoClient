@@ -25,6 +25,8 @@ namespace Kirara
         public void Set(SimRole simRole)
         {
             SimRole = simRole;
+            transform.position = simRole.Pos;
+            transform.rotation = simRole.Rot;
         }
 
         private void Update()

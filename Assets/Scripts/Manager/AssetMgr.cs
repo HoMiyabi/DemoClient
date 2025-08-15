@@ -101,21 +101,5 @@ namespace Manager
             yield return RequestPackageVersion();
             yield return UpdatePackageManifest();
         }
-
-        public GameObject InstantiateGO(string location)
-        {
-            var handle = package.LoadAssetSync<GameObject>(location);
-            var go = handle.InstantiateSync();
-            handle.Release();
-            return go;
-        }
-
-        public GameObject InstantiateGO(string location, Transform parent)
-        {
-            var handle = package.LoadAssetSync<GameObject>(location);
-            var go = handle.InstantiateSync(parent);
-            handle.Release();
-            return go;
-        }
     }
 }

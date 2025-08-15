@@ -18,14 +18,14 @@ namespace Kirara.UI
         private RectTransform rectTransform;
 
         private Transform wsFollow;
-        private Monster Monster { get; set; }
+        private MonsterCtrl Monster { get; set; }
 
         private void Awake()
         {
             rectTransform = transform as RectTransform;
         }
 
-        public void Set(Monster monster)
+        public void Set(MonsterCtrl monster)
         {
             Monster = monster;
 
@@ -39,23 +39,23 @@ namespace Kirara.UI
 
         private void SetHpRatioImmediate()
         {
-            double currHp = Monster.Model.AttrSet[EAttrType.CurrHp];
-            double maxHp = Monster.Model.AttrSet[EAttrType.Hp];
+            double currHp = Monster.Model.Set[EAttrType.CurrHp];
+            double maxHp = Monster.Model.Set[EAttrType.Hp];
             HPBar.fillAmount = (float)(currHp / maxHp);
             delayHPBar.fillAmount = (float)(currHp / maxHp);
         }
 
         public void UpdateHpRatio()
         {
-            double currHp = Monster.Model.AttrSet[EAttrType.CurrHp];
-            double maxHp = Monster.Model.AttrSet[EAttrType.Hp];
+            double currHp = Monster.Model.Set[EAttrType.CurrHp];
+            double maxHp = Monster.Model.Set[EAttrType.Hp];
             HPBar.fillAmount = (float)(currHp / maxHp);
         }
 
         public void UpdateDazeRatio()
         {
-            double currDaze = Monster.Model.AttrSet[EAttrType.CurrDaze];
-            double maxDaze = Monster.Model.AttrSet[EAttrType.MaxDaze];
+            double currDaze = Monster.Model.Set[EAttrType.CurrDaze];
+            double maxDaze = Monster.Model.Set[EAttrType.MaxDaze];
 
             double ratio = currDaze / maxDaze;
             dazeBar.fillAmount = (float)ratio;

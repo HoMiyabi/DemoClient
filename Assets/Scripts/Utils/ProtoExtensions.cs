@@ -37,6 +37,11 @@ namespace Kirara
             return self;
         }
 
+        public static NVector3 Net(this Vector3 v)
+        {
+            return new NVector3().Set(v);
+        }
+
         //
         // public static Modifier GetModifier(this NWeaponAttr weaponAttr)
         // {

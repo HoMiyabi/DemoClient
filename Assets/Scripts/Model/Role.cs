@@ -4,15 +4,18 @@ using cfg.main;
 using Cysharp.Threading.Tasks;
 using Kirara.AttrAbility;
 using Manager;
+using UnityEngine;
 
 namespace Kirara.Model
 {
     public class Role
     {
-        public CharacterConfig Config { get; private set; }
+        public RoleConfig Config { get; private set; }
         public string Id { get; set; }
         public int Level { get; set; }
         public int Exp { get; set; }
+        public Vector3 Pos { get; set; }
+        public Vector3 Rot { get; set; }
 
         private WeaponItem _weapon;
         public WeaponItem Weapon
@@ -56,8 +59,10 @@ namespace Kirara.Model
 
         public Role(NRole role, Player player)
         {
-            Config = ConfigMgr.tb.TbCharacterConfig[role.Cid];
+            Config = ConfigMgr.tb.TbRoleConfig[role.Cid];
             Id = role.Id;
+            Pos = role.Pos.Unity();
+            Rot = role.Rot.Unity();
 
             var chBaseAttrs = ConfigMgr.tb.TbCharacterBaseAttrConfig[role.Cid].ChBaseAttrs;
 

@@ -26,17 +26,16 @@ public class RoleSelectPanel : BasePanel
     }
     #endregion
 
-    public GameObject RoleSelectCellPrefab;
+    public GameObject RoleSelectItemPrefab;
     public float offset;
-    private readonly Stack<GameObject> pool = new();
     private readonly Bindable<int> selected = new(0);
-    private List<CharacterConfig> list;
+    private List<RoleConfig> list;
 
     protected override void Awake()
     {
         base.Awake();
 
-        list = ConfigMgr.tb.TbCharacterConfig.DataList;
+        list = ConfigMgr.tb.TbRoleConfig.DataList;
 
         UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
         SelectBtn.onClick.AddListener(() =>
@@ -51,7 +50,7 @@ public class RoleSelectPanel : BasePanel
         });
 
         LoopScroll._totalCount = list.Count;
-        LoopScroll.SetGOSourceFunc(GetObject, ReturnObject);
+        LoopScroll.SetGOSource(new LoopScrollGOPool(RoleSelectItemPrefab, transform));
         LoopScroll.provideData = ProvideData;
         LoopScroll.updateItem = UpdateItem;
     }
@@ -60,7 +59,7 @@ public class RoleSelectPanel : BasePanel
     {
         float y = item.anchoredPosition.y;
         float x = item.anchoredPosition.x;
-        if (MathUtils.Repeat(index, 3) == 1)
+        if ((index % 3 + 3) % 3 == 1)
         {
             y -= offset;
         }
@@ -70,28 +69,9 @@ public class RoleSelectPanel : BasePanel
 
     private void ProvideData(GameObject go, int idx)
     {
-        var cell = go.GetComponent<UIRoleSelectCell>();
-        var list = ConfigMgr.tb.TbCharacterConfig.DataList;
+        var cell = go.GetComponent<UIRoleSelectItem>();
         int i = (idx % list.Count + list.Count) % list.Count;
         var config = list[i];
         cell.Set(config, i, selected);
-    }
-
-    private GameObject GetObject(int idx)
-    {
-        if (pool.Count == 0)
-        {
-            return Instantiate(RoleSelectCellPrefab);
-        }
-        var go = pool.Pop();
-        go.SetActive(true);
-        return go;
-    }
-
-    private void ReturnObject(GameObject go)
-    {
-        go.transform.SetParent(transform, false);
-        go.SetActive(false);
-        pool.Push(go);
     }
 }

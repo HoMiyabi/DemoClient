@@ -15,7 +15,7 @@ public partial class Tables
 {
     public main.TbDiscConfig TbDiscConfig {get; }
     public main.TbChActionNumericConfig TbChActionNumericConfig {get; }
-    public main.TbCharacterConfig TbCharacterConfig {get; }
+    public main.TbRoleConfig TbRoleConfig {get; }
     public main.TbCurrencyItemConfig TbCurrencyItemConfig {get; }
     public main.TbExchangeConfig TbExchangeConfig {get; }
     public main.TbCharacterBaseAttrConfig TbCharacterBaseAttrConfig {get; }
@@ -40,7 +40,7 @@ public partial class Tables
     {
         TbDiscConfig = new main.TbDiscConfig(loader("main_tbdiscconfig"));
         TbChActionNumericConfig = new main.TbChActionNumericConfig(loader("main_tbchactionnumericconfig"));
-        TbCharacterConfig = new main.TbCharacterConfig(loader("main_tbcharacterconfig"));
+        TbRoleConfig = new main.TbRoleConfig(loader("main_tbroleconfig"));
         TbCurrencyItemConfig = new main.TbCurrencyItemConfig(loader("main_tbcurrencyitemconfig"));
         TbExchangeConfig = new main.TbExchangeConfig(loader("main_tbexchangeconfig"));
         TbCharacterBaseAttrConfig = new main.TbCharacterBaseAttrConfig(loader("main_tbcharacterbaseattrconfig"));
@@ -66,7 +66,7 @@ public partial class Tables
     {
         TbDiscConfig.ResolveRef(this);
         TbChActionNumericConfig.ResolveRef(this);
-        TbCharacterConfig.ResolveRef(this);
+        TbRoleConfig.ResolveRef(this);
         TbCurrencyItemConfig.ResolveRef(this);
         TbExchangeConfig.ResolveRef(this);
         TbCharacterBaseAttrConfig.ResolveRef(this);

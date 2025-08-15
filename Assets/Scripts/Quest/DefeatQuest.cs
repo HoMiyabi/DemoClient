@@ -10,7 +10,7 @@ namespace Kirara.Quest
 		public readonly DefeatQuestConfig config;
         protected override ProgressQuestConfig progressQuestConfig => config;
 
-        private readonly List<Monster> monsters = new();
+        private readonly List<MonsterCtrl> monsters = new();
 
         public DefeatQuest(DefeatQuestConfig config, QuestChain questChain): base(questChain)
         {
@@ -24,7 +24,7 @@ namespace Kirara.Quest
             MonsterSystem.Instance.OnMonsterSpawn += OnMonsterSpawn;
         }
 
-        private void OnMonsterSpawn(Monster monster)
+        private void OnMonsterSpawn(MonsterCtrl monster)
         {
             if (monster.Model.MonsterCid != config.MonsterCid) return;
 
@@ -59,7 +59,7 @@ namespace Kirara.Quest
             }
         }
 
-        private void OnMonsterDie(Monster monster)
+        private void OnMonsterDie(MonsterCtrl monster)
         {
             if (monster.Model.MonsterCid != config.MonsterCid) return;
 

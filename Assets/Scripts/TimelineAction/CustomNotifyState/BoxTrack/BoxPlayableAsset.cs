@@ -46,12 +46,12 @@ namespace Kirara.TimelineAction
         }
 
         public readonly Collider[] cols = new Collider[16];
-        private Monster monster;
+        private MonsterCtrl monster;
         private RoleCtrl role;
 
         public override void NotifyBegin(ActionPlayer player)
         {
-            monster = player.GetComponent<Monster>();
+            monster = player.GetComponent<MonsterCtrl>();
             if (monster != null)
             {
                 MonsterBoxBegin();
@@ -186,7 +186,7 @@ namespace Kirara.TimelineAction
 
         private void ChHitBoxBegin()
         {
-            CombatProcessSceneManager.ChHit(role, this);
+            CombatProcessSceneManager.RoleAttack(role, this);
         }
     }
 }
