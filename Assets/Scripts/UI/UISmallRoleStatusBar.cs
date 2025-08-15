@@ -2,7 +2,6 @@ using cfg.main;
 using Kirara.Model;
 using Manager;
 using UnityEngine;
-using UnityEngine.UI;
 using YooAsset;
 
 namespace Kirara.UI
@@ -10,17 +9,18 @@ namespace Kirara.UI
     public class UISmallRoleStatusBar : MonoBehaviour
     {
         #region View
-        private Image HPBar;
-        private Image DecibelBar;
-        private Image EnergyBar;
-        private Image CharacterIcon;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Image HpBar;
+        private UnityEngine.UI.Image EnergyBar;
+        private UnityEngine.UI.Image RoleIcon;
+        public void BindUI()
         {
-            var c         = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            HPBar         = c.Q<Image>(0, "HPBar");
-            DecibelBar    = c.Q<Image>(1, "DecibelBar");
-            EnergyBar     = c.Q<Image>(2, "EnergyBar");
-            CharacterIcon = c.Q<Image>(3, "CharacterIcon");
+            if (_isBound) return;
+            _isBound = true;
+            var c     = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            HpBar     = c.Q<UnityEngine.UI.Image>(0, "HpBar");
+            EnergyBar = c.Q<UnityEngine.UI.Image>(1, "EnergyBar");
+            RoleIcon  = c.Q<UnityEngine.UI.Image>(2, "RoleIcon");
         }
         #endregion
 
@@ -32,7 +32,7 @@ namespace Kirara.UI
 
         private void Awake()
         {
-            InitUI();
+            BindUI();
         }
 
         private void OnDestroy()
@@ -55,16 +55,16 @@ namespace Kirara.UI
             UpdateHP();
             UpdateEnergy();
 
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
-            CharacterIcon.sprite = handle.AssetObject as Sprite;
+            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconRoleGeneralLoc);
+            RoleIcon.sprite = handle.AssetObject as Sprite;
         }
 
         private void UpdateHP()
         {
-            double currHP = Role.Set[EAttrType.CurrHp];
+            double currHp = Role.Set[EAttrType.CurrHp];
             double maxHP = Role.Set[EAttrType.Hp];
 
-            HPBar.fillAmount = (float)(currHP / maxHP);
+            HpBar.fillAmount = (float)(currHp / maxHP);
         }
 
         private void UpdateEnergy()
@@ -83,10 +83,11 @@ namespace Kirara.UI
             EnergyBar.fillAmount = (float)(currEnergy / maxEnergy);
         }
 
-        private void SetDecibel(float decibel)
+        public void Update()
         {
-            float maxDecibel = 3000;
-            DecibelBar.fillAmount = decibel / maxDecibel;
+            if (Role == null) return;
+            UpdateHP();
+            UpdateEnergy();
         }
     }
 }
