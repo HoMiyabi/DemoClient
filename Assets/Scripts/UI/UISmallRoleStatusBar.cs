@@ -24,6 +24,10 @@ namespace Kirara.UI
         }
         #endregion
 
+        private static readonly int Value = Shader.PropertyToID("_Value");
+        private static readonly int EmptyColor = Shader.PropertyToID("_EmptyColor");
+        private static readonly int FullColor = Shader.PropertyToID("_FullColor");
+
         public Color energyLackColor = Color.white;
         public Color energyEnoughColor = Color.white;
 
@@ -33,6 +37,8 @@ namespace Kirara.UI
         private void Awake()
         {
             BindUI();
+
+            EnergyBar.material = new Material(EnergyBar.material);
         }
 
         private void OnDestroy()
@@ -62,9 +68,9 @@ namespace Kirara.UI
         private void UpdateHP()
         {
             double currHp = Role.Set[EAttrType.CurrHp];
-            double maxHP = Role.Set[EAttrType.Hp];
+            double maxHp = Role.Set[EAttrType.Hp];
 
-            HpBar.fillAmount = (float)(currHp / maxHP);
+			HpBar.material.SetFloat(Value, (float)(currHp / maxHp));
         }
 
         private void UpdateEnergy()
@@ -76,11 +82,15 @@ namespace Kirara.UI
             var chNumeric = ConfigMgr.tb.TbChActionNumericConfig[actionId];
 
             float exSpecialEnergy = chNumeric.EnergyCost;
-            EnergyBar.color = currEnergy < exSpecialEnergy ? energyLackColor : energyEnoughColor;
+            var color = currEnergy < exSpecialEnergy ? energyLackColor : energyEnoughColor;
 
             double maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
 
-            EnergyBar.fillAmount = (float)(currEnergy / maxEnergy);
+            // Debug.Log($"Role: {Role.Config.Name}, Energy: {currEnergy}");
+			EnergyBar.material.SetFloat(Value, (float)(currEnergy / maxEnergy));
+            EnergyBar.material.SetColor(EmptyColor, color);
+            EnergyBar.material.SetColor(FullColor, color);
+            EnergyBar.SetMaterialDirty();
         }
 
         public void Update()
