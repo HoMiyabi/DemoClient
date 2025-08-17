@@ -62,14 +62,17 @@ namespace Kirara.AttrAbility
         public List<ILuaAbility> Abilities { get; private set; } = new();
         private List<(string handle, float time)> Timers { get; set; } = new();
 
-        private static readonly Dictionary<string, LuaTable> configAbilities =
-            LuaMgr.Instance.LuaEnv.Global.Get<Dictionary<string, LuaTable>>("configAbilities");
+        [CSharpCallLua]
+        private delegate void InitAbilityDel(ILuaAbility ability);
+
+        private static readonly Dictionary<string, InitAbilityDel> configAbilities =
+            LuaMgr.Instance.LuaEnv.Global.Get<Dictionary<string, InitAbilityDel>>("configAbilities");
 
         [CSharpCallLua]
-        private delegate ILuaAbility newAbilityDel();
+        private delegate ILuaAbility NewAbilityDel(AttrAbilitySet set);
 
-        private static readonly newAbilityDel newAbility =
-            LuaMgr.Instance.LuaEnv.Global.GetInPath<newAbilityDel>("Ability.new");
+        private static readonly NewAbilityDel newAbility =
+            LuaMgr.Instance.LuaEnv.Global.GetInPath<NewAbilityDel>("Ability.new");
 
         public void Update(float dt)
         {
@@ -98,6 +101,7 @@ namespace Kirara.AttrAbility
 
         private void UpdateAbilities(float dt)
         {
+            Debug.Log($"UpdateAbilities, Abilities.Count: {Abilities.Count}");
             foreach (var ability in Abilities)
             {
                 ability.update(dt);
@@ -153,9 +157,8 @@ namespace Kirara.AttrAbility
                 Debug.LogWarning($"Ability已存在 name: {name}");
                 return;
             }
-            var ability = newAbility();
+            var ability = newAbility(this);
             ability.name = name;
-            ability.set = this;
             foreach (var kv in attrs)
             {
                 ability.attrs.Set(kv.Key, kv.Value);
@@ -169,9 +172,11 @@ namespace Kirara.AttrAbility
             var ability = Abilities.Find(x => x.name == name);
             if (ability == null)
             {
-                ability = newAbility();
-                ability.set = this;
-                ability.setConfig(configAbilities[name]);
+                ability = newAbility(this);
+                ability.name = name;
+                var init = configAbilities[name];
+                init(ability);
+                Abilities.Add(ability);
                 // ability.attrs.ForEach<string, double>((key, value) =>
                 // {
                 //     if (Enum.TryParse<EAttrType>(key, out var type))

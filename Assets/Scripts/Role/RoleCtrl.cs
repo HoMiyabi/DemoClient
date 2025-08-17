@@ -60,7 +60,7 @@ namespace Kirara
 
         private void Update()
         {
-            Role.UpdateEnergyRegen(Time.deltaTime);
+            // Role.UpdateEnergyRegen(Time.deltaTime);
             Role.Set.Update(Time.deltaTime);
 
             if (EnableRotation)

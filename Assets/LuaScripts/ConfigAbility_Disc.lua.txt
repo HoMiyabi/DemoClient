@@ -1,38 +1,51 @@
-local config =
-{
-    {
-        name = "ZhenXingDiSiKe_2",
-        attrs = {
-            ImpactPct = 0.06
-        }
-    },
-    {
-        name = "ZhenXingDiSiKe_4"
-    },
-    {
-        name = "YaoBaiJueShi_2",
-        attrs = {
-            EnergyRegenPct = 0.2
-        }
-    },
-    {
-        name = "YaoBaiJueShi_4"
-    },
-    {
-        name = "YanYuZhongJinShu_2"
-    },
-    {
-        name = "YanYuZhongJinShu_4"
-    },
-    {
-        name = "HeTunDianYin_2",
-        attrs = {
-            PenRatio = 0.08
-        }
-    },
-    {
-        name = "HeTunDianYin_4"
-    }
-}
+local config = {}
+
+
+---@param self Ability
+config.ZhenXingDiSiKe_2 = function(self)
+    self.attrs.ImpactPct = 0.06
+end
+
+
+---@param self Ability
+config.ZhenXingDiSiKe_4 = function(self)
+
+end
+
+
+---@param self Ability
+config.YaoBaiJueShi_2 = function(self)
+    self.attrs.EnergyRegenPct = 0.2
+end
+
+
+---@param self Ability
+config.YaoBaiJueShi_4 = function(self)
+
+end
+
+
+---@param self Ability
+config.YanYuZhongJinShu_2 = function(self)
+
+end
+
+
+---@param self Ability
+config.YanYuZhongJinShu_4 = function(self)
+
+end
+
+
+---@param self Ability
+config.HeTunDianYin_2 = function(self)
+    self.attrs.PenRatio = 0.08
+end
+
+
+---@param self Ability
+config.HeTunDianYin_4 = function(self)
+
+end
 
 return config

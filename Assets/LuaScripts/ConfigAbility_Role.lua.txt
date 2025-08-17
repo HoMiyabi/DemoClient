@@ -1,0 +1,24 @@
+local config = {}
+
+
+---@param self Ability
+config.RoleEnergyRegen = function(self)
+
+    ---@param self Ability
+    self.onUpdate = function(self, dt)
+        local e = CS.cfg.main.EAttrType
+        local mul = 8
+        local maxEnergy = 120;
+        local currEnergy = self.set[e.CurrEnergy]
+
+        --print("RoleEnergyRegen.onUpdate", currEnergy, dt, self.set)
+
+        if currEnergy < maxEnergy then
+            local regen = self.set[e.EnergyRegen] * mul
+            self.set[e.CurrEnergy] = math.min(currEnergy + dt * regen, maxEnergy)
+        end
+    end
+end
+
+
+return config

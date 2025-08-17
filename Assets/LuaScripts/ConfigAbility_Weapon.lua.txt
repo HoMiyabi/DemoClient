@@ -1,78 +1,89 @@
-local config =
-{
-    {
-        name = "LiuHuangShi",
-        onAttackLanded = function(self, ctx)
-            if ctx.attackType == "NormalAttack"
-                    or ctx.attackType == "DashAttack"
-                    or ctx.attackType == "闪避反击" then
-                if not self:hasTimer("LiuHuangShi_Timer") then
-                    self:setTimer("LiuHuangShi_Timer", 0.5)
-                    self:attachAbility("LiuHuangShi_1")
-                end
+local config = {}
+
+
+---@param self Ability
+config.LiuHuangShi = function(self)
+
+    ---@param self Ability
+    self.onAttackLanded = function(self, ctx)
+        if ctx.attackType == "NormalAttack"
+                or ctx.attackType == "DashAttack"
+                or ctx.attackType == "闪避反击" then
+            if not self:hasTimer("LiuHuangShi_Timer") then
+                self:setTimer("LiuHuangShi_Timer", 0.5)
+                self:attachAbility("LiuHuangShi_1")
             end
         end
-    },
-    {
-        name = "LiuHuangShi_1",
-        duration = 8,
-        stackLimit = 8,
-        attrs = {
-            AttackPct = 0.035
-        }
-    },
-    {
-        name = "DeMaLaDianChi2Xing",
-        attrs = {
-            ElectricDmgPct = 0.15
-        },
-        onAttackLanded = function(self, ctx)
-            if ctx.actionType == "闪避反击" or ctx.actionType == "支援攻击" then
-                self:attachAbility("DeMaLaDianChi2Xing_1")
-            end
+    end
+end
+
+
+---@param self Ability
+config.LiuHuangShi_1 = function(self)
+    self.duration = 8
+    self.stackLimit = 8
+    self.attrs.AttackPct = self:inject("Rate")
+end
+
+
+---@param self Ability
+config.DeMaLaDianChi2Xing = function(self)
+    self.attrs.ElectricDmgPct = 0.15
+
+    ---@param self Ability
+    self.onAttackLanded = function(self, ctx)
+        if ctx.actionType == "闪避反击" or ctx.actionType == "支援攻击" then
+            self:attachAbility("DeMaLaDianChi2Xing_1")
         end
-    },
-    {
-        name = "DeMaLaDianChi2Xing_1",
-        duration = 8,
-        attrs = {
-            NengLiangHuoDeXiaoLv = 0.18
-        }
-    },
-    {
-        name = "XingHuiYinQing",
-        onActionStart = function(self, ctx)
-            if ctx.actionType == "闪避反击" or ctx.actionType == "快速支援" then
-                self.attachAbility("XingHuiYinQing_1")
-            end
+    end
+end
+
+
+---@param self Ability
+config.DeMaLaDianChi2Xing_1 = function(self)
+    self.duration = 8
+    self.attrs.NengLiangHuoDeXiaoLv = 0.18
+end
+
+
+---@param self Ability
+config.XingHuiYinQing = function(self)
+
+    ---@param self Ability
+    self.onActionStart = function(self, ctx)
+        if ctx.actionType == "闪避反击" or ctx.actionType == "快速支援" then
+            self.attachAbility("XingHuiYinQing_1")
         end
-    },
-    {
-        name = "XingHuiYinQing_1",
-        duration = 12,
-        attrs = {
-            AtkPct = 0.12
-        }
-    },
-    {
-        name = "XianLuoXingDian",
-        attrs = {
-            CritDmg = 0.5
-        },
-        onActionStart = function(self, ctx)
-            if ctx.actionType == "强化特殊技" then
-                self:attachAbility("XianLuoXingDian_2")
-            end
+    end
+end
+
+
+---@param self Ability
+config.XingHuiYinQing_1 = function(self)
+    self.duration = 12
+    self.attrs.AtkPct = 0.12
+end
+
+
+---@param self Ability
+config.XianLuoXingDian = function(self)
+    self.attrs.CritDmg = 0.5
+
+    ---@param self Ability
+    self.onActionStart = function(self, ctx)
+        if ctx.actionType == "强化特殊技" then
+            self:attachAbility("XianLuoXingDian_2")
         end
-    },
-    {
-        name = "XianLuoXingDian_2",
-        duration = 15,
-        stackLimit = 2,
-        attrs = {
-            IceDmg = 0.2
-        }
-    },
-}
+    end
+end
+
+
+---@param self Ability
+config.XianLuoXingDian_2 = function(self)
+    self.duration = 15
+    self.stackLimit = 2
+    self.attrs.IceDmg = 0.2
+end
+
 
 return config

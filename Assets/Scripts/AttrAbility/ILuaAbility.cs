@@ -16,7 +16,6 @@ namespace Kirara.AttrAbility
 
         void update(float dt);
         void onAttached();
-        void setConfig(LuaTable config);
         double getMinRemainingTime();
     }
 }

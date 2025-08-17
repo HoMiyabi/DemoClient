@@ -1,3 +1,14 @@
+---@class Ability
+---@field public set userdata
+---@field public name string
+---@field public duration number
+---@field public stackLimit number
+---@field public attachInterval number
+---@field public attrs table
+---@field public stackRefreshPolicy function
+---@field public overflowRefreshPolicy function
+---@field public stackCount number
+---@field public remainingTimes table
 Ability = {}
 Ability.__index = Ability
 
@@ -54,6 +65,12 @@ function Ability:update(dt)
             i = i + 1
         end
     end
+
+    self:onUpdate(dt)
+end
+
+---@param dt number
+function Ability:onUpdate(dt)
 end
 
 function Ability:onAttached()
@@ -70,15 +87,14 @@ function Ability:onAttached()
     end
 end
 
----@param abilityConfig table
-function Ability:setConfig(abilityConfig)
-    for key, value in pairs(abilityConfig) do
-        self[key] = value
-    end
-    if self.init ~= nil then
-        self:init()
-    end
-end
+--function Ability:setConfig(abilityConfig)
+--    for key, value in pairs(abilityConfig) do
+--        self[key] = value
+--    end
+--    if self.init ~= nil then
+--        self:init()
+--    end
+--end
 
 ---@return number
 function Ability:getMinRemainingTime()
@@ -95,12 +111,13 @@ function Ability:getMinRemainingTime()
     return min
 end
 
-function Ability.new()
+---@param set userdata
+function Ability.new(set)
     local obj = {}
     setmetatable(obj, Ability)
     -- 属性能力集
     ---@type userdata
-    obj.set = nil
+    obj.set = set
 
     -- 名字
     ---@type string

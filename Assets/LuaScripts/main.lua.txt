@@ -5,11 +5,18 @@ require("Ability")
 print("--加载ConfigAbility--")
 local configAbility_Weapon = require("ConfigAbility_Weapon")
 local configAbility_Disc = require("ConfigAbility_Disc")
+local configAbility_Role = require("ConfigAbility_Role")
 
 configAbilities = {}
-for _, value in ipairs(configAbility_Weapon) do
-    configAbilities[value.name] = value
+
+for k, v in pairs(configAbility_Weapon) do
+    configAbilities[k] = v
 end
-for _, value in ipairs(configAbility_Disc) do
-    configAbilities[value.name] = value
+
+for k, v in pairs(configAbility_Disc) do
+    configAbilities[k] = v
+end
+
+for k, v in pairs(configAbility_Role) do
+    configAbilities[k] = v
 end

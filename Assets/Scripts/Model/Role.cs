@@ -87,6 +87,9 @@ namespace Kirara.Model
             }
 
             Set[EAttrType.CurrHp] = Set[EAttrType.Hp];
+
+            // 添加能量恢复Ability
+            Set.AttachAbility("RoleEnergyRegen");
         }
 
         // 更新能量恢复
