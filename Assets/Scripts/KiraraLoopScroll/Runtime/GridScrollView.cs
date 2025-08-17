@@ -128,7 +128,7 @@ namespace KiraraLoopScroll
             return GetItemPosInUGUISpace(lineNum, subNum);
         }
 
-        // 排间距
+        // 排宽
         private float LineWidth => direction switch
         {
             EDirection.Horizontal => size.x,
@@ -149,14 +149,16 @@ namespace KiraraLoopScroll
             {
                 if (isInfinite) return 0f;
 
+                float validMaxPos = Mathf.Max(0f, ContentSize - ViewSize);
                 if (Pos < 0f)
                 {
-                    return -Pos;
+                    return -Pos; // 正数
                 }
-                if (ContentSize - (Pos + ViewSize) < 0)
+                if (Pos > validMaxPos)
                 {
-                    return ContentSize - (Pos + ViewSize);
+                    return validMaxPos - Pos; // 负数
                 }
+
                 return 0f;
             }
         }
