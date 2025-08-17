@@ -45,18 +45,6 @@ namespace Kirara.Model
 
         private readonly Dictionary<int, int> discCidToCount = new();
 
-        public NSyncRole SyncRole => new()
-        {
-            Id = Id,
-            Movement = new NMovement
-            {
-                Pos = new NVector3().Set(RoleCtrl.transform.position),
-                Rot = new NVector3().Set(RoleCtrl.transform.rotation.eulerAngles)
-            }
-        };
-
-        public RoleCtrl RoleCtrl { get; set; }
-
         public Role(NRole role, Player player)
         {
             Config = ConfigMgr.tb.TbRoleConfig[role.Cid];
@@ -92,16 +80,9 @@ namespace Kirara.Model
             Set.AttachAbility("RoleEnergyRegen");
         }
 
-        // 更新能量恢复
-        public void UpdateEnergyRegen(float dt)
+        public void Update(float dt)
         {
-            const float mul = 8f;
-            double maxEnergy = ConfigMgr.tb.TbGlobalConfig.ChMaxEnergy;
-
-            if (Set[EAttrType.CurrEnergy] >= maxEnergy) return;
-
-            double regen = Set[EAttrType.EnergyRegen] * mul;
-            Set[EAttrType.CurrEnergy] = Math.Min(Set[EAttrType.CurrEnergy] + dt * regen, maxEnergy);
+            Set.Update(dt);
         }
 
         #region 武器 Weapon

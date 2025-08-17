@@ -10,7 +10,7 @@ namespace Kirara
         [LuaCallCSharp]
         public static List<Type> myLuaCallCSharpList = new()
         {
-            typeof(EAttrType)
+            // typeof(EAttrType)
         };
     }
 }

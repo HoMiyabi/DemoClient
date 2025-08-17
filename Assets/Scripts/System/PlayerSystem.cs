@@ -95,7 +95,7 @@ namespace Kirara
                 req.Player.Roles.Clear();
                 foreach (var roleCtrl in RoleCtrls)
                 {
-                    req.Player.Roles.Add(roleCtrl.Role.SyncRole);
+                    req.Player.Roles.Add(roleCtrl.SyncRole);
                 }
                 NetFn.Send(req);
             }
@@ -279,6 +279,11 @@ namespace Kirara
         {
             Player.transform.position = FrontRoleCtrl.transform.position;
             FrontRoleCtrl.ActionCtrl.UpdatePressed(pressedDict);
+
+            foreach (var roleCtrl in RoleCtrls)
+            {
+                roleCtrl.Role.Update(Time.deltaTime);
+            }
         }
     }
 }

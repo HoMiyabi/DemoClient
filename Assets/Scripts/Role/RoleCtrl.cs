@@ -35,6 +35,16 @@ namespace Kirara
 
         public bool lookAtMonster;
 
+        public NSyncRole SyncRole => new()
+        {
+            Id = Role.Id,
+            Movement = new NMovement
+            {
+                Pos = new NVector3().Set(transform.position),
+                Rot = new NVector3().Set(transform.rotation.eulerAngles)
+            }
+        };
+
         private void Awake()
         {
             Cam = Camera.main.transform;
@@ -53,16 +63,12 @@ namespace Kirara
         public void Set(Role role)
         {
             Role = role;
-            Role.RoleCtrl = this;
             SetPos(role.Pos);
             transform.rotation = Quaternion.Euler(role.Rot);
         }
 
         private void Update()
         {
-            // Role.UpdateEnergyRegen(Time.deltaTime);
-            Role.Set.Update(Time.deltaTime);
-
             if (EnableRotation)
             {
                 ProcessRotation();
