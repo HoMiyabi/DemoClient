@@ -26,7 +26,7 @@ namespace Kirara.Quest
 
         private void OnMonsterSpawn(MonsterCtrl monster)
         {
-            if (monster.Model.MonsterCid != config.MonsterCid) return;
+            if (monster.Model.Config.Id != config.MonsterCid) return;
 
             if (monsters.Count + Progress < config.Count)
             {
@@ -61,7 +61,7 @@ namespace Kirara.Quest
 
         private void OnMonsterDie(MonsterCtrl monster)
         {
-            if (monster.Model.MonsterCid != config.MonsterCid) return;
+            if (monster.Model.Config.Id != config.MonsterCid) return;
 
             if (monsters.Remove(monster))
             {

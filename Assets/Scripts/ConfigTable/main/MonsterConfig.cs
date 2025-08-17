@@ -29,6 +29,7 @@ public sealed partial class MonsterConfig : Luban.BeanBase
         MaxDaze = (float)_obj.GetValue("max_daze");
         StunDuration = (float)_obj.GetValue("stun_duration");
         StunDmgMultiplier = (float)_obj.GetValue("stun_dmg_multiplier");
+        IconLoc = (string)_obj.GetValue("icon_loc");
     }
 
     public static MonsterConfig DeserializeMonsterConfig(JToken _buf)
@@ -45,6 +46,7 @@ public sealed partial class MonsterConfig : Luban.BeanBase
     public readonly float MaxDaze;
     public readonly float StunDuration;
     public readonly float StunDmgMultiplier;
+    public readonly string IconLoc;
 
 
     public const int __ID__ = -165256153;
@@ -66,6 +68,7 @@ public sealed partial class MonsterConfig : Luban.BeanBase
         + "maxDaze:" + MaxDaze + ","
         + "stunDuration:" + StunDuration + ","
         + "stunDmgMultiplier:" + StunDmgMultiplier + ","
+        + "iconLoc:" + IconLoc + ","
         + "}";
     }
 }

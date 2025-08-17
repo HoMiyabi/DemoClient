@@ -1,86 +1,109 @@
-﻿using System;
+﻿using System.Linq;
 using cfg.main;
-using TMPro;
+using Kirara.Model;
+using Manager;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI
 {
     public class UIMonsterStatusBar : MonoBehaviour
     {
-        public Image delayHPBar;
-        public Image HPBar;
-        public float delayHPBarSpeed = 0.2f;
+        #region View
+        private bool _isBound;
+        private UnityEngine.UI.Image  HpBar;
+        private UnityEngine.UI.Image  DazeBar;
+        private UnityEngine.UI.Image  MonsterIcon;
+        private TMPro.TextMeshProUGUI DazeText;
+        public void BindUI()
+        {
+            if (_isBound) return;
+            _isBound = true;
+            var c       = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            HpBar       = c.Q<UnityEngine.UI.Image>(0, "HpBar");
+            DazeBar     = c.Q<UnityEngine.UI.Image>(1, "DazeBar");
+            MonsterIcon = c.Q<UnityEngine.UI.Image>(2, "MonsterIcon");
+            DazeText    = c.Q<TMPro.TextMeshProUGUI>(3, "DazeText");
+        }
+        #endregion
 
-        public Image dazeBar;
-        public TextMeshProUGUI dazeText;
-
-        private RectTransform rectTransform;
-
-        private Transform wsFollow;
-        private MonsterCtrl Monster { get; set; }
+        private static readonly int Value = Shader.PropertyToID("_Value");
 
         private void Awake()
         {
-            rectTransform = transform as RectTransform;
+            BindUI();
+            HpBar.material = new Material(HpBar.material);
+            DazeBar.material = new Material(DazeBar.material);
         }
 
-        public void Set(MonsterCtrl monster)
+        private MonsterModel Monster { get; set; }
+        private int prevMonsterCid = -1;
+
+        // public void Set(MonsterCtrl monster)
+        // {
+        //     Monster = monster;
+        //
+        //     UpdateHp();
+        //     UpdateDaze();
+        // }
+
+        private void UpdateHp()
         {
-            Monster = monster;
-
-            wsFollow = monster.statusBarFollow;
-
-            monster.onDie += () => Destroy(gameObject);
-
-            SetHpRatioImmediate();
-            UpdateDazeRatio();
+            double currHp = Monster.Set[EAttrType.CurrHp];
+            double maxHp = Monster.Set[EAttrType.Hp];
+            HpBar.material.SetFloat(Value, (float)(currHp / maxHp));
         }
 
-        private void SetHpRatioImmediate()
+        private void UpdateDaze()
         {
-            double currHp = Monster.Model.Set[EAttrType.CurrHp];
-            double maxHp = Monster.Model.Set[EAttrType.Hp];
-            HPBar.fillAmount = (float)(currHp / maxHp);
-            delayHPBar.fillAmount = (float)(currHp / maxHp);
-        }
-
-        public void UpdateHpRatio()
-        {
-            double currHp = Monster.Model.Set[EAttrType.CurrHp];
-            double maxHp = Monster.Model.Set[EAttrType.Hp];
-            HPBar.fillAmount = (float)(currHp / maxHp);
-        }
-
-        public void UpdateDazeRatio()
-        {
-            double currDaze = Monster.Model.Set[EAttrType.CurrDaze];
-            double maxDaze = Monster.Model.Set[EAttrType.MaxDaze];
+            double currDaze = Monster.Set[EAttrType.CurrDaze];
+            double maxDaze = Monster.Set[EAttrType.MaxDaze];
 
             double ratio = currDaze / maxDaze;
-            dazeBar.fillAmount = (float)ratio;
+            DazeBar.material.SetFloat(Value, (float)ratio);
 
-            dazeText.text = (ratio * 100).ToString("F0");
+            DazeText.text = (ratio * 100).ToString("F0");
+        }
+
+        private void UpdateIcon()
+        {
+            if (Monster.Config.Id == prevMonsterCid) return;
+
+            prevMonsterCid = Monster.Config.Id;
+            var handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(Monster.Config.IconLoc);
+            MonsterIcon.sprite = handle.AssetObject as Sprite;
         }
 
         public void Update()
         {
-            if (!wsFollow)
+            if (MonsterSystem.Instance.monsters.Count > 0)
             {
-                Destroy(gameObject);
-                return;
+                var monsterCtrl = MonsterSystem.Instance.monsters.Values.First();
+                Monster = monsterCtrl.Model;
             }
-            RectUtils.SetRectWorldPos(rectTransform, wsFollow.position);
-
-            UpdateHpRatio();
-            UpdateDazeRatio();
-
-            // 缓降
-            if (HPBar.fillAmount < delayHPBar.fillAmount)
+            else
             {
-                delayHPBar.fillAmount = Math.Max(HPBar.fillAmount,
-                    delayHPBar.fillAmount - delayHPBarSpeed * Time.deltaTime);
+                Monster = null;
             }
+
+            if (Monster != null)
+            {
+                transform.localScale = Vector3.one;
+                UpdateHp();
+                UpdateDaze();
+                UpdateIcon();
+            }
+            else
+            {
+                transform.localScale = Vector3.zero;
+            }
+
+
+            // // 缓降
+            // if (HPBar.fillAmount < delayHPBar.fillAmount)
+            // {
+            //     delayHPBar.fillAmount = Math.Max(HPBar.fillAmount,
+            //         delayHPBar.fillAmount - delayHPBarSpeed * Time.deltaTime);
+            // }
         }
     }
 }

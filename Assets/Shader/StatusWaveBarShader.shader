@@ -10,7 +10,8 @@ Shader "Kirara/StatusWaveBarShader"
         _Speed ("Speed", Float) = 3.0           // 正弦波移动速度
         _Frequency ("Frequency", Float) = 15.0  // 正弦波频率
         _Amplitude ("Amplitude", Float) = 0.03  // 正弦波振幅
-        _Theta ("Theta", Float) = 0.0
+        _Theta ("Theta", Float) = 0.0 // 倾斜角度
+        _IsReverse ("IsReverse", Float) = 0.0 // 是否反转
     }
 
     SubShader
@@ -61,6 +62,7 @@ Shader "Kirara/StatusWaveBarShader"
             half _Frequency;
             half _Amplitude;
             half _Theta;
+            half _IsReverse;
 
             Varyings vert(Attributes IN)
             {
@@ -83,15 +85,17 @@ Shader "Kirara/StatusWaveBarShader"
                 half yOfSin = _Amplitude * sin(_Frequency * xOfSin + phi);
                 half wave = IN.uv.y * tan(rad) + yOfSin * cos(rad);
 
+                // 反转
+                IN.uv.x = _IsReverse + (1 - 2 * _IsReverse) * IN.uv.x;
+
                 // 计算是否是背景区域
                 half healthLine = _Value + wave;
-                half isBackground = step(healthLine, IN.uv.x);
 
                 // 采样条颜色
                 half4 barColor = lerp(_EmptyColor, _FullColor, IN.uv.x);
 
                 // 根据是否是背景区域采样条颜色或背景颜色
-                half4 finalColor = lerp(barColor, _BackgroundColor, isBackground);
+                half4 finalColor = lerp(_BackgroundColor, barColor, step(IN.uv.x, healthLine));
 
                 return finalColor;
             }

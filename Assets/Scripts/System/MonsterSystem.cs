@@ -38,7 +38,7 @@ namespace Kirara
             }
 
 
-            UIMgr.Instance.AddHUD<UIMonsterStatusBar>().Set(monster);
+            // UIMgr.Instance.AddHUD<UIMonsterStatusBar>().Set(monster);
 
             OnMonsterSpawn?.Invoke(monster);
         }
