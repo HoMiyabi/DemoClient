@@ -101,7 +101,7 @@ namespace Kirara.AttrAbility
 
         private void UpdateAbilities(float dt)
         {
-            Debug.Log($"UpdateAbilities, Abilities.Count: {Abilities.Count}");
+            // Debug.Log($"UpdateAbilities, Abilities.Count: {Abilities.Count}");
             foreach (var ability in Abilities)
             {
                 ability.update(dt);
