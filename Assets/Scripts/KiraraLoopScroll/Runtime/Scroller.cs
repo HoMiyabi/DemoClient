@@ -159,9 +159,19 @@ namespace KiraraLoopScroll
         protected void SetPos(float scrollPos, bool updateScrollbar)
         {
             _pos = scrollPos;
-            if (updateScrollbar && scrollbar)
+            if (updateScrollbar && scrollbar && ContentSize >= 0f)
             {
-                scrollbar.SetValueWithoutNotify(scrollPos / ValidRange.Length);
+                // 值为0时上方对齐顶部，值为1时下方对齐底部
+                float input;
+                if (ContentSize <= ViewSize)
+                {
+                    input = PosToEdge >= 0f ? 0f : 1f;
+                }
+                else
+                {
+                    input = scrollPos / ValidRange.Length;
+                }
+                scrollbar.SetValueWithoutNotify(input);
             }
             UpdateItems();
         }
@@ -194,7 +204,7 @@ namespace KiraraLoopScroll
         {
             if (scrollbar && ContentSize >= 0)
             {
-                // 滚动条的手柄长 = 可见内容长度 / 内容总长度
+                // 滚动条的手柄长 = 可见内容大小 / 内容总大小
                 scrollbar.size = ContentSizeInView / ContentSize;
             }
         }
