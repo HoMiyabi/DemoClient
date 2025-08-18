@@ -22,13 +22,13 @@ end
 config.LiuHuangShi_1 = function(self)
     self.duration = 8
     self.stackLimit = 8
-    self.attrs.AttackPct = self:inject("Rate")
+    self.attrs[self.EAttrType.AttackPct] = self:inject("Rate")
 end
 
 
 ---@param self Ability
 config.DeMaLaDianChi2Xing = function(self)
-    self.attrs.ElectricDmgPct = 0.15
+    self.attrs[self.EAttrType.ElectricDmgPct] = 0.15
 
     ---@param self Ability
     self.onAttackLanded = function(self, ctx)
@@ -42,7 +42,7 @@ end
 ---@param self Ability
 config.DeMaLaDianChi2Xing_1 = function(self)
     self.duration = 8
-    self.attrs.NengLiangHuoDeXiaoLv = 0.18
+    self.attrs[self.EAttrType.NengLiangHuoDeXiaoLv] = 0.18
 end
 
 
@@ -61,13 +61,13 @@ end
 ---@param self Ability
 config.XingHuiYinQing_1 = function(self)
     self.duration = 12
-    self.attrs.AtkPct = 0.12
+    self.attrs[self.EAttrType.AtkPct] = 0.12
 end
 
 
 ---@param self Ability
 config.XianLuoXingDian = function(self)
-    self.attrs.CritDmg = 0.5
+    self.attrs[self.EAttrType.CritDmg] = 0.5
 
     ---@param self Ability
     self.onActionStart = function(self, ctx)
@@ -82,7 +82,7 @@ end
 config.XianLuoXingDian_2 = function(self)
     self.duration = 15
     self.stackLimit = 2
-    self.attrs.IceDmg = 0.2
+    self.attrs[self.EAttrType.IceDmg] = 0.2
 end
 
 

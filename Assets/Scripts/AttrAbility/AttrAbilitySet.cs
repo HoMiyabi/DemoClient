@@ -150,7 +150,7 @@ namespace Kirara.AttrAbility
             return Timers.FindIndex(x => x.handle == handle) >= 0;
         }
 
-        public void AttachAbility(string name, Dictionary<string, double> attrs)
+        public void AttachAbility(string name, Dictionary<EAttrType, double> attrs)
         {
             if (Abilities.Find(x => x.name == name) != null)
             {

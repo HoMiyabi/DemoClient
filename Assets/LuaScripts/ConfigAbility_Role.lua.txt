@@ -6,16 +6,15 @@ config.RoleEnergyRegen = function(self)
 
     ---@param self Ability
     self.onUpdate = function(self, dt)
-        local e = CS.cfg.main.EAttrType
         local mul = 8
         local maxEnergy = 120;
-        local currEnergy = self.set[e.CurrEnergy]
+        local currEnergy = self.set[self.EAttrType.CurrEnergy]
 
         --print("RoleEnergyRegen.onUpdate", currEnergy, dt, self.set)
 
         if currEnergy < maxEnergy then
-            local regen = self.set[e.EnergyRegen] * mul
-            self.set[e.CurrEnergy] = math.min(currEnergy + dt * regen, maxEnergy)
+            local regen = self.set[self.EAttrType.EnergyRegen] * mul
+            self.set[self.EAttrType.CurrEnergy] = math.min(currEnergy + dt * regen, maxEnergy)
         end
     end
 end

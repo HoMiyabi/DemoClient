@@ -120,10 +120,10 @@ namespace Kirara.Model
         {
             // 添加属性能力
             string name = weapon.Name + "属性";
-            Set.AttachAbility(name, new Dictionary<string, double>()
+            Set.AttachAbility(name, new Dictionary<EAttrType, double>()
             {
-                [GetAttrTypeString(weapon.BaseAttr.AttrTypeId)] = weapon.BaseAttr.Value,
-                [GetAttrTypeString(weapon.AdvancedAttr.AttrTypeId)] = weapon.AdvancedAttr.Value,
+                [(EAttrType)weapon.BaseAttr.AttrTypeId] = weapon.BaseAttr.Value,
+                [(EAttrType)weapon.AdvancedAttr.AttrTypeId] = weapon.AdvancedAttr.Value,
             });
 
             // 添加被动能力
@@ -132,10 +132,10 @@ namespace Kirara.Model
 
         #endregion
 
-        private string GetAttrTypeString(int attrTypeId)
-        {
-            return Enum.ToObject(typeof(EAttrType), attrTypeId).ToString();
-        }
+        // private string GetAttrTypeString(int attrTypeId)
+        // {
+        //     return Enum.ToObject(typeof(EAttrType), attrTypeId).ToString();
+        // }
 
         #region 驱动盘 Disc
 
@@ -198,13 +198,13 @@ namespace Kirara.Model
         private void AddDiscAbility(int pos)
         {
             var disc = Disc(pos);
-            var attrs = new Dictionary<string, double>
+            var attrs = new Dictionary<EAttrType, double>
             {
-                [GetAttrTypeString(disc.MainAttr.AttrTypeId)] = disc.MainAttr.Value,
+                [(EAttrType)disc.MainAttr.AttrTypeId] = disc.MainAttr.Value,
             };
             foreach (var discAttr in disc.SubAttrs)
             {
-                attrs.Add(GetAttrTypeString(discAttr.AttrTypeId), discAttr.Value);
+                attrs.Add((EAttrType)discAttr.AttrTypeId, discAttr.Value);
             }
 
             Set.AttachAbility($"驱动盘{pos}", attrs);

@@ -9,6 +9,7 @@
 ---@field public overflowRefreshPolicy function
 ---@field public stackCount number
 ---@field public remainingTimes table
+---@field public EAttrType table
 Ability = {}
 Ability.__index = Ability
 
@@ -153,5 +154,8 @@ function Ability.new(set)
     -- 每层剩余时间
     ---@type table
     obj.remainingTimes = {}
+
+    ---@type table
+    obj.EAttrType = CS.cfg.main.EAttrType
     return obj
 end

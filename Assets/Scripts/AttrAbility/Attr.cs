@@ -19,12 +19,11 @@ namespace Kirara.AttrAbility
         public double Evaluate()
         {
             double delta = 0;
-            string key = type.ToString();
             foreach (var ability in set.Abilities)
             {
-                if (ability.attrs.ContainsKey(key))
+                if (ability.attrs.ContainsKey(type))
                 {
-                    delta += ability.stackCount * ability.attrs.Get<double>(key);
+                    delta += ability.stackCount * ability.attrs.Get<EAttrType, double>(type);
                 }
             }
 
