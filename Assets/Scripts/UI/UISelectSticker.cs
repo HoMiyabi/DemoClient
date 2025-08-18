@@ -42,7 +42,7 @@ namespace Kirara.UI
                 stickerSprites.Add(handle.AssetObject as Sprite);
             }
 
-            SelectStickerLoopScroll.SetGOSource(new LoopScrollGOPool(SelectStickerItemPrefab, transform));
+            SelectStickerLoopScroll.SetSource(new LoopScrollGOPool(SelectStickerItemPrefab, transform));
             SelectStickerLoopScroll.provideData = ProvideData;
             SelectStickerLoopScroll._totalCount = stickerConfigIds.Count;
         }

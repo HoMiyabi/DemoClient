@@ -1,6 +1,5 @@
 ﻿using Manager;
 using UnityEngine;
-using UnityEngine.UI;
 using YooAsset;
 
 namespace Kirara.UI
@@ -8,20 +7,18 @@ namespace Kirara.UI
     public class UIDiscPosIcon : MonoBehaviour
     {
         #region View
-        private Image Img;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Image Img;
+        public void BindUI()
         {
+            if (_isBound) return;
+            _isBound = true;
             var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            Img   = c.Q<Image>(0, "Img");
+            Img   = c.Q<UnityEngine.UI.Image>(0, "Img");
         }
         #endregion
 
         private AssetHandle handle;
-
-        private void Awake()
-        {
-            InitUI();
-        }
 
         private void OnDestroy()
         {
@@ -36,6 +33,7 @@ namespace Kirara.UI
 
         public void Set(int pos)
         {
+            BindUI();
             if (pos is < 1 or > 6)
             {
                 Debug.LogWarning($"pos {pos} is invalid");

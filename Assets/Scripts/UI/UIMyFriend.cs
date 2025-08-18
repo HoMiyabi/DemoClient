@@ -31,7 +31,7 @@ namespace Kirara.UI
             friends = PlayerService.Player.Friends;
             Debug.Log("friends.Count = " + friends.Count);
 
-            ScrollView.SetGOSource(new LoopScrollGOPool(UserInfoBarItemPrefab, transform));
+            ScrollView.SetSource(new LoopScrollGOPool(UserInfoBarItemPrefab, transform));
             ScrollView.provideData = ProvideData;
             UpdateUI();
             PlayerService.Player.OnFriendsChanged += UpdateUI;

@@ -29,7 +29,13 @@ namespace Kirara.UI
         #endregion
 
         [SerializeField] private GameObject UIInventoryCellDiscPrefab;
-        private LoopScrollGOPool Pool { get; set; }
+
+        private Role Role { get; set; }
+
+        private List<DiscItem> discs;
+        private int _pos;
+
+        private readonly LiveData<DiscItem> _selectedDisc = new(null);
 
         private void Awake()
         {
@@ -37,31 +43,22 @@ namespace Kirara.UI
 
             UpgradeBtn.onClick.AddListener(() =>
             {
-                UIMgr.Instance.PushPanel<UpgradeDiscDialogPanel>().Set(SelectedDisc);
+                UIMgr.Instance.PushPanel<UpgradeDiscDialogPanel>().Set(_selectedDisc.Value);
             });
 
-            Pool = new LoopScrollGOPool(UIInventoryCellDiscPrefab, transform);
-            Scroller.SetGOSourceFunc(Pool.GetObject, Pool.ReturnObject);
+            var pool = new LoopScrollGOPool(UIInventoryCellDiscPrefab, transform);
+            Scroller.SetSource(pool);
             Scroller.provideData = ProvideData;
+
+            _selectedDisc.Observe(OnSelectionChanged);
         }
 
-        private List<DiscItem> discs;
-        private int _pos;
-
-        private DiscItem _selectedDisc;
-        private DiscItem SelectedDisc
+        private void OnSelectionChanged(DiscItem disc)
         {
-            get => _selectedDisc;
-            set
-            {
-                if (_selectedDisc == value) return;
-                _selectedDisc = value;
-                UIDiscDetail.Set(value);
-                UpdateEquipBtn();
-            }
+            if (disc == null) return;
+            UIDiscDetail.Set(disc);
+            UpdateEquipBtn();
         }
-
-        private Role Role { get; set; }
 
         private void OnDestroy()
         {
@@ -94,7 +91,7 @@ namespace Kirara.UI
 
             if (discs.Count > 0)
             {
-                SelectedDisc = discs[0];
+                _selectedDisc.Value = discs[0];
             }
         }
 
@@ -117,11 +114,11 @@ namespace Kirara.UI
 
         private void UpdateEquipBtn()
         {
-            if (Role.Disc(_pos) == null && SelectedDisc.RoleId == "")
+            if (Role.Disc(_pos) == null && _selectedDisc.Value.RoleId == "")
             {
                 EquipBtnSwitchEquip();
             }
-            else if (Role.Disc(_pos) != null && SelectedDisc.RoleId == Role.Id)
+            else if (Role.Disc(_pos) != null && _selectedDisc.Value.RoleId == Role.Id)
             {
                 EquipBtnSwitchRemove();
             }
@@ -150,17 +147,14 @@ namespace Kirara.UI
             EquipBtnText.text = "装备";
             EquipBtn.interactable = true;
             EquipBtn.onClick.RemoveAllListeners();
-            EquipBtn.onClick.AddListener(() => Role.EquipDisc(_pos, SelectedDisc).Forget());
+            EquipBtn.onClick.AddListener(() => Role.EquipDisc(_pos, _selectedDisc.Value).Forget());
         }
 
         #endregion
 
         private void ProvideData(GameObject go, int idx)
         {
-            go.GetComponent<UIInventoryCellDisc>().Set(discs[idx], () =>
-            {
-                SelectedDisc = discs[idx];
-            });
+            go.GetComponent<UIInventoryCellDisc>().Set(discs[idx], _selectedDisc);
         }
     }
 }

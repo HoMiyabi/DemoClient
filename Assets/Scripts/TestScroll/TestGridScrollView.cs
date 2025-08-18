@@ -23,7 +23,7 @@ namespace Kirara.TestScroll
         {
             BindUI();
 
-            GridScrollView.SetGOSource(new LoopScrollGOPool(ItemPrefab, transform));
+            GridScrollView.SetSource(new LoopScrollGOPool(ItemPrefab, transform));
             GridScrollView.provideData = ProvideData;
             GridScrollView._totalCount = 100;
         }

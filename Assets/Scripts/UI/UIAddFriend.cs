@@ -38,7 +38,7 @@ namespace Kirara.UI
 
             SearchBtn.onClick.AddListener(UniTask.UnityAction(SearchBtn_onClick));
 
-            ScrollView.SetGOSource(new LoopScrollGOPool(UserItemPrefab, transform));
+            ScrollView.SetSource(new LoopScrollGOPool(UserItemPrefab, transform));
             ScrollView.provideData = ProvideData;
 
             PlayerService.Player.OnFriendRequestsChanged += UpdateUI;

@@ -31,7 +31,7 @@ namespace Kirara.TestScroll
 
             var pool = new LoopScrollGOPool(Prefab, transform);
 
-            Scroller.SetGOSourceFunc(pool.GetObject, pool.ReturnObject);
+            Scroller.SetSourceFunc(pool.GetObject, pool.ReturnObject);
             Scroller.provideData = ProvideData;
 
             Scroller._totalCount = count;

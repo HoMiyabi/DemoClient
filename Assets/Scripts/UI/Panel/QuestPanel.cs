@@ -57,7 +57,7 @@ namespace Kirara.UI.Panel
 
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
 
-            ScrollView.SetGOSource(new LoopScrollGOPool(UIQuestChainItemPrefab, transform));
+            ScrollView.SetSource(new LoopScrollGOPool(UIQuestChainItemPrefab, transform));
             ScrollView.provideData = ProvideData;
             ScrollView._totalCount = QuestSystem.Instance.chains.Count;
         }

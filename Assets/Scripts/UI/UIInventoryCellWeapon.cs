@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace Kirara.UI
 {
-    public class UIInventoryCellWeapon : MonoBehaviour, ISelectItem
+    public class UIInventoryCellWeapon : MonoBehaviour
     {
         #region View
         private bool _isBound;
@@ -34,19 +34,22 @@ namespace Kirara.UI
         }
         #endregion
 
-        private SelectController selectController;
+        private LiveData<WeaponItem> _selected;
 
         private void OnDestroy()
         {
             Clear();
         }
 
-        public void Clear()
+        private void Clear()
         {
             if (_weapon != null)
             {
                 _weapon.OnRoleIdChanged -= SetRole;
+                _weapon = null;
             }
+            _selected?.Remove(OnSelectionChanged);
+            _weapon = null;
         }
 
         private WeaponItem _weapon;
@@ -55,7 +58,6 @@ namespace Kirara.UI
             get => _weapon;
             set
             {
-                if (_weapon == value) return;
                 Clear();
                 _weapon = value;
                 _weapon.OnRoleIdChanged += SetRole;
@@ -69,13 +71,16 @@ namespace Kirara.UI
             }
         }
 
-        public UIInventoryCellWeapon Set(WeaponItem weapon, UnityAction onClick)
+        public UIInventoryCellWeapon Set(WeaponItem weapon, LiveData<WeaponItem> selected)
         {
             BindUI();
+            Clear();
 
             Weapon = weapon;
+            _selected = selected;
+            _selected.Observe(OnSelectionChanged);
             Btn.onClick.RemoveAllListeners();
-            Btn.onClick.AddListener(onClick);
+            Btn.onClick.AddListener(Btn_onClick);
             return this;
         }
 
@@ -111,14 +116,21 @@ namespace Kirara.UI
             InfoText.text = $"等级{level}";
         }
 
-        public void OnSelect()
+        private void OnSelectionChanged(WeaponItem weapon)
         {
-            SelectBorder.gameObject.SetActive(true);
+            if (weapon == _weapon)
+            {
+                SelectBorder.gameObject.SetActive(true);
+            }
+            else
+            {
+                SelectBorder.gameObject.SetActive(false);
+            }
         }
 
-        public void OnDeselect()
+        private void Btn_onClick()
         {
-            SelectBorder.gameObject.SetActive(false);
+            _selected?.Set(_weapon);
         }
     }
 }

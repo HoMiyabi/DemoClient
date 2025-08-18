@@ -10,25 +10,23 @@ public class RoleSelectPanel : BasePanel
 {
     #region View
     private bool _isBound;
-    private UnityEngine.UI.Button UIBackBtn;
-    private UnityEngine.UI.Button SelectBtn;
-    private KiraraLoopScroll.GridScrollView        LoopScroll;
-    private SelectController      SelectController;
+    private UnityEngine.UI.Button           UIBackBtn;
+    private UnityEngine.UI.Button           SelectBtn;
+    private KiraraLoopScroll.GridScrollView LoopScroll;
     public override void BindUI()
     {
         if (_isBound) return;
         _isBound = true;
-        var c            = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-        UIBackBtn        = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
-        SelectBtn        = c.Q<UnityEngine.UI.Button>(1, "SelectBtn");
-        LoopScroll       = c.Q<KiraraLoopScroll.GridScrollView>(2, "LoopScroll");
-        SelectController = c.Q<SelectController>(3, "SelectController");
+        var c      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+        UIBackBtn  = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+        SelectBtn  = c.Q<UnityEngine.UI.Button>(1, "SelectBtn");
+        LoopScroll = c.Q<KiraraLoopScroll.GridScrollView>(2, "LoopScroll");
     }
     #endregion
 
     public GameObject RoleSelectItemPrefab;
     public float offset;
-    private readonly Bindable<int> selected = new(0);
+    private readonly LiveData<int> selected = new(0);
     private List<RoleConfig> list;
 
     protected override void Awake()
@@ -50,7 +48,7 @@ public class RoleSelectPanel : BasePanel
         });
 
         LoopScroll._totalCount = list.Count;
-        LoopScroll.SetGOSource(new LoopScrollGOPool(RoleSelectItemPrefab, transform));
+        LoopScroll.SetSource(new LoopScrollGOPool(RoleSelectItemPrefab, transform));
         LoopScroll.provideData = ProvideData;
         LoopScroll.updateItem = UpdateItem;
     }

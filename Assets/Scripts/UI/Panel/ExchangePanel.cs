@@ -31,7 +31,7 @@ namespace Kirara.UI.Panel
 
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
 
-            ScrollView.SetGOSource(new LoopScrollGOPool(ExchangeItemPrefab, transform));
+            ScrollView.SetSource(new LoopScrollGOPool(ExchangeItemPrefab, transform));
             ScrollView.provideData = ProvideData;
 
             UpdateItems().Forget();

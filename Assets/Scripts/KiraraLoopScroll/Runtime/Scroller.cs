@@ -143,15 +143,15 @@ namespace KiraraLoopScroll
         public ReturnObject returnObject;
         public ProvideData provideData;
 
-        public void SetGOSourceFunc(GetObject getObject, ReturnObject returnObject)
+        public void SetSourceFunc(GetObject getObject, ReturnObject returnObject)
         {
             this.getObject = getObject;
             this.returnObject = returnObject;
         }
 
-        public void SetGOSource(IGOSource source)
+        public void SetSource(IGameObjectSource source)
         {
-            SetGOSourceFunc(source.GetObject, source.ReturnObject);
+            SetSourceFunc(source.GetObject, source.ReturnObject);
         }
 
         #endregion

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Kirara.Model;
 using UnityEngine;
 
@@ -39,50 +38,23 @@ namespace Kirara.UI.Panel
         [SerializeField] private GameObject UIInventoryCellDiscPrefab;
         [SerializeField] private GameObject UIInventoryCellWeaponPrefab;
 
-        private Stack<Transform> pool;
+        private List<WeaponItem> _weapons = new();
+        private readonly LiveData<WeaponItem> _selectedWeapon = new(null);
 
-        private List<WeaponItem> weapons = new();
-        private int _weaponIdx = -1;
-        private int WeaponIdx
-        {
-            get => _weaponIdx;
-            set
-            {
-                if (_weaponIdx == value) return;
-                _weaponIdx = value;
-                OnWeaponSelect?.Invoke();
-            }
-        }
-        public Action OnWeaponSelect;
-
-        private List<DiscItem> discs = new();
-        private int _discIdx = -1;
-
-        private int DiscIdx
-        {
-            get => _discIdx;
-            set
-            {
-                if (_discIdx == value) return;
-
-                _discIdx = value;
-                OnDiscSelect?.Invoke();
-            }
-        }
-        public Action OnDiscSelect;
-
-        private LoopScrollGOPool weaponPool;
-        private LoopScrollGOPool discPool;
+        private List<DiscItem> _discs = new();
+        private readonly LiveData<DiscItem> _selectedDisc = new(null);
 
         protected override void Awake()
         {
             base.Awake();
 
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
-            pool = new Stack<Transform>();
 
             CoinText.text = PlayerService.Player.Currencies
                 .Find(x => x.Cid == 1)?.Count.ToString() ?? "0";
+
+            _selectedWeapon.Add(value => UIWeaponDetail.Set(value));
+            _selectedDisc.Add(value => UIDiscDetail.Set(value));
 
             SetItems();
             SetTab();
@@ -90,65 +62,67 @@ namespace Kirara.UI.Panel
 
         private void SetItems()
         {
-            weapons = PlayerService.Player.Weapons;
+            _weapons = PlayerService.Player.Weapons;
+            if (_weapons.Count > 0)
+            {
+                _selectedWeapon.Value = _weapons[0];
+            }
 
-            weaponPool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
-            WeaponLoopScroll.SetGOSourceFunc(weaponPool.GetObject, weaponPool.ReturnObject);
+            var weaponPool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
+            WeaponLoopScroll.SetSource(weaponPool);
             WeaponLoopScroll.provideData = ProvideWeaponData;
-            WeaponLoopScroll._totalCount = weapons.Count;
+            WeaponLoopScroll._totalCount = _weapons.Count;
 
-            discs = PlayerService.Player.Discs;
+            _discs = PlayerService.Player.Discs;
+            if (_discs.Count > 0)
+            {
+                _selectedDisc.Value = _discs[0];
+            }
 
-            discPool = new LoopScrollGOPool(UIInventoryCellDiscPrefab, transform);
-            DiscLoopScroll.SetGOSourceFunc(discPool.GetObject, discPool.ReturnObject);
+            var discPool = new LoopScrollGOPool(UIInventoryCellDiscPrefab, transform);
+            DiscLoopScroll.SetSource(discPool);
             DiscLoopScroll.provideData = ProvideDiscData;
-            DiscLoopScroll._totalCount = discs.Count;
+            DiscLoopScroll._totalCount = _discs.Count;
         }
 
         private void SetTab()
         {
             UITabController.onIndexChanged += UpdateTab;
-            UpdateTab(0);
+            UpdateTab(UITabController.index);
         }
 
         private void UpdateTab(int index)
         {
             if (index == 0)
             {
-                if (weapons.Count > 0)
-                {
-                    WeaponIdx = 0;
-                }
-                InventoryNameText.text = $"音擎仓库 {weapons.Count}";
+                // if (weapons.Count > 0)
+                // {
+                //     WeaponIdx = 0;
+                // }
+                InventoryNameText.text = $"音擎仓库 {_weapons.Count}";
             }
             else if (index == 1)
             {
-                if (discs.Count > 0)
-                {
-                    DiscIdx = 0;
-                }
-                InventoryNameText.text = $"驱动仓库 {discs.Count}";
+                // if (discs.Count > 0)
+                // {
+                //     DiscIdx = 0;
+                // }
+                InventoryNameText.text = $"驱动仓库 {_discs.Count}";
             }
         }
 
         private void ProvideWeaponData(GameObject go, int idx)
         {
-            var item = weapons[idx];
-            var cell = go.GetComponent<UIInventoryCellWeapon>();
-            cell.Set(item, () =>
-            {
-                WeaponIdx = idx;
-            });
+            var data = _weapons[idx];
+            var item = go.GetComponent<UIInventoryCellWeapon>();
+            item.Set(data, _selectedWeapon);
         }
 
         private void ProvideDiscData(GameObject go, int idx)
         {
-            var item = discs[idx];
-            var cell = go.GetComponent<UIInventoryCellDisc>();
-            cell.Set(item, () =>
-            {
-                DiscIdx = idx;
-            });
+            var data = _discs[idx];
+            var item = go.GetComponent<UIInventoryCellDisc>();
+            item.Set(data, _selectedDisc);
         }
     }
 }

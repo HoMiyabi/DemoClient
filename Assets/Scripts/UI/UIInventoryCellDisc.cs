@@ -3,9 +3,8 @@ using Kirara;
 using Kirara.Model;
 using Manager;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
+public class UIInventoryCellDisc : MonoBehaviour
 {
     #region View
     private bool _isBound;
@@ -31,7 +30,7 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
     }
     #endregion
 
-    private SelectController selectController;
+    private LiveData<DiscItem> _selected;
 
     private void OnDestroy()
     {
@@ -44,7 +43,10 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
         {
             _disc.OnRoleIdChanged -= UpdateRole;
             _disc.OnLevelChanged -= UpdateLevel;
+            _disc = null;
         }
+        _selected?.Remove(OnSelectionChanged);
+        _disc = null;
     }
 
     private DiscItem _disc;
@@ -53,7 +55,6 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
     {
         set
         {
-            if (_disc == value) return;
             Clear();
             _disc = value;
             _disc.OnRoleIdChanged += UpdateRole;
@@ -73,13 +74,16 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
         InfoText.text = $"等级{_disc.Level}";
     }
 
-    public void Set(DiscItem disc, UnityAction onClick)
+    public void Set(DiscItem disc, LiveData<DiscItem> selected)
     {
         BindUI();
+        Clear();
 
         Disc = disc;
+        _selected = selected;
+        _selected.Observe(OnSelectionChanged);
         Btn.onClick.RemoveAllListeners();
-        Btn.onClick.AddListener(onClick);
+        Btn.onClick.AddListener(Btn_onClick);
     }
 
     private void UpdateRole()
@@ -104,13 +108,20 @@ public class UIInventoryCellDisc : MonoBehaviour, ISelectItem
         IconImg.sprite = itemIconHandle.AssetObject as Sprite;
     }
 
-    public void OnSelect()
+    private void OnSelectionChanged(DiscItem disc)
     {
-        SelectBorder.gameObject.SetActive(true);
+        if (disc == _disc)
+        {
+            SelectBorder.gameObject.SetActive(true);
+        }
+        else
+        {
+            SelectBorder.gameObject.SetActive(false);
+        }
     }
 
-    public void OnDeselect()
+    private void Btn_onClick()
     {
-        SelectBorder.gameObject.SetActive(false);
+        _selected?.Set(_disc);
     }
 }

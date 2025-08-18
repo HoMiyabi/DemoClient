@@ -5,7 +5,7 @@ using YooAsset;
 
 namespace Kirara.UI
 {
-    public class UIRoleSelectItem : MonoBehaviour, ISelectItem
+    public class UIRoleSelectItem : MonoBehaviour
     {
         #region View
         private bool _isBound;
@@ -24,8 +24,7 @@ namespace Kirara.UI
         #endregion
 
         private AssetHandle handle;
-        private SelectController selectController;
-        private Bindable<int> _selected;
+        private LiveData<int> _selected;
         private int _idx;
 
         private void Awake()
@@ -36,10 +35,9 @@ namespace Kirara.UI
         private void Clear()
         {
             handle?.Release();
-            if (_selected != null)
-            {
-                _selected.OnValueChanged -= OnValueChanged;
-            }
+            handle = null;
+            _selected?.Remove(OnSelectionChanged);
+            _selected = null;
         }
 
         private void OnDestroy()
@@ -47,7 +45,7 @@ namespace Kirara.UI
             Clear();
         }
 
-        public void Set(RoleConfig roleConfig, int idx, Bindable<int> selected)
+        public void Set(RoleConfig roleConfig, int idx, LiveData<int> selected)
         {
             Clear();
             handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(roleConfig.RoleSelectIconLoc);
@@ -55,38 +53,27 @@ namespace Kirara.UI
 
             _selected = selected;
             _idx = idx;
-            _selected.OnValueChanged += OnValueChanged;
-            OnValueChanged(_selected.Value);
+            _selected.Observe(OnSelectionChanged);
 
             Btn.onClick.RemoveAllListeners();
             Btn.onClick.AddListener(Btn_onClick);
         }
 
-        private void OnValueChanged(int idx)
+        private void OnSelectionChanged(int idx)
         {
             if (idx == _idx)
             {
-                OnSelect();
+                SelectBorder.gameObject.SetActive(true);
             }
             else
             {
-                OnDeselect();
+                SelectBorder.gameObject.SetActive(false);
             }
         }
 
         private void Btn_onClick()
         {
             _selected.Value = _idx;
-        }
-
-        public void OnSelect()
-        {
-            SelectBorder.gameObject.SetActive(true);
-        }
-
-        public void OnDeselect()
-        {
-            SelectBorder.gameObject.SetActive(false);
         }
     }
 }

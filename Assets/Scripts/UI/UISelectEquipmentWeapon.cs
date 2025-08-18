@@ -27,30 +27,26 @@ namespace Kirara.UI
         #endregion
 
         [SerializeField] private GameObject UIInventoryCellWeaponPrefab;
-        private LoopScrollGOPool Pool { get; set; }
+
+        private Role Role { get; set; }
+        private List<WeaponItem> weapons;
+        private readonly LiveData<WeaponItem> _selectedWeapon = new(null);
 
         private void Awake()
         {
             BindUI();
 
-            Pool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
-            Scroller.SetGOSourceFunc(Pool.GetObject, Pool.ReturnObject);
+            var pool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
+            Scroller.SetSource(pool);
             Scroller.provideData = ProvideData;
+            _selectedWeapon.Observe(OnSelectionChanged);
         }
 
-        private Role Role { get; set; }
-        private List<WeaponItem> weapons;
-        private WeaponItem _selectedWeapon;
-        private WeaponItem SelectedWeapon
+        private void OnSelectionChanged(WeaponItem weapon)
         {
-            get => _selectedWeapon;
-            set
-            {
-                if (_selectedWeapon == value) return;
-                _selectedWeapon = value;
-                UpdateEquipBtnView();
-                UIWeaponDetail.Set(value);
-            }
+            if (weapon == null) return;
+            UpdateEquipBtnView();
+            UIWeaponDetail.Set(weapon);
         }
 
         private void OnDestroy()
@@ -64,6 +60,7 @@ namespace Kirara.UI
             {
                 Role.OnWeaponChanged -= UpdateEquipBtnView;
             }
+            Role = null;
         }
 
         public void Set(Role role)
@@ -79,7 +76,7 @@ namespace Kirara.UI
 
             if (weapons.Count > 0)
             {
-                SelectedWeapon = weapons[0];
+                _selectedWeapon.Value = weapons[0];
             }
         }
 
@@ -101,11 +98,11 @@ namespace Kirara.UI
 
         private void UpdateEquipBtnView()
         {
-            if (Role.Weapon == null && SelectedWeapon.RoleId == "")
+            if (Role.Weapon == null && _selectedWeapon.Value.RoleId == "")
             {
                 SetEquipBtnEquip();
             }
-            else if (Role.Weapon != null && SelectedWeapon.RoleId == Role.Id)
+            else if (Role.Weapon != null && _selectedWeapon.Value.RoleId == Role.Id)
             {
                 SetEquipBtnRemove();
             }
@@ -134,17 +131,15 @@ namespace Kirara.UI
             EquipBtnText.text = "装备";
             EquipBtn.interactable = true;
             EquipBtn.onClick.RemoveAllListeners();
-            EquipBtn.onClick.AddListener(() => Role.EquipWeapon(SelectedWeapon).Forget());
+            EquipBtn.onClick.AddListener(() => Role.EquipWeapon(_selectedWeapon.Value).Forget());
         }
 
         #endregion
 
-        private void ProvideData(GameObject go, int idx)
+        private void ProvideData(GameObject go, int index)
         {
-            go.GetComponent<UIInventoryCellWeapon>().Set(weapons[idx], () =>
-            {
-                SelectedWeapon = weapons[idx];
-            });
+            var item = go.GetComponent<UIInventoryCellWeapon>();
+            item.Set(weapons[index], _selectedWeapon);
         }
     }
 }

@@ -105,12 +105,12 @@ namespace Kirara.UI.Panel
 
             // 聊天人选择列表
             friends = PlayerService.Player.Friends;
-            ChatFriendScrollView.SetGOSource(new LoopScrollGOPool(ChatFriendItemPrefab, transform));
+            ChatFriendScrollView.SetSource(new LoopScrollGOPool(ChatFriendItemPrefab, transform));
             ChatFriendScrollView.provideData = ProvideFriendData;
             ChatFriendScrollView._totalCount = friends.Count;
 
             // 聊天列表
-            ChatLoopScroll.SetGOSource(new LoopScrollGOPool(ChatItemPrefab, transform));
+            ChatLoopScroll.SetSource(new LoopScrollGOPool(ChatItemPrefab, transform));
             ChatLoopScroll.provideData = ProvideChatData;
 
             ChattingPlayer = friends.FirstOrDefault();
