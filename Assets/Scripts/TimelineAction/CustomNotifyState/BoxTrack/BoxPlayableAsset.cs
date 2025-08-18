@@ -186,7 +186,7 @@ namespace Kirara.TimelineAction
 
         private void ChHitBoxBegin()
         {
-            CombatProcessSceneManager.RoleAttack(role, this);
+            AttackProcessManager.RoleAttack(role, this);
         }
     }
 }

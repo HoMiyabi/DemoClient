@@ -9,7 +9,7 @@ namespace Kirara.NetHandler.Monster
             if (string.IsNullOrEmpty(msg.ActionName)) return;
             if (MonsterSystem.Instance.monsters.TryGetValue(msg.MonsterId, out var monster))
             {
-                monster.PlayAction(msg.ActionName, 0.15f);
+                monster.PlayAction(msg.ActionName, 0);
             }
         }
     }

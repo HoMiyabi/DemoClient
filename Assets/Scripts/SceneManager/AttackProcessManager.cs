@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Kirara
 {
-    public class CombatProcessSceneManager
+    public class AttackProcessManager
     {
         private static bool GetIsCrit(Role role)
         {
@@ -74,11 +74,12 @@ namespace Kirara
             NetFn.Send(new MsgMonsterTakeDamage
             {
                 MonsterId = target.Model.MonsterId,
-                Damage = (float)dmg,
+                Damage = dmg,
                 IsCrit = isCrit,
-                Daze = (float)daze,
+                Daze = daze,
                 HitGatherDist = box.hitGatherDist,
                 CenterPos = role.transform.TransformPoint(box.center).Net(),
+                RolePos = role.transform.position.Net(),
             });
 
             PlayVisual(role, target, dmg, isCrit, box);

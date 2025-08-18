@@ -11,7 +11,7 @@ namespace Kirara.Model
 
         public AttrAbilitySet Set { get; } = new();
 
-        public MonsterModel(int monsterCid, int monsterId, float hp)
+        public MonsterModel(int monsterCid, int monsterId, double hp)
         {
             MonsterId = monsterId;
 
