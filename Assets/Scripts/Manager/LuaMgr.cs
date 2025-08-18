@@ -9,15 +9,19 @@ namespace Manager
     public class LuaMgr : UnitySingleton<LuaMgr>
     {
         public LuaEnv LuaEnv { get; private set; }
+        private bool isInit;
 
         private const float GCInterval = 1f;
         private float lastGCTime;
 
-        [CSharpCallLua]
-        public delegate void AbilityTableInit(LuaTable abilityTable, Func<string, double> inject);
-
         public void Init()
         {
+            if (isInit)
+            {
+                Debug.Log("LuaMgr已初始化");
+                return;
+            }
+            isInit = true;
             LuaEnv = new LuaEnv();
             LuaEnv.AddLoader(LuaLoader);
             LuaEnv.DoString("require('main')");

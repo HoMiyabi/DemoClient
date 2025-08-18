@@ -3,13 +3,8 @@ using UnityEngine;
 
 namespace Kirara.UI.Panel
 {
-    public class BasePanel : MonoBehaviour
+    public class BasePanel : AbstractBasePanel
     {
-        public Action onClosed;
-
-        public Action onPlayEnterFinished;
-        public Action onPlayExitFinished;
-
         public virtual void BindUI()
         {
         }
@@ -17,29 +12,6 @@ namespace Kirara.UI.Panel
         protected virtual void Awake()
         {
             BindUI();
-        }
-
-        public virtual void PlayEnter()
-        {
-            onPlayEnterFinished?.Invoke();
-        }
-
-        public virtual void PlayExit()
-        {
-            onPlayExitFinished?.Invoke();
-        }
-
-        public virtual void OnPause()
-        {
-        }
-
-        public virtual void OnResume()
-        {
-        }
-
-        public void PopPanel()
-        {
-            UIMgr.Instance.PopPanel(this);
         }
     }
 }

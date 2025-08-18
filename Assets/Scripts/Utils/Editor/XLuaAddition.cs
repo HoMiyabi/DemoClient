@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using cfg.main;
 using XLua;
 
 namespace Kirara
@@ -10,7 +9,7 @@ namespace Kirara
         [LuaCallCSharp]
         public static List<Type> myLuaCallCSharpList = new()
         {
-            // typeof(EAttrType)
+            typeof(KiraraDirectBinder.KiraraDirectBinder)
         };
     }
 }

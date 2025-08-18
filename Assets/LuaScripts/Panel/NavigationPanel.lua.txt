@@ -1,0 +1,36 @@
+
+local NavigationPanel = {}
+
+function NavigationPanel:BindUI()
+    local b           = self.com:GetComponent(typeof(CS.KiraraDirectBinder.KiraraDirectBinder))
+    self.SettingBtn   = b:Q(0, "SettingBtn")
+    self.InventoryBtn = b:Q(1, "InventoryBtn")
+    self.UIBackBtn    = b:Q(2, "UIBackBtn")
+    self.FriendBtn    = b:Q(3, "FriendBtn")
+end
+
+
+
+function NavigationPanel:Awake()
+    self.UIBackBtn.onClick:AddListener(function()
+        print("Pop Panel")
+        CS.Kirara.UIMgr.Instance:PopPanel(self.com)
+    end)
+
+    self.SettingBtn.onClick:AddListener(function()
+        print("Push SettingsPanel")
+        CS.Kirara.UIMgr.Instance:PushPanel('SettingsPanel')
+    end)
+
+    self.InventoryBtn.onClick:AddListener(function()
+        print("Push InventoryPanel")
+        CS.Kirara.UIMgr.Instance:PushPanel('InventoryPanel')
+    end)
+
+    self.FriendBtn.onClick:AddListener(function()
+        print('Push SocialPanel')
+        CS.Kirara.UIMgr.Instance:PushPanel('SocialPanel')
+    end)
+end
+
+return NavigationPanel

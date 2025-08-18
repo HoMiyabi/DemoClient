@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
+using XLua;
 
 namespace Kirara
 {
+    [LuaCallCSharp]
     public class UnitySingleton<T> : MonoBehaviour where T : UnitySingleton<T>
     {
         private static T instance;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Kirara.UI.Panel;
 using Manager;
 using UnityEngine;
+using XLua;
 
 namespace Kirara
 {
@@ -13,6 +14,7 @@ namespace Kirara
         Top = 2,
     }
 
+    [LuaCallCSharp]
     public class UIMgr : UnitySingleton<UIMgr>
     {
         [SerializeField] private RectTransform hudCanvas;
@@ -20,7 +22,7 @@ namespace Kirara
         [SerializeField] private RectTransform topCanvas;
         private RectTransform[] canvass;
 
-        private List<BasePanel> stk;
+        private List<AbstractBasePanel> stk;
 
 
         public int NormalCount => stk.Count;
@@ -36,10 +38,10 @@ namespace Kirara
                 DontDestroyOnLoad(canvas.gameObject);
             }
 
-            stk = new List<BasePanel>();
+            stk = new List<AbstractBasePanel>();
         }
 
-        private T Init<T>(GameObject go) where T : BasePanel
+        private T Init<T>(GameObject go) where T : AbstractBasePanel
         {
             var panel = go.GetComponent<T>();
 
@@ -54,25 +56,30 @@ namespace Kirara
             return panel;
         }
 
-        public T PushPanel<T>(GameObject prefab) where T : BasePanel
+        public T PushPanel<T>(GameObject prefab) where T : AbstractBasePanel
         {
             var go = Instantiate(prefab, canvass[(int)UILayer.Normal]);
             return Init<T>(go);
         }
 
-        public T PushPanel<T>() where T : BasePanel
+        public T PushPanel<T>() where T : AbstractBasePanel
         {
             var go = LoadInLayer(typeof(T).Name, UILayer.Normal);
             return Init<T>(go);
         }
 
-        public BasePanel PushPanel(string location)
+        public AbstractBasePanel PushPanel(string location)
         {
             var go = LoadInLayer(location, UILayer.Normal);
-            return Init<BasePanel>(go);
+            return Init<AbstractBasePanel>(go);
         }
 
-        public void PopPanel(BasePanel panel)
+        public AbstractBasePanel PushPanel(Type type)
+        {
+            return PushPanel(type.Name);
+        }
+
+        public void PopPanel(AbstractBasePanel panel)
         {
             if (stk.Count == 0 || stk[^1] != panel)
             {

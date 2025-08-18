@@ -17,7 +17,8 @@ namespace Kirara.UI.Panel
             input.Combat.Esc.started += _ =>
             {
                 // 导航面板
-                UIMgr.Instance.PushPanel<NavigationPanel>();
+                UIMgr.Instance.PushPanel("NavigationPanel");
+                // UIMgr.Instance.PushPanel<NavigationPanel>();
             };
             input.Combat.CharacterPanel.started += _ =>
             {

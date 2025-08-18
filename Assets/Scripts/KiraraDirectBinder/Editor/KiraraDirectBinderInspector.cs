@@ -164,7 +164,7 @@ namespace KiraraDirectBinder.Editor
                 {
                     (string fieldName, var com) = _target.items[i];
                     string typeName = GetFullNameOrEmpty(com);
-                    sb.AppendLine($"    {fieldName.PadRight(equalLeftLen)} = c.{nameof(_target.Q)}<{typeName}>({i}, \"{fieldName}\");");
+                    sb.AppendLine($"    {fieldName.PadRight(equalLeftLen)} = c.Q<{typeName}>({i}, \"{fieldName}\");");
                 }
             }
 
