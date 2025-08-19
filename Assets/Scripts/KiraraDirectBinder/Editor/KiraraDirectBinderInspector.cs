@@ -147,10 +147,7 @@ namespace KiraraDirectBinder.Editor
                             }
                             else if (obj is GameObject gameObject)
                             {
-                                if (gameObject.TryGetComponent<RectTransform>(out var rectTransform))
-                                {
-                                    AddItem(rectTransform);
-                                }
+                                AddItem(gameObject.transform);
                             }
                         }
                     }
