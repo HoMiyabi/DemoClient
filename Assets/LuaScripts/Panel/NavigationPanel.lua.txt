@@ -6,10 +6,10 @@ function NavigationPanel:BindUI()
     end
     self._isBound = true
     local b           = self.com:GetComponent(typeof(CS.KiraraDirectBinder.KiraraDirectBinder))
-    self.SettingBtn   = b.Q(0, "SettingBtn")
-    self.InventoryBtn = b.Q(1, "InventoryBtn")
-    self.UIBackBtn    = b.Q(2, "UIBackBtn")
-    self.FriendBtn    = b.Q(3, "FriendBtn")
+    self.SettingBtn   = b:Q(0, "SettingBtn")
+    self.InventoryBtn = b:Q(1, "InventoryBtn")
+    self.UIBackBtn    = b:Q(2, "UIBackBtn")
+    self.FriendBtn    = b:Q(3, "FriendBtn")
 end
 
 
