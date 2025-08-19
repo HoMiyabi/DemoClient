@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace KiraraDirectBinder.Editor
 {
@@ -22,35 +23,30 @@ namespace KiraraDirectBinder.Editor
             {
                 drawHeaderCallback = ReList_DrawHeader,
                 drawElementCallback = ReList_DrawElement,
-                drawElementBackgroundCallback = ReList_DrawElementBackground,
             };
             varNameFreq = new Dictionary<string, int>();
         }
 
         #region ReorderableList
 
-        private Rect GetVarNameRect(Rect rect)
+        private Rect GetHorizontalItem(Rect rect, int index, int count, float spacing = 0f)
         {
-            float hSpacing = 4f;
+            Assert.IsTrue(count >= 1);
+            Assert.IsTrue(index >= 0 && index < count);
 
-            var r1 = rect;
-            r1.width = r1.width / 2 - hSpacing / 2;
-            return r1;
-        }
-
-        private Rect GetComponentRect(Rect rect)
-        {
-            float hSpacing = 4f;
-
-            var r1 = rect;
-            r1.width = r1.width / 2 - hSpacing / 2;
-            r1.x += r1.width + hSpacing;
-            return r1;
+            rect.width = (rect.width - (count - 1) * spacing) / count;
+            rect.x += index * (rect.width + spacing);
+            return rect;
         }
 
         private void ReList_DrawHeader(Rect rect)
         {
-            GUI.Label(rect, "组件");
+            rect.width -= EditorGUIUtility.singleLineHeight;
+            rect.x += EditorGUIUtility.singleLineHeight;
+            var varNameRect = GetHorizontalItem(rect, 0, 2, 4);
+            var componentRect = GetHorizontalItem(rect, 1, 2, 4);
+            GUI.Label(varNameRect, "变量名");
+            GUI.Label(componentRect, "组件");
         }
 
         private void ReList_DrawElement(Rect rect, int index, bool isActive, bool isFocused)
@@ -59,61 +55,67 @@ namespace KiraraDirectBinder.Editor
             var fieldNameProp = itemProp.FindPropertyRelative("fieldName");
             var componentProp = itemProp.FindPropertyRelative("component");
 
-            rect.y += 2;
-            rect.height = EditorGUIUtility.singleLineHeight;
+            var contentRect = rect;
+            contentRect.y += 2;
+            contentRect.height = EditorGUIUtility.singleLineHeight;
 
-            var varNameRect = GetVarNameRect(rect);
-            var componentRect = GetComponentRect(rect);
+            var varNameRect = GetHorizontalItem(contentRect, 0, 2, 4);
+            var componentRect = GetHorizontalItem(contentRect, 1, 2, 4);
 
-            float defaultWidth = EditorGUIUtility.labelWidth;
-            EditorGUIUtility.labelWidth = varNameRect.width / 5;
-            EditorGUI.PropertyField(varNameRect, fieldNameProp, new GUIContent("变量名"));
-            EditorGUI.PropertyField(componentRect, componentProp, new GUIContent("组件"));
-            EditorGUIUtility.labelWidth = defaultWidth;
+            DrawName(varNameRect, fieldNameProp);
+            DrawComponent(componentRect, componentProp);
         }
 
-        private void ReList_DrawElementBackground(Rect rect, int index, bool isActive, bool isFocused)
+        private static readonly Color duplicateNameColor = Color.yellow;
+        private static readonly Color referenceNullColor = Color.red + new Color(-0.3f, 0.5f, 0.5f);
+
+        private void DrawName(Rect r, SerializedProperty prop)
         {
-            if (index < 0)
+            var oldColor = GUI.color;
+            if (varNameFreq[prop.stringValue] >= 2)
             {
-                ReorderableList.defaultBehaviours.DrawElementBackground(rect, index, isActive, isFocused, reList.draggable);
-                return;
+                GUI.color = duplicateNameColor;
             }
+            EditorGUI.PropertyField(r, prop, GUIContent.none);
+            GUI.color = oldColor;
+        }
 
-            var itemProp = itemsProp.GetArrayElementAtIndex(index);
-            var fieldNameProp = itemProp.FindPropertyRelative("fieldName");
-            var componentProp = itemProp.FindPropertyRelative("component");
+        private void DrawComponent(Rect r, SerializedProperty prop)
+        {
+            bool isNull = prop.objectReferenceValue == null;
+            r.width -= EditorGUIUtility.singleLineHeight;
 
-            var varNameRect = GetVarNameRect(rect);
-            var componentRect = GetComponentRect(rect);
+            var oldColor = GUI.color;
+            if (isNull)
+            {
+                GUI.color = referenceNullColor;
+            }
+            EditorGUI.PropertyField(r, prop, GUIContent.none);
+            GUI.color = oldColor;
 
-            // 变量名是否重复警告
-            if (varNameFreq[fieldNameProp.stringValue] <= 1)
+            EditorGUI.BeginDisabledGroup(isNull);
+            r.x += r.width;
+            r.width = EditorGUIUtility.singleLineHeight;
+            if (EditorGUI.DropdownButton(r, GUIContent.none, FocusType.Keyboard))
             {
-                ReorderableList.defaultBehaviours.DrawElementBackground(varNameRect, index, isActive, isFocused, reList.draggable);
+                var currCom = (Component)prop.objectReferenceValue;
+                var coms = currCom.GetComponents<Component>();
+                var menu = new GenericMenu();
+                foreach (var com in coms)
+                {
+                    menu.AddItem(new GUIContent(com.GetType().Name), com == currCom, () =>
+                    {
+                        prop.objectReferenceValue = com;
+                        // GenericMenu的生命周期不一样，所以这里要手动调用
+                        serializedObject.ApplyModifiedProperties();
+                    });
+                }
+                menu.DropDown(r);
             }
-            else
-            {
-                DrawRect(varNameRect, isActive || isFocused, Color.yellow * 0.85f, Color.yellow);
-            }
-
-            if (componentProp.objectReferenceValue)
-            {
-                ReorderableList.defaultBehaviours.DrawElementBackground(componentRect, index, isActive, isFocused, reList.draggable);
-            }
-            else
-            {
-                var color = Color.red + new Color(-0.3f, 0.5f, 0.5f);
-                DrawRect(componentRect, isActive || isFocused, color * 0.8f, color);
-            }
+            EditorGUI.EndDisabledGroup();
         }
 
         #endregion
-
-        private void DrawRect(Rect rect, bool highlight, Color normalColor, Color highlightColor)
-        {
-            EditorGUI.DrawRect(rect, highlight ? highlightColor : normalColor);
-        }
 
         private void DrawDragArea()
         {
@@ -168,9 +170,12 @@ namespace KiraraDirectBinder.Editor
         private void UpdateVarNameFreq()
         {
             varNameFreq.Clear();
-            foreach (var item in _target.items)
+            for (int i = 0; i < itemsProp.arraySize; i++)
             {
-                varNameFreq[item.fieldName] = varNameFreq.GetValueOrDefault(item.fieldName) + 1;
+                var itemProp = itemsProp.GetArrayElementAtIndex(i);
+                var varNameProp = itemProp.FindPropertyRelative("fieldName");
+                string varName = varNameProp.stringValue;
+                varNameFreq[varName] = varNameFreq.GetValueOrDefault(varName) + 1;
             }
         }
 
