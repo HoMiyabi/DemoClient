@@ -15,9 +15,9 @@ namespace Kirara.UI.Panel
         {
             if (_isBound) return;
             _isBound = true;
-            var c      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn  = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
-            ScrollView = c.Q<KiraraLoopScroll.GridScrollView>(1, "ScrollView");
+            var b      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIBackBtn  = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            ScrollView = b.Q<KiraraLoopScroll.GridScrollView>(1, "ScrollView");
         }
         #endregion
 

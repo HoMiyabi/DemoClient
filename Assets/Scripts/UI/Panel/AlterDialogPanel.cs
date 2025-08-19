@@ -1,5 +1,4 @@
 ﻿using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,32 +7,34 @@ namespace Kirara.UI.Panel
     public class AlterDialogPanel : BasePanel
     {
         #region View
-        private Image BoxBgImg;
-        private TextMeshProUGUI TitleText;
-        private TextMeshProUGUI ContentText;
-        private Button OkBtn;
-        private Button CloseBtn;
-        private RectTransform BoxTra;
-        private Image BgImg;
-        private CanvasGroup CanvasGroup;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Image      BoxBgImg;
+        private TMPro.TextMeshProUGUI     TitleText;
+        private TMPro.TextMeshProUGUI     ContentText;
+        private UnityEngine.UI.Button     OkBtn;
+        private UnityEngine.UI.Button     CloseBtn;
+        private UnityEngine.RectTransform BoxTra;
+        private UnityEngine.UI.Image      BgImg;
+        private UnityEngine.CanvasGroup   CanvasGroup;
+        public override void BindUI()
         {
-            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            BoxBgImg = c.Q<Image>(0, "BoxBgImg");
-            TitleText = c.Q<TextMeshProUGUI>(1, "TitleText");
-            ContentText = c.Q<TextMeshProUGUI>(2, "ContentText");
-            OkBtn = c.Q<Button>(3, "OkBtn");
-            CloseBtn = c.Q<Button>(4, "CloseBtn");
-            BoxTra = c.Q<RectTransform>(5, "BoxTra");
-            BgImg = c.Q<Image>(6, "BgImg");
-            CanvasGroup = c.Q<CanvasGroup>(7, "CanvasGroup");
+            if (_isBound) return;
+            _isBound = true;
+            var b       = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            BoxBgImg    = b.Q<UnityEngine.UI.Image>(0, "BoxBgImg");
+            TitleText   = b.Q<TMPro.TextMeshProUGUI>(1, "TitleText");
+            ContentText = b.Q<TMPro.TextMeshProUGUI>(2, "ContentText");
+            OkBtn       = b.Q<UnityEngine.UI.Button>(3, "OkBtn");
+            CloseBtn    = b.Q<UnityEngine.UI.Button>(4, "CloseBtn");
+            BoxTra      = b.Q<UnityEngine.RectTransform>(5, "BoxTra");
+            BgImg       = b.Q<UnityEngine.UI.Image>(6, "BgImg");
+            CanvasGroup = b.Q<UnityEngine.CanvasGroup>(7, "CanvasGroup");
         }
         #endregion
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
-
+            base.Awake();
             CloseBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
         }
 

@@ -2,26 +2,27 @@
 using cfg.main;
 using Kirara.System;
 using Manager;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI.Panel
 {
     public class DialoguePanel : BasePanel
     {
         #region View
-        private TextMeshProUGUI NameText;
-        private RectTransform OptionParent;
-        private Button Btn;
-        private UIDialogueText UIDialogueText;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI     NameText;
+        private UnityEngine.RectTransform OptionParent;
+        private UnityEngine.UI.Button     Btn;
+        private Kirara.UI.UIDialogueText  UIDialogueText;
+        public override void BindUI()
         {
-            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            NameText = c.Q<TextMeshProUGUI>(0, "NameText");
-            OptionParent = c.Q<RectTransform>(1, "OptionParent");
-            Btn = c.Q<Button>(2, "Btn");
-            UIDialogueText = c.Q<UIDialogueText>(3, "UIDialogueText");
+            if (_isBound) return;
+            _isBound = true;
+            var b          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            NameText       = b.Q<TMPro.TextMeshProUGUI>(0, "NameText");
+            OptionParent   = b.Q<UnityEngine.RectTransform>(1, "OptionParent");
+            Btn            = b.Q<UnityEngine.UI.Button>(2, "Btn");
+            UIDialogueText = b.Q<Kirara.UI.UIDialogueText>(3, "UIDialogueText");
         }
         #endregion
 
@@ -43,10 +44,9 @@ namespace Kirara.UI.Panel
 
         private Dictionary<string, int> blackBoard;
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
-
+            base.Awake();
             pool = new SimpleGOPool(optionItemPrefab, transform);
             pool.ReleaseChildren(OptionParent);
 

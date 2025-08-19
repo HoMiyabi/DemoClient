@@ -6,7 +6,7 @@ namespace Kirara.UI.Panel
     {
         private GameInput input;
 
-        private void Awake()
+        protected override void Awake()
         {
             input = new GameInput();
             AddInput();

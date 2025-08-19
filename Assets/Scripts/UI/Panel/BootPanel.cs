@@ -1,29 +1,29 @@
 ﻿using Cysharp.Threading.Tasks;
 using Kirara.Manager;
 using Manager;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI.Panel
 {
     public class BootPanel : BasePanel
     {
         #region View
-        private Button BgBtn;
-        private TextMeshProUGUI StatusText;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button BgBtn;
+        private TMPro.TextMeshProUGUI StatusText;
+        public override void BindUI()
         {
-            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            BgBtn = c.Q<Button>(0, "BgBtn");
-            StatusText = c.Q<TextMeshProUGUI>(1, "StatusText");
+            if (_isBound) return;
+            _isBound = true;
+            var b      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            BgBtn      = b.Q<UnityEngine.UI.Button>(0, "BgBtn");
+            StatusText = b.Q<TMPro.TextMeshProUGUI>(1, "StatusText");
         }
         #endregion
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
-
+            base.Awake();
             StatusText.text = string.Empty;
         }
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Manager;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using YooAsset;
 
 namespace Kirara.UI.Panel
@@ -11,13 +9,16 @@ namespace Kirara.UI.Panel
     public class LoadingPanel : BasePanel
     {
         #region View
-        private Image           ProgressBarImg;
-        private TextMeshProUGUI ProgressText;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Image  ProgressBarImg;
+        private TMPro.TextMeshProUGUI ProgressText;
+        public override void BindUI()
         {
-            var c          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            ProgressBarImg = c.Q<Image>(0, "ProgressBarImg");
-            ProgressText   = c.Q<TextMeshProUGUI>(1, "ProgressText");
+            if (_isBound) return;
+            _isBound = true;
+            var b          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            ProgressBarImg = b.Q<UnityEngine.UI.Image>(0, "ProgressBarImg");
+            ProgressText   = b.Q<TMPro.TextMeshProUGUI>(1, "ProgressText");
         }
         #endregion
 
@@ -34,9 +35,9 @@ namespace Kirara.UI.Panel
             }
         }
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
+            base.Awake();
 
             Progress = 0f;
         }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Manager;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 using YooAsset;
 
 namespace Kirara.UI.Panel
@@ -12,31 +9,34 @@ namespace Kirara.UI.Panel
     public class ExchangeDialogPanel : BasePanel
     {
         #region View
-        private TextMeshProUGUI TitleText;
-        private TextMeshProUGUI ToNameCountText;
-        private TextMeshProUGUI ToDescText;
-        private UINumSlider     UINumSlider;
-        private Button          UICloseBtn;
-        private Image           FromIcon;
-        private TextMeshProUGUI FromCountCostText;
-        private Button          UIOverlayBtn;
-        private TextMeshProUGUI ExchangeCountText;
-        private Button          ConfirmBtn;
-        private Image           ToIcon;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI TitleText;
+        private TMPro.TextMeshProUGUI ToNameCountText;
+        private TMPro.TextMeshProUGUI ToDescText;
+        private Kirara.UI.UINumSlider UINumSlider;
+        private UnityEngine.UI.Button UICloseBtn;
+        private UnityEngine.UI.Image  FromIcon;
+        private TMPro.TextMeshProUGUI FromCountCostText;
+        private UnityEngine.UI.Button UIOverlayBtn;
+        private TMPro.TextMeshProUGUI ExchangeCountText;
+        private UnityEngine.UI.Button ConfirmBtn;
+        private UnityEngine.UI.Image  ToIcon;
+        public override void BindUI()
         {
-            var c             = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            TitleText         = c.Q<TextMeshProUGUI>(0, "TitleText");
-            ToNameCountText   = c.Q<TextMeshProUGUI>(1, "ToNameCountText");
-            ToDescText        = c.Q<TextMeshProUGUI>(2, "ToDescText");
-            UINumSlider       = c.Q<UINumSlider>(3, "UINumSlider");
-            UICloseBtn        = c.Q<Button>(4, "UICloseBtn");
-            FromIcon          = c.Q<Image>(5, "FromIcon");
-            FromCountCostText = c.Q<TextMeshProUGUI>(6, "FromCountCostText");
-            UIOverlayBtn      = c.Q<Button>(7, "UIOverlayBtn");
-            ExchangeCountText = c.Q<TextMeshProUGUI>(8, "ExchangeCountText");
-            ConfirmBtn        = c.Q<Button>(9, "ConfirmBtn");
-            ToIcon            = c.Q<Image>(10, "ToIcon");
+            if (_isBound) return;
+            _isBound = true;
+            var b             = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            TitleText         = b.Q<TMPro.TextMeshProUGUI>(0, "TitleText");
+            ToNameCountText   = b.Q<TMPro.TextMeshProUGUI>(1, "ToNameCountText");
+            ToDescText        = b.Q<TMPro.TextMeshProUGUI>(2, "ToDescText");
+            UINumSlider       = b.Q<Kirara.UI.UINumSlider>(3, "UINumSlider");
+            UICloseBtn        = b.Q<UnityEngine.UI.Button>(4, "UICloseBtn");
+            FromIcon          = b.Q<UnityEngine.UI.Image>(5, "FromIcon");
+            FromCountCostText = b.Q<TMPro.TextMeshProUGUI>(6, "FromCountCostText");
+            UIOverlayBtn      = b.Q<UnityEngine.UI.Button>(7, "UIOverlayBtn");
+            ExchangeCountText = b.Q<TMPro.TextMeshProUGUI>(8, "ExchangeCountText");
+            ConfirmBtn        = b.Q<UnityEngine.UI.Button>(9, "ConfirmBtn");
+            ToIcon            = b.Q<UnityEngine.UI.Image>(10, "ToIcon");
         }
         #endregion
 
@@ -46,9 +46,9 @@ namespace Kirara.UI.Panel
         private AssetHandle fromIconHandle;
         private AssetHandle toIconHandle;
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
+            base.Awake();
 
             Title = "兑换确认";
             UICloseBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
