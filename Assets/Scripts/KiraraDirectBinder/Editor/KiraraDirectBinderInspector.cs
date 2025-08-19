@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace KiraraDirectBinder.Editor
         private KiraraDirectBinder _target;
         private SerializedProperty itemsProp;
         private ReorderableList reList;
+        private Dictionary<string, int> varNameFreq;
 
         public void OnEnable()
         {
@@ -22,9 +24,29 @@ namespace KiraraDirectBinder.Editor
                 drawElementCallback = ReList_DrawElement,
                 drawElementBackgroundCallback = ReList_DrawElementBackground,
             };
+            varNameFreq = new Dictionary<string, int>();
         }
 
         #region ReorderableList
+
+        private Rect GetVarNameRect(Rect rect)
+        {
+            float hSpacing = 4f;
+
+            var r1 = rect;
+            r1.width = r1.width / 2 - hSpacing / 2;
+            return r1;
+        }
+
+        private Rect GetComponentRect(Rect rect)
+        {
+            float hSpacing = 4f;
+
+            var r1 = rect;
+            r1.width = r1.width / 2 - hSpacing / 2;
+            r1.x += r1.width + hSpacing;
+            return r1;
+        }
 
         private void ReList_DrawHeader(Rect rect)
         {
@@ -40,17 +62,13 @@ namespace KiraraDirectBinder.Editor
             rect.y += 2;
             rect.height = EditorGUIUtility.singleLineHeight;
 
-            float hSpacing = 4f;
-
-            var rect1 = rect;
-            rect1.width = rect1.width / 2 - hSpacing / 2;
-            var rect2 = rect1;
-            rect2.x += rect1.width + hSpacing;
+            var varNameRect = GetVarNameRect(rect);
+            var componentRect = GetComponentRect(rect);
 
             float defaultWidth = EditorGUIUtility.labelWidth;
-            EditorGUIUtility.labelWidth = rect1.width / 5;
-            EditorGUI.PropertyField(rect1, fieldNameProp, new GUIContent("变量名"));
-            EditorGUI.PropertyField(rect2, componentProp, new GUIContent("组件"));
+            EditorGUIUtility.labelWidth = varNameRect.width / 5;
+            EditorGUI.PropertyField(varNameRect, fieldNameProp, new GUIContent("变量名"));
+            EditorGUI.PropertyField(componentRect, componentProp, new GUIContent("组件"));
             EditorGUIUtility.labelWidth = defaultWidth;
         }
 
@@ -62,27 +80,40 @@ namespace KiraraDirectBinder.Editor
                 return;
             }
 
-            // 如果引用为空，警告
             var itemProp = itemsProp.GetArrayElementAtIndex(index);
+            var fieldNameProp = itemProp.FindPropertyRelative("fieldName");
             var componentProp = itemProp.FindPropertyRelative("component");
-            if (componentProp.objectReferenceValue)
+
+            var varNameRect = GetVarNameRect(rect);
+            var componentRect = GetComponentRect(rect);
+
+            // 变量名是否重复警告
+            if (varNameFreq[fieldNameProp.stringValue] <= 1)
             {
-                ReorderableList.defaultBehaviours.DrawElementBackground(rect, index, isActive, isFocused, reList.draggable);
+                ReorderableList.defaultBehaviours.DrawElementBackground(varNameRect, index, isActive, isFocused, reList.draggable);
             }
             else
             {
-                if (isActive || isFocused)
-                {
-                    EditorGUI.DrawRect(rect, Color.yellow);
-                }
-                else
-                {
-                    EditorGUI.DrawRect(rect, Color.yellow * 0.9f);
-                }
+                DrawRect(varNameRect, isActive || isFocused, Color.yellow * 0.85f, Color.yellow);
+            }
+
+            if (componentProp.objectReferenceValue)
+            {
+                ReorderableList.defaultBehaviours.DrawElementBackground(componentRect, index, isActive, isFocused, reList.draggable);
+            }
+            else
+            {
+                var color = Color.red + new Color(-0.3f, 0.5f, 0.5f);
+                DrawRect(componentRect, isActive || isFocused, color * 0.8f, color);
             }
         }
 
         #endregion
+
+        private void DrawRect(Rect rect, bool highlight, Color normalColor, Color highlightColor)
+        {
+            EditorGUI.DrawRect(rect, highlight ? highlightColor : normalColor);
+        }
 
         private void DrawDragArea()
         {
@@ -134,6 +165,15 @@ namespace KiraraDirectBinder.Editor
             itemProp.FindPropertyRelative("component").objectReferenceValue = component;
         }
 
+        private void UpdateVarNameFreq()
+        {
+            varNameFreq.Clear();
+            foreach (var item in _target.items)
+            {
+                varNameFreq[item.fieldName] = varNameFreq.GetValueOrDefault(item.fieldName) + 1;
+            }
+        }
+
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -158,6 +198,7 @@ namespace KiraraDirectBinder.Editor
                 GUIUtility.systemCopyBuffer = code;
             }
 
+            UpdateVarNameFreq();
             reList.DoLayoutList();
 
             serializedObject.ApplyModifiedProperties();

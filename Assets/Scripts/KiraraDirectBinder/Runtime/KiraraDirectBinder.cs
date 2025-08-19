@@ -82,6 +82,8 @@ namespace KiraraDirectBinder
 
         private static readonly Vector2 rectOffset = new(-28, 0);
 
+        private static readonly HashSet<string> varNameSet = new();
+
         private static void OnHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
         {
             var go = UnityEditor.EditorUtility.InstanceIDToObject(instanceID) as GameObject;
@@ -130,12 +132,34 @@ namespace KiraraDirectBinder
                             textColor = GetColor(i)
                         }
                     });
+
+                    string tip = "";
+
+                    bool hasDuplicateName = false;
+                    varNameSet.Clear();
+                    foreach (var item in binder.items)
+                    {
+                        if (!varNameSet.Add(item.fieldName))
+                        {
+                            hasDuplicateName = true;
+                        }
+                    }
+                    if (hasDuplicateName)
+                    {
+                        tip += "变量名重复";
+                    }
+
                     if (binder.items.FindIndex(item => item.component == null) >= 0)
                     {
-                        var v = GUI.skin.label.CalcSize(new GUIContent("丢失引用"));
+                        tip += " 丢失引用";
+                    }
+
+                    if (tip != "")
+                    {
+                        var v = GUI.skin.label.CalcSize(new GUIContent(tip));
                         binderRect.position -= new Vector2(v.x, 0);
                         binderRect.position += new Vector2(0, (binderRect.height - v.y) * 0.5f);
-                        GUI.Label(binderRect, "丢失引用");
+                        GUI.Label(binderRect, tip);
                     }
                 }
             }

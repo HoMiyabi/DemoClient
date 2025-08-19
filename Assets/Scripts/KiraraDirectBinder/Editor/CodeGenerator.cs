@@ -28,22 +28,8 @@ namespace KiraraDirectBinder.Editor
             return component.GetType().FullName ?? string.Empty;
         }
 
-        private static void AssertNoDuplicateNames(KiraraDirectBinder binder)
-        {
-            var set = new HashSet<string>();
-            foreach (var item in binder.items)
-            {
-                if (!set.Add(item.fieldName))
-                {
-                    Debug.LogWarning($"重复的变量名: {item.fieldName}");
-                    return;
-                }
-            }
-        }
-
         public static string GenLuaCode(KiraraDirectBinder binder)
         {
-            AssertNoDuplicateNames(binder);
             // 变量名最大长度
             int varNameMaxLen = GetVarNameMaxLen(binder);
             int equalLeftLen = Mathf.Max("local b".Length, 5 + varNameMaxLen);
@@ -75,7 +61,6 @@ namespace KiraraDirectBinder.Editor
         // 生成C#代码
         public static string GenCSharpCode(KiraraDirectBinder binder, string bindUIMethodModifier)
         {
-            AssertNoDuplicateNames(binder);
             string varModifier = "private";
 
             // 类型全名的最大长度
