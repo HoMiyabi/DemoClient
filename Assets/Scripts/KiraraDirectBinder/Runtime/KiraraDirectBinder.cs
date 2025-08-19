@@ -135,18 +135,24 @@ namespace KiraraDirectBinder
 
                     string tip = "";
 
-                    bool hasDuplicateName = false;
+                    bool invalidVarName = false;
                     varNameSet.Clear();
                     foreach (var item in binder.items)
                     {
+                        if (string.IsNullOrWhiteSpace(item.fieldName))
+                        {
+                            invalidVarName = true;
+                            break;
+                        }
                         if (!varNameSet.Add(item.fieldName))
                         {
-                            hasDuplicateName = true;
+                            invalidVarName = true;
+                            break;
                         }
                     }
-                    if (hasDuplicateName)
+                    if (invalidVarName)
                     {
-                        tip += "变量名重复";
+                        tip += "变量名有误";
                     }
 
                     if (binder.items.FindIndex(item => item.component == null) >= 0)

@@ -62,19 +62,19 @@ namespace KiraraDirectBinder.Editor
             var varNameRect = GetHorizontalItem(contentRect, 0, 2, 4);
             var componentRect = GetHorizontalItem(contentRect, 1, 2, 4);
 
-            DrawName(varNameRect, fieldNameProp);
+            DrawVarName(varNameRect, fieldNameProp);
             DrawComponent(componentRect, componentProp);
         }
 
-        private static readonly Color duplicateNameColor = Color.yellow;
+        private static readonly Color invalidVarNameColor = Color.yellow;
         private static readonly Color referenceNullColor = Color.red + new Color(-0.3f, 0.5f, 0.5f);
 
-        private void DrawName(Rect r, SerializedProperty prop)
+        private void DrawVarName(Rect r, SerializedProperty prop)
         {
             var oldColor = GUI.color;
-            if (varNameFreq[prop.stringValue] >= 2)
+            if (string.IsNullOrWhiteSpace(prop.stringValue) || varNameFreq[prop.stringValue] >= 2)
             {
-                GUI.color = duplicateNameColor;
+                GUI.color = invalidVarNameColor;
             }
             EditorGUI.PropertyField(r, prop, GUIContent.none);
             GUI.color = oldColor;
