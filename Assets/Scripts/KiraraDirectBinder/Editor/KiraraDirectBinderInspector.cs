@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Text;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -86,9 +84,61 @@ namespace KiraraDirectBinder.Editor
 
         #endregion
 
+        private void DrawDragArea()
+        {
+            var area = GUILayoutUtility.GetRect(0f, 30f,
+                GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            var tips = new GUIContent("拖拽到此处添加");
+            EditorGUI.DrawRect(area, Color.yellow * 0.7f + new Color(0, 0, 0.3f, 0));
+            EditorGUI.LabelField(area, tips, new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.MiddleCenter
+            });
+
+            var e = Event.current;
+            switch (e.type)
+            {
+                case EventType.DragUpdated:
+                case EventType.DragPerform:
+                    if (!area.Contains(e.mousePosition)) return;
+
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                    if (e.type == EventType.DragPerform)
+                    {
+                        DragAndDrop.AcceptDrag();
+                        foreach (var obj in DragAndDrop.objectReferences)
+                        {
+                            if (obj is Component component)
+                            {
+                                AddItem(component);
+                            }
+                            else if (obj is GameObject gameObject)
+                            {
+                                if (gameObject.TryGetComponent<RectTransform>(out var rectTransform))
+                                {
+                                    AddItem(rectTransform);
+                                }
+                            }
+                        }
+                    }
+                    e.Use();
+                    break;
+            }
+        }
+
+        private void AddItem(Component component)
+        {
+            itemsProp.InsertArrayElementAtIndex(itemsProp.arraySize);
+            var itemProp = itemsProp.GetArrayElementAtIndex(itemsProp.arraySize - 1);
+            itemProp.FindPropertyRelative("fieldName").stringValue = component.name;
+            itemProp.FindPropertyRelative("component").objectReferenceValue = component;
+        }
+
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+
+            DrawDragArea();
 
             if (GUILayout.Button("复制C#代码 override"))
             {
@@ -106,15 +156,6 @@ namespace KiraraDirectBinder.Editor
             {
                 string code = CodeGenerator.GenLuaCode(_target);
                 GUIUtility.systemCopyBuffer = code;
-            }
-
-            var component = (Component)EditorGUILayout.ObjectField("添加组件", null, typeof(Component), true);
-            if (component)
-            {
-                itemsProp.InsertArrayElementAtIndex(itemsProp.arraySize);
-                var itemProp = itemsProp.GetArrayElementAtIndex(itemsProp.arraySize - 1);
-                itemProp.FindPropertyRelative("fieldName").stringValue = component.name;
-                itemProp.FindPropertyRelative("component").objectReferenceValue = component;
             }
 
             reList.DoLayoutList();
