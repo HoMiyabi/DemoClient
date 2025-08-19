@@ -102,6 +102,12 @@ namespace KiraraDirectBinder.Editor
                 GUIUtility.systemCopyBuffer = code;
             }
 
+            if (GUILayout.Button("复制Lua代码"))
+            {
+                string code = GenerateLuaCode();
+                GUIUtility.systemCopyBuffer = code;
+            }
+
             var component = (Component)EditorGUILayout.ObjectField("添加组件", null, typeof(Component), true);
             if (component)
             {
@@ -121,23 +127,33 @@ namespace KiraraDirectBinder.Editor
             return component.GetType().FullName ?? string.Empty;
         }
 
+        private int GetTypeFullNameMaxLen()
+        {
+            return _target.items
+                .Select(x => GetFullNameOrEmpty(x.component).Length)
+                .DefaultIfEmpty()
+                .Max();
+        }
+
+        private int GetVarNameMaxLen()
+        {
+            return _target.items
+                .Select(x => x.fieldName.Length)
+                .DefaultIfEmpty()
+                .Max();
+        }
+
         // 生成C#代码
         private string GenerateCSharpCode(string bindUIMethodModifier)
         {
             string varModifier = "private";
 
             // 类型全名的最大长度
-            int typeNameMaxLen = _target.items
-                .Select(x => GetFullNameOrEmpty(x.component).Length)
-                .DefaultIfEmpty()
-                .Max();
+            int typeFullNameMaxLen = GetTypeFullNameMaxLen();
 
             // 变量名最大长度
-            int fieldNameMaxLen = _target.items
-                .Select(x => x.fieldName.Length)
-                .DefaultIfEmpty()
-                .Max();
-            int equalLeftLen = Mathf.Max("var c".Length, fieldNameMaxLen);
+            int varNameMaxLen = GetVarNameMaxLen();
+            int equalLeftLen = Mathf.Max("var b".Length, varNameMaxLen);
 
             var sb = new StringBuilder();
             sb.AppendLine("#region View");
@@ -148,7 +164,7 @@ namespace KiraraDirectBinder.Editor
             }
             foreach ((string fieldName, var com) in _target.items)
             {
-                sb.AppendLine($"{varModifier} {GetFullNameOrEmpty(com).PadRight(typeNameMaxLen)} {fieldName};");
+                sb.AppendLine($"{varModifier} {GetFullNameOrEmpty(com).PadRight(typeFullNameMaxLen)} {fieldName};");
             }
 
             sb.AppendLine($"public {bindUIMethodModifier}void BindUI()");
@@ -158,18 +174,48 @@ namespace KiraraDirectBinder.Editor
             {
                 sb.AppendLine("if (_isBound) return;");
                 sb.AppendLine("_isBound = true;");
-                sb.AppendLine($"    {"var c".PadRight(equalLeftLen)} = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();");
+                sb.AppendLine($"    {"var b".PadRight(equalLeftLen)} = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();");
 
                 for (int i = 0; i < _target.items.Count; i++)
                 {
                     (string fieldName, var com) = _target.items[i];
                     string typeName = GetFullNameOrEmpty(com);
-                    sb.AppendLine($"    {fieldName.PadRight(equalLeftLen)} = c.Q<{typeName}>({i}, \"{fieldName}\");");
+                    sb.AppendLine($"    {fieldName.PadRight(equalLeftLen)} = b.Q<{typeName}>({i}, \"{fieldName}\");");
                 }
             }
 
             sb.AppendLine("}");
             sb.Append("#endregion");
+
+            return sb.ToString();
+        }
+
+        private string GenerateLuaCode()
+        {
+            // 变量名最大长度
+            int varNameMaxLen = GetVarNameMaxLen();
+            int equalLeftLen = Mathf.Max("local b".Length, 5 + varNameMaxLen);
+            var sb = new StringBuilder();
+
+            if (_target.items.Count > 0)
+            {
+                sb.AppendLine("if self._isBound then");
+                sb.AppendLine("    return");
+                sb.AppendLine("end");
+                sb.AppendLine("self._isBound = true");
+                sb.AppendLine($"{"local b".PadRight(equalLeftLen)} = self.com:GetComponent(typeof(CS.KiraraDirectBinder.KiraraDirectBinder))");
+
+                for (int i = 0; i < _target.items.Count; i++)
+                {
+                    (string fieldName, var com) = _target.items[i];
+                    string typeName = GetFullNameOrEmpty(com);
+                    sb.Append($"{$"self.{fieldName}".PadRight(equalLeftLen)} = b.Q({i}, \"{fieldName}\")");
+                    if (i < _target.items.Count - 1)
+                    {
+                        sb.AppendLine();
+                    }
+                }
+            }
 
             return sb.ToString();
         }
