@@ -40,7 +40,7 @@ namespace Kirara.UI
                 sb.AppendFormat("{0}: {1:F4}\n", ConfigMgr.tb.TbAttrShowConfig[type].ShowName, set[type]);
             }
 
-            sb.AppendLine("效果：");
+            sb.AppendLine("增益：");
             foreach (var buff in set.Buffs)
             {
                 sb.AppendFormat("{0}: {1}/{2}层, 剩余{3:F2}/{4:F2}秒\n",

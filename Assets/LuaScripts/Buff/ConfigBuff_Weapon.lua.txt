@@ -5,7 +5,7 @@ local config = {}
 config.LiuHuangShi = function(self)
 
     ---@param self Buff
-    self.OnAttackLanded = function(self, ctx)
+    self.OnAttackHit = function(self, ctx)
         if ctx.attackType == "NormalAttack"
                 or ctx.attackType == "DashAttack"
                 or ctx.attackType == "闪避反击" then
@@ -31,7 +31,7 @@ config.DeMaLaDianChi2Xing = function(self)
     self.attrs[self.EAttrType.ElectricDmgPct] = 0.15
 
     ---@param self Buff
-    self.OnAttackLanded = function(self, ctx)
+    self.OnAttackHit = function(self, ctx)
         if ctx.actionType == "闪避反击" or ctx.actionType == "支援攻击" then
             self:AttachBuff("DeMaLaDianChi2Xing_1")
         end

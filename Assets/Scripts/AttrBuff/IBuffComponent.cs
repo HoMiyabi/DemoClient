@@ -17,5 +17,8 @@ namespace Kirara.AttrBuff
         void Update(float dt);
         void Attached();
         double GetMinRemainingTime();
+
+        void OnAttackHit(AttackHitContext ctx);
+        void OnActionStart(ActionStartContext ctx);
     }
 }

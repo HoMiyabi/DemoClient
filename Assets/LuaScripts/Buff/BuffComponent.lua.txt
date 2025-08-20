@@ -103,6 +103,14 @@ function Buff:GetMinRemainingTime()
     return min
 end
 
+---@param ctx table
+function Buff:OnAttackHit(ctx)
+end
+
+---@param ctx table
+function Buff:OnActionStart(ctx)
+end
+
 ---@param set userdata
 ---@param name string
 function Buff.New(set, name)
