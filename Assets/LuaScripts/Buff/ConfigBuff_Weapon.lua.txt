@@ -1,84 +1,84 @@
 local config = {}
 
 
----@param self Ability
+---@param self Buff
 config.LiuHuangShi = function(self)
 
-    ---@param self Ability
-    self.onAttackLanded = function(self, ctx)
+    ---@param self Buff
+    self.OnAttackLanded = function(self, ctx)
         if ctx.attackType == "NormalAttack"
                 or ctx.attackType == "DashAttack"
                 or ctx.attackType == "闪避反击" then
-            if not self:hasTimer("LiuHuangShi_Timer") then
-                self:setTimer("LiuHuangShi_Timer", 0.5)
-                self:attachAbility("LiuHuangShi_1")
+            if not self:HasTimer("LiuHuangShi_Timer") then
+                self:SetTimer("LiuHuangShi_Timer", 0.5)
+                self:AttachBuff("LiuHuangShi_1")
             end
         end
     end
 end
 
 
----@param self Ability
+---@param self Buff
 config.LiuHuangShi_1 = function(self)
     self.duration = 8
     self.stackLimit = 8
-    self.attrs[self.EAttrType.AttackPct] = self:inject("Rate")
+    self.attrs[self.EAttrType.AttackPct] = self:Inject("Rate")
 end
 
 
----@param self Ability
+---@param self Buff
 config.DeMaLaDianChi2Xing = function(self)
     self.attrs[self.EAttrType.ElectricDmgPct] = 0.15
 
-    ---@param self Ability
-    self.onAttackLanded = function(self, ctx)
+    ---@param self Buff
+    self.OnAttackLanded = function(self, ctx)
         if ctx.actionType == "闪避反击" or ctx.actionType == "支援攻击" then
-            self:attachAbility("DeMaLaDianChi2Xing_1")
+            self:AttachBuff("DeMaLaDianChi2Xing_1")
         end
     end
 end
 
 
----@param self Ability
+---@param self Buff
 config.DeMaLaDianChi2Xing_1 = function(self)
     self.duration = 8
     self.attrs[self.EAttrType.NengLiangHuoDeXiaoLv] = 0.18
 end
 
 
----@param self Ability
+---@param self Buff
 config.XingHuiYinQing = function(self)
 
-    ---@param self Ability
-    self.onActionStart = function(self, ctx)
+    ---@param self Buff
+    self.OnActionStart = function(self, ctx)
         if ctx.actionType == "闪避反击" or ctx.actionType == "快速支援" then
-            self.attachAbility("XingHuiYinQing_1")
+            self.AttachBuff("XingHuiYinQing_1")
         end
     end
 end
 
 
----@param self Ability
+---@param self Buff
 config.XingHuiYinQing_1 = function(self)
     self.duration = 12
     self.attrs[self.EAttrType.AtkPct] = 0.12
 end
 
 
----@param self Ability
+---@param self Buff
 config.XianLuoXingDian = function(self)
     self.attrs[self.EAttrType.CritDmg] = 0.5
 
-    ---@param self Ability
-    self.onActionStart = function(self, ctx)
+    ---@param self Buff
+    self.OnActionStart = function(self, ctx)
         if ctx.actionType == "强化特殊技" then
-            self:attachAbility("XianLuoXingDian_2")
+            self:AttachBuff("XianLuoXingDian_2")
         end
     end
 end
 
 
----@param self Ability
+---@param self Buff
 config.XianLuoXingDian_2 = function(self)
     self.duration = 15
     self.stackLimit = 2

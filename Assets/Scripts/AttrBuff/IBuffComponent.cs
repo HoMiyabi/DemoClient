@@ -1,11 +1,11 @@
 using XLua;
 
-namespace Kirara.AttrAbility
+namespace Kirara.AttrBuff
 {
     [CSharpCallLua]
-    public interface ILuaAbility
+    public interface IBuffComponent
     {
-        AttrAbilitySet set { get; set; }
+        AttrBuffSet set { get; set; }
         string name { get; set; }
         double duration { get; set; }
         int stackLimit { get; set; }
@@ -14,8 +14,8 @@ namespace Kirara.AttrAbility
         int stackCount { get; set; }
         LuaTable remainingTimes { get; set; }
 
-        void update(float dt);
-        void onAttached();
-        double getMinRemainingTime();
+        void Update(float dt);
+        void Attached();
+        double GetMinRemainingTime();
     }
 }

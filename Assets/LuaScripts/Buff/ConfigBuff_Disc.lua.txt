@@ -1,49 +1,49 @@
 local config = {}
 
 
----@param self Ability
+---@param self Buff
 config.ZhenXingDiSiKe_2 = function(self)
     self.attrs[self.EAttrType.ImpactPct] = 0.06
 end
 
 
----@param self Ability
+---@param self Buff
 config.ZhenXingDiSiKe_4 = function(self)
 
 end
 
 
----@param self Ability
+---@param self Buff
 config.YaoBaiJueShi_2 = function(self)
     self.attrs[self.EAttrType.EnergyRegenPct] = 0.2
 end
 
 
----@param self Ability
+---@param self Buff
 config.YaoBaiJueShi_4 = function(self)
 
 end
 
 
----@param self Ability
+---@param self Buff
 config.YanYuZhongJinShu_2 = function(self)
 
 end
 
 
----@param self Ability
+---@param self Buff
 config.YanYuZhongJinShu_4 = function(self)
 
 end
 
 
----@param self Ability
+---@param self Buff
 config.HeTunDianYin_2 = function(self)
     self.attrs[self.EAttrType.PenRatio] = 0.08
 end
 
 
----@param self Ability
+---@param self Buff
 config.HeTunDianYin_4 = function(self)
 
 end

@@ -1,4 +1,4 @@
----@class Ability
+---@class Buff
 ---@field public set userdata
 ---@field public name string
 ---@field public duration number
@@ -10,10 +10,10 @@
 ---@field public stackCount number
 ---@field public remainingTimes table
 ---@field public EAttrType table
-Ability = {}
-Ability.__index = Ability
+Buff = {}
+Buff.__index = Buff
 
-function Ability:refreshPolicy_RefreshMin()
+function Buff:RefreshPolicy_RefreshMin()
     local minIdx = 1
     local min = self.remainingTimes[1]
     for i = 2, #self.remainingTimes do
@@ -25,7 +25,7 @@ function Ability:refreshPolicy_RefreshMin()
     self.remainingTimes[minIdx] = self.duration
 end
 
-function Ability:refreshPolicy_RefreshAll()
+function Buff:RefreshPolicy_RefreshAll()
     for i = 1, #self.remainingTimes do
         self.remainingTimes[i] = self.duration
     end
@@ -33,29 +33,29 @@ end
 
 ---@param varName string
 ---@return number
-function Ability:inject(varName)
-    return CS.Kirara.AttrEffect.AttrAbilitySet.Inject(self.name, varName)
+function Buff:Inject(varName)
+    return self.set:Inject(self.name, varName)
 end
 
 ---@param handle string
 ---@param time number
-function Ability:setTimer(handle, time)
+function Buff:SetTimer(handle, time)
     self.set:SetTimer(handle, time)
 end
 
 ---@param handle string
 ---@return boolean
-function Ability:hasTimer(handle)
+function Buff:HasTimer(handle)
     return self.set:HasTimer(handle)
 end
 
----@param abilityName string
-function Ability:attachAbility(abilityName)
-    self.set:AttachAbility(abilityName)
+---@param buffName string
+function Buff:AttachBuff(buffName)
+    self.set:AttachBuff(buffName)
 end
 
 ---@param dt number
-function Ability:update(dt)
+function Buff:Update(dt)
     local i = 1
     while i <= #self.remainingTimes do
         self.remainingTimes[i] = self.remainingTimes[i] - dt
@@ -67,14 +67,14 @@ function Ability:update(dt)
         end
     end
 
-    self:onUpdate(dt)
+    self:OnUpdate(dt)
 end
 
 ---@param dt number
-function Ability:onUpdate(dt)
+function Buff:OnUpdate(dt)
 end
 
-function Ability:onAttached()
+function Buff:Attached()
     if self.stackCount < self.stackLimit then
         table.insert(self.remainingTimes, self.duration)
         self.stackCount = self.stackCount + 1
@@ -88,17 +88,8 @@ function Ability:onAttached()
     end
 end
 
---function Ability:setConfig(abilityConfig)
---    for key, value in pairs(abilityConfig) do
---        self[key] = value
---    end
---    if self.init ~= nil then
---        self:init()
---    end
---end
-
 ---@return number
-function Ability:getMinRemainingTime()
+function Buff:GetMinRemainingTime()
     if #self.remainingTimes == 0 then
         return 0
     end
@@ -113,16 +104,17 @@ function Ability:getMinRemainingTime()
 end
 
 ---@param set userdata
-function Ability.new(set)
+---@param name string
+function Buff.New(set, name)
     local obj = {}
-    setmetatable(obj, Ability)
-    -- 属性能力集
+    setmetatable(obj, Buff)
+    -- 属性增益集
     ---@type userdata
     obj.set = set
 
     -- 名字
     ---@type string
-    obj.name = ""
+    obj.name = name
 
     -- 持续时间
     ---@type number
@@ -145,7 +137,7 @@ function Ability.new(set)
     obj.stackRefreshPolicy = nil
 
     -- 叠层溢出刷新策略
-    obj.overflowRefreshPolicy = Ability.refreshPolicy_RefreshMin
+    obj.overflowRefreshPolicy = Buff.RefreshPolicy_RefreshMin
 
     -- 当前层数
     ---@type number

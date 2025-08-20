@@ -41,11 +41,11 @@ namespace Kirara.UI
             }
 
             sb.AppendLine("效果：");
-            foreach (var ability in set.Abilities)
+            foreach (var buff in set.Buffs)
             {
                 sb.AppendFormat("{0}: {1}/{2}层, 剩余{3:F2}/{4:F2}秒\n",
-                    ability.name, ability.stackCount, ability.stackLimit,
-                    ability.getMinRemainingTime(), ability.duration);
+                    buff.name, buff.stackCount, buff.stackLimit,
+                    buff.GetMinRemainingTime(), buff.duration);
             }
             string text = sb.ToString();
             if (text != cacheText)

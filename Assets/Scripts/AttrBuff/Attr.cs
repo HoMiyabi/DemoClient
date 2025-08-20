@@ -1,6 +1,6 @@
 ﻿using cfg.main;
 
-namespace Kirara.AttrAbility
+namespace Kirara.AttrBuff
 {
     public class Attr
     {
@@ -8,18 +8,16 @@ namespace Kirara.AttrAbility
 
         public double baseValue;
 
-        public AttrAbilitySet set;
-
         public Attr(EAttrType type, double baseValue)
         {
             this.type = type;
             this.baseValue = baseValue;
         }
 
-        public double Evaluate()
+        public double Evaluate(AttrBuffSet set)
         {
             double delta = 0;
-            foreach (var ability in set.Abilities)
+            foreach (var ability in set.Buffs)
             {
                 if (ability.attrs.ContainsKey(type))
                 {

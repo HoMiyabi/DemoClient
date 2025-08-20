@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using cfg.main;
 using Cysharp.Threading.Tasks;
-using Kirara.AttrAbility;
+using Kirara.AttrBuff;
 using Manager;
 using UnityEngine;
 
@@ -27,13 +27,13 @@ namespace Kirara.Model
                 if (_weapon != null)
                 {
                     _weapon.RoleId = "";
-                    RemoveWeaponAbilities(_weapon);
+                    RemoveWeaponBuffs(_weapon);
                 }
                 _weapon = value;
                 if (_weapon != null)
                 {
                     _weapon.RoleId = Id;
-                    AddWeaponAbilities(_weapon);
+                    AddWeaponBuffs(_weapon);
                 }
 
                 OnWeaponChanged?.Invoke();
@@ -41,7 +41,7 @@ namespace Kirara.Model
         }
         public event Action OnWeaponChanged;
 
-        public AttrAbilitySet Set { get; private set; } = new();
+        public AttrBuffSet Set { get; private set; } = new();
 
         private readonly Dictionary<int, int> discCidToCount = new();
 
@@ -76,8 +76,8 @@ namespace Kirara.Model
 
             Set[EAttrType.CurrHp] = Set[EAttrType.Hp];
 
-            // 添加能量恢复Ability
-            Set.AttachAbility("RoleEnergyRegen");
+            // 添加能量恢复Buff
+            Set.AttachBuff("RoleEnergyRegen");
         }
 
         public void Update(float dt)
@@ -106,28 +106,28 @@ namespace Kirara.Model
             Weapon = weapon;
         }
 
-        private void RemoveWeaponAbilities(WeaponItem weapon)
+        private void RemoveWeaponBuffs(WeaponItem weapon)
         {
-            // 移除属性能力
+            // 移除属性Buff
             string attrName = weapon.Name + "属性";
-            Set.RemoveAbility(attrName);
+            Set.RemoveBuff(attrName);
 
-            // 移除被动能力
-            Set.RemoveAbility(weapon.Config.PassiveAbilityName);
+            // 移除被动Buff
+            Set.RemoveBuff(weapon.Config.PassiveAbilityName);
         }
 
-        private void AddWeaponAbilities(WeaponItem weapon)
+        private void AddWeaponBuffs(WeaponItem weapon)
         {
-            // 添加属性能力
+            // 添加属性Buff
             string name = weapon.Name + "属性";
-            Set.AttachAbility(name, new Dictionary<EAttrType, double>()
+            Set.AttachBuff(name, new Dictionary<EAttrType, double>()
             {
                 [(EAttrType)weapon.BaseAttr.AttrTypeId] = weapon.BaseAttr.Value,
                 [(EAttrType)weapon.AdvancedAttr.AttrTypeId] = weapon.AdvancedAttr.Value,
             });
 
-            // 添加被动能力
-            Set.AttachAbility(weapon.Config.PassiveAbilityName);
+            // 添加被动Buff
+            Set.AttachBuff(weapon.Config.PassiveAbilityName);
         }
 
         #endregion
@@ -175,27 +175,27 @@ namespace Kirara.Model
             if (Disc(pos) != null)
             {
                 Disc(pos).RoleId = "";
-                RemoveDiscAbility(pos);
+                RemoveDiscBuff(pos);
             }
 
-            UpdateDiscSetAbility(pos, newDisc);
+            UpdateDiscSetBuff(pos, newDisc);
 
             discs[pos - 1] = newDisc;
             if (Disc(pos) != null)
             {
                 Disc(pos).RoleId = Id;
-                AddDiscAbility(pos);
+                AddDiscBuff(pos);
             }
 
             OnDiscChanged?.Invoke(pos);
         }
 
-        private void RemoveDiscAbility(int pos)
+        private void RemoveDiscBuff(int pos)
         {
-            Set.RemoveAbility($"驱动盘{pos}");
+            Set.RemoveBuff($"驱动盘{pos}");
         }
 
-        private void AddDiscAbility(int pos)
+        private void AddDiscBuff(int pos)
         {
             var disc = Disc(pos);
             var attrs = new Dictionary<EAttrType, double>
@@ -207,7 +207,7 @@ namespace Kirara.Model
                 attrs.Add((EAttrType)discAttr.AttrTypeId, discAttr.Value);
             }
 
-            Set.AttachAbility($"驱动盘{pos}", attrs);
+            Set.AttachBuff($"驱动盘{pos}", attrs);
         }
 
         private bool IsDiscSameConfig(DiscItem disc1, DiscItem disc2)
@@ -216,7 +216,7 @@ namespace Kirara.Model
                 || (disc1 == null && disc2 == null);
         }
 
-        private void UpdateDiscSetAbility(int pos, DiscItem newDisc)
+        private void UpdateDiscSetBuff(int pos, DiscItem newDisc)
         {
             var oldDisc = Disc(pos);
             if (IsDiscSameConfig(oldDisc, newDisc)) return;
@@ -226,11 +226,11 @@ namespace Kirara.Model
                 int cnt = discCidToCount[oldDisc.Cid];
                 if (cnt == 4)
                 {
-                    Set.RemoveAbility(oldDisc.Config.SetAbility4Name);
+                    Set.RemoveBuff(oldDisc.Config.SetAbility4Name);
                 }
                 else if (cnt == 2)
                 {
-                    Set.RemoveAbility(oldDisc.Config.SetAbility2Name);
+                    Set.RemoveBuff(oldDisc.Config.SetAbility2Name);
                 }
                 cnt--;
                 if (cnt == 0)
@@ -248,11 +248,11 @@ namespace Kirara.Model
                 int cnt = discCidToCount.GetValueOrDefault(newDisc.Cid) + 1;
                 if (cnt == 4)
                 {
-                    Set.AttachAbility(newDisc.Config.SetAbility4Name);
+                    Set.AttachBuff(newDisc.Config.SetAbility4Name);
                 }
                 else if (cnt == 2)
                 {
-                    Set.AttachAbility(newDisc.Config.SetAbility2Name);
+                    Set.AttachBuff(newDisc.Config.SetAbility2Name);
                 }
                 discCidToCount[newDisc.Cid] = cnt;
             }

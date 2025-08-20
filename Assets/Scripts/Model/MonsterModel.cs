@@ -1,5 +1,5 @@
 using cfg.main;
-using Kirara.AttrAbility;
+using Kirara.AttrBuff;
 using Manager;
 
 namespace Kirara.Model
@@ -9,7 +9,7 @@ namespace Kirara.Model
         public int MonsterId { get; private set; }
         public MonsterConfig Config { get; private set; }
 
-        public AttrAbilitySet Set { get; } = new();
+        public AttrBuffSet Set { get; } = new();
 
         public MonsterModel(int monsterCid, int monsterId, double hp)
         {
