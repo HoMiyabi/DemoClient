@@ -40,7 +40,7 @@ namespace Kirara.UI
                 return;
             }
             Clear();
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>($"Pos{pos}Icon");
+            handle = YooAssets.LoadAssetSync<Sprite>($"Pos{pos}Icon");
             Img.sprite = handle.AssetObject as Sprite;
         }
     }

@@ -80,14 +80,14 @@ namespace Kirara.UI.Panel
         public void SetFrom(NExchangeItem item)
         {
             var fromConfig = ConfigMgr.tb.TbCurrencyItemConfig[item.FromConfigId];
-            fromIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(fromConfig.IconLoc);
+            fromIconHandle = YooAssets.LoadAssetSync<Sprite>(fromConfig.IconLoc);
             FromIcon.sprite = fromIconHandle.AssetObject as Sprite;
         }
 
         public void SetTo(NExchangeItem item)
         {
             var toConfig = ConfigMgr.tb.TbWeaponConfig[item.ToConfigId];
-            toIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(toConfig.IconLoc);
+            toIconHandle = YooAssets.LoadAssetSync<Sprite>(toConfig.IconLoc);
             ToIcon.sprite = toIconHandle.AssetObject as Sprite;
             ToNameCountText.text = $"{toConfig.Name} X{item.ToCount}";
             ToDescText.text = toConfig.Desc;

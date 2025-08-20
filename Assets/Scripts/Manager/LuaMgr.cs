@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Kirara;
 using UnityEngine;
 using XLua;
+using YooAsset;
 
 namespace Manager
 {
@@ -29,7 +30,7 @@ namespace Manager
 
         private byte[] LuaLoader(ref string filepath)
         {
-            var handle = AssetMgr.Instance.package.LoadAssetSync<TextAsset>(filepath + ".lua");
+            var handle = YooAssets.LoadAssetSync<TextAsset>(filepath + ".lua");
             var textAsset = (TextAsset)handle.AssetObject;
             handle.Release();
             return textAsset.bytes;

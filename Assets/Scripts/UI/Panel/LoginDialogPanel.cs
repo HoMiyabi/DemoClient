@@ -1,35 +1,35 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Kirara.Network;
-using TMPro;
-using UnityEngine.UI;
 
 namespace Kirara.UI.Panel
 {
     public class LoginDialogPanel : BasePanel
     {
         #region View
-        private Button UICloseBtn;
-        private TMP_InputField UsernameInput;
-        private TMP_InputField PasswordInput;
-        private Button LoginBtn;
-        private Button RegisterBtn;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button UICloseBtn;
+        private TMPro.TMP_InputField  UsernameInput;
+        private TMPro.TMP_InputField  PasswordInput;
+        private UnityEngine.UI.Button LoginBtn;
+        private UnityEngine.UI.Button RegisterBtn;
+        public override void BindUI()
         {
-            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UICloseBtn = c.Q<Button>(0, "UICloseBtn");
-            UsernameInput = c.Q<TMP_InputField>(1, "UsernameInput");
-            PasswordInput = c.Q<TMP_InputField>(2, "PasswordInput");
-            LoginBtn = c.Q<Button>(3, "LoginBtn");
-            RegisterBtn = c.Q<Button>(4, "RegisterBtn");
+            if (_isBound) return;
+            _isBound = true;
+            var b         = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UICloseBtn    = b.Q<UnityEngine.UI.Button>(0, "UICloseBtn");
+            UsernameInput = b.Q<TMPro.TMP_InputField>(1, "UsernameInput");
+            PasswordInput = b.Q<TMPro.TMP_InputField>(2, "PasswordInput");
+            LoginBtn      = b.Q<UnityEngine.UI.Button>(3, "LoginBtn");
+            RegisterBtn   = b.Q<UnityEngine.UI.Button>(4, "RegisterBtn");
         }
         #endregion
 
         public bool LoginSuccess { get; private set; }
 
-        private void Awake()
+        private void Start()
         {
-            InitUI();
-
             UICloseBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             LoginBtn.onClick.AddListener(() => btnLogin_onClick().Forget());
             RegisterBtn.onClick.AddListener(() => btnRegister_onClick().Forget());
@@ -50,7 +50,7 @@ namespace Kirara.UI.Panel
             catch (ResultException e)
             {
                 var rsp = (RspLogin)e.Msg;
-                var panel = UIMgr.Instance.PushPanel<AlterDialogPanel>();
+                var panel = UIMgr.Instance.PushPanel<DialogPanel>();
                 panel.Title = "提示";
                 panel.Content = rsp.Result.Msg;
                 panel.OkClickedEvent.AddListener(() => UIMgr.Instance.PopPanel(panel));
@@ -65,7 +65,7 @@ namespace Kirara.UI.Panel
                 Password = PasswordInput.text
             });
 
-            var panel = UIMgr.Instance.PushPanel<AlterDialogPanel>();
+            var panel = UIMgr.Instance.PushPanel<DialogPanel>();
             panel.Title = "提示";
             panel.Content = rsp.Result.Msg;
             panel.OkClickedEvent.AddListener(() => UIMgr.Instance.PopPanel(panel));

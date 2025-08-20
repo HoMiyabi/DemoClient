@@ -2,6 +2,7 @@
 using Kirara.UI;
 using Manager;
 using UnityEngine;
+using YooAsset;
 
 namespace Kirara.TimelineAction
 {
@@ -20,7 +21,7 @@ namespace Kirara.TimelineAction
             }
             Debug.Log("攻击提示");
 
-            var handle = AssetMgr.Instance.package.LoadAssetSync<AudioClip>("AttackTip");
+            var handle = YooAssets.LoadAssetSync<AudioClip>("AttackTip");
             AudioMgr.Instance.PlaySFX(handle.AssetObject as AudioClip, monster.transform.position);
             handle.Release();
 

@@ -3,6 +3,7 @@ using cfg.main;
 using Kirara.Model;
 using Manager;
 using UnityEngine;
+using YooAsset;
 
 namespace Kirara.UI
 {
@@ -69,7 +70,7 @@ namespace Kirara.UI
             if (Monster.Config.Id == prevMonsterCid) return;
 
             prevMonsterCid = Monster.Config.Id;
-            var handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(Monster.Config.IconLoc);
+            var handle = YooAssets.LoadAssetSync<Sprite>(Monster.Config.IconLoc);
             MonsterIcon.sprite = handle.AssetObject as Sprite;
         }
 

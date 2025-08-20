@@ -1,6 +1,7 @@
 ﻿using cfg;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using YooAsset;
 
 namespace Manager
 {
@@ -15,7 +16,7 @@ namespace Manager
 
         private static JArray TableLoader(string filename)
         {
-            var handle = AssetMgr.Instance.package.LoadAssetSync<TextAsset>(filename);
+            var handle = YooAssets.LoadAssetSync<TextAsset>(filename);
             var textAsset = handle.GetAssetObject<TextAsset>();
             var jArray = JArray.Parse(textAsset.text);
             handle.Release();

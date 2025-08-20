@@ -2,6 +2,7 @@
 using Kirara.Model;
 using Manager;
 using UnityEngine;
+using YooAsset;
 
 namespace Kirara.UI
 {
@@ -74,7 +75,7 @@ namespace Kirara.UI
             UpdateLevelView();
             disc.OnLevelChanged += UpdateLevelView;
 
-            var discIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(disc.IconLoc);
+            var discIconHandle = YooAssets.LoadAssetSync<Sprite>(disc.IconLoc);
             var discSprite = discIconHandle.AssetObject as Sprite;
 
             BackIcon.sprite = discSprite;
@@ -122,7 +123,7 @@ namespace Kirara.UI
                 return;
             }
             var role = PlayerService.Player.Roles.First(it => it.Id == roleId);
-            var wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
+            var wearerIconHandle = YooAssets.LoadAssetSync<Sprite>(role.Config.IconLoc);
             WearerIcon.sprite = wearerIconHandle.AssetObject as Sprite;
         }
     }

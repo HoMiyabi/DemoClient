@@ -1,30 +1,32 @@
-﻿using Kirara.Model;
-using UnityEngine.UI;
+﻿using System;
+using Kirara.Model;
 
 namespace Kirara.UI.Panel
 {
     public class RoleDetailPanel : BasePanel
     {
         #region View
-        private Button               UIBackBtn;
-        private UITabController      UITabController;
-        private UIRoleBasicStat UICharacterBasicStat;
-        private UICharacterEquipment UICharacterEquipment;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button          UIBackBtn;
+        private Kirara.UI.UITabController      UITabController;
+        private Kirara.UI.UIRoleBasicStat      UICharacterBasicStat;
+        private Kirara.UI.UICharacterEquipment UICharacterEquipment;
+        public override void BindUI()
         {
-            var c                = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn            = c.Q<Button>(0, "UIBackBtn");
-            UITabController      = c.Q<UITabController>(1, "UITabController");
-            UICharacterBasicStat = c.Q<UIRoleBasicStat>(2, "UICharacterBasicStat");
-            UICharacterEquipment = c.Q<UICharacterEquipment>(3, "UICharacterEquipment");
+            if (_isBound) return;
+            _isBound = true;
+            var b                = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIBackBtn            = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            UITabController      = b.Q<Kirara.UI.UITabController>(1, "UITabController");
+            UICharacterBasicStat = b.Q<Kirara.UI.UIRoleBasicStat>(2, "UICharacterBasicStat");
+            UICharacterEquipment = b.Q<Kirara.UI.UICharacterEquipment>(3, "UICharacterEquipment");
         }
         #endregion
 
         private Role Role { get; set; }
 
-        private void Awake()
+        private void Start()
         {
-            InitUI();
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
         }
 

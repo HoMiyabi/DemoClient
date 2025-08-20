@@ -1,8 +1,5 @@
-﻿using System;
-using Manager;
-using TMPro;
+﻿using Manager;
 using UnityEngine;
-using UnityEngine.UI;
 using YooAsset;
 
 namespace Kirara.UI.Panel
@@ -10,33 +7,36 @@ namespace Kirara.UI.Panel
     public class ObtainPanel : BasePanel
     {
         #region View
-        private Button          ConfirmBtn;
-        private TextMeshProUGUI ToItemCountText;
-        private Image           Icon;
-        private Button          UIOverlayBtn;
-        private TextMeshProUGUI NameText;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button ConfirmBtn;
+        private TMPro.TextMeshProUGUI ToItemCountText;
+        private UnityEngine.UI.Image  Icon;
+        private UnityEngine.UI.Button UIOverlayBtn;
+        private TMPro.TextMeshProUGUI NameText;
+        public override void BindUI()
         {
-            var c           = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            ConfirmBtn      = c.Q<Button>(0, "ConfirmBtn");
-            ToItemCountText = c.Q<TextMeshProUGUI>(1, "ToItemCountText");
-            Icon            = c.Q<Image>(2, "Icon");
-            UIOverlayBtn    = c.Q<Button>(3, "UIOverlayBtn");
-            NameText        = c.Q<TextMeshProUGUI>(4, "NameText");
+            if (_isBound) return;
+            _isBound = true;
+            var b           = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            ConfirmBtn      = b.Q<UnityEngine.UI.Button>(0, "ConfirmBtn");
+            ToItemCountText = b.Q<TMPro.TextMeshProUGUI>(1, "ToItemCountText");
+            Icon            = b.Q<UnityEngine.UI.Image>(2, "Icon");
+            UIOverlayBtn    = b.Q<UnityEngine.UI.Button>(3, "UIOverlayBtn");
+            NameText        = b.Q<TMPro.TextMeshProUGUI>(4, "NameText");
         }
         #endregion
 
         private AssetHandle iconHandle;
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
+            base.Awake();
 
             UIOverlayBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             ConfirmBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
         }
 
-        public void Clear()
+        private void Clear()
         {
             iconHandle?.Release();
             iconHandle = null;
@@ -52,7 +52,7 @@ namespace Kirara.UI.Panel
             Clear();
 
             var config = ConfigMgr.tb.TbWeaponConfig[weaponCid];
-            iconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(config.IconLoc);
+            iconHandle = YooAssets.LoadAssetSync<Sprite>(config.IconLoc);
             Icon.sprite = iconHandle.AssetObject as Sprite;
             NameText.text = config.Name;
 

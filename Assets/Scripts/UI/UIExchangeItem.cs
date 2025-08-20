@@ -1,6 +1,7 @@
 ﻿using Manager;
 using UnityEngine;
 using UnityEngine.Events;
+using YooAsset;
 
 namespace Kirara.UI
 {
@@ -37,7 +38,7 @@ namespace Kirara.UI
         {
             var fromConfig = ConfigMgr.tb.TbCurrencyItemConfig[item.FromConfigId];
 
-            var fromItemIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(fromConfig.IconLoc);
+            var fromItemIconHandle = YooAssets.LoadAssetSync<Sprite>(fromConfig.IconLoc);
 
             FromItemIcon.sprite = fromItemIconHandle.AssetObject as Sprite;
             FromItemCountText.text = item.FromCount.ToString();
@@ -49,7 +50,7 @@ namespace Kirara.UI
         {
             var toConfig = ConfigMgr.tb.TbWeaponConfig[item.ToConfigId];
 
-            var toItemIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(toConfig.IconLoc);
+            var toItemIconHandle = YooAssets.LoadAssetSync<Sprite>(toConfig.IconLoc);
 
             ToItemIcon.sprite = toItemIconHandle.AssetObject as Sprite;
             ToItemCountText.text = $"X{item.ToCount}";

@@ -48,7 +48,7 @@ namespace Kirara.UI
         public void Set(RoleConfig roleConfig, int idx, LiveData<int> selected)
         {
             Clear();
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(roleConfig.RoleSelectIconLoc);
+            handle = YooAssets.LoadAssetSync<Sprite>(roleConfig.RoleSelectIconLoc);
             Icon.sprite = handle.AssetObject as Sprite;
 
             _selected = selected;

@@ -5,6 +5,7 @@ using Kirara.UI.Panel;
 using Manager;
 using UnityEngine;
 using UnityEngine.Pool;
+using YooAsset;
 
 namespace Kirara.UI
 {
@@ -38,7 +39,7 @@ namespace Kirara.UI
             {
                 stickerConfigIds.Add(item.Id);
 
-                var handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(item.Location);
+                var handle = YooAssets.LoadAssetSync<Sprite>(item.Location);
                 stickerSprites.Add(handle.AssetObject as Sprite);
             }
 

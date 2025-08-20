@@ -8,14 +8,14 @@ namespace Manager
         public static AssetHandle GetIconInterKnotRole(int configId)
         {
             string loc = ConfigMgr.tb.TbIconInterKnotRoleConfig[configId].Location;
-            var handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(loc);
+            var handle = YooAssets.LoadAssetSync<Sprite>(loc);
             return handle;
         }
 
         public static AssetHandle GetIconSticker(int configId)
         {
             string loc = ConfigMgr.tb.TbIconSticker[configId].Location;
-            var handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(loc);
+            var handle = YooAssets.LoadAssetSync<Sprite>(loc);
             return handle;
         }
     }

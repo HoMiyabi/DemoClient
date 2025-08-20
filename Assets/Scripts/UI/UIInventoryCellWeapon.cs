@@ -3,6 +3,7 @@ using Kirara.Model;
 using Manager;
 using UnityEngine;
 using UnityEngine.Events;
+using YooAsset;
 
 namespace Kirara.UI
 {
@@ -95,7 +96,7 @@ namespace Kirara.UI
             {
                 WearerIconImg.gameObject.SetActive(true);
                 var role = PlayerService.Player.Roles.First(it => it.Id == roleId);
-                var wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
+                var wearerIconHandle = YooAssets.LoadAssetSync<Sprite>(role.Config.IconLoc);
                 WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
             }
         }
@@ -107,7 +108,7 @@ namespace Kirara.UI
 
         private void SetIcon(string iconLocation)
         {
-            var itemIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(iconLocation);
+            var itemIconHandle = YooAssets.LoadAssetSync<Sprite>(iconLocation);
             IconImg.sprite = itemIconHandle.AssetObject as Sprite;
         }
 

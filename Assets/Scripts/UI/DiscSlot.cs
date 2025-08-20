@@ -61,7 +61,7 @@ namespace Kirara.UI
 
             if (disc != null)
             {
-                icon = AssetMgr.Instance.package.LoadAssetSync<Sprite>(disc.IconLoc);
+                icon = YooAssets.LoadAssetSync<Sprite>(disc.IconLoc);
                 Img.sprite = icon.AssetObject as Sprite;
                 Img.color = Color.white;
             }

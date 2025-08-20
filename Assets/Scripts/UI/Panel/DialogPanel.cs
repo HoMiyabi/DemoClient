@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Kirara.UI.Panel
 {
-    public class AlterDialogPanel : BasePanel
+    public class DialogPanel : BasePanel
     {
         #region View
         private bool _isBound;
@@ -16,6 +16,7 @@ namespace Kirara.UI.Panel
         private UnityEngine.RectTransform BoxTra;
         private UnityEngine.UI.Image      BgImg;
         private UnityEngine.CanvasGroup   CanvasGroup;
+        private TMPro.TextMeshProUGUI     OkBtnText;
         public override void BindUI()
         {
             if (_isBound) return;
@@ -29,12 +30,12 @@ namespace Kirara.UI.Panel
             BoxTra      = b.Q<UnityEngine.RectTransform>(5, "BoxTra");
             BgImg       = b.Q<UnityEngine.UI.Image>(6, "BgImg");
             CanvasGroup = b.Q<UnityEngine.CanvasGroup>(7, "CanvasGroup");
+            OkBtnText   = b.Q<TMPro.TextMeshProUGUI>(8, "OkBtnText");
         }
         #endregion
 
-        protected override void Awake()
+        private void Start()
         {
-            base.Awake();
             CloseBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
         }
 
@@ -58,8 +59,30 @@ namespace Kirara.UI.Panel
             t.onComplete = () => onPlayExitFinished?.Invoke();
         }
 
-        public string Title { get => TitleText.text; set => TitleText.text = value; }
-        public string Content { get => ContentText.text; set => ContentText.text = value; }
+        public string Title
+        {
+            get => TitleText.text;
+            set => TitleText.text = value;
+        }
+
+        public string Content
+        {
+            get => ContentText.text;
+            set => ContentText.text = value;
+        }
+
         public Button.ButtonClickedEvent OkClickedEvent => OkBtn.onClick;
+
+        public bool HasCloseBtn
+        {
+            get => CloseBtn.gameObject.activeSelf;
+            set => CloseBtn.gameObject.SetActive(value);
+        }
+
+        public string OkText
+        {
+            get => OkBtnText.text;
+            set => OkBtnText.text = value;
+        }
     }
 }

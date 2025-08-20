@@ -75,7 +75,7 @@ namespace Kirara.UI
         public void Set(string iconLoc, string name_, int count)
         {
             Clear();
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(iconLoc);
+            handle = YooAssets.LoadAssetSync<Sprite>(iconLoc);
             Icon.sprite = handle.AssetObject as Sprite;
             NameText.text = name_;
             CountText.text = count.ToString();

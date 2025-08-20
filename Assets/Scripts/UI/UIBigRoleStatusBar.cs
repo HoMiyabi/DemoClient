@@ -61,7 +61,7 @@ namespace Kirara.UI
             UpdateHP();
             UpdateEnergy();
 
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconRoleGeneralLoc);
+            handle = YooAssets.LoadAssetSync<Sprite>(role.Config.IconRoleGeneralLoc);
             RoleIcon.sprite = handle.AssetObject as Sprite;
         }
 

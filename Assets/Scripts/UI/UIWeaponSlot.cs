@@ -56,7 +56,7 @@ namespace Kirara.UI
         {
             if (ch.Weapon != null)
             {
-                iconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(ch.Weapon.IconLoc);
+                iconHandle = YooAssets.LoadAssetSync<Sprite>(ch.Weapon.IconLoc);
                 Img.sprite = iconHandle.AssetObject as Sprite;
                 Img.color = Color.white;
             }

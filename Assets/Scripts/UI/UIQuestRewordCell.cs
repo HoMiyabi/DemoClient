@@ -43,7 +43,7 @@ namespace Kirara.UI
             Clear();
             var itemConfig = ConfigMgr.tb.TbCurrencyItemConfig[reword.CurrencyCid];
 
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(itemConfig.IconLoc);
+            handle = YooAssets.LoadAssetSync<Sprite>(itemConfig.IconLoc);
             Icon.sprite = handle.AssetObject as Sprite;
 
             CountText.text = reword.Count.ToString();

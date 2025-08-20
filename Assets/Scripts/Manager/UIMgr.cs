@@ -4,6 +4,7 @@ using Kirara.UI.Panel;
 using Manager;
 using UnityEngine;
 using XLua;
+using YooAsset;
 
 namespace Kirara
 {
@@ -122,7 +123,7 @@ namespace Kirara
 
         private GameObject LoadInLayer(string location, UILayer layer)
         {
-            var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(location);
+            var handle = YooAssets.LoadAssetSync<GameObject>(location);
             var go = handle.InstantiateSync(canvass[(int)layer]);
             handle.Release();
             return go;

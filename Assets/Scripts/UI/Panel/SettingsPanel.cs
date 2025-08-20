@@ -1,37 +1,33 @@
 ﻿using Manager;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kirara.UI.Panel
 {
     public class SettingsPanel : BasePanel
     {
         #region View
-        private Button        UIBackBtn;
-        private RectTransform Content;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button     UIBackBtn;
+        private UnityEngine.RectTransform Content;
+        public override void BindUI()
         {
-            var c     = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn = c.Q<Button>(0, "UIBackBtn");
-            Content   = c.Q<RectTransform>(1, "Content");
+            if (_isBound) return;
+            _isBound = true;
+            var b     = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIBackBtn = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            Content   = b.Q<UnityEngine.RectTransform>(1, "Content");
         }
         #endregion
 
-        private const string settingItemName = "UISettingItem";
-
-        private void Awake()
-        {
-            InitUI();
-
-            UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
-        }
+        public GameObject SettingItemPrefab;
 
         private void Start()
         {
-            Content.DestroyChildren();
-            var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>("UISettingItem");
+            UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
 
-            handle.InstantiateSync(Content).GetComponent<UISettingItem>()
+            Content.DestroyChildren();
+
+            Instantiate(SettingItemPrefab, Content).GetComponent<UISettingItem>()
                 .Set("主音量",0, 10,
                     SettingsMgr.settings.MainVolume, value =>
                 {
@@ -40,7 +36,7 @@ namespace Kirara.UI.Panel
                     // AudioManger.Instance.masterVolume = value / 10f;
                 });
 
-            handle.InstantiateSync(Content).GetComponent<UISettingItem>()
+            Instantiate(SettingItemPrefab, Content).GetComponent<UISettingItem>()
                 .Set("音乐音量", 0, 10,
                     SettingsMgr.settings.MusicVolume, value =>
                 {
@@ -49,7 +45,7 @@ namespace Kirara.UI.Panel
                     // AudioManger.Instance.sfxVolume = value / 10f;
                 });
 
-            handle.InstantiateSync(Content).GetComponent<UISettingItem>()
+            Instantiate(SettingItemPrefab, Content).GetComponent<UISettingItem>()
                 .Set("语音音量", 0, 10,
                     SettingsMgr.settings.DialogVolume, value =>
                 {
@@ -58,7 +54,7 @@ namespace Kirara.UI.Panel
                     // AudioManger.Instance.sfxVolume = value / 10f;
                 });
 
-            handle.InstantiateSync(Content).GetComponent<UISettingItem>()
+            Instantiate(SettingItemPrefab, Content).GetComponent<UISettingItem>()
                 .Set("音效音量", 0, 10,
                     SettingsMgr.settings.SFXVolume, value =>
                 {
@@ -66,8 +62,6 @@ namespace Kirara.UI.Panel
                     SettingsMgr.Save();
                     // AudioManger.Instance.sfxVolume = value / 10f;
                 });
-
-            handle.Release();
         }
     }
 }

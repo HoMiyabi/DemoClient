@@ -3,6 +3,7 @@ using Kirara;
 using Kirara.Model;
 using Manager;
 using UnityEngine;
+using YooAsset;
 
 public class UIInventoryCellDisc : MonoBehaviour
 {
@@ -97,14 +98,14 @@ public class UIInventoryCellDisc : MonoBehaviour
         {
             WearerIconImg.gameObject.SetActive(true);
             var role = PlayerService.Player.Roles.First(it => it.Id == _disc.RoleId);
-            var wearerIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(role.Config.IconLoc);
+            var wearerIconHandle = YooAssets.LoadAssetSync<Sprite>(role.Config.IconLoc);
             WearerIconImg.sprite = wearerIconHandle.AssetObject as Sprite;
         }
     }
 
     private void SetIcon(string iconLocation)
     {
-        var itemIconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(iconLocation);
+        var itemIconHandle = YooAssets.LoadAssetSync<Sprite>(iconLocation);
         IconImg.sprite = itemIconHandle.AssetObject as Sprite;
     }
 

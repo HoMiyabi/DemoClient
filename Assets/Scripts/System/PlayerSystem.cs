@@ -9,6 +9,7 @@ using Kirara.UI.Panel;
 using Manager;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using YooAsset;
 
 namespace Kirara
 {
@@ -125,7 +126,7 @@ namespace Kirara
 
         private void Start()
         {
-            var handle = AssetMgr.Instance.package.LoadAssetSync<AudioClip>("music1");
+            var handle = YooAssets.LoadAssetSync<AudioClip>("music1");
             AudioMgr.Instance.PlayMusic(handle.AssetObject as AudioClip);
 
             Init();
@@ -266,7 +267,7 @@ namespace Kirara
             {
                 var role = roles.Find(it => it.Id == roleId);
                 Debug.Log($"加载角色 {role.Config.Name}");
-                var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(role.Config.PrefabLoc);
+                var handle = YooAssets.LoadAssetSync<GameObject>(role.Config.PrefabLoc);
                 var go = handle.InstantiateSync(RoleParent, false);
                 var roleCtrl = go.GetComponent<RoleCtrl>();
                 roleCtrl.Set(role);

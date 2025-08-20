@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using Manager;
+﻿using System.Collections;
 using UnityEngine;
 using YooAsset;
 
@@ -10,43 +8,21 @@ namespace Kirara.UI.Panel
     {
         #region View
         private bool _isBound;
-        private UnityEngine.UI.Image  ProgressBarImg;
-        private TMPro.TextMeshProUGUI ProgressText;
+        private Kirara.UI.UIProgressBar UIProgressBar;
         public override void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
-            var b          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            ProgressBarImg = b.Q<UnityEngine.UI.Image>(0, "ProgressBarImg");
-            ProgressText   = b.Q<TMPro.TextMeshProUGUI>(1, "ProgressText");
+            var b         = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIProgressBar = b.Q<Kirara.UI.UIProgressBar>(0, "UIProgressBar");
         }
         #endregion
 
-        private float progress;
-
-        public float Progress
-        {
-            get => progress;
-            set
-            {
-                progress = value;
-                ProgressBarImg.fillAmount = progress;
-                ProgressText.text = progress.ToString("P0");
-            }
-        }
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            Progress = 0f;
-        }
-
         public void Load(string sceneName, string loadingSceneName)
         {
-            AssetMgr.Instance.package.LoadSceneSync(loadingSceneName);
+            YooAssets.LoadSceneSync(loadingSceneName);
 
-            var handle = AssetMgr.Instance.package.LoadSceneAsync(sceneName);
+            var handle = YooAssets.LoadSceneAsync(sceneName);
             // handle.Completed += (h) =>
             // {
             //     Debug.Log("场景加载完成");
@@ -59,29 +35,19 @@ namespace Kirara.UI.Panel
         {
             while (!handle.IsDone)
             {
-                if (Progress < 0.9f)
+                if (UIProgressBar.Progress < 0.9f)
                 {
-                    Progress += Time.deltaTime;
+                    UIProgressBar.Progress += Time.deltaTime;
                 }
                 yield return null;
             }
 
-            while (Progress < 1f)
+            while (UIProgressBar.Progress < 1f)
             {
-                Progress += Time.deltaTime * 3f;
+                UIProgressBar.Progress += Time.deltaTime * 3f;
                 yield return null;
             }
             Destroy(gameObject);
         }
-        //
-        // private IEnumerator GetProgress(SceneHandle handle)
-        // {
-        //     while (!handle.IsDone)
-        //     {
-        //         Debug.Log($"加载进度：{handle.Progress}");
-        //         SetProgress(handle.Progress);
-        //         yield return null;
-        //     }
-        // }
     }
 }

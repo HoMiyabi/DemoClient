@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using Manager;
 using UnityEngine;
+using YooAsset;
 
 namespace Kirara
 {
@@ -34,7 +35,7 @@ namespace Kirara
 
         public ParticleSystem Play(string location, Vector3 worldPos)
         {
-            var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(location);
+            var handle = YooAssets.LoadAssetSync<GameObject>(location);
             var ps =  Play(handle.AssetObject as GameObject, worldPos);
             handle.Release();
             return ps;

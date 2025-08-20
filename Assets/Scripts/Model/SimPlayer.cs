@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Manager;
 using UnityEngine;
+using YooAsset;
 
 namespace Kirara.Model
 {
@@ -20,7 +21,7 @@ namespace Kirara.Model
                 SimRoles.Add(simRole.Id, simRole);
 
                 string loc = ConfigMgr.tb.TbRoleConfig[simRole.Cid].SimPrefabLoc;
-                var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(loc);
+                var handle = YooAssets.LoadAssetSync<GameObject>(loc);
                 var go = handle.InstantiateSync(SimPlayerSystem.Instance.simRoleParent);
 
                 var simRoleCtrl = go.GetComponent<SimRoleCtrl>();

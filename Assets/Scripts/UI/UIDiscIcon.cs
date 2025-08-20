@@ -37,7 +37,7 @@ namespace Kirara.UI
         public void Set(string loc)
         {
             Clear();
-            handle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(loc);
+            handle = YooAssets.LoadAssetSync<Sprite>(loc);
             Img.sprite = handle.AssetObject as Sprite;
         }
     }

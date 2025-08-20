@@ -4,6 +4,7 @@ using Kirara.Model;
 using Kirara.UI;
 using Manager;
 using UnityEngine;
+using YooAsset;
 
 namespace Kirara
 {
@@ -21,7 +22,7 @@ namespace Kirara
         {
             var config = ConfigMgr.tb.TbMonsterConfig[syncMonster.MonsterCid];
 
-            var handle = AssetMgr.Instance.package.LoadAssetSync<GameObject>(config.Location);
+            var handle = YooAssets.LoadAssetSync<GameObject>(config.Location);
             var go = handle.InstantiateSync(monsterParent);
 
             // go.GetComponent<CharacterController>().enabled = false;

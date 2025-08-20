@@ -1,6 +1,7 @@
 ﻿using Kirara.Model;
 using Manager;
 using UnityEngine;
+using YooAsset;
 
 namespace Kirara.UI
 {
@@ -54,7 +55,7 @@ namespace Kirara.UI
 
             LevelText.text = $"等级{weapon.Level}/{WeaponItem.MaxLevel}";
 
-            var iconHandle = AssetMgr.Instance.package.LoadAssetSync<Sprite>(weapon.IconLoc);
+            var iconHandle = YooAssets.LoadAssetSync<Sprite>(weapon.IconLoc);
             var sprite = iconHandle.AssetObject as Sprite;
 
             BackIconImg.sprite = sprite;
