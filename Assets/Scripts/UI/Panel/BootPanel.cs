@@ -102,7 +102,7 @@ namespace Kirara.UI.Panel
             panel.Content = "初始化资源失败";
             panel.OkText = "重试";
             panel.HasCloseBtn = false;
-            panel.OkClickedEvent.AddListener(() =>
+            panel.OkBtnOnClick.AddListener(() =>
             {
                 UIMgr.Instance.PopPanel(panel);
                 retry();
@@ -116,7 +116,7 @@ namespace Kirara.UI.Panel
             panel.Content = "请求资源版本失败";
             panel.OkText = "重试";
             panel.HasCloseBtn = false;
-            panel.OkClickedEvent.AddListener(() =>
+            panel.OkBtnOnClick.AddListener(() =>
             {
                 UIMgr.Instance.PopPanel(panel);
                 retry();
@@ -130,7 +130,7 @@ namespace Kirara.UI.Panel
             panel.Content = "更新资源清单失败";
             panel.OkText = "重试";
             panel.HasCloseBtn = false;
-            panel.OkClickedEvent.AddListener(() =>
+            panel.OkBtnOnClick.AddListener(() =>
             {
                 UIMgr.Instance.PopPanel(panel);
                 retry();
@@ -144,7 +144,7 @@ namespace Kirara.UI.Panel
             panel.Content = $"文件：{totalCount}个，大小：{totalBytes * AssetMgr.BToMB:F2}MB";
             panel.OkText = "更新";
             panel.HasCloseBtn = false;
-            panel.OkClickedEvent.AddListener(() =>
+            panel.OkBtnOnClick.AddListener(() =>
             {
                 UIMgr.Instance.PopPanel(panel);
                 startDownload();
@@ -158,7 +158,7 @@ namespace Kirara.UI.Panel
             panel.Content = $"包裹名: {data.PackageName}\n文件名: {data.FileName}\n错误信息: {data.ErrorInfo}";
             panel.OkText = "重试";
             panel.HasCloseBtn = false;
-            panel.OkClickedEvent.AddListener(() =>
+            panel.OkBtnOnClick.AddListener(() =>
             {
                 UIMgr.Instance.PopPanel(panel);
                 retry();

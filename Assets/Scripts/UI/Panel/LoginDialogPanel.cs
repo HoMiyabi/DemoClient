@@ -53,7 +53,7 @@ namespace Kirara.UI.Panel
                 var panel = UIMgr.Instance.PushPanel<DialogPanel>();
                 panel.Title = "提示";
                 panel.Content = rsp.Result.Msg;
-                panel.OkClickedEvent.AddListener(() => UIMgr.Instance.PopPanel(panel));
+                panel.OkBtnOnClick.AddListener(() => UIMgr.Instance.PopPanel(panel));
             }
         }
 
@@ -68,7 +68,7 @@ namespace Kirara.UI.Panel
             var panel = UIMgr.Instance.PushPanel<DialogPanel>();
             panel.Title = "提示";
             panel.Content = rsp.Result.Msg;
-            panel.OkClickedEvent.AddListener(() => UIMgr.Instance.PopPanel(panel));
+            panel.OkBtnOnClick.AddListener(() => UIMgr.Instance.PopPanel(panel));
         }
     }
 }

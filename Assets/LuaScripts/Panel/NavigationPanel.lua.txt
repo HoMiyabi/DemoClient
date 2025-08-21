@@ -10,6 +10,7 @@ function NavigationPanel:BindUI()
     self.InventoryBtn = b:Q(1, "InventoryBtn")
     self.UIBackBtn    = b:Q(2, "UIBackBtn")
     self.FriendBtn    = b:Q(3, "FriendBtn")
+    self.TestBtn      = b:Q(4, "TestBtn")
 end
 
 
@@ -33,6 +34,17 @@ function NavigationPanel:Awake()
         print('Push SocialPanel')
         CS.Kirara.UIMgr.Instance:PushPanel('SocialPanel')
     end)
+
+    --self.TestBtn.onClick.AddListener(function()
+    --    print('TestBtn onClick')
+    --    local panel = CS.Kirara.UIMgr.Instance:PushPanel('DialogPanel')
+    --    panel.Title = '提示'
+    --    panel.Content = '热更新测试'
+    --    panel.OkText = 'Ciallo~'
+    --    panel.OkBtnOnClick:AddListener(function()
+    --        CS.Kirara.UIMgr.Instance:PopPanel(panel)
+    --    end)
+    --end)
 end
 
 return NavigationPanel

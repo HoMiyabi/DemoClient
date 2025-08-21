@@ -1,9 +1,11 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using XLua;
 
 namespace Kirara.UI.Panel
 {
+    [LuaCallCSharp]
     public class DialogPanel : BasePanel
     {
         #region View
@@ -71,7 +73,7 @@ namespace Kirara.UI.Panel
             set => ContentText.text = value;
         }
 
-        public Button.ButtonClickedEvent OkClickedEvent => OkBtn.onClick;
+        public Button.ButtonClickedEvent OkBtnOnClick => OkBtn.onClick;
 
         public bool HasCloseBtn
         {

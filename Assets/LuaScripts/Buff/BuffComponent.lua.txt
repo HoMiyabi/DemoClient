@@ -1,4 +1,4 @@
----@class Buff
+---@class BuffComponent
 ---@field public set userdata
 ---@field public name string
 ---@field public duration number
@@ -10,10 +10,10 @@
 ---@field public stackCount number
 ---@field public remainingTimes table
 ---@field public EAttrType table
-Buff = {}
-Buff.__index = Buff
+BuffComponent = {}
+BuffComponent.__index = BuffComponent
 
-function Buff:RefreshPolicy_RefreshMin()
+function BuffComponent:RefreshPolicy_RefreshMin()
     local minIdx = 1
     local min = self.remainingTimes[1]
     for i = 2, #self.remainingTimes do
@@ -25,7 +25,7 @@ function Buff:RefreshPolicy_RefreshMin()
     self.remainingTimes[minIdx] = self.duration
 end
 
-function Buff:RefreshPolicy_RefreshAll()
+function BuffComponent:RefreshPolicy_RefreshAll()
     for i = 1, #self.remainingTimes do
         self.remainingTimes[i] = self.duration
     end
@@ -33,29 +33,29 @@ end
 
 ---@param varName string
 ---@return number
-function Buff:Inject(varName)
+function BuffComponent:Inject(varName)
     return self.set:Inject(self.name, varName)
 end
 
 ---@param handle string
 ---@param time number
-function Buff:SetTimer(handle, time)
+function BuffComponent:SetTimer(handle, time)
     self.set:SetTimer(handle, time)
 end
 
 ---@param handle string
 ---@return boolean
-function Buff:HasTimer(handle)
+function BuffComponent:HasTimer(handle)
     return self.set:HasTimer(handle)
 end
 
 ---@param buffName string
-function Buff:AttachBuff(buffName)
+function BuffComponent:AttachBuff(buffName)
     self.set:AttachBuff(buffName)
 end
 
 ---@param dt number
-function Buff:Update(dt)
+function BuffComponent:Update(dt)
     local i = 1
     while i <= #self.remainingTimes do
         self.remainingTimes[i] = self.remainingTimes[i] - dt
@@ -71,10 +71,10 @@ function Buff:Update(dt)
 end
 
 ---@param dt number
-function Buff:OnUpdate(dt)
+function BuffComponent:OnUpdate(dt)
 end
 
-function Buff:Attached()
+function BuffComponent:Attached()
     if self.stackCount < self.stackLimit then
         table.insert(self.remainingTimes, self.duration)
         self.stackCount = self.stackCount + 1
@@ -89,7 +89,7 @@ function Buff:Attached()
 end
 
 ---@return number
-function Buff:GetMinRemainingTime()
+function BuffComponent:GetMinRemainingTime()
     if #self.remainingTimes == 0 then
         return 0
     end
@@ -104,18 +104,18 @@ function Buff:GetMinRemainingTime()
 end
 
 ---@param ctx table
-function Buff:OnAttackHit(ctx)
+function BuffComponent:OnAttackHit(ctx)
 end
 
 ---@param ctx table
-function Buff:OnActionStart(ctx)
+function BuffComponent:OnActionStart(ctx)
 end
 
 ---@param set userdata
 ---@param name string
-function Buff.New(set, name)
+function BuffComponent.New(set, name)
     local obj = {}
-    setmetatable(obj, Buff)
+    setmetatable(obj, BuffComponent)
     -- 属性增益集
     ---@type userdata
     obj.set = set
@@ -145,7 +145,7 @@ function Buff.New(set, name)
     obj.stackRefreshPolicy = nil
 
     -- 叠层溢出刷新策略
-    obj.overflowRefreshPolicy = Buff.RefreshPolicy_RefreshMin
+    obj.overflowRefreshPolicy = BuffComponent.RefreshPolicy_RefreshMin
 
     -- 当前层数
     ---@type number

@@ -31,6 +31,7 @@ namespace Kirara.UI
             get => _progress;
             set
             {
+                _progress = value;
                 Text.text = value.ToString("P0");
                 BarImg.fillAmount = value;
             }
