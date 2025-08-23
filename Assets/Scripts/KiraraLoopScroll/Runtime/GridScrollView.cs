@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace KiraraLoopScroll
 {
@@ -7,17 +8,18 @@ namespace KiraraLoopScroll
     public class GridScrollView : Scroller
     {
         // 不可见阈值
-        public int invisibleThreshold;
+        [FormerlySerializedAs("invisibleThreshold")] public int loadThreshold = 0;
 
         // 内边距
         public Padding padding;
 
         // Item的大小
-        public Vector2 size = new(100f, 100f);
+        [FormerlySerializedAs("size")] public Vector2 itemSize = new(100f, 100f);
 
         // Item的间距
         public Vector2 spacing = new(10f, 10f);
 
+        public bool flexibleCountInLine = false;
         // 每一排的Item数量
         public int countInLine = 3;
 
@@ -38,6 +40,49 @@ namespace KiraraLoopScroll
             UpdateItems();
         }
 
+        private int CountInLine
+        {
+            get
+            {
+                if (!flexibleCountInLine)
+                {
+                    return countInLine;
+                }
+                float sz = SubDirViewSize;
+                sz -= SubDirPadding;
+                int ans = Mathf.FloorToInt((sz + SubDirSpacing + 1f) / (SubDirItemSize + SubDirSpacing));
+                return Mathf.Max(1, ans);
+            }
+        }
+
+        private float SubDirViewSize => direction switch
+        {
+            EDirection.Horizontal => content.rect.height,
+            EDirection.Vertical => content.rect.width,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private float SubDirPadding => direction switch
+        {
+            EDirection.Horizontal => padding.top + padding.bottom,
+            EDirection.Vertical => padding.left + padding.right,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private float SubDirItemSize => direction switch
+        {
+            EDirection.Horizontal => itemSize.y,
+            EDirection.Vertical => itemSize.x,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private float SubDirSpacing => direction switch
+        {
+            EDirection.Horizontal => spacing.y,
+            EDirection.Vertical => spacing.x,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
         private float StartPadding => direction switch
         {
             EDirection.Horizontal => padding.left,
@@ -52,26 +97,26 @@ namespace KiraraLoopScroll
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        // 可见最小Index
-        private int VisibleFrontIndex
+        // 加载最小Index
+        private int ShouldLoadFrontIndex
         {
             get
             {
                 int minLine = Mathf.FloorToInt((Pos - StartPadding + LineSpacing) / (LineWidth + LineSpacing));
-                minLine -= invisibleThreshold;
-                int index = minLine * countInLine;
+                minLine -= loadThreshold;
+                int index = minLine * CountInLine;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
 
-        // 可见最大Index(不包含)
-        private int VisibleBackIndex
+        // 加载最大Index(不包含)
+        private int ShouldLoadBackIndex
         {
             get
             {
                 int maxLine = Mathf.CeilToInt((Pos + ViewSize - StartPadding) / (LineWidth + LineSpacing));
-                maxLine += invisibleThreshold;
-                int index = maxLine * countInLine;
+                maxLine += loadThreshold;
+                int index = maxLine * CountInLine;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
@@ -91,7 +136,7 @@ namespace KiraraLoopScroll
             {
                 (row, col) = (col, row);
             }
-            var delta = size + spacing;
+            var delta = itemSize + spacing;
             float x = col * delta.x;
             float y = row * delta.y;
             return new Vector2(x, y);
@@ -113,12 +158,12 @@ namespace KiraraLoopScroll
 
         private int GetLineNum(int index)
         {
-            return Mathf.FloorToInt(index / (float)countInLine);
+            return Mathf.FloorToInt(index / (float)CountInLine);
         }
 
         private int GetSubNum(int index)
         {
-            return (index % countInLine + countInLine) % countInLine;
+            return (index % CountInLine + CountInLine) % CountInLine;
         }
 
         private Vector2 GetItemPosInUGUISpace(int index)
@@ -131,12 +176,12 @@ namespace KiraraLoopScroll
         // 排宽
         private float LineWidth => direction switch
         {
-            EDirection.Horizontal => size.x,
-            EDirection.Vertical => size.y,
+            EDirection.Horizontal => itemSize.x,
+            EDirection.Vertical => itemSize.y,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        private int LineCount => Mathf.CeilToInt(_totalCount / (float)countInLine);
+        private int LineCount => Mathf.CeilToInt(_totalCount / (float)CountInLine);
 
         protected override float GetSnapPos(float pos)
         {
@@ -225,24 +270,24 @@ namespace KiraraLoopScroll
             const int maxIterations = 1000;
             int i = 0;
 
-            int visibleFrontIndex = VisibleFrontIndex;
-            int visibleBackIndex = VisibleBackIndex;
-            while (items.Count > 0 && itemFrontIndex < visibleFrontIndex && i < maxIterations)
+            int shouldLoadFrontIndex = ShouldLoadFrontIndex;
+            int shouldLoadBackIndex = ShouldLoadBackIndex;
+            while (items.Count > 0 && itemFrontIndex < shouldLoadFrontIndex && i < maxIterations)
             {
                 PopFront();
                 i++;
             }
-            while (items.Count > 0 && itemBackIndex > visibleBackIndex && i < maxIterations)
+            while (items.Count > 0 && itemBackIndex > shouldLoadBackIndex && i < maxIterations)
             {
                 PopBack();
                 i++;
             }
-            while (itemFrontIndex > visibleFrontIndex && i < maxIterations)
+            while (itemFrontIndex > shouldLoadFrontIndex && i < maxIterations)
             {
                 PushFront();
                 i++;
             }
-            while (itemBackIndex < visibleBackIndex && i < maxIterations)
+            while (itemBackIndex < shouldLoadBackIndex && i < maxIterations)
             {
                 PushBack();
                 i++;
