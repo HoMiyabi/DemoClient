@@ -185,7 +185,8 @@ namespace KiraraLoopScroll
 
         protected override float GetSnapPos(float pos)
         {
-            return Mathf.Round((pos - StartPadding + LineSpacing) / (LineWidth + LineSpacing)) * (LineWidth + LineSpacing);
+            float dirNormalizedPos = (pos - StartPadding + LineSpacing) / (LineWidth + LineSpacing);
+            return Mathf.Round(dirNormalizedPos) * (LineWidth + LineSpacing) + StartPadding;
         }
 
         protected override float PosToEdge
