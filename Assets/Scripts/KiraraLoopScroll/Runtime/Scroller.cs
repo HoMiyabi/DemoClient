@@ -20,6 +20,8 @@ namespace KiraraLoopScroll
         /// </summary>
         public EDirection direction = EDirection.Vertical;
 
+        public bool isClamped = false;
+
         // 一阶粘性阻尼
         // 阻尼率
         public float dampingRatio = 7f;
@@ -285,10 +287,20 @@ namespace KiraraLoopScroll
 
             if (!isInfinite && !Mathf.Approximately(PosToEdge, 0f))
             {
-                deltaProj *= 0.25f;
+                if (isClamped)
+                {
+                    Pos += PosToEdge;
+                }
+                else
+                {
+                    float k = 0.25f;
+                    Pos += k * deltaProj;
+                }
             }
-
-            Pos += deltaProj;
+            else
+            {
+                Pos += deltaProj;
+            }
         }
 
         // 鼠标按下
