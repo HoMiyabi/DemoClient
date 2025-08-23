@@ -7,7 +7,7 @@ namespace KiraraLoopScroll
     [AddComponentMenu("Kirara Loop Scroll/Grid Scroll View")]
     public class GridScrollView : Scroller
     {
-        // 不可见阈值
+        // 多加载阈值，排数
         [FormerlySerializedAs("invisibleThreshold")] public int loadThreshold = 0;
 
         // 内边距
@@ -57,8 +57,8 @@ namespace KiraraLoopScroll
 
         private float SubDirViewSize => direction switch
         {
-            EDirection.Horizontal => content.rect.height,
-            EDirection.Vertical => content.rect.width,
+            EDirection.Horizontal => viewport.rect.height,
+            EDirection.Vertical => viewport.rect.width,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -231,7 +231,7 @@ namespace KiraraLoopScroll
         {
             var go = getObject(itemFrontIndex - 1);
             provideData?.Invoke(go, itemFrontIndex - 1);
-            go.transform.SetParent(content, false);
+            go.transform.SetParent(viewport, false);
 
             items.PushFront((RectTransform)go.transform);
             itemFrontIndex--;
@@ -241,7 +241,7 @@ namespace KiraraLoopScroll
         {
             var go = getObject(itemBackIndex);
             provideData?.Invoke(go, itemBackIndex);
-            go.transform.SetParent(content, false);
+            go.transform.SetParent(viewport, false);
 
             items.PushBack((RectTransform)go.transform);
             itemBackIndex++;

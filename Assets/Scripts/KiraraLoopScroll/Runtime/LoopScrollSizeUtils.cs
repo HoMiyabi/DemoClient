@@ -47,5 +47,10 @@ namespace KiraraLoopScroll
         {
             return axis == 0 ? GetPreferredWidth(item) : GetPreferredHeight(item);
         }
+
+        public static Vector2 GetPreferredSize(RectTransform item)
+        {
+            return new Vector2(GetPreferredWidth(item), GetPreferredHeight(item));
+        }
     }
 }

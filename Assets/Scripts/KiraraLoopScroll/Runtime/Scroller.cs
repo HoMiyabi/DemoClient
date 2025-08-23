@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace KiraraLoopScroll
@@ -9,7 +10,7 @@ namespace KiraraLoopScroll
         IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerDownHandler, IScrollHandler, IPointerUpHandler
     {
         // 内容
-        public RectTransform content;
+        [FormerlySerializedAs("content")] public RectTransform viewport;
 
         // 滚动条
         public Scrollbar scrollbar;
@@ -71,8 +72,8 @@ namespace KiraraLoopScroll
             {
                 return direction switch
                 {
-                    EDirection.Vertical => content.rect.height,
-                    EDirection.Horizontal => content.rect.width,
+                    EDirection.Vertical => viewport.rect.height,
+                    EDirection.Horizontal => viewport.rect.width,
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }
@@ -178,9 +179,9 @@ namespace KiraraLoopScroll
 
         protected virtual void Awake()
         {
-            if (!content)
+            if (!viewport)
             {
-                content = (RectTransform)transform;
+                viewport = (RectTransform)transform;
             }
         }
 
@@ -215,7 +216,7 @@ namespace KiraraLoopScroll
             if (eventData.button != PointerEventData.InputButton.Left) return;
             state = EScrollerState.Drag;
 
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(content, eventData.position,
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(viewport, eventData.position,
                 eventData.pressEventCamera, out prevPointerPos);
         }
 
@@ -224,7 +225,7 @@ namespace KiraraLoopScroll
         {
             if (eventData.button != PointerEventData.InputButton.Left) return;
 
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(content, eventData.position,
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(viewport, eventData.position,
                 eventData.pressEventCamera, out var pointerPos);
             var delta = pointerPos - prevPointerPos;
             prevPointerPos = pointerPos;
@@ -274,7 +275,7 @@ namespace KiraraLoopScroll
         {
             if (eventData.button != PointerEventData.InputButton.Left) return;
 
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(content, eventData.position,
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(viewport, eventData.position,
                 eventData.pressEventCamera, out var pointerPos);
             var delta = pointerPos - prevPointerPos;
             prevPointerPos = pointerPos;
