@@ -285,21 +285,32 @@ namespace KiraraLoopScroll
             float deltaProj = CalcDeltaProj(delta);
             scrollVelocity = deltaProj / Time.deltaTime;
 
-            if (!isInfinite && !Mathf.Approximately(PosToEdge, 0f))
+            if (isInfinite)
             {
-                if (isMovementClamped)
-                {
-                    Pos += PosToEdge;
-                }
-                else
-                {
-                    float k = 0.25f;
-                    Pos += k * deltaProj;
-                }
+                Pos += deltaProj;
             }
             else
             {
-                Pos += deltaProj;
+                if (isMovementClamped)
+                {
+                    Pos += deltaProj;
+                    if (!Mathf.Approximately(PosToEdge, 0f))
+                    {
+                        Pos += PosToEdge;
+                    }
+                }
+                else
+                {
+                    if (!Mathf.Approximately(PosToEdge, 0f))
+                    {
+                        float k = 0.25f;
+                        Pos += k * deltaProj;
+                    }
+                    else
+                    {
+                        Pos += deltaProj;
+                    }
+                }
             }
         }
 
