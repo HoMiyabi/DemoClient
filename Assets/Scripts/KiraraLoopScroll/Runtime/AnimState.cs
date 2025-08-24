@@ -85,6 +85,7 @@ namespace KiraraLoopScroll
                 pos = _startPos + (_endPos - _startPos) * (1f - Mathf.Exp(-_dampingRatio * _time));
                 if (Mathf.Abs(pos - _endPos) < 1f)
                 {
+                    pos = _endPos;
                     IsComplete = true;
                     _onComplete?.Invoke();
                 }
