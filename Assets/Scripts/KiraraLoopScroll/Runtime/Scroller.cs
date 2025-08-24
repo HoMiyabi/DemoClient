@@ -34,12 +34,12 @@ namespace KiraraLoopScroll
         /// <summary>
         /// 鼠标滚轮灵敏度，用于控制滚动距离
         /// </summary>
-        public float wheelSensitivity = 0.1f;
+        public float wheelSensitivity = 0.2f;
 
         /// <summary>
         /// 鼠标滚轮滚动时长
         /// </summary>
-        public float wheelScrollDuration = 0.3f;
+        public float wheelScrollDuration = 0.25f;
 
         /// <summary>
         /// 是否为无限滚动
@@ -274,6 +274,10 @@ namespace KiraraLoopScroll
 
         private void CheckSetElastic()
         {
+            if (!isInfinite && !Mathf.Approximately(PosToEdge, 0f))
+            {
+                ScrollTo(Pos + PosToEdge, elasticDuration);
+            }
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -340,8 +344,9 @@ namespace KiraraLoopScroll
             // 滚轮向下为负，向上为正
             // 滚轮向下对应视窗向下，坐标增加
             delta = -delta;
+            delta *= wheelSensitivity;
             scrollVelocity = 0f;
-            ScrollTo(Pos + delta * wheelSensitivity, wheelScrollDuration);
+            ScrollTo(Pos + delta, wheelScrollDuration, CheckSetElastic);
         }
 
         private float CalcDeltaProj(Vector2 delta)
