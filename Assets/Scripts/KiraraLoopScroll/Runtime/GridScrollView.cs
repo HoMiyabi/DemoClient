@@ -8,7 +8,7 @@ namespace KiraraLoopScroll
     public class GridScrollView : Scroller
     {
         [Range(0f, 1f)]
-        public float itemSnapPos = 0.5f;
+        public float itemSnapPivot = 0.5f;
 
         // 多加载阈值，排数
         [FormerlySerializedAs("invisibleThreshold")] public int loadThreshold = 0;
@@ -197,8 +197,8 @@ namespace KiraraLoopScroll
 
         protected override float GetSnapPos(float pos)
         {
-            float row = (pos - TopPadding + VSpacing) / (ItemHeight + VSpacing);
-            return Mathf.Round(row) * (ItemHeight + VSpacing) + TopPadding + itemSnapPos * ItemHeight;
+            float row = (pos - TopPadding - VSpacing * 0.5f) / (ItemHeight + VSpacing);
+            return Mathf.Round(row) * (ItemHeight + VSpacing) + TopPadding + itemSnapPivot * ItemHeight;
         }
 
         protected override float PosToEdge

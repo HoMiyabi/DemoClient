@@ -49,7 +49,7 @@ namespace KiraraLoopScroll
         // 对齐功能
         public bool enableSnap;
         [Range(0f, 1f)]
-        public float viewportSnapPos = 0.5f;
+        public float viewportSnapPivot = 0.5f;
 
         #region 抽象方法区
 
@@ -252,7 +252,7 @@ namespace KiraraLoopScroll
                     if (ValidRange.Contains(endPos))
                     {
                         // 对齐停止点
-                        float snapOffset = viewportSnapPos * DirViewportSize;
+                        float snapOffset = viewportSnapPivot * DirViewportSize;
                         endPos = GetSnapPos(endPos + snapOffset) - snapOffset;
                         state = EScrollerState.Inertia;
                         animState.SetInertia(Pos, endPos, scrollVelocity, dampingRatio);
