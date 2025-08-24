@@ -19,6 +19,8 @@ namespace KiraraLoopScroll
         // Item的间距
         public Vector2 spacing = new(10f, 10f);
 
+        public EItemAlignment itemAlignment = EItemAlignment.LeftOrUpper;
+
         public bool flexibleCountInLine = false;
         // 每一排的Item数量
         public int countInLine = 3;
@@ -40,7 +42,7 @@ namespace KiraraLoopScroll
             UpdateItems();
         }
 
-        private int CountInLine
+        private int ColCount
         {
             get
             {
@@ -48,49 +50,71 @@ namespace KiraraLoopScroll
                 {
                     return countInLine;
                 }
-                float sz = SubDirViewSize;
-                sz -= SubDirPadding;
-                int ans = Mathf.FloorToInt((sz + SubDirSpacing + 1f) / (SubDirItemSize + SubDirSpacing));
+                float sz = ViewportWidth;
+                sz -= LeftPadding + RightPadding;
+                int ans = Mathf.FloorToInt((sz + HSpacing + 1f) / (ItemWidth + HSpacing));
                 return Mathf.Max(1, ans);
             }
         }
 
-        private float SubDirViewSize => direction switch
+        private float ViewportWidth => direction switch
         {
             EDirection.Horizontal => viewport.rect.height,
             EDirection.Vertical => viewport.rect.width,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        private float SubDirPadding => direction switch
-        {
-            EDirection.Horizontal => padding.top + padding.bottom,
-            EDirection.Vertical => padding.left + padding.right,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-        private float SubDirItemSize => direction switch
+        private float ItemWidth => direction switch
         {
             EDirection.Horizontal => itemSize.y,
             EDirection.Vertical => itemSize.x,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        private float SubDirSpacing => direction switch
+        // 排宽
+        private float ItemHeight => direction switch
+        {
+            EDirection.Horizontal => itemSize.x,
+            EDirection.Vertical => itemSize.y,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private float HSpacing => direction switch
         {
             EDirection.Horizontal => spacing.y,
             EDirection.Vertical => spacing.x,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        private float StartPadding => direction switch
+        private float VSpacing => direction switch
+        {
+            EDirection.Horizontal => spacing.x,
+            EDirection.Vertical => spacing.y,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private float LeftPadding => direction switch
+        {
+            EDirection.Horizontal => padding.bottom,
+            EDirection.Vertical => padding.left,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private float RightPadding => direction switch
+        {
+            EDirection.Horizontal => padding.top,
+            EDirection.Vertical => padding.right,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private float TopPadding => direction switch
         {
             EDirection.Horizontal => padding.left,
             EDirection.Vertical => padding.top,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        private float EndPadding => direction switch
+        private float BottomPadding => direction switch
         {
             EDirection.Horizontal => padding.right,
             EDirection.Vertical => padding.bottom,
@@ -102,9 +126,9 @@ namespace KiraraLoopScroll
         {
             get
             {
-                int minLine = Mathf.FloorToInt((Pos - StartPadding + LineSpacing) / (LineWidth + LineSpacing));
+                int minLine = Mathf.FloorToInt((Pos - TopPadding + VSpacing) / (ItemHeight + VSpacing));
                 minLine -= loadThreshold;
-                int index = minLine * CountInLine;
+                int index = minLine * ColCount;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
@@ -114,79 +138,64 @@ namespace KiraraLoopScroll
         {
             get
             {
-                int maxLine = Mathf.CeilToInt((Pos + ViewSize - StartPadding) / (LineWidth + LineSpacing));
+                int maxLine = Mathf.CeilToInt((Pos + ViewSize - TopPadding) / (ItemHeight + VSpacing));
                 maxLine += loadThreshold;
-                int index = maxLine * CountInLine;
+                int index = maxLine * ColCount;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
 
-        private float LineSpacing => direction switch
+        private Vector2 GetItemUGUIPos(int rowNum, int colNum)
         {
-            EDirection.Horizontal => spacing.x,
-            EDirection.Vertical => spacing.y,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+            float y = TopPadding + rowNum * (ItemHeight + VSpacing) - Pos;
 
-        private Vector2 GetItemPos(int lineNum, int subNum)
-        {
-            int row = lineNum;
-            int col = subNum;
+            float x = 0f;
+            if (itemAlignment == EItemAlignment.LeftOrUpper)
+            {
+                x = LeftPadding;
+            }
+            else if (itemAlignment == EItemAlignment.Center)
+            {
+                x = ViewportWidth * 0.5f - ContentWidthWithoutPadding * 0.5f;
+            }
+            else if (itemAlignment == EItemAlignment.RightOrLower)
+            {
+                x = ViewportWidth - RightPadding - ContentWidthWithoutPadding;
+            }
+            x += colNum * (ItemWidth + HSpacing);
+
             if (direction == EDirection.Horizontal)
             {
-                (row, col) = (col, row);
+                (x, y) = (y, x);
             }
-            var delta = itemSize + spacing;
-            float x = col * delta.x;
-            float y = row * delta.y;
+            y = -y;
             return new Vector2(x, y);
         }
 
-        private Vector2 DirectionPos => direction switch
+        private int GetRowNum(int index)
         {
-            EDirection.Horizontal => new Vector2(Pos, 0),
-            EDirection.Vertical => new Vector2(0, Pos),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-        private Vector2 GetItemPosInUGUISpace(int lineNum, int subNum)
-        {
-            var pos = GetItemPos(lineNum, subNum) + new Vector2(padding.left, padding.top) - DirectionPos;
-            pos.y = -pos.y;
-            return pos;
+            // 无论index为正负，都要向下取整
+            return Mathf.FloorToInt(index / (float)ColCount);
         }
 
-        private int GetLineNum(int index)
+        private int GetColNum(int index)
         {
-            return Mathf.FloorToInt(index / (float)CountInLine);
+            return (index % ColCount + ColCount) % ColCount;
         }
 
-        private int GetSubNum(int index)
+        private Vector2 GetItemUGUIPos(int index)
         {
-            return (index % CountInLine + CountInLine) % CountInLine;
+            int rowNum = GetRowNum(index);
+            int colNum = GetColNum(index);
+            return GetItemUGUIPos(rowNum, colNum);
         }
 
-        private Vector2 GetItemPosInUGUISpace(int index)
-        {
-            int lineNum = GetLineNum(index);
-            int subNum = GetSubNum(index);
-            return GetItemPosInUGUISpace(lineNum, subNum);
-        }
-
-        // 排宽
-        private float LineWidth => direction switch
-        {
-            EDirection.Horizontal => itemSize.x,
-            EDirection.Vertical => itemSize.y,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-        private int LineCount => Mathf.CeilToInt(_totalCount / (float)CountInLine);
+        private int RowCount => Mathf.CeilToInt(_totalCount / (float)ColCount);
 
         protected override float GetSnapPos(float pos)
         {
-            float dirNormalizedPos = (pos - StartPadding + LineSpacing) / (LineWidth + LineSpacing);
-            return Mathf.Round(dirNormalizedPos) * (LineWidth + LineSpacing) + StartPadding;
+            float dirNormalizedPos = (pos - TopPadding + VSpacing) / (ItemHeight + VSpacing);
+            return Mathf.Round(dirNormalizedPos) * (ItemHeight + VSpacing) + TopPadding;
         }
 
         protected override float PosToEdge
@@ -247,6 +256,20 @@ namespace KiraraLoopScroll
             itemBackIndex++;
         }
 
+        private float ContentWidthWithoutPadding
+        {
+            get
+            {
+                int colCount = ColCount;
+                float ans = ItemWidth * colCount;
+                if (colCount >= 2)
+                {
+                    ans += HSpacing * (colCount - 1);
+                }
+                return ans;
+            }
+        }
+
 
         protected override float ContentSize
         {
@@ -254,13 +277,13 @@ namespace KiraraLoopScroll
             {
                 if (isInfinite) return float.PositiveInfinity;
 
-                float lineCount = LineCount;
-                float ans = LineWidth * lineCount;
-                if (lineCount >= 2)
+                float rowCount = RowCount;
+                float ans = ItemHeight * rowCount;
+                if (rowCount >= 2)
                 {
-                    ans += LineSpacing * (lineCount - 1);
+                    ans += VSpacing * (rowCount - 1);
                 }
-                ans += StartPadding + EndPadding;
+                ans += TopPadding + BottomPadding;
                 return ans;
             }
         }
@@ -307,7 +330,7 @@ namespace KiraraLoopScroll
                 item.anchorMax = new Vector2(0f, 1f);
                 item.pivot = new Vector2(0f, 1f);
 
-                item.anchoredPosition = GetItemPosInUGUISpace(index);
+                item.anchoredPosition = GetItemUGUIPos(index);
                 updateItem?.Invoke(item, index);
             }
         }

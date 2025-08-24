@@ -145,7 +145,7 @@ namespace KiraraLoopScroll
             };
         }
 
-        private float HViewportSize => direction switch
+        private float ViewportWidth => direction switch
         {
             EDirection.Horizontal => viewport.rect.height,
             EDirection.Vertical => viewport.rect.width,
@@ -206,25 +206,27 @@ namespace KiraraLoopScroll
 
         private Vector2 GetItemUGUIPos(Item item, float pos)
         {
-            var ans = Vector2.zero;
+            float y = pos - Pos;
+            float x = 0f;
             if (itemAlignment == EItemAlignment.LeftOrUpper)
             {
-                ans = new Vector2(LeftPadding, -(pos - Pos));
+                x = LeftPadding;
             }
             else if (itemAlignment == EItemAlignment.Center)
             {
-                ans = new Vector2(HViewportSize * 0.5f - GetH(item.size) * 0.5f, -(pos - Pos));
+                x = ViewportWidth * 0.5f - GetH(item.size) * 0.5f;
             }
             else if (itemAlignment == EItemAlignment.RightOrLower)
             {
-                ans = new Vector2(HViewportSize - RightPadding - GetH(item.size), -(pos - Pos));
+                x = ViewportWidth - RightPadding - GetH(item.size);
             }
+
             if (direction == EDirection.Horizontal)
             {
-                ans.y = -ans.y;
-                (ans.x, ans.y) = (ans.y, ans.x);
+                (x, y) = (y, x);
             }
-            return ans;
+            y = -y;
+            return new Vector2(x, y);
         }
 
         private void PopFront()

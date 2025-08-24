@@ -20,7 +20,7 @@ namespace KiraraLoopScroll
         /// </summary>
         public EDirection direction = EDirection.Vertical;
 
-        public bool isClamped = false;
+        public bool isMovementClamped = false;
 
         // 一阶粘性阻尼
         // 阻尼率
@@ -287,7 +287,7 @@ namespace KiraraLoopScroll
 
             if (!isInfinite && !Mathf.Approximately(PosToEdge, 0f))
             {
-                if (isClamped)
+                if (isMovementClamped)
                 {
                     Pos += PosToEdge;
                 }
