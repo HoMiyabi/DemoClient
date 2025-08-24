@@ -48,6 +48,8 @@ namespace KiraraLoopScroll
 
         // 对齐功能
         public bool enableSnap;
+        [Range(0f, 1f)]
+        public float viewportSnapPos = 0.5f;
 
         #region 抽象方法区
 
@@ -68,7 +70,7 @@ namespace KiraraLoopScroll
         /// <summary>
         /// 视口大小
         /// </summary>
-        protected float ViewSize
+        protected float DirViewportSize
         {
             get
             {
@@ -94,19 +96,19 @@ namespace KiraraLoopScroll
         // Idle状态下，Pos可以在的范围
         protected ScrollRange ValidRange => (isInfinite || ContentSize < 0)
             ? ScrollRange.Infinity
-            : new ScrollRange(0f, Mathf.Max(0f, ContentSize - ViewSize));
+            : new ScrollRange(0f, Mathf.Max(0f, ContentSize - DirViewportSize));
 
         // 视口中的内容大小，因为窗口可能超出内容，比如滑到了边缘外，视口有部分没有内容
-        protected float ContentSizeInView
+        protected float ContentSizeInViewport
         {
             get
             {
-                if (isInfinite) return ViewSize;
+                if (isInfinite) return DirViewportSize;
 
                 if (ContentSize < 0f) return 0f;
 
                 float l = Mathf.Max(Pos, 0f);
-                float r = Mathf.Min(Pos + ViewSize, ContentSize);
+                float r = Mathf.Min(Pos + DirViewportSize, ContentSize);
                 return Mathf.Max(r - l, 0f);
             }
         }
@@ -166,7 +168,7 @@ namespace KiraraLoopScroll
             {
                 // 值为0时上方对齐顶部，值为1时下方对齐底部
                 float input;
-                if (ContentSize <= ViewSize)
+                if (ContentSize <= DirViewportSize)
                 {
                     input = PosToEdge >= 0f ? 0f : 1f;
                 }
@@ -208,7 +210,7 @@ namespace KiraraLoopScroll
             if (scrollbar && ContentSize >= 0)
             {
                 // 滚动条的手柄长 = 可见内容大小 / 内容总大小
-                scrollbar.size = ContentSizeInView / ContentSize;
+                scrollbar.size = ContentSizeInViewport / ContentSize;
             }
         }
 
@@ -250,7 +252,8 @@ namespace KiraraLoopScroll
                     if (ValidRange.Contains(endPos))
                     {
                         // 对齐停止点
-                        endPos = GetSnapPos(endPos);
+                        float snapOffset = viewportSnapPos * DirViewportSize;
+                        endPos = GetSnapPos(endPos + snapOffset) - snapOffset;
                         state = EScrollerState.Inertia;
                         animState.SetInertia(Pos, endPos, scrollVelocity, dampingRatio);
                     }

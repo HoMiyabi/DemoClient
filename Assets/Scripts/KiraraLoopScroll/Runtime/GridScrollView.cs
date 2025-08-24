@@ -7,6 +7,9 @@ namespace KiraraLoopScroll
     [AddComponentMenu("Kirara Loop Scroll/Grid Scroll View")]
     public class GridScrollView : Scroller
     {
+        [Range(0f, 1f)]
+        public float itemSnapPos = 0.5f;
+
         // 多加载阈值，排数
         [FormerlySerializedAs("invisibleThreshold")] public int loadThreshold = 0;
 
@@ -138,7 +141,7 @@ namespace KiraraLoopScroll
         {
             get
             {
-                int maxLine = Mathf.CeilToInt((Pos + ViewSize - TopPadding) / (ItemHeight + VSpacing));
+                int maxLine = Mathf.CeilToInt((Pos + DirViewportSize - TopPadding) / (ItemHeight + VSpacing));
                 maxLine += loadThreshold;
                 int index = maxLine * ColCount;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
@@ -194,8 +197,8 @@ namespace KiraraLoopScroll
 
         protected override float GetSnapPos(float pos)
         {
-            float dirNormalizedPos = (pos - TopPadding + VSpacing) / (ItemHeight + VSpacing);
-            return Mathf.Round(dirNormalizedPos) * (ItemHeight + VSpacing) + TopPadding;
+            float row = (pos - TopPadding + VSpacing) / (ItemHeight + VSpacing);
+            return Mathf.Round(row) * (ItemHeight + VSpacing) + TopPadding + itemSnapPos * ItemHeight;
         }
 
         protected override float PosToEdge
@@ -204,7 +207,7 @@ namespace KiraraLoopScroll
             {
                 if (isInfinite) return 0f;
 
-                float validMaxPos = Mathf.Max(0f, ContentSize - ViewSize);
+                float validMaxPos = Mathf.Max(0f, ContentSize - DirViewportSize);
                 if (Pos < 0f)
                 {
                     return -Pos; // 正数

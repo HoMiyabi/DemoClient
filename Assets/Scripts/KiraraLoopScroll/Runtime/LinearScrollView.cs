@@ -84,7 +84,7 @@ namespace KiraraLoopScroll
                 if (items.Count == 0) return 0f;
 
                 if (itemFrontIndex == 0 && itemBackIndex == _totalCount &&
-                    itemBackPos - itemFrontPos < ViewSize)
+                    itemBackPos - itemFrontPos < DirViewportSize)
                 {
                     // 所有Item都在视口内
                     return itemFrontPos - TopPadding - Pos;
@@ -101,7 +101,7 @@ namespace KiraraLoopScroll
 
                 if (itemBackIndex == _totalCount)
                 {
-                    float dist = itemBackPos + BottomPadding - (Pos + ViewSize);
+                    float dist = itemBackPos + BottomPadding - (Pos + DirViewportSize);
                     if (dist < 0f)
                     {
                         // 说明视口尾部超出内容
@@ -164,7 +164,7 @@ namespace KiraraLoopScroll
                 i++;
             }
 
-            while (items.Count > 0 && Pos + ViewSize < itemBackPos - GetV(items.Back.size) && i < maxIterations)
+            while (items.Count > 0 && Pos + DirViewportSize < itemBackPos - GetV(items.Back.size) && i < maxIterations)
             {
                 PopBack();
                 i++;
@@ -176,7 +176,7 @@ namespace KiraraLoopScroll
                 i++;
             }
 
-            while (itemBackIndex < _totalCount && Pos + ViewSize > itemBackPos + spacing && i < maxIterations)
+            while (itemBackIndex < _totalCount && Pos + DirViewportSize > itemBackPos + spacing && i < maxIterations)
             {
                 PushBack();
                 i++;
@@ -316,8 +316,8 @@ namespace KiraraLoopScroll
             {
                 PopFront();
             }
-            itemFrontPos = ViewSize;
-            itemBackPos = ViewSize;
+            itemFrontPos = DirViewportSize;
+            itemBackPos = DirViewportSize;
             itemFrontIndex = _totalCount;
             itemBackIndex = _totalCount;
             SetPos(0, true);
