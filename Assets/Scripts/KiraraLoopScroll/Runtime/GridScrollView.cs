@@ -23,6 +23,7 @@ namespace KiraraLoopScroll
         public Vector2 spacing = new(10f, 10f);
 
         public EItemAlignment itemAlignment = EItemAlignment.LeftOrUpper;
+        public ECorner startCorner = ECorner.UpperLeft;
 
         public bool flexibleCountInLine = false;
         // 每一排的Item数量
@@ -129,9 +130,9 @@ namespace KiraraLoopScroll
         {
             get
             {
-                int minLine = Mathf.FloorToInt((Pos - TopPadding + VSpacing) / (ItemHeight + VSpacing));
-                minLine -= loadThreshold;
-                int index = minLine * ColCount;
+                int minRow = Mathf.FloorToInt((Pos - TopPadding + VSpacing) / (ItemHeight + VSpacing));
+                minRow -= loadThreshold;
+                int index = minRow * ColCount;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
@@ -141,9 +142,9 @@ namespace KiraraLoopScroll
         {
             get
             {
-                int maxLine = Mathf.CeilToInt((Pos + DirViewportSize - TopPadding) / (ItemHeight + VSpacing));
-                maxLine += loadThreshold;
-                int index = maxLine * ColCount;
+                int maxRow = Mathf.CeilToInt((Pos + DirViewportSize - TopPadding) / (ItemHeight + VSpacing));
+                maxRow += loadThreshold;
+                int index = maxRow * ColCount;
                 return isInfinite ? index : Mathf.Clamp(index, 0, _totalCount);
             }
         }
