@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using cfg.main;
 using Kirara.TimelineAction;
-using Manager;
 using UnityEngine;
 
 namespace Kirara
@@ -12,12 +10,14 @@ namespace Kirara
         public KiraraActionListSO actionList;
         public Dictionary<string, KiraraActionSO> ActionDict { get; private set; }
         public ActionPlayer ActionPlayer { get; private set; }
-        private RoleCtrl roleCtrl;
 
         private KiraraActionSO _action;
         public EActionState State { get; set; }
 
         public readonly List<CancelWindowPlayableAsset> cancelWindowsAsset = new();
+
+        public Func<KiraraActionSO, bool> isActionExecutable;
+        public Action<KiraraActionSO, string> onPlayAction;
 
         private bool IsPressed(Dictionary<EActionCommand, bool> pressedDict, EActionCommand command)
         {
@@ -27,7 +27,6 @@ namespace Kirara
         private void Awake()
         {
             ActionPlayer = GetComponent<ActionPlayer>();
-            roleCtrl = GetComponent<RoleCtrl>();
             Refresh();
         }
 
@@ -129,14 +128,11 @@ namespace Kirara
 
         private bool IsActionExecutableInternal(KiraraActionSO action)
         {
-            int actionId = action.actionId;
-            if (actionId == 0) return true;
-            var config = ConfigMgr.tb.TbChActionNumericConfig[actionId];
-            if (config.EnergyCost <= roleCtrl.Role.Set[EAttrType.CurrEnergy])
+            if (isActionExecutable != null)
             {
-                return true;
+                return isActionExecutable(action);
             }
-            return false;
+            return true;
         }
 
         public void PlayActionFullName(string actionFullName, float fadeDuration = 0f, Action onFinish = null)
@@ -158,24 +154,9 @@ namespace Kirara
 
         private void PlayActionInternal(KiraraActionSO action, string actionName, float fadeDuration = 0f, Action onFinish = null)
         {
-            NetFn.Send(new MsgRolePlayAction
-            {
-                RoleId = roleCtrl.Role.Id,
-                ActionName = actionName
-            });
             _action = action;
-
             State = action.actionState;
-            roleCtrl.SetActionParams(action.actionParams);
-
-            if (action.actionId != 0)
-            {
-                var config = ConfigMgr.tb.TbChActionNumericConfig[action.actionId];
-                if (config != null)
-                {
-                    roleCtrl.Role.Set[EAttrType.CurrEnergy] -= config.EnergyCost;
-                }
-            }
+            onPlayAction?.Invoke(action, actionName);
 
             string s1 = _action?.name ?? "null";
             string s2 = action.name ?? "null";

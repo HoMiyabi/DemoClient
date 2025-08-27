@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using cfg.main;
 using Cinemachine;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Kirara.Model;
 using Kirara.TimelineAction;
+using Manager;
 
 namespace Kirara
 {
@@ -55,9 +57,33 @@ namespace Kirara
             ChGravity = GetComponent<ChGravity>();
 
             ActionCtrl = GetComponent<ActionCtrl1>();
+            ActionCtrl.isActionExecutable = IsActionExecutable;
+            ActionCtrl.onPlayAction = OnPlayAction;
 
             leftAssistVCam.enabled = false;
             rightAssistVCam.enabled = false;
+        }
+
+        private void OnPlayAction(KiraraActionSO action, string actionName)
+        {
+            SetActionParams(action.actionParams);
+            NetFn.Send(new MsgRolePlayAction
+            {
+                RoleId = Role.Id,
+                ActionName = actionName
+            });
+        }
+
+        private bool IsActionExecutable(KiraraActionSO action)
+        {
+            int actionId = action.actionId;
+            if (actionId == 0) return true;
+            var config = ConfigMgr.tb.TbChActionNumericConfig[actionId];
+            if (config.EnergyCost <= Role.Set[EAttrType.CurrEnergy])
+            {
+                return true;
+            }
+            return false;
         }
 
         public void Set(Role role)
