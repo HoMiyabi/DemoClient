@@ -27,7 +27,7 @@ namespace Kirara
         public CinemachineVirtualCamera VCam { get; set; }
         private CharacterController CharacterController { get; set; }
         private ChGravity ChGravity { get; set; }
-        public ActionCtrl1 ActionCtrl { get; private set; }
+        public ActionCtrl ActionCtrl { get; private set; }
 
         private bool EnableRotation { get; set; }
         private bool EnableRecenter { get; set; }
@@ -56,7 +56,7 @@ namespace Kirara
             CharacterController = GetComponent<CharacterController>();
             ChGravity = GetComponent<ChGravity>();
 
-            ActionCtrl = GetComponent<ActionCtrl1>();
+            ActionCtrl = GetComponent<ActionCtrl>();
             ActionCtrl.isActionExecutable = IsActionExecutable;
             ActionCtrl.onPlayAction = OnPlayAction;
 

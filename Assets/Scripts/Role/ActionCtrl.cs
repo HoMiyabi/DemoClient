@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Kirara
 {
-    public class ActionCtrl1 : MonoBehaviour
+    public class ActionCtrl : MonoBehaviour
     {
         public KiraraActionListSO actionList;
         public Dictionary<string, KiraraActionSO> ActionDict { get; private set; }
@@ -158,12 +158,12 @@ namespace Kirara
             State = action.actionState;
             onPlayAction?.Invoke(action, actionName);
 
-            string s1 = _action?.name ?? "null";
-            string s2 = action.name ?? "null";
-            if (s1 != s2)
-            {
-                // Debug.Log($"[{s1}] to [{s2}], fadeDuration = {fadeDuration}");
-            }
+            // string s1 = _action?.name ?? "null";
+            // string s2 = action.name ?? "null";
+            // if (s1 != s2)
+            // {
+            //     // Debug.Log($"[{s1}] to [{s2}], fadeDuration = {fadeDuration}");
+            // }
 
             // 结束取消
             AddEndCancel(ref onFinish);

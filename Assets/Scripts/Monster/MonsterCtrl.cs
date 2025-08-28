@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using cfg.main;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
@@ -18,22 +17,18 @@ namespace Kirara
 
         public BoxCollider boxCollider;
         public SphereCollider sphereCollider;
-        public KiraraActionListSO actionList;
-        private Dictionary<string, KiraraActionSO> ActionDict;
 
         public event Action onDie;
 
         public RoleCtrl ParryingRole { get; set; }
-
-        public ActionPlayer ActionPlayer { get; set; }
         private CharacterController CharacterController { get; set; }
         public MonsterModel Model { get; private set; }
+        public ActionCtrl ActionCtrl { get; private set; }
 
         private void Awake()
         {
-            ActionPlayer = GetComponent<ActionPlayer>();
             CharacterController = GetComponent<CharacterController>();
-            ActionDict = actionList.ActionDict;
+            ActionCtrl = GetComponent<ActionCtrl>();
         }
 
         public void Set(MonsterModel model)
@@ -67,17 +62,17 @@ namespace Kirara
         {
             if (duration <= 0f) return;
 
-            ActionPlayer.Speed = speed;
+            ActionCtrl.ActionPlayer.Speed = speed;
             await UniTask.WaitForSeconds(duration);
-            ActionPlayer.Speed = 1f;
+            ActionCtrl.ActionPlayer.Speed = 1f;
         }
 
         public async UniTaskVoid EnterParried()
         {
             const float duration = 0.5f;
-            ActionPlayer.Speed = 0f;
+            ActionCtrl.ActionPlayer.Speed = 0f;
             await UniTask.WaitForSeconds(duration);
-            ActionPlayer.Speed = 1f;
+            ActionCtrl.ActionPlayer.Speed = 1f;
             // todo)) 恢复进入Hit
             // MonsterAICtrl.EnterState(MonsterAICtrl.State.Hit);
         }
@@ -118,7 +113,7 @@ namespace Kirara
 
         public void PlayAction(string actionName, float fadeDuration = 0f, Action onFinish = null)
         {
-            ActionPlayer.Play(ActionDict[actionName], actionName, fadeDuration, onFinish);
+            ActionCtrl.PlayAction(actionName, fadeDuration, onFinish);
         }
 
         private void OnAnimatorMove()

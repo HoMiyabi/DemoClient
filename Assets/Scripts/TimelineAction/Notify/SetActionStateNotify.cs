@@ -11,7 +11,7 @@ namespace Kirara.TimelineAction
 
         public override void Notify(ActionPlayer player)
         {
-            var actionCtrl = player.GetComponent<ActionCtrl1>();
+            var actionCtrl = player.GetComponent<ActionCtrl>();
             if (actionCtrl == null)
             {
                 Debug.LogWarning("ActionCtrl is null");

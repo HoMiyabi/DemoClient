@@ -7,11 +7,26 @@ namespace Kirara.TimelineAction
     {
         private UnityEditor.Editor editor;
         private KiraraActionSO _action;
+        public KiraraActionSO Action
+        {
+            get => _action;
+            set
+            {
+                if (value == _action) return;
+
+                _action = value;
+                ClearEditor();
+                if (_action)
+                {
+                    editor = UnityEditor.Editor.CreateEditor(_action);
+                }
+            }
+        }
         private Vector2 scrollPos;
 
         public static ActionDetailsWindow GetWindow()
         {
-            var window = GetWindow<ActionDetailsWindow>("动作细节面板");
+            var window = GetWindow<ActionDetailsWindow>("动作细节");
             return window;
         }
 
@@ -27,26 +42,6 @@ namespace Kirara.TimelineAction
                 DestroyImmediate(editor);
                 editor = null;
             }
-        }
-
-        private void UpdateEditor()
-        {
-            if (ActionListWindow.Instance == null) return;
-            if (ActionListWindow.Instance.Action != _action)
-            {
-                _action = ActionListWindow.Instance.Action;
-                ClearEditor();
-                if (_action)
-                {
-                    editor = UnityEditor.Editor.CreateEditor(_action);
-                }
-            }
-        }
-
-        private void Update()
-        {
-            UpdateEditor();
-            Repaint();
         }
 
         private void OnGUI()

@@ -19,8 +19,8 @@ namespace Kirara.TimelineAction
         private AnimationClip _clip;
         private KiraraActionSO _action;
 
-        // 所有进入的通知状态
-        private readonly List<ActionNotifyState> _insideNotifyStates = new();
+        // 所有运行的通知状态
+        private readonly List<ActionNotifyState> _runningNotifyStates = new();
 
         // 所有的通知状态
         private readonly List<ActionNotifyState> _notifyStates = new();
@@ -43,7 +43,7 @@ namespace Kirara.TimelineAction
             _clip = null;
             Time = 0f;
             IsPlaying = false;
-            _insideNotifyStates.Clear();
+            _runningNotifyStates.Clear();
             ClearNotifyStates();
             ClearNotifies();
             // _animator.enabled = false;
@@ -67,11 +67,11 @@ namespace Kirara.TimelineAction
             playCalled = true;
 
             // 切换的时候调用之前所有的end
-            foreach (var state in _insideNotifyStates)
+            foreach (var state in _runningNotifyStates)
             {
                 state.NotifyEnd(this);
             }
-            _insideNotifyStates.Clear();
+            _runningNotifyStates.Clear();
 
             ClearNotifyStates();
             ClearNotifies();
@@ -88,12 +88,12 @@ namespace Kirara.TimelineAction
 
         private void ProcessNotifies()
         {
+            playCalled = false;
             // 处理 Notify State Begin
             while (_notifyStatesFront < _notifyStates.Count && _notifyStates[_notifyStatesFront].start <= Time)
             {
                 var state = _notifyStates[_notifyStatesFront];
-                _insideNotifyStates.Add(state);
-                playCalled = false;
+                _runningNotifyStates.Add(state);
                 state.NotifyBegin(this);
                 if (playCalled)
                 {
@@ -105,7 +105,6 @@ namespace Kirara.TimelineAction
             // 处理 Notify
             while (_notifiesFront < _notifies.Count && _notifies[_notifiesFront].time <= Time)
             {
-                playCalled = false;
                 _notifies[_notifiesFront].Notify(this);
                 if (playCalled)
                 {
@@ -115,13 +114,12 @@ namespace Kirara.TimelineAction
             }
 
             // 处理 Notify State End
-            for (int i = 0; i < _insideNotifyStates.Count;)
+            for (int i = 0; i < _runningNotifyStates.Count;)
             {
-                var state = _insideNotifyStates[i];
+                var state = _runningNotifyStates[i];
                 if (state.start + state.length <= Time)
                 {
-                    _insideNotifyStates.RemoveAt(i);
-                    playCalled = false;
+                    _runningNotifyStates.RemoveAt(i);
                     state.NotifyEnd(this);
                     if (playCalled)
                     {
@@ -141,7 +139,6 @@ namespace Kirara.TimelineAction
             {
                 Time += UnityEngine.Time.deltaTime * Speed;
 
-                playCalled = false;
                 ProcessNotifies();
                 if (playCalled)
                 {
@@ -152,16 +149,20 @@ namespace Kirara.TimelineAction
                 {
                     if (_action.isLoop)
                     {
+                        if (_runningNotifyStates.Count > 0)
+                        {
+                            Debug.LogWarning($"循环动作到结尾 但还在通知状态中");
+                            foreach (var state in _runningNotifyStates)
+                            {
+                                state.NotifyEnd(this);
+                            }
+                        }
+                        _runningNotifyStates.Clear();
+
                         Time -= _clip.length;
                         _notifyStatesFront = 0;
                         _notifiesFront = 0;
-                        if (_insideNotifyStates.Count > 0)
-                        {
-                            Debug.LogWarning($"循环动作到结尾 但还在通知状态中");
-                        }
-                        _insideNotifyStates.Clear();
 
-                        playCalled = false;
                         ProcessNotifies();
                         if (playCalled)
                         {
@@ -180,7 +181,7 @@ namespace Kirara.TimelineAction
                     }
                 }
 
-                foreach (var state in _insideNotifyStates)
+                foreach (var state in _runningNotifyStates)
                 {
                     state.NotifyTick(this, Time);
                 }

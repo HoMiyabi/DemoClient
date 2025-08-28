@@ -10,7 +10,7 @@ namespace Kirara.TimelineAction
 
         public override void NotifyBegin(ActionPlayer player)
         {
-            var actionCtrl = player.GetComponent<ActionCtrl1>();
+            var actionCtrl = player.GetComponent<ActionCtrl>();
             if (!actionCtrl)
             {
                 return;
@@ -20,7 +20,7 @@ namespace Kirara.TimelineAction
 
         public override void NotifyEnd(ActionPlayer player)
         {
-            var actionCtrl = player.GetComponent<ActionCtrl1>();
+            var actionCtrl = player.GetComponent<ActionCtrl>();
             if (!actionCtrl)
             {
                 return;

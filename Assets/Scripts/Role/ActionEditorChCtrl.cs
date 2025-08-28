@@ -13,14 +13,14 @@ namespace Kirara
         public Transform lookAt;
         public CinemachineVirtualCamera vcam;
         private GameInput input;
-        private ActionCtrl1 actionCtrl;
+        private ActionCtrl actionCtrl;
 
         private Dictionary<EActionCommand, bool> commandPressed = new();
 
         private void Awake()
         {
             input = new GameInput();
-            actionCtrl = GetComponent<ActionCtrl1>();
+            actionCtrl = GetComponent<ActionCtrl>();
         }
 
         public void OnEnable()
