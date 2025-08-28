@@ -5,6 +5,7 @@ using Kirara.Model;
 using Kirara.TimelineAction;
 using Kirara.UI;
 using UnityEngine;
+using YooAsset;
 using Random = UnityEngine.Random;
 
 namespace Kirara
@@ -15,8 +16,8 @@ namespace Kirara
         public Transform attackLightFollow;
         public Transform indicatorFollow;
 
-        public BoxCollider boxCollider;
-        public SphereCollider sphereCollider;
+        [SerializeField] private BoxCollider boxCollider;
+        [SerializeField] private SphereCollider sphereCollider;
 
         public event Action onDie;
 
@@ -119,6 +120,121 @@ namespace Kirara
         private void OnAnimatorMove()
         {
 
+        }
+
+        public void BeginDodgeDetect(BoxPlayableAsset box)
+        {
+            switch (box.boxShape)
+            {
+                case EBoxShape.Sphere:
+                {
+                    sphereCollider.center = box.center;
+                    sphereCollider.radius = box.radius;
+
+                    sphereCollider.enabled = true;
+                    break;
+                }
+                case EBoxShape.Box:
+                {
+                    boxCollider.center = box.center;
+                    boxCollider.size = box.size;
+
+                    boxCollider.enabled = true;
+                    break;
+                }
+                default:
+                {
+                    Debug.Log("未知Box形状");
+                    break;
+                }
+            }
+            MonsterSystem.Instance.DodgeDetectMonsters.Add(this);
+        }
+
+        public void EndDodgeDetect(BoxPlayableAsset box)
+        {
+            switch (box.boxShape)
+            {
+                case EBoxShape.Sphere:
+                {
+                    sphereCollider.enabled = false;
+                    break;
+                }
+                case EBoxShape.Box:
+                {
+                    boxCollider.enabled = false;
+                    break;
+                }
+                default:
+                {
+                    Debug.Log("未知Box形状");
+                    break;
+                }
+            }
+            MonsterSystem.Instance.DodgeDetectMonsters.Remove(this);
+        }
+
+        public void BoxBegin(BoxPlayableAsset box)
+        {
+            switch (box.boxType)
+            {
+                case EBoxType.HitBox:
+                    BeginHit();
+                    break;
+                case EBoxType.DodgeBox:
+                    BeginDodgeDetect(box);
+                    break;
+                default:
+                    Debug.Log("未知Box类型");
+                    break;
+            }
+        }
+
+        public void BoxEnd(BoxPlayableAsset box)
+        {
+            if (box.boxType == EBoxType.DodgeBox)
+            {
+                EndDodgeDetect(box);
+            }
+        }
+
+        private void BeginHit()
+        {
+            // if (ParryingRole != null)
+            // {
+            //     // 有角色在格挡自己
+            //     Debug.Log("触发格挡");
+            //     ParryingRole.EnterParryAid().Forget();
+            //     EnterParried().Forget();
+            //
+            //     ParryingRole = null;
+            // }
+            // else
+            // {
+            //     int count = PhysicsOverlap(monsterCtrl.transform, LayerMask.GetMask("Character"));
+            //     for (int i = 0; i < count; i++)
+            //     {
+            //         var col = cols[i];
+            //         if (col.TryGetComponent<RoleCtrl>(out var roleCtrl))
+            //         {
+            //             var invAttr = roleCtrl.Role.Set[EAttrType.Invincible];
+            //             if (invAttr == 0)
+            //             {
+            //                 Debug.Log($"Monster命中{roleCtrl.Role.Config.Name}");
+            //             }
+            //         }
+            //     }
+            // }
+        }
+
+        public void DoAttackTip(bool canParry)
+        {
+            Debug.Log("攻击提示");
+            var handle = YooAssets.LoadAssetSync<AudioClip>("AttackTip");
+            AudioMgr.Instance.PlaySFX(handle.AssetObject as AudioClip, transform.position);
+            handle.Release();
+
+            UIMgr.Instance.AddHUD<UIAttackLight>().Set(canParry, attackLightFollow);
         }
     }
 }

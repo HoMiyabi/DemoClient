@@ -5,7 +5,7 @@ using UnityEngine.Timeline;
 
 namespace Kirara.TimelineAction
 {
-    [DisplayName("相机震动标记")]
+    [DisplayName("相机震动通知")]
     public class CameraShakeMarker : ActionNotify
     {
         public float angle;

@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
-using UnityEngine;
 
 namespace Kirara.TimelineAction
 {
-    [DisplayName("命中停顿标记")]
+    [DisplayName("命中停顿通知")]
     public class HitstopNotify1 : ActionNotify
     {
         [SecondFrame(60)]

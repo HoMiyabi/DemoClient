@@ -13,7 +13,7 @@ namespace Kirara
         [SerializeField] private Transform monsterParent;
         public readonly Dictionary<int, MonsterCtrl> monsters = new();
 
-        public List<MonsterCtrl> AttackingMonsters { get; private set; } = new();
+        public List<MonsterCtrl> DodgeDetectMonsters { get; private set; } = new();
 
         public event Action<MonsterCtrl> OnMonsterSpawn;
         public event Action<MonsterCtrl> OnMonsterDie;
@@ -62,9 +62,9 @@ namespace Kirara
             return ClosestMonster(worldPos, monsters.Values, out dist);
         }
 
-        public MonsterCtrl ClosestAttackingMonster(Vector3 worldPos, out float dist)
+        public MonsterCtrl ClosestDodgeDetectMonster(Vector3 worldPos, out float dist)
         {
-            return ClosestMonster(worldPos, AttackingMonsters, out dist);
+            return ClosestMonster(worldPos, DodgeDetectMonsters, out dist);
         }
 
         private static MonsterCtrl ClosestMonster(Vector3 worldPos, IEnumerable<MonsterCtrl> monsters, out float dist)

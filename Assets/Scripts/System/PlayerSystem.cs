@@ -245,7 +245,7 @@ namespace Kirara
                 FrontRoleId = FrontRoleCtrl.Role.Id
             });
 
-            var monster = MonsterSystem.Instance.ClosestAttackingMonster(prev.transform.position, out float dist);
+            var monster = MonsterSystem.Instance.ClosestDodgeDetectMonster(prev.transform.position, out float dist);
             if (monster != null)
             {
                 prev.SwitchOutAided();

@@ -325,5 +325,18 @@ namespace Kirara
             await UniTask.WaitForSeconds(duration);
             ActionCtrl.ActionPlayer.Speed = 1f;
         }
+
+        public void BoxBegin(BoxPlayableAsset box)
+        {
+            if (box.boxType == EBoxType.HitBox)
+            {
+                AttackProcessManager.RoleAttack(this, box);
+            }
+        }
+
+        public void ConsumeEnergy(float cost)
+        {
+            Role.Set[EAttrType.CurrEnergy] -= cost;
+        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using cfg.main;
 using Kirara.Model;
 using Kirara.TimelineAction;
-using Kirara.UI;
 using Manager;
 using UnityEngine;
 
@@ -87,12 +86,12 @@ namespace Kirara
 
         public static void RoleAttack(RoleCtrl role, BoxPlayableAsset box)
         {
-            int count = box.PhysicsOverlap(role.transform, LayerMask.GetMask("Monster"));
+            int count = PhysicsOverlap(box, role.transform, LayerMask.GetMask("Monster"));
 
             role.lastHitMonsters.Clear();
             for (int i = 0; i < count; i++)
             {
-                var col = box.cols[i];
+                var col = cols[i];
                 var monster = col.GetComponent<MonsterCtrl>();
                 if (monster)
                 {
@@ -104,6 +103,23 @@ namespace Kirara
                     Debug.LogWarning("monster == null");
                 }
             }
+        }
+
+        private static readonly Collider[] cols = new Collider[128];
+
+        private static int PhysicsOverlap(BoxPlayableAsset box, Transform parent, int layerMask)
+        {
+            var worldPos = parent.TransformPoint(box.center);
+            if (box.boxShape == EBoxShape.Sphere)
+            {
+                return Physics.OverlapSphereNonAlloc(worldPos, box.radius, cols, layerMask);
+            }
+            if (box.boxShape == EBoxShape.Box)
+            {
+                return Physics.OverlapBoxNonAlloc(worldPos, box.size / 2, cols, parent.rotation, layerMask);
+            }
+            Debug.LogError("BoxPlayableAsset.PhysicsOverlap: Unknown box type");
+            return 0;
         }
     }
 }

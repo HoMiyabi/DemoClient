@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using cfg.main;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -27,166 +26,33 @@ namespace Kirara.TimelineAction
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
             this.owner = owner;
-            return ScriptPlayable<BoxPlayable>.Create(graph);
+            return ScriptPlayable<ActionNotifyStatePlayable>.Create(graph);
         }
-
-        public int PhysicsOverlap(Transform parent, int layerMask)
-        {
-            var worldPos = parent.TransformPoint(center);
-            if (boxShape == EBoxShape.Sphere)
-            {
-                return Physics.OverlapSphereNonAlloc(worldPos, radius, cols, layerMask);
-            }
-            if (boxShape == EBoxShape.Box)
-            {
-                return Physics.OverlapBoxNonAlloc(worldPos, size / 2, cols, parent.rotation, layerMask);
-            }
-            Debug.LogError("BoxPlayableAsset.PhysicsOverlap: Unknown box type");
-            return 0;
-        }
-
-        public readonly Collider[] cols = new Collider[16];
-        private MonsterCtrl monster;
-        private RoleCtrl role;
 
         public override void NotifyBegin(ActionPlayer player)
         {
-            monster = player.GetComponent<MonsterCtrl>();
-            if (monster != null)
+            if (player.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
             {
-                MonsterBoxBegin();
+                monsterCtrl.BoxBegin(this);
                 return;
             }
 
-            role = player.GetComponent<RoleCtrl>();
-            if (role != null)
+            if (player.TryGetComponent<RoleCtrl>(out var roleCtrl))
             {
-                if (boxType == EBoxType.HitBox)
-                {
-                    ChHitBoxBegin();
-                }
-                else
-                {
-                    Debug.Log("未知Box类型");
-                }
+                roleCtrl.BoxBegin(this);
                 return;
             }
-            Debug.Log("未知类型");
         }
 
         public override void NotifyEnd(ActionPlayer player)
         {
-            if (monster != null && boxType == EBoxType.DodgeBox)
+            if (player.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
             {
-                MonsterDodgeBoxEnd();
+                monsterCtrl.BoxEnd(this);
+                return;
             }
 
             // HitstopNotify不知道怎么不见了在Timeline里面
-        }
-
-        private void MonsterBoxBegin()
-        {
-            switch (boxType)
-            {
-                case EBoxType.HitBox:
-                    MonsterHitBoxBegin();
-                    break;
-                case EBoxType.DodgeBox:
-                    MonsterDodgeBoxBegin();
-                    break;
-                default:
-                    Debug.Log("未知Box类型");
-                    break;
-            }
-        }
-
-        private void MonsterHitBoxBegin()
-        {
-            if (monster.ParryingRole != null)
-            {
-                // 有角色在格挡自己
-                Debug.Log("触发格挡");
-                monster.ParryingRole.EnterParryAid().Forget();
-                monster.EnterParried().Forget();
-
-                monster.ParryingRole = null;
-            }
-            else
-            {
-                int count = PhysicsOverlap(monster.transform, LayerMask.GetMask("Character"));
-                for (int i = 0; i < count; i++)
-                {
-                    var col = cols[i];
-                    if (col.TryGetComponent<RoleCtrl>(out var roleCtrl))
-                    {
-                        var invAttr = roleCtrl.Role.Set[EAttrType.Invincible];
-                        if (invAttr == 0)
-                        {
-                            Debug.Log($"Monster命中{roleCtrl.Role.Config.Name}");
-                        }
-                    }
-                }
-            }
-        }
-
-        private void MonsterDodgeBoxBegin()
-        {
-            switch (boxShape)
-            {
-                case EBoxShape.Sphere:
-                {
-                    // 这里认为开启闪避检测盒就是在攻击
-                    monster.sphereCollider.center = center;
-                    monster.sphereCollider.radius = radius;
-
-                    monster.sphereCollider.enabled = true;
-                    MonsterSystem.Instance.AttackingMonsters.Add(monster);
-                    break;
-                }
-                case EBoxShape.Box:
-                {
-                    monster.boxCollider.center = center;
-                    monster.boxCollider.size = size;
-
-                    monster.boxCollider.enabled = true;
-                    MonsterSystem.Instance.AttackingMonsters.Add(monster);
-                    break;
-                }
-                default:
-                {
-                    Debug.Log("未知Box形状");
-                    break;
-                }
-            }
-        }
-
-        private void MonsterDodgeBoxEnd()
-        {
-            switch (boxShape)
-            {
-                case EBoxShape.Sphere:
-                {
-                    monster.sphereCollider.enabled = false;
-                    MonsterSystem.Instance.AttackingMonsters.Remove(monster);
-                    break;
-                }
-                case EBoxShape.Box:
-                {
-                    monster.boxCollider.enabled = false;
-                    MonsterSystem.Instance.AttackingMonsters.Remove(monster);
-                    break;
-                }
-                default:
-                {
-                    Debug.Log("未知Box形状");
-                    break;
-                }
-            }
-        }
-
-        private void ChHitBoxBegin()
-        {
-            AttackProcessManager.RoleAttack(role, this);
         }
     }
 }

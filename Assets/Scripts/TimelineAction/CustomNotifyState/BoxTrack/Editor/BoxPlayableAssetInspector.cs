@@ -220,7 +220,7 @@ namespace Kirara.TimelineAction
 
         private void DrawControlPreview()
         {
-            if (GUILayout.Button("启用并禁用其他预览"))
+            if (GUILayout.Button("只显示当前预览"))
             {
                 bPreview = true;
                 foreach (var item in instances)
