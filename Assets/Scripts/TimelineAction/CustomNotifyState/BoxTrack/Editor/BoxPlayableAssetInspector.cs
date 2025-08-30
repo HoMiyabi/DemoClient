@@ -23,15 +23,16 @@ namespace Kirara.TimelineAction
         private SerializedProperty rotMaxValueProp;
         private SerializedProperty hitGatherDistProp;
 
-        private enum EditMode
+        private enum EEditMode
         {
             None = -1,
             Center = 0,
             Size = 1,
         }
 
-        private EditMode editMode = EditMode.None;
-        private readonly string[] editNames = {"中心", "尺寸"};
+        private EEditMode editMode = EEditMode.None;
+
+        private readonly string[] editModeNames = {"中心", "尺寸"};
 
         private static readonly List<BoxPlayableAssetInspector> instances = new();
         private bool bPreview = true;
@@ -54,28 +55,29 @@ namespace Kirara.TimelineAction
             rotMaxValueProp = serializedObject.FindProperty(nameof(_target.rotMaxValue));
             hitGatherDistProp = serializedObject.FindProperty(nameof(_target.hitGatherDist));
 
-            SceneView.duringSceneGui -= DuringSceneGUI;
-            SceneView.duringSceneGui += DuringSceneGUI;
             if (!instances.Contains(this))
             {
                 instances.Add(this);
+                SceneView.duringSceneGui += DuringSceneGUI;
+                // Debug.Log($"add instance {GetInstanceID()}, instances.Count = {instances.Count}");
             }
         }
 
         public override void OnInspectorGUI()
         {
-            DrawProp();
+            serializedObject.Update();
+            DrawProperty();
             DrawToolbar();
-            DrawControlPreview();
+            DrawPreviewController();
+            serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawProp()
+        private void DrawProperty()
         {
-            serializedObject.Update();
             EditorGUILayout.PropertyField(boxTypeProp, new GUIContent("类型"));
             EditorGUILayout.PropertyField(boxShapeProp, new GUIContent("形状"));
             EditorGUILayout.PropertyField(centerProp, new GUIContent("中心"));
-            switch (_target.boxShape)
+            switch ((EBoxShape)boxShapeProp.enumValueIndex)
             {
                 case EBoxShape.Sphere:
                 {
@@ -88,10 +90,10 @@ namespace Kirara.TimelineAction
                     break;
                 }
                 default:
-                    Debug.LogWarning("未处理的形状 " + _target.boxShape);
+                    Debug.LogWarning("未处理的形状 " + (EBoxShape)boxShapeProp.enumValueIndex);
                     break;
             }
-            if (_target.boxType == EBoxType.HitBox)
+            if ((EBoxType)boxTypeProp.enumValueIndex == EBoxType.HitBox)
             {
                 EditorGUILayout.PropertyField(attackStrengthProp, new GUIContent("攻击强度"));
                 EditorGUILayout.PropertyField(hitIdProp, new GUIContent("Hit Id"));
@@ -104,45 +106,48 @@ namespace Kirara.TimelineAction
                 }
                 EditorGUILayout.PropertyField(hitGatherDistProp, new GUIContent("命中聚集距离"));
             }
-            serializedObject.ApplyModifiedProperties();
         }
 
         private void DrawToolbar()
         {
-            int newSelected = GUILayout.Toolbar((int)editMode, editNames);
-            if (GUI.changed)
+            EditorGUI.BeginChangeCheck();
+            var clickMode = (EEditMode)GUILayout.Toolbar((int)editMode, editModeNames);
+            if (EditorGUI.EndChangeCheck())
             {
-                if ((int)editMode == newSelected)
+                // Debug.Log($"set editMode clickMode: {clickMode}, editMode: {EditMode}");
+                if (editMode == clickMode)
                 {
-                    editMode = EditMode.None;
+                    editMode = EEditMode.None;
                 }
                 else
                 {
-                    editMode = (EditMode)newSelected;
+                    editMode = clickMode;
                 }
                 SceneView.RepaintAll();
             }
         }
 
-
-        private void OnDestroy()
-        {
-            SceneView.duringSceneGui -= DuringSceneGUI;
-            instances.Remove(this);
-        }
-
         private void OnDisable()
         {
-            SceneView.duringSceneGui -= DuringSceneGUI;
-            instances.Remove(this);
+            if (instances.Remove(this))
+            {
+                // Debug.Log($"OnDisable remove instance {GetInstanceID()}, instances.Count = {instances.Count}");
+                SceneView.duringSceneGui -= DuringSceneGUI;
+            }
         }
 
         private void DuringSceneGUI(SceneView sceneView)
         {
-            if (_target.owner == null) return;
+            if (_target.owner == null)
+            {
+                // Debug.LogWarning("BoxPlayableAssetInspector: owner is null");
+                return;
+            }
 
-            DrawBoxInScene();
+            serializedObject.Update();
             DrawHandleInScene();
+            DrawBoxInScene();
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void DrawBoxInScene()
@@ -150,30 +155,33 @@ namespace Kirara.TimelineAction
             if (!bPreview) return;
 
             var parent = _target.owner.transform;
-            var center = parent.TransformPoint(_target.center);
+            var center = parent.TransformPoint(centerProp.vector3Value);
 
-            Handles.color = Color.white;
-            if (_target.boxType == EBoxType.HitBox)
+            using (var s = new Handles.DrawingScope())
             {
-                Handles.color = Color.red;
-            }
-            switch (_target.boxShape)
-            {
-                case EBoxShape.Sphere:
+                Handles.color = Color.white;
+                if ((EBoxType)boxShapeProp.enumValueIndex == EBoxType.HitBox)
                 {
-                    Handles.DrawWireDisc(center, Vector3.up, _target.radius);
-                    Handles.DrawWireDisc(center, Vector3.right, _target.radius);
-                    Handles.DrawWireDisc(center, Vector3.forward, _target.radius);
-                    break;
+                    Handles.color = Color.red;
                 }
-                case EBoxShape.Box:
+                switch ((EBoxShape)boxShapeProp.enumValueIndex)
                 {
-                    Handles.DrawWireCube(center, _target.size);
-                    break;
+                    case EBoxShape.Sphere:
+                    {
+                        Handles.DrawWireDisc(center, Vector3.up, radiusProp.floatValue);
+                        Handles.DrawWireDisc(center, Vector3.right, radiusProp.floatValue);
+                        Handles.DrawWireDisc(center, Vector3.forward, radiusProp.floatValue);
+                        break;
+                    }
+                    case EBoxShape.Box:
+                    {
+                        Handles.DrawWireCube(center, sizeProp.vector3Value);
+                        break;
+                    }
+                    default:
+                        Debug.LogWarning("未处理的形状 " + (EBoxShape)boxShapeProp.enumValueIndex);
+                        break;
                 }
-                default:
-                    Debug.LogWarning("未处理的形状 " + _target.boxShape);
-                    break;
             }
         }
 
@@ -181,44 +189,34 @@ namespace Kirara.TimelineAction
         {
             var parent = _target.owner.transform;
 
-            if (editMode == EditMode.Center)
+            // Debug.Log("editMode = " + EditMode);
+            if (editMode == EEditMode.Center)
             {
-                var worldPos = parent.TransformPoint(_target.center);
+                // Handles.PositionHandle(centerProp.vector3Value + Vector3.up * 2, Quaternion.identity);
+                var worldPos = parent.TransformPoint(centerProp.vector3Value);
                 var newWorldPos = Handles.PositionHandle(worldPos, Quaternion.identity);
                 var newLocalPos = parent.InverseTransformPoint(newWorldPos);
-                if (newLocalPos != _target.center)
-                {
-                    Undo.RecordObject(_target, "修改中心");
-                    _target.center = newLocalPos;
-                }
+                centerProp.vector3Value = newLocalPos;
             }
-            else if (editMode == EditMode.Size)
+            else if (editMode == EEditMode.Size)
             {
-                var worldPos = parent.TransformPoint(_target.center);
+                var worldPos = parent.TransformPoint(centerProp.vector3Value);
 
-                if (_target.boxShape == EBoxShape.Sphere)
+                if ((EBoxShape)boxShapeProp.enumValueIndex == EBoxShape.Sphere)
                 {
-                    var newScale = Handles.ScaleHandle(new Vector3(_target.radius, 0f, 0f), worldPos, Quaternion.identity);
-                    if (newScale.x != _target.radius)
-                    {
-                        Undo.RecordObject(_target, "修改尺寸");
-                        _target.radius = newScale.x;
-                    }
+                    float newRadius = Handles.RadiusHandle(Quaternion.identity, worldPos, radiusProp.floatValue, true);
+                    radiusProp.floatValue = newRadius;
                 }
-                else if (_target.boxShape == EBoxShape.Box)
+                else if ((EBoxShape)boxShapeProp.enumValueIndex == EBoxShape.Box)
                 {
-                    var newScale = Handles.ScaleHandle(_target.size, worldPos, Quaternion.identity);
-                    if (newScale != _target.size)
-                    {
-                        Undo.RecordObject(_target, "修改尺寸");
-                        _target.size = newScale;
-                    }
+                    var newScale = Handles.ScaleHandle(sizeProp.vector3Value, worldPos, Quaternion.identity);
+                    sizeProp.vector3Value = newScale;
                 }
             }
         }
 
 
-        private void DrawControlPreview()
+        private void DrawPreviewController()
         {
             if (GUILayout.Button("只显示当前预览"))
             {

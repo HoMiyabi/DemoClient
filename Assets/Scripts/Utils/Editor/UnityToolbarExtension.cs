@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityToolbarExtender;
@@ -7,11 +6,11 @@ using UnityToolbarExtender;
 namespace Kirara
 {
 	[InitializeOnLoad]
-	public class UnityToolbarButton
+	public class UnityToolbarExtension
 	{
 		private const string SceneName = "BootScene";
 
-		static UnityToolbarButton()
+		static UnityToolbarExtension()
 		{
 			ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
 		}
@@ -20,7 +19,7 @@ namespace Kirara
 		{
 			GUILayout.FlexibleSpace();
 
-			if(GUILayout.Button(new GUIContent("运行", $"从{SceneName}运行"), ToolbarStyles.commandButtonStyle))
+			if (GUILayout.Button(new GUIContent("运行", $"从{SceneName}运行"), ToolbarStyles.commandButtonStyle))
 			{
 				SceneHelper.StartScene(SceneName);
 			}
@@ -49,7 +48,7 @@ namespace Kirara
 
 		public static void StartScene(string sceneName)
 		{
-			if(EditorApplication.isPlaying)
+			if (EditorApplication.isPlaying)
 			{
 				EditorApplication.isPlaying = false;
 			}
@@ -69,7 +68,7 @@ namespace Kirara
 
 			EditorApplication.update -= OnUpdate;
 
-			if(EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+			if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
 			{
 				// need to get scene via search because the path to the scene
 				// file contains the package version so it'll change over time
@@ -89,4 +88,3 @@ namespace Kirara
 		}
 	}
 }
-#endif

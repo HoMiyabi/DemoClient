@@ -1,0 +1,132 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Kirara.ActionExtractor;
+using Kirara.TimelineAction;
+using Newtonsoft.Json;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Timeline;
+
+namespace Kirara
+{
+    public class ActionExtractorWindow : EditorWindow
+    {
+        [MenuItem("Kirara/动作提取器")]
+        private static void GetWindow()
+        {
+            GetWindow<ActionExtractorWindow>();
+        }
+
+        private static int frameRate = 60;
+
+        private static List<float> GetKeys(AnimRootMotion motion, string bindingPropertyName)
+        {
+            return bindingPropertyName switch
+            {
+                "RootT.x" => motion.tx,
+                "RootT.y" => motion.ty,
+                "RootT.z" => motion.tz,
+                "RootQ.x" => motion.qx,
+                "RootQ.y" => motion.qy,
+                "RootQ.z" => motion.qz,
+                "RootQ.w" => motion.qw,
+                _ => throw new ArgumentException("Invalid binding property name", bindingPropertyName)
+            };
+        }
+
+        private static AnimRootMotion ExtractRootMotion(AnimationClip clip)
+        {
+            var motion = new AnimRootMotion();
+            motion.length = clip.length;
+            motion.frameRate = frameRate;
+            foreach (var binding in AnimationUtility.GetCurveBindings(clip))
+            {
+                if (binding.path == "" && binding.propertyName.StartsWith("Root"))
+                {
+                    var curve = AnimationUtility.GetEditorCurve(clip, binding);
+                    var keys = GetKeys(motion, binding.propertyName);
+                    for (float time = 0f; time < clip.length; time += 1f / frameRate)
+                    {
+                        keys.Add(curve.Evaluate(time));
+                    }
+                }
+            }
+            return motion;
+        }
+
+        private static ActionOutput ExtractAction(KiraraActionSO action)
+        {
+            AnimationClip clip = null;
+            foreach (var track in action.GetOutputTracks())
+            {
+                if (track is AnimationTrack animationTrack)
+                {
+                    foreach (var timelineClip in animationTrack.GetClips())
+                    {
+                        var asset = (AnimationPlayableAsset)timelineClip.asset;
+                        clip = asset.clip;
+                        break;
+                    }
+                }
+            }
+            if (clip == null)
+            {
+                Debug.LogWarning($"{action.name}没有动画片段");
+            }
+            var output = new ActionOutput
+            {
+                rootMotion = ExtractRootMotion(clip),
+                isLoop = action.isLoop
+            };
+            foreach (var track in action.GetOutputTracks())
+            {
+                if (track is BoxTrack boxTrack)
+                {
+                    foreach (var timelineClip in boxTrack.GetClips())
+                    {
+                        var asset = (BoxPlayableAsset)timelineClip.asset;
+                        asset.start = (float)timelineClip.start;
+                        asset.length = (float)timelineClip.duration;
+                        output.boxes.Add((BoxPlayableAsset)timelineClip.asset);
+                    }
+                }
+            }
+            return output;
+        }
+
+        public void OnGUI()
+        {
+            var actions = Selection.GetFiltered<KiraraActionSO>(SelectionMode.Unfiltered);
+            GUILayout.Label($"已选择{actions.Length}个动作");
+
+            if (GUILayout.Button("提取"))
+            {
+                foreach (var action in actions)
+                {
+                    var output = ExtractAction(action);
+
+                    var settings = new JsonSerializerSettings();
+                    settings.Converters.Add(new Vector3JsonConverter());
+                    settings.Converters.Add(new BoxPlayableAssetJsonConverter());
+                    string json = JsonConvert.SerializeObject(output, Formatting.Indented, settings);
+
+                    string path = AssetDatabase.GetAssetPath(action);
+                    path = Path.ChangeExtension(path, "json");
+                    if (File.Exists(path))
+                    {
+                        bool ok = EditorUtility.DisplayDialog("提示", $"存在同名文件，位于{path}",
+                            "覆盖", "跳过");
+                        if (!ok)
+                        {
+                            continue;
+                        }
+                    }
+                    Debug.Log($"{action.name}输出: {path}");
+                    File.WriteAllText(path, json);
+                }
+                AssetDatabase.Refresh();
+            }
+        }
+    }
+}

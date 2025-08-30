@@ -5,6 +5,7 @@ namespace Kirara
     public class AnimRootMotion
     {
         public float length;
+        public int frameRate;
         public List<float> tx = new();
         public List<float> ty = new();
         public List<float> tz = new();
