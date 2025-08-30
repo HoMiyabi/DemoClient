@@ -132,8 +132,9 @@ namespace Kirara.TimelineAction
 
         private void OnGUI()
         {
-            const float LabelWidth = 50f;
-            EditorGUIUtility.labelWidth = LabelWidth;
+            float oldLabelWidth = EditorGUIUtility.labelWidth;
+            const float labelWidth = 80f;
+            EditorGUIUtility.labelWidth = labelWidth;
 
             // 动作列表
             EditorGUI.BeginChangeCheck();
@@ -154,6 +155,8 @@ namespace Kirara.TimelineAction
                     EditorUtility.SetDirty(ActionList);
                 }
             }
+
+            EditorGUIUtility.labelWidth = oldLabelWidth;
 
             // 控制栏
             using (new GUILayout.HorizontalScope())
