@@ -63,120 +63,7 @@ namespace KiraraDirectBinder
         }
 
 #if UNITY_EDITOR
-        [UnityEditor.InitializeOnLoadMethod]
-        private static void Load()
-        {
-            UnityEditor.EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyWindowItemOnGUI;
-        }
-
-        private static readonly string text = "★";
-
-        private static readonly Color[] colors = {
-            Color.yellow,
-            Color.white,
-            Color.red,
-            Color.magenta,
-            Color.black,
-            Color.cyan
-        };
-
-        private static readonly Vector2 rectOffset = new(-28, 0);
-
-        private static readonly HashSet<string> varNameSet = new();
-
-        private static void OnHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
-        {
-            var go = UnityEditor.EditorUtility.InstanceIDToObject(instanceID) as GameObject;
-            if (!go)
-            {
-                return;
-            }
-
-            // Debug.Log(selectionRect);
-            var r = new Rect(selectionRect);
-            r.position += rectOffset;
-
-            for (int i = 0; i < binders.Count; i++)
-            {
-                var binder = binders[i];
-                foreach (var item in binder.items)
-                {
-                    if (item.component)
-                    {
-                        if (item.component.gameObject == go)
-                        {
-                            GUI.Label(r, text, new GUIStyle()
-                            {
-                                normal = new GUIStyleState()
-                                {
-                                    textColor = GetColor(i)
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-
-            // 绘制Binder
-            var binderRect = new Rect(selectionRect);
-            binderRect.position += new Vector2(binderRect.width - GUI.skin.label.CalcSize(new GUIContent(text)).x, 0);
-            for (int i = 0; i < binders.Count; i++)
-            {
-                var binder = binders[i];
-                if (binder.gameObject == go)
-                {
-                    GUI.Label(binderRect, text, new GUIStyle()
-                    {
-                        normal = new GUIStyleState()
-                        {
-                            textColor = GetColor(i)
-                        }
-                    });
-
-                    string tip = "";
-
-                    bool invalidVarName = false;
-                    varNameSet.Clear();
-                    foreach (var item in binder.items)
-                    {
-                        if (string.IsNullOrWhiteSpace(item.fieldName))
-                        {
-                            invalidVarName = true;
-                            break;
-                        }
-                        if (!varNameSet.Add(item.fieldName))
-                        {
-                            invalidVarName = true;
-                            break;
-                        }
-                    }
-                    if (invalidVarName)
-                    {
-                        tip += "变量名有误";
-                    }
-
-                    if (binder.items.FindIndex(item => item.component == null) >= 0)
-                    {
-                        tip += " 丢失引用";
-                    }
-
-                    if (tip != "")
-                    {
-                        var v = GUI.skin.label.CalcSize(new GUIContent(tip));
-                        binderRect.position -= new Vector2(v.x, 0);
-                        binderRect.position += new Vector2(0, (binderRect.height - v.y) * 0.5f);
-                        GUI.Label(binderRect, tip);
-                    }
-                }
-            }
-        }
-
-        private static Color GetColor(int index)
-        {
-            return colors[index % colors.Length];
-        }
-
-        private static readonly List<KiraraDirectBinder> binders = new();
+        public static readonly List<KiraraDirectBinder> binders = new();
 
         private void OnEnable()
         {
@@ -187,7 +74,6 @@ namespace KiraraDirectBinder
         {
             binders.Remove(this);
         }
-
 #endif
     }
 }

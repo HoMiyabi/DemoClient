@@ -67,7 +67,7 @@ namespace KiraraDirectBinder.Editor
         }
 
         private static readonly Color invalidVarNameColor = Color.yellow;
-        private static readonly Color referenceNullColor = Color.red + new Color(-0.3f, 0.5f, 0.5f);
+        private static readonly Color referenceNullColor = Color.red + new Color(0f, 0.5f, 0.6f);
 
         private void DrawVarName(Rect r, SerializedProperty prop)
         {
