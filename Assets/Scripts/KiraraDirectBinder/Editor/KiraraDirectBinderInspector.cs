@@ -56,7 +56,7 @@ namespace KiraraDirectBinder.Editor
             var componentProp = itemProp.FindPropertyRelative("component");
 
             var contentRect = rect;
-            contentRect.y += 2;
+            contentRect.y += (contentRect.height - EditorGUIUtility.singleLineHeight) * 0.5f;
             contentRect.height = EditorGUIUtility.singleLineHeight;
 
             var varNameRect = GetHorizontalItem(contentRect, 0, 2, 4);
