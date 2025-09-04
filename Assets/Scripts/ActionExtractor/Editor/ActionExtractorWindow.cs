@@ -12,6 +12,8 @@ namespace Kirara
 {
     public class ActionExtractorWindow : EditorWindow
     {
+        private DefaultAsset outputDirAsset;
+
         [MenuItem("Kirara/动作提取器")]
         private static void GetWindow()
         {
@@ -76,6 +78,7 @@ namespace Kirara
             }
             var output = new ActionOutput
             {
+                name = action.name,
                 rootMotion = ExtractRootMotion(clip),
                 isLoop = action.isLoop
             };
@@ -97,9 +100,21 @@ namespace Kirara
 
         public void OnGUI()
         {
+            outputDirAsset = (DefaultAsset)EditorGUILayout.ObjectField("输出目录", outputDirAsset, typeof(DefaultAsset), false);
+            string outputDir = null;
+            if (outputDirAsset != null)
+            {
+                outputDir = AssetDatabase.GetAssetPath(outputDirAsset);
+                if (!Directory.Exists(outputDir))
+                {
+                    outputDir = null;
+                }
+            }
+
             var actions = Selection.GetFiltered<KiraraActionSO>(SelectionMode.Unfiltered);
             GUILayout.Label($"已选择{actions.Length}个动作");
 
+            EditorGUI.BeginDisabledGroup(outputDir == null);
             if (GUILayout.Button("提取"))
             {
                 foreach (var action in actions)
@@ -111,22 +126,23 @@ namespace Kirara
                     settings.Converters.Add(new BoxPlayableAssetJsonConverter());
                     string json = JsonConvert.SerializeObject(output, Formatting.Indented, settings);
 
-                    string path = AssetDatabase.GetAssetPath(action);
-                    path = Path.ChangeExtension(path, "json");
-                    if (File.Exists(path))
+
+                    string outputPath = Path.Combine(outputDir, action.name + ".json");
+                    if (File.Exists(outputPath))
                     {
-                        bool ok = EditorUtility.DisplayDialog("提示", $"存在同名文件，位于{path}",
+                        bool ok = EditorUtility.DisplayDialog("提示", $"存在同名文件，位于{outputPath}",
                             "覆盖", "跳过");
                         if (!ok)
                         {
                             continue;
                         }
                     }
-                    Debug.Log($"{action.name}输出: {path}");
-                    File.WriteAllText(path, json);
+                    Debug.Log($"{action.name}输出: {outputPath}");
+                    File.WriteAllText(outputPath, json);
                 }
                 AssetDatabase.Refresh();
             }
+            EditorGUI.EndDisabledGroup();
         }
     }
 }

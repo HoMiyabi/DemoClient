@@ -114,7 +114,7 @@ namespace Kirara
 
         public void PlayAction(string actionName, float fadeDuration = 0f, Action onFinish = null)
         {
-            ActionCtrl.PlayAction(actionName, fadeDuration, onFinish);
+            ActionCtrl.PlayActionFullName(actionName, fadeDuration, onFinish);
         }
 
         private void OnAnimatorMove()
