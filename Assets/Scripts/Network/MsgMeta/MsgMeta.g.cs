@@ -90,6 +90,7 @@ public partial class MsgMeta
             new MsgMetaData(MsgCmdId.MsgCompleteQuestChain, MsgCompleteQuestChain.Parser, false),
             new MsgMetaData(MsgCmdId.NotifyObtainItems, NotifyObtainItems.Parser, false),
             new MsgMetaData(MsgCmdId.NotifyRoleTakeDamage, NotifyRoleTakeDamage.Parser, false),
+            new MsgMetaData(MsgCmdId.MsgRoleSetParry, MsgRoleSetParry.Parser, false),
         };
     
         cmdIdToData = new Dictionary<uint, MsgMetaData>
@@ -177,6 +178,7 @@ public partial class MsgMeta
             {MsgCmdId.MsgCompleteQuestChain, data[80]},
             {MsgCmdId.NotifyObtainItems, data[81]},
             {MsgCmdId.NotifyRoleTakeDamage, data[82]},
+            {MsgCmdId.MsgRoleSetParry, data[83]},
         };
 
         typeToData = new Dictionary<Type, MsgMetaData>
@@ -264,6 +266,7 @@ public partial class MsgMeta
             {typeof(MsgCompleteQuestChain), data[80]},
             {typeof(NotifyObtainItems), data[81]},
             {typeof(NotifyRoleTakeDamage), data[82]},
+            {typeof(MsgRoleSetParry), data[83]},
         };
     }
 }

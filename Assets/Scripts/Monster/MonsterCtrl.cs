@@ -21,7 +21,7 @@ namespace Kirara
 
         public event Action onDie;
 
-        public RoleCtrl ParryingRole { get; set; }
+        // public RoleCtrl ParryingRole { get; set; }
         private CharacterController CharacterController { get; set; }
         public MonsterModel Model { get; private set; }
         public ActionCtrl ActionCtrl { get; private set; }

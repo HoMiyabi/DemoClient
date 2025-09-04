@@ -31,7 +31,6 @@ namespace Kirara
 
         private bool EnableRotation { get; set; }
         private bool EnableRecenter { get; set; }
-        public bool EnableParryAid { get; set; }
 
         public List<MonsterCtrl> lastHitMonsters = new();
 
@@ -265,7 +264,7 @@ namespace Kirara
             transform.forward = -monster.transform.forward;
             SetPos(monster.transform.position + monster.transform.forward * parryDist);
             ActionCtrl.PlayAction(ActionName.Attack_ParryAid_Start);
-            monster.ParryingRole = this;
+            // monster.ParryingRole = this;
 
         }
 
@@ -343,6 +342,28 @@ namespace Kirara
         {
             Debug.Log($"{name} 角色被攻击，伤害：{damage}");
             Role.Set[EAttrType.CurrHp] -= damage;
+            if (ActionCtrl.ActionDict.ContainsKey("Hit_L_Front"))
+            {
+                ActionCtrl.PlayAction("Hit_L_Front");
+            }
+        }
+
+        public void EnterAssistCamera()
+        {
+            float leftDist = Vector3.Distance(
+                leftAssistVCam.transform.position, Cam.position);
+            float rightDist = Vector3.Distance(
+                rightAssistVCam.transform.position, Cam.position);
+
+            var assistVCam = leftDist < rightDist ? leftAssistVCam : rightAssistVCam;
+
+            assistVCam.enabled = true;
+        }
+
+        public void ExitAssistCamera()
+        {
+            leftAssistVCam.enabled = false;
+            rightAssistVCam.enabled = false;
         }
     }
 }

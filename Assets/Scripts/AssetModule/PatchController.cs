@@ -24,6 +24,7 @@ namespace Manager
         public FoundUpdateFilesDel OnFoundUpdateFiles;
         public WebFileDownloadFailedDel OnWebFileDownloadFailed;
         public DownloaderOperation.DownloadUpdate OnDownloadUpdate;
+        public Action OnDownloadSuccess;
 
         private DownloadErrorData downloadErrorData;
 
@@ -37,7 +38,7 @@ namespace Manager
         public async UniTask PatchAsync()
         {
             // 1. 初始化Package
-            // 2. 获取Package版本
+            // 2. 请求最新Package版本
             // 3. 更新Package清单
             // 4. 创建下载器
             // 5. 下载资源包文件
@@ -68,18 +69,18 @@ namespace Manager
                 await utcs.Task;
             }
 
-            // 2. 获取Package版本
+            // 2. 请求最新Package版本
             while (true)
             {
                 await RequestPackageVersion().ToUniTask();
                 if (op.Status == EOperationStatus.Succeed)
                 {
                     // 获取Package版本
-                    Log($"获取package版本成功: {PackageVersion}");
+                    Log($"请求最新package版本成功: {PackageVersion}");
                     break;
                 }
                 // 失败
-                LogWarning($"获取package版本失败: {op.Error}");
+                LogWarning($"请求最新package版本失败: {op.Error}");
 
                 // 请求重试
                 var utcs = new UniTaskCompletionSource();
@@ -133,6 +134,7 @@ namespace Manager
                 if (op.Status == EOperationStatus.Succeed)
                 {
                     Log("资源文件下载完毕");
+                    OnDownloadSuccess?.Invoke();
                     break;
                 }
                 // 下载失败

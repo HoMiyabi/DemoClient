@@ -34,7 +34,7 @@ namespace Kirara.UI.Panel
             Boot().Forget();
         }
 
-        private void SetStatus(string text)
+        private void SetStatusText(string text)
         {
             Debug.Log(text);
             StatusText.text = text;
@@ -42,11 +42,11 @@ namespace Kirara.UI.Panel
 
         private async UniTaskVoid Boot()
         {
-            SetStatus("连接服务器...");
+            SetStatusText("连接服务器...");
             NetMgr.Instance.Init();
             NetMgr.Instance.Connect();
 
-            SetStatus("加载资源...");
+            SetStatusText("加载资源...");
             YooAssets.Initialize();
 
             patchCtrl = new PatchController("DefaultPackage")
@@ -56,20 +56,21 @@ namespace Kirara.UI.Panel
                 OnUpdatePackageManifestFailed = OnUpdatePackageManifestFailed,
                 OnFoundUpdateFiles = OnFoundUpdateFiles,
                 OnWebFileDownloadFailed = OnWebFileDownloadFailed,
-                OnDownloadUpdate = OnDownloadUpdate
+                OnDownloadUpdate = OnDownloadUpdate,
+                OnDownloadSuccess = OnDownloadSuccess
             };
             await patchCtrl.PatchAsync();
 
             var package = YooAssets.GetPackage("DefaultPackage");
             YooAssets.SetDefaultPackage(package);
 
-            SetStatus("初始化脚本...");
+            SetStatusText("初始化脚本...");
             LuaMgr.Instance.Init();
 
-            SetStatus("加载配置...");
+            SetStatusText("加载配置...");
             ConfigMgr.LoadTables();
 
-            SetStatus("点击登录");
+            SetStatusText("点击登录");
             BgBtn.onClick.AddListener(() =>
             {
                 var login = UIMgr.Instance.PushPanel<LoginDialogPanel>();
@@ -147,6 +148,7 @@ namespace Kirara.UI.Panel
             panel.OkBtnOnClick.AddListener(() =>
             {
                 UIMgr.Instance.PopPanel(panel);
+                ShowProgressBar(0f);
                 startDownload();
             });
         }
@@ -161,13 +163,30 @@ namespace Kirara.UI.Panel
             panel.OkBtnOnClick.AddListener(() =>
             {
                 UIMgr.Instance.PopPanel(panel);
+                ShowProgressBar(0f);
                 retry();
             });
+        }
+
+        private void OnDownloadSuccess()
+        {
+            HideProgressBar();
         }
 
         private void OnDownloadUpdate(DownloadUpdateData data)
         {
             UIProgressBar.Progress = data.Progress;
+        }
+
+        private void ShowProgressBar(float progress)
+        {
+            UIProgressBar.gameObject.SetActive(true);
+            UIProgressBar.Progress = progress;
+        }
+
+        private void HideProgressBar()
+        {
+            UIProgressBar.gameObject.SetActive(false);
         }
     }
 }

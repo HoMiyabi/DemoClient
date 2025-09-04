@@ -84,4 +84,5 @@ public static class MsgCmdId
     public const uint MsgCompleteQuestChain = 1673094375;
     public const uint NotifyObtainItems = 4200006441;
     public const uint NotifyRoleTakeDamage = 3190900487;
+    public const uint MsgRoleSetParry = 2144593015;
 }

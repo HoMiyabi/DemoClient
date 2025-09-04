@@ -6,36 +6,13 @@ namespace Kirara
     [LuaCallCSharp]
     public class UnitySingleton<T> : MonoBehaviour where T : UnitySingleton<T>
     {
-        private static T instance;
-
-        public static T Instance {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = FindObjectOfType<T>();
-                    if (instance != null)
-                    {
-                        DontDestroyOnLoad(instance.gameObject);
-                        Debug.LogWarning($"{typeof(T).Name}.Instance未设置，使用FindObjectOfType查找到");
-                    }
-                    else
-                    {
-                        var go = new GameObject(typeof(T).Name);
-                        instance = go.AddComponent<T>();
-                        DontDestroyOnLoad(go);
-                        Debug.LogWarning($"{typeof(T).Name}.Instance不存在，创建GameObject");
-                    }
-                }
-                return instance;
-            }
-        }
+        public static T Instance { get; private set; }
 
         protected virtual void Awake()
         {
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = this as T;
+                Instance = this as T;
                 DontDestroyOnLoad(gameObject);
             }
             else

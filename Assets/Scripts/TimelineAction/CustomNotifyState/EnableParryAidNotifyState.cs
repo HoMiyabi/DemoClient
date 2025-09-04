@@ -8,24 +8,29 @@ namespace Kirara.TimelineAction
     {
         public override void NotifyBegin(ActionPlayer player)
         {
-            var ch = player.GetComponent<RoleCtrl>();
-            if (ch == null)
+            var roleCtrl = player.GetComponent<RoleCtrl>();
+            if (roleCtrl)
             {
-                Debug.Log("ch == null");
-                return;
+                NetFn.Send(new MsgRoleSetParry()
+                {
+                    RoleId = roleCtrl.Role.Id,
+                    Parrying = true
+                });
             }
-            ch.EnableParryAid = true;
         }
 
         public override void NotifyEnd(ActionPlayer player)
         {
-            var ch = player.GetComponent<RoleCtrl>();
-            if (ch == null)
+            var roleCtrl = player.GetComponent<RoleCtrl>();
+            if (roleCtrl)
             {
-                Debug.Log("ch == null");
-                return;
+                NetFn.Send(new MsgRoleSetParry()
+                {
+                    RoleId = roleCtrl.Role.Id,
+                    Parrying = false
+                });
             }
-            ch.EnableParryAid = false;
+            // ch.EnableParryAid = false;
         }
     }
 }
