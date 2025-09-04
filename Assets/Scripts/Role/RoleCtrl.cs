@@ -338,5 +338,11 @@ namespace Kirara
         {
             Role.Set[EAttrType.CurrEnergy] -= cost;
         }
+
+        public void HandleTakeDamage(double damage)
+        {
+            Debug.Log($"{name} 角色被攻击，伤害：{damage}");
+            Role.Set[EAttrType.CurrHp] -= damage;
+        }
     }
 }
