@@ -140,8 +140,8 @@ namespace Kirara
                 }
             }
 
-            if (string.IsNullOrEmpty(action.inheritTransitionActionName)) return;
-            var baseAction = ActionDict[action.inheritTransitionActionName];
+            if (string.IsNullOrEmpty(action.inheritActionTransition)) return;
+            var baseAction = ActionDict[action.inheritActionTransition];
             transition = GetExecutableCommandTransition(baseAction, command, phase);
             if (transition != null)
             {
@@ -187,9 +187,9 @@ namespace Kirara
                 PlayAction(transition.actionName, transition.fadeDuration);
             }
 
-            if (string.IsNullOrEmpty(_action.inheritTransitionActionName)) return;
+            if (string.IsNullOrEmpty(_action.inheritActionTransition)) return;
 
-            var baseAction = ActionDict[_action.inheritTransitionActionName];
+            var baseAction = ActionDict[_action.inheritActionTransition];
             transition = GetExecutableSignalTransition(baseAction, signalName);
             if (transition != null)
             {

@@ -13,8 +13,8 @@ namespace Kirara.TimelineAction
         public bool isLoop;
         [FormerlySerializedAs("finishCancelInfo")] public FinishTransitionInfo finishTransition;
 
-        [TimelineActionName]
-        public string inheritTransitionActionName;
+        [FormerlySerializedAs("inheritTransitionActionName")] [TimelineActionName]
+        public string inheritActionTransition;
         public ActionParams actionParams;
         public List<CommandTransitionInfo> commandTransitions;
         public List<SignalTransitionInfo> signalTransitions;
