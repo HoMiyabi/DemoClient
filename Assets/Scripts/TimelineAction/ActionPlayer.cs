@@ -20,10 +20,10 @@ namespace Kirara.TimelineAction
         private KiraraActionSO _action;
 
         // 所有运行的通知状态
-        private readonly List<ActionNotifyState> _runningNotifyStates = new();
+        public readonly List<ActionNotifyState> _runningNotifyStates = new();
 
         // 所有的通知状态
-        private readonly List<ActionNotifyState> _notifyStates = new();
+        public List<ActionNotifyState> NotifyStates { get; } = new();
         private int _notifyStatesFront;
 
         // 所有的通知
@@ -51,7 +51,7 @@ namespace Kirara.TimelineAction
 
         private void ClearNotifyStates()
         {
-            _notifyStates.Clear();
+            NotifyStates.Clear();
             _notifyStatesFront = 0;
         }
 
@@ -77,7 +77,7 @@ namespace Kirara.TimelineAction
             ClearNotifies();
 
             _action = action;
-            UnpackAction(action, out _clip, _notifyStates, _notifies);
+            UnpackAction(action, out _clip, NotifyStates, _notifies);
 
             Time = 0f;
             IsPlaying = true;
@@ -90,9 +90,9 @@ namespace Kirara.TimelineAction
         {
             playCalled = false;
             // 处理 Notify State Begin
-            while (_notifyStatesFront < _notifyStates.Count && _notifyStates[_notifyStatesFront].start <= Time)
+            while (_notifyStatesFront < NotifyStates.Count && NotifyStates[_notifyStatesFront].start <= Time)
             {
-                var state = _notifyStates[_notifyStatesFront];
+                var state = NotifyStates[_notifyStatesFront];
                 _runningNotifyStates.Add(state);
                 state.NotifyBegin(this);
                 if (playCalled)

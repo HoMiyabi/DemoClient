@@ -31,7 +31,7 @@ namespace Kirara.Editor
             node = (StateNode)target;
             graphEditor = (MyNodeGraphEditor)window.graphEditor;
 
-            // base.OnBodyGUI();
+            base.OnBodyGUI();
 
             var tra = graphEditor.tra;
             PlayableDirector director = null;

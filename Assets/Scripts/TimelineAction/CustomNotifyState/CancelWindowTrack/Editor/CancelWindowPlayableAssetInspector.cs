@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Kirara.TimelineAction
 {
-    [CustomEditor(typeof(CancelWindowPlayableAsset))]
+    [CustomEditor(typeof(CommandTransitionNotifyState))]
     public class CancelWindowPlayableAssetInspector : UnityEditor.Editor
     {
-        private CancelWindowPlayableAsset _target;
+        private CommandTransitionNotifyState _target;
         private void OnEnable()
         {
-            _target = (CancelWindowPlayableAsset)target;
+            _target = (CommandTransitionNotifyState)target;
         }
 
         public override void OnInspectorGUI()
@@ -20,7 +20,7 @@ namespace Kirara.TimelineAction
                 EditorGUILayout.HelpBox("未选择动作列表", MessageType.Info);
                 return;
             }
-            string fullName = ActionListWindow.Instance.ActionList.namePrefix + _target.cancelInfo.actionName;
+            string fullName = ActionListWindow.Instance.ActionList.namePrefix + _target.commandTransition.actionName;
             if (ActionListWindow.Instance.ActionList != null)
             {
                 foreach (var action in ActionListWindow.Instance.ActionList.actions)

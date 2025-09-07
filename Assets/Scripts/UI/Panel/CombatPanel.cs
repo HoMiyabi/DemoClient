@@ -37,10 +37,10 @@ namespace Kirara.UI.Panel
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
-            if (PlayerSystem.Instance != null)
-            {
-                PlayerSystem.Instance.gameObject.SetActive(true);
-            }
+            // if (PlayerSystem.Instance != null)
+            // {
+            //     PlayerSystem.Instance.gameObject.SetActive(true);
+            // }
 
             input.Enable();
         }
@@ -50,10 +50,10 @@ namespace Kirara.UI.Panel
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
 
-            if (PlayerSystem.Instance != null)
-            {
-                PlayerSystem.Instance.gameObject.SetActive(false);
-            }
+            // if (PlayerSystem.Instance != null)
+            // {
+            //     PlayerSystem.Instance.gameObject.SetActive(false);
+            // }
 
             input.Disable();
         }

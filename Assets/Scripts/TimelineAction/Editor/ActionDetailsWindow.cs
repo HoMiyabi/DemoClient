@@ -65,7 +65,7 @@ namespace Kirara.TimelineAction
             if (!ActionListWindow.Instance.ActionList) return;
 
             var instance = ActionListWindow.Instance;
-            string fullName = instance.ActionList.namePrefix + _action.finishCancelInfo.actionName;
+            string fullName = instance.ActionList.namePrefix + _action.finishTransition.actionName;
             var next = instance.ActionList.actions.Find(a => a.name == fullName);
             if (next)
             {

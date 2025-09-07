@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
-using Kirara.Model;
 using Kirara.TimelineAction;
 using Kirara.UI.Panel;
-using Manager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using YooAsset;
@@ -57,7 +55,7 @@ namespace Kirara
 
         public bool switchEnabled = true;
 
-        public readonly Dictionary<EActionCommand, bool> pressedDict = new();
+        // public readonly Dictionary<EActionCommand, bool> pressedDict = new();
 
         protected override void Awake()
         {
@@ -143,7 +141,7 @@ namespace Kirara
             Player = Instantiate(playerPrefab, transform);
         }
 
-        public static bool TryConvertCommand(Guid id, out EActionCommand command)
+        public static bool TryConvertInputActionToCommand(Guid id, out EActionCommand command)
         {
             if (id == Instance.input.Combat.BaseAttack.id)
             {
@@ -167,7 +165,7 @@ namespace Kirara
             }
             else
             {
-                command = EActionCommand.Always;
+                command = EActionCommand.None;
                 return false;
             }
             return true;
@@ -200,11 +198,11 @@ namespace Kirara
         {
             // started中调用Disable会导致ActionId改变
             if (ctx.phase == InputActionPhase.Disabled) return;
-            if (TryConvertCommand(ctx.action.id, out var command))
+            if (TryConvertInputActionToCommand(ctx.action.id, out var command))
             {
-                pressedDict[command] = true;
+                FrontRoleCtrl.ActionCtrl.InputCommand(command, EActionCommandPhase.Down);
+                // pressedDict[command] = true;
             }
-            FrontRoleCtrl.ActionCtrl.Input(command, EActionCommandPhase.Down);
         }
 
         private void HandleCanceledInputToFrontCommand(InputAction.CallbackContext ctx)
@@ -212,11 +210,11 @@ namespace Kirara
             // started中调用Disable会导致ActionId改变
             if (ctx.phase == InputActionPhase.Disabled) return;
 
-            if (TryConvertCommand(ctx.action.id, out var command))
+            if (TryConvertInputActionToCommand(ctx.action.id, out var command))
             {
-                pressedDict[command] = false;
+                FrontRoleCtrl.ActionCtrl.InputCommand(command, EActionCommandPhase.Up);
+                // pressedDict[command] = false;
             }
-            FrontRoleCtrl.ActionCtrl.Input(command, EActionCommandPhase.Up);
         }
 
         private void HandleSwitchRoleNext(InputAction.CallbackContext ctx)
@@ -279,11 +277,36 @@ namespace Kirara
         private void Update()
         {
             Player.transform.position = FrontRoleCtrl.transform.position;
-            FrontRoleCtrl.ActionCtrl.UpdatePressed(pressedDict);
+            UpdateInputPress();
+            // FrontRoleCtrl.ActionCtrl.UpdatePressed(pressedDict);
 
             foreach (var roleCtrl in RoleCtrls)
             {
                 roleCtrl.Role.Update(Time.deltaTime);
+            }
+        }
+
+        private void UpdateInputPress()
+        {
+            if (input.Combat.BaseAttack.phase == InputActionPhase.Started)
+            {
+                FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.BaseAttack, EActionCommandPhase.Press);
+            }
+            if (input.Combat.Dodge.phase == InputActionPhase.Started)
+            {
+                FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.Dodge, EActionCommandPhase.Press);
+            }
+            if (input.Combat.Move.phase == InputActionPhase.Started)
+            {
+                FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.Move, EActionCommandPhase.Press);
+            }
+            if (input.Combat.SpecialAttack.phase == InputActionPhase.Started)
+            {
+                FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.SpecialAttack, EActionCommandPhase.Press);
+            }
+            if (input.Combat.Ultimate.phase == InputActionPhase.Started)
+            {
+                FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.Ultimate, EActionCommandPhase.Press);
             }
         }
     }

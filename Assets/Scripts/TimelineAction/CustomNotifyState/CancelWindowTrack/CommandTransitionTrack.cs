@@ -3,8 +3,9 @@ using UnityEngine.Timeline;
 
 namespace Kirara.TimelineAction
 {
-    [TrackClipType(typeof(CancelWindowPlayableAsset)), DisplayName("取消窗口轨道")]
-    public class CancelWindowTrack : TrackAsset
+    [TrackClipType(typeof(CommandTransitionNotifyState)),
+     DisplayName("指令转移轨道")]
+    public class CommandTransitionTrack : TrackAsset
     {
         protected override void OnCreateClip(TimelineClip clip)
         {

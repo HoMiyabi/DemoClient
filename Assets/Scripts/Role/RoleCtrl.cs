@@ -58,6 +58,7 @@ namespace Kirara
             ActionCtrl = GetComponent<ActionCtrl>();
             ActionCtrl.isActionExecutable = IsActionExecutable;
             ActionCtrl.onPlayAction = OnPlayAction;
+            ActionCtrl.onSetActionParams = SetActionParams;
 
             leftAssistVCam.enabled = false;
             rightAssistVCam.enabled = false;
@@ -65,7 +66,6 @@ namespace Kirara
 
         private void OnPlayAction(KiraraActionSO action, string actionName)
         {
-            SetActionParams(action.actionParams);
             NetFn.Send(new MsgRolePlayAction
             {
                 RoleId = Role.Id,

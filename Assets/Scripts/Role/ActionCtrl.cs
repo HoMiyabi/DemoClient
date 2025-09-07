@@ -12,17 +12,17 @@ namespace Kirara
         public ActionPlayer ActionPlayer { get; private set; }
 
         private KiraraActionSO _action;
-        public EActionState State { get; set; }
-
-        public readonly List<CancelWindowPlayableAsset> cancelWindowsAsset = new();
+        // public EActionState State { get; set; }
 
         public Func<KiraraActionSO, bool> isActionExecutable;
         public Action<KiraraActionSO, string> onPlayAction;
+        public Action<ActionParams> onSetActionParams;
+        public KiraraActionSO OverrideAction { get; set; }
 
-        private bool IsPressed(Dictionary<EActionCommand, bool> pressedDict, EActionCommand command)
-        {
-            return pressedDict.TryGetValue(command, out bool pressed) && pressed;
-        }
+        // private bool IsPressed(Dictionary<EActionCommand, bool> pressedDict, EActionCommand command)
+        // {
+        //     return pressedDict.TryGetValue(command, out bool pressed) && pressed;
+        // }
 
         private void Awake()
         {
@@ -35,96 +35,137 @@ namespace Kirara
             ActionDict = actionList.ActionDict;
         }
 
-        public void UpdatePressed(Dictionary<EActionCommand, bool> pressedDict)
-        {
-            // End只要Press就能Move，特判一下吧
-            if (_action != null &&
-                State == EActionState.End &&
-                IsPressed(pressedDict, EActionCommand.Move))
-            {
-                string actionName = GetDefaultAction(EActionCommand.Move);
-                if (!string.IsNullOrEmpty(actionName))
-                {
-                    var action = ActionDict[actionName];
+        // public void UpdatePressed(Dictionary<EActionCommand, bool> pressedDict)
+        // {
+        //     // End只要Press就能Move，特判一下吧
+        //     if (_action != null &&
+        //         State == EActionState.End &&
+        //         IsPressed(pressedDict, EActionCommand.Move))
+        //     {
+        //         string actionName = GetDefaultAction(EActionCommand.Move);
+        //         if (!string.IsNullOrEmpty(actionName))
+        //         {
+        //             var action = ActionDict[actionName];
+        //
+        //             if (ActionPriority.Get(action.actionState) > ActionPriority.Get(State))
+        //             {
+        //                 Debug.Log(($"优先级转移 {action.name} > {_action.name}"));
+        //                 PlayAction(actionName, 0.15f);
+        //             }
+        //         }
+        //     }
+        //
+        //     // 按下Press阶段的触发
+        //     foreach (var cancelWin in commandTransitionNotifyStates)
+        //     {
+        //         if (cancelWin.commandTransition.phase == EActionCommandPhase.Press &&
+        //             IsPressed(pressedDict, cancelWin.commandTransition.command) &&
+        //             cancelWin.Inside(ActionPlayer.Time))
+        //         {
+        //             PlayAction(cancelWin.commandTransition.actionName, cancelWin.commandTransition.fadeDuration);
+        //             return;
+        //         }
+        //     }
+        // }
 
-                    if (ActionPriority.Get(action.actionState) > ActionPriority.Get(State))
+        public void InputCommand(EActionCommand command, EActionCommandPhase phase)
+        {
+            if (OverrideAction)
+            {
+                InputCommand(OverrideAction, command, phase);
+            }
+            else if (_action)
+            {
+                InputCommand(_action, command, phase);
+            }
+        }
+
+        private void InputCommand(KiraraActionSO action, EActionCommand command, EActionCommandPhase phase)
+        {
+            if (ActionCommandTransition(action, command, phase)) return;
+
+            // 检查指令跳转通知状态
+            foreach (var state in ActionPlayer._runningNotifyStates)
+            {
+                if (state is CommandTransitionNotifyState transitionState)
+                {
+                    if (transitionState.Check(command, phase, ActionPlayer.Time) &&
+                        TryPlayAction(transitionState.commandTransition.actionName,
+                            transitionState.commandTransition.fadeDuration))
                     {
-                        Debug.Log(($"优先级转移 {action.name} > {_action.name}"));
-                        PlayAction(actionName, 0.15f);
+                        return;
                     }
                 }
             }
 
-            // 按下Press阶段的触发
-            foreach (var cancelWin in cancelWindowsAsset)
+            if (!string.IsNullOrEmpty(action.inheritTransitionActionName))
             {
-                if (cancelWin.cancelInfo.phase == EActionCommandPhase.Press &&
-                    IsPressed(pressedDict, cancelWin.cancelInfo.command) &&
-                    cancelWin.Inside(ActionPlayer.Time))
-                {
-                    PlayAction(cancelWin.cancelInfo.actionName, cancelWin.cancelInfo.fadeDuration);
-                    return;
-                }
+                var baseAction = ActionDict[action.inheritTransitionActionName];
+                ActionCommandTransition(baseAction, command, phase);
             }
         }
 
-        public void Input(EActionCommand command, EActionCommandPhase phase)
+        private bool ActionCommandTransition(KiraraActionSO action, EActionCommand command, EActionCommandPhase phase)
         {
-            if (_action == null) return;
-
-            // 检查取消窗口转移
-            foreach (var cancelWin in cancelWindowsAsset)
+            // 检查动作的指令跳转
+            if (action.commandTransitions != null)
             {
-                if (cancelWin.Check(command, phase, ActionPlayer.Time) &&
-                    TryPlayAction(cancelWin.cancelInfo.actionName, cancelWin.cancelInfo.fadeDuration))
+                foreach (var transition in action.commandTransitions)
                 {
-                    return;
-                }
-            }
-
-            // 优先级转移
-            if (phase == EActionCommandPhase.Down)
-            {
-                string actionName = GetDefaultAction(command);
-                if (!string.IsNullOrEmpty(actionName))
-                {
-                    var action = ActionDict[actionName];
-                    if (ActionPriority.Get(action.actionState) > ActionPriority.Get(State))
+                    if (transition.command == command &&
+                        transition.phase == phase &&
+                        TryPlayAction(transition.actionName, transition.fadeDuration))
                     {
-                        // Debug.Log(($"优先级转移 [{action.name}] > [{_action.name}]"));
-                        PlayAction(actionName, 0.15f);
+                        return true;
                     }
                 }
             }
+
+            return false;
+
+            // // 优先级转移
+            // if (phase == EActionCommandPhase.Down)
+            // {
+            //     string actionName = GetDefaultAction(command);
+            //     if (!string.IsNullOrEmpty(actionName))
+            //     {
+            //         var action = ActionDict[actionName];
+            //         if (ActionPriority.Get(action.actionState) > ActionPriority.Get(State))
+            //         {
+            //             // Debug.Log(($"优先级转移 [{action.name}] > [{_action.name}]"));
+            //             PlayAction(actionName, 0.15f);
+            //         }
+            //     }
+            // }
         }
 
-        private string GetDefaultAction(EActionCommand command)
-        {
-            if (command == EActionCommand.Move)
-            {
-                return ActionName.Walk_Start;
-            }
-            if (command == EActionCommand.Dodge)
-            {
-                return ActionName.Evade_Back;
-            }
-            if (command == EActionCommand.BaseAttack)
-            {
-                return ActionName.Attack_Normal_01;
-            }
-            if (command == EActionCommand.SpecialAttack)
-            {
-                if (IsActionExecutable(ActionName.Attack_Ex_Special)) return ActionName.Attack_Ex_Special;
-                if (IsActionExecutable(ActionName.Attack_Special)) return ActionName.Attack_Special;
-            }
-            return null;
-        }
+        // private string GetDefaultAction(EActionCommand command)
+        // {
+        //     if (command == EActionCommand.Move)
+        //     {
+        //         return ActionName.Walk_Start;
+        //     }
+        //     if (command == EActionCommand.Dodge)
+        //     {
+        //         return ActionName.Evade_Back;
+        //     }
+        //     if (command == EActionCommand.BaseAttack)
+        //     {
+        //         return ActionName.Attack_Normal_01;
+        //     }
+        //     if (command == EActionCommand.SpecialAttack)
+        //     {
+        //         if (IsActionExecutable(ActionName.Attack_Ex_Special)) return ActionName.Attack_Ex_Special;
+        //         if (IsActionExecutable(ActionName.Attack_Special)) return ActionName.Attack_Special;
+        //     }
+        //     return null;
+        // }
 
-        public bool IsActionExecutable(string actionName)
-        {
-            var action = ActionDict[actionName];
-            return IsActionExecutableInternal(action);
-        }
+        // public bool IsActionExecutable(string actionName)
+        // {
+        //     var action = ActionDict[actionName];
+        //     return IsActionExecutableInternal(action);
+        // }
 
         private bool IsActionExecutableInternal(KiraraActionSO action)
         {
@@ -155,8 +196,10 @@ namespace Kirara
         private void PlayActionInternal(KiraraActionSO action, string actionName, float fadeDuration = 0f, Action onFinish = null)
         {
             _action = action;
-            State = action.actionState;
+            OverrideAction = null;
+            // State = action.actionState;
             onPlayAction?.Invoke(action, actionName);
+            onSetActionParams?.Invoke(action.actionParams);
 
             // string s1 = _action?.name ?? "null";
             // string s2 = action.name ?? "null";
@@ -186,7 +229,7 @@ namespace Kirara
             // 结束取消
             if (_action.isLoop) return;
 
-            var finishCancel = _action.finishCancelInfo;
+            var finishCancel = _action.finishTransition;
             if (!string.IsNullOrEmpty(finishCancel.actionName))
             {
                 // Debug.Log($"{name} 添加结束转移到{_action.finishNextActionName}");
@@ -199,6 +242,44 @@ namespace Kirara
             {
                 Debug.LogWarning($"{name} {_action.name} 没有结束取消");
             }
+        }
+
+        public void InputSignal(string signalName)
+        {
+            if (OverrideAction)
+            {
+                InputSignal(OverrideAction, signalName);
+            }
+            else if (_action)
+            {
+                InputSignal(_action, signalName);
+            }
+        }
+
+        private void InputSignal(KiraraActionSO action, string signalName)
+        {
+            if (ActionSignalTransition(action, signalName)) return;
+
+            if (string.IsNullOrEmpty(_action.inheritTransitionActionName)) return;
+
+            var baseAction = ActionDict[_action.inheritTransitionActionName];
+            ActionSignalTransition(baseAction, signalName);
+        }
+
+        private bool ActionSignalTransition(KiraraActionSO action, string signalName)
+        {
+            if (action.signalTransitions != null)
+            {
+                foreach (var signalTransition in action.signalTransitions)
+                {
+                    if (signalTransition.signalName == signalName &&
+                        TryPlayAction(signalTransition.actionName, signalTransition.fadeDuration))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

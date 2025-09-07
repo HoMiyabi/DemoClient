@@ -3,7 +3,7 @@
 namespace Kirara.TimelineAction
 {
     [DisplayName("攻击提示通知")]
-    public class AttackTipMarker : ActionNotify
+    public class AttackTipNotify : ActionNotify
     {
         public bool canParry;
 

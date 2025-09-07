@@ -2,11 +2,11 @@
 {
     public enum EActionCommand
     {
-        Always,
-        Move,
-        Dodge,
-        BaseAttack,
-        SpecialAttack,
-        Ultimate
+        None = 0,
+        Move = 1,
+        Dodge = 2,
+        BaseAttack = 3,
+        SpecialAttack = 4,
+        Ultimate = 5
     }
 }
