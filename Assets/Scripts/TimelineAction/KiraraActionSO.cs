@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TimelineAction;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Timeline;
@@ -10,13 +9,13 @@ namespace Kirara.TimelineAction
     public class KiraraActionSO : TimelineAsset
     {
         public int actionId;
-        public EActionState actionState;
-        public ActionParams actionParams;
 
         public bool isLoop;
         [FormerlySerializedAs("finishCancelInfo")] public FinishTransitionInfo finishTransition;
 
+        [TimelineActionName]
         public string inheritTransitionActionName;
+        public ActionParams actionParams;
         public List<CommandTransitionInfo> commandTransitions;
         public List<SignalTransitionInfo> signalTransitions;
     }

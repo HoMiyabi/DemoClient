@@ -8,10 +8,10 @@ namespace Kirara.TimelineAction
     {
         public float cost;
 
-        public override void Notify(ActionPlayer player)
+        public override void Notify(ActionCtrl actionCtrl)
         {
-            base.Notify(player);
-            if (player.TryGetComponent<RoleCtrl>(out var roleCtrl))
+            base.Notify(actionCtrl);
+            if (actionCtrl.TryGetComponent<RoleCtrl>(out var roleCtrl))
             {
                 roleCtrl.ConsumeEnergy(cost);
             }

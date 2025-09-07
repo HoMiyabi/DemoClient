@@ -61,30 +61,6 @@ namespace Kirara.TimelineAction
         private void DrawAction()
         {
             editor.OnInspectorGUI();
-
-            if (!ActionListWindow.Instance.ActionList) return;
-
-            var instance = ActionListWindow.Instance;
-            string fullName = instance.ActionList.namePrefix + _action.finishTransition.actionName;
-            var next = instance.ActionList.actions.Find(a => a.name == fullName);
-            if (next)
-            {
-                if (GUILayout.Button("切换动作"))
-                {
-                    instance.Action = next;
-                }
-            }
-            else
-            {
-                EditorGUILayout.HelpBox("未找到动作", MessageType.Info);
-            }
-
-            if (GUILayout.Button("重置参数为状态默认"))
-            {
-                Undo.RecordObject(_action, "重置参数为状态默认");
-                _action.actionParams = ActionParams.GetStateDefault(_action.actionState);
-                EditorUtility.SetDirty(_action);
-            }
         }
 
         private void DrawNull()

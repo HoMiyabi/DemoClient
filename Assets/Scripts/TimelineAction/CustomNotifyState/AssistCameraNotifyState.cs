@@ -2,20 +2,18 @@ namespace Kirara.TimelineAction
 {
     public class AssistCameraNotifyState : ActionNotifyState
     {
-        public override void NotifyBegin(ActionPlayer player)
+        public override void NotifyBegin(ActionCtrl actionCtrl)
         {
-            base.NotifyBegin(player);
-            var roleCtrl = player.GetComponent<RoleCtrl>();
+            var roleCtrl = actionCtrl.GetComponent<RoleCtrl>();
             if (roleCtrl)
             {
                 roleCtrl.EnterAssistCamera();
             }
         }
 
-        public override void NotifyEnd(ActionPlayer player)
+        public override void NotifyEnd(ActionCtrl actionCtrl)
         {
-            base.NotifyEnd(player);
-            var roleCtrl = player.GetComponent<RoleCtrl>();
+            var roleCtrl = actionCtrl.GetComponent<RoleCtrl>();
             if (roleCtrl)
             {
                 roleCtrl.ExitAssistCamera();

@@ -20,9 +20,9 @@ namespace Kirara.TimelineAction
             return ParticleControlPlayable.Create(graph, owner, prefab, position, rotation, scale);
         }
 
-        public override void NotifyBegin(ActionPlayer player)
+        public override void NotifyBegin(ActionCtrl actionCtrl)
         {
-            var transform = player.transform;
+            var transform = actionCtrl.transform;
             var particle = ParticleMgr.Instance.Play(prefab, transform);
             particle.transform.localPosition = position;
             particle.transform.localRotation = Quaternion.Euler(rotation);

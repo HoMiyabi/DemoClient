@@ -8,9 +8,9 @@ namespace Kirara.TimelineAction
         private Vector3 worldPos;
         private Vector3 localPos;
 
-        public override void NotifyBegin(ActionPlayer player)
+        public override void NotifyBegin(ActionCtrl actionCtrl)
         {
-            var ch = player.GetComponent<RoleCtrl>();
+            var ch = actionCtrl.GetComponent<RoleCtrl>();
             if (ch != null)
             {
                 vcamFollow = ch.vcamFollow;
@@ -23,7 +23,7 @@ namespace Kirara.TimelineAction
             }
         }
 
-        public override void NotifyTick(ActionPlayer player, float time)
+        public override void NotifyTick(ActionCtrl actionCtrl, float time)
         {
             if (vcamFollow != null)
             {
@@ -31,7 +31,7 @@ namespace Kirara.TimelineAction
             }
         }
 
-        public override void NotifyEnd(ActionPlayer player)
+        public override void NotifyEnd(ActionCtrl actionCtrl)
         {
             if (vcamFollow != null)
             {

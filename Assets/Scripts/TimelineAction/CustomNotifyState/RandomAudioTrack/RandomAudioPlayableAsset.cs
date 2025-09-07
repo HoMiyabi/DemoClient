@@ -37,9 +37,9 @@ namespace Kirara.TimelineAction
             }
         }
 
-        public override void NotifyBegin(ActionPlayer player)
+        public override void NotifyBegin(ActionCtrl actionCtrl)
         {
-            var transform = player.transform;
+            var transform = actionCtrl.transform;
             AudioMgr.Instance.PlaySFX(
                 audioClips.RandomItem(dontPlayProbability),
                 transform.position);

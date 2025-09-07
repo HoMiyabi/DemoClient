@@ -29,24 +29,24 @@ namespace Kirara.TimelineAction
             return ScriptPlayable<ActionNotifyStatePlayable>.Create(graph);
         }
 
-        public override void NotifyBegin(ActionPlayer player)
+        public override void NotifyBegin(ActionCtrl actionCtrl)
         {
-            if (player.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
+            if (actionCtrl.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
             {
                 monsterCtrl.BoxBegin(this);
                 return;
             }
 
-            if (player.TryGetComponent<RoleCtrl>(out var roleCtrl))
+            if (actionCtrl.TryGetComponent<RoleCtrl>(out var roleCtrl))
             {
                 roleCtrl.BoxBegin(this);
                 return;
             }
         }
 
-        public override void NotifyEnd(ActionPlayer player)
+        public override void NotifyEnd(ActionCtrl actionCtrl)
         {
-            if (player.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
+            if (actionCtrl.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
             {
                 monsterCtrl.BoxEnd(this);
                 return;

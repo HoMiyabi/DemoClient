@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Kirara.Model;
 using Kirara.TimelineAction;
 using UnityEngine;
@@ -9,17 +8,17 @@ namespace Kirara
     public class SimRoleCtrl : MonoBehaviour
     {
         public KiraraActionListSO actionList;
-        private Dictionary<string, KiraraActionSO> ActionDict { get; set; }
         private Animator Animator { get; set; }
         private SimRole SimRole { get; set; }
-        private ActionPlayer ActionPlayer { get; set; }
+        private ActionCtrl ActionCtrl { get; set; }
         private float followSpeed = 25f;
 
         private void Awake()
         {
             Animator = GetComponent<Animator>();
-            ActionPlayer = GetComponent<ActionPlayer>();
-            ActionDict = actionList.ActionDict;
+            ActionCtrl = GetComponent<ActionCtrl>();
+            ActionCtrl.OnSetActionParams = SetActionParams;
+            ActionCtrl.EnableFinishTransition = false;
         }
 
         public void Set(SimRole simRole)
@@ -47,11 +46,9 @@ namespace Kirara
             transform.rotation *= Animator.deltaRotation;
         }
 
-        public void PlayAction(string actionName, float fadeDuration = 0f, Action onEnd = null)
+        public void PlayAction(string actionName, float fadeDuration = 0f, Action onFinish = null)
         {
-            var action = ActionDict[actionName];
-            SetActionParams(action.actionParams);
-            ActionPlayer.Play(action, actionName, fadeDuration, onEnd);
+            ActionCtrl.PlayAction(actionName, fadeDuration, onFinish);
         }
 
         private void SetActionParams(ActionParams actionParams)

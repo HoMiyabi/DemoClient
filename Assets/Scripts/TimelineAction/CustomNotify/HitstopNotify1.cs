@@ -9,9 +9,9 @@ namespace Kirara.TimelineAction
         public float duration = 0.05f;
         public float animationSpeed;
 
-        public override void Notify(ActionPlayer player)
+        public override void Notify(ActionCtrl actionCtrl)
         {
-            var ch = player.GetComponent<RoleCtrl>();
+            var ch = actionCtrl.GetComponent<RoleCtrl>();
             if (!ch) return;
             ch.TryTriggerHitstop(duration, animationSpeed);
         }

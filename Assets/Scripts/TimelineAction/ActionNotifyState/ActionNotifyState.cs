@@ -15,9 +15,9 @@ namespace Kirara.TimelineAction
             return ScriptPlayable<ActionNotifyStatePlayable>.Create(graph);
         }
 
-        public virtual void NotifyBegin(ActionPlayer player) {}
-        public virtual void NotifyTick(ActionPlayer player, float time) {}
-        public virtual void NotifyEnd(ActionPlayer player) {}
+        public virtual void NotifyBegin(ActionCtrl actionCtrl) {}
+        public virtual void NotifyTick(ActionCtrl actionCtrl, float time) {}
+        public virtual void NotifyEnd(ActionCtrl actionCtrl) {}
         public ClipCaps clipCaps => ClipCaps.None;
     }
 }

@@ -56,15 +56,15 @@ namespace Kirara
             ChGravity = GetComponent<ChGravity>();
 
             ActionCtrl = GetComponent<ActionCtrl>();
-            ActionCtrl.isActionExecutable = IsActionExecutable;
-            ActionCtrl.onPlayAction = OnPlayAction;
-            ActionCtrl.onSetActionParams = SetActionParams;
+            ActionCtrl.IsActionExecutable = IsActionExecutable;
+            ActionCtrl.OnExecuteAction = OnExecuteAction;
+            ActionCtrl.OnSetActionParams = SetActionParams;
 
             leftAssistVCam.enabled = false;
             rightAssistVCam.enabled = false;
         }
 
-        private void OnPlayAction(KiraraActionSO action, string actionName)
+        private void OnExecuteAction(KiraraActionSO action, string actionName)
         {
             NetFn.Send(new MsgRolePlayAction
             {
@@ -173,9 +173,9 @@ namespace Kirara
         {
             if (duration <= 0f) return;
 
-            ActionCtrl.ActionPlayer.Speed = speed;
+            ActionCtrl.Speed = speed;
             await UniTask.WaitForSeconds(duration);
-            ActionCtrl.ActionPlayer.Speed = 1f;
+            ActionCtrl.Speed = 1f;
         }
 
         private void OnAnimatorMove()
@@ -320,9 +320,9 @@ namespace Kirara
             ActionCtrl.PlayAction(ActionName.Attack_ParryAid_H);
 
             const float duration = 0.5f;
-            ActionCtrl.ActionPlayer.Speed = 0f;
+            ActionCtrl.Speed = 0f;
             await UniTask.WaitForSeconds(duration);
-            ActionCtrl.ActionPlayer.Speed = 1f;
+            ActionCtrl.Speed = 1f;
         }
 
         public void BoxBegin(BoxPlayableAsset box)
@@ -342,7 +342,7 @@ namespace Kirara
         {
             Debug.Log($"{name} 角色被攻击，伤害：{damage}");
             Role.Set[EAttrType.CurrHp] -= damage;
-            if (ActionCtrl.ActionDict.ContainsKey("Hit_L_Front"))
+            if (ActionCtrl.TryGetAction("Hit_L_Front", out _))
             {
                 ActionCtrl.PlayAction("Hit_L_Front");
             }

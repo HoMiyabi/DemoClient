@@ -63,17 +63,17 @@ namespace Kirara
         {
             if (duration <= 0f) return;
 
-            ActionCtrl.ActionPlayer.Speed = speed;
+            ActionCtrl.Speed = speed;
             await UniTask.WaitForSeconds(duration);
-            ActionCtrl.ActionPlayer.Speed = 1f;
+            ActionCtrl.Speed = 1f;
         }
 
         public async UniTaskVoid EnterParried()
         {
             const float duration = 0.5f;
-            ActionCtrl.ActionPlayer.Speed = 0f;
+            ActionCtrl.Speed = 0f;
             await UniTask.WaitForSeconds(duration);
-            ActionCtrl.ActionPlayer.Speed = 1f;
+            ActionCtrl.Speed = 1f;
             // todo)) 恢复进入Hit
             // MonsterAICtrl.EnterState(MonsterAICtrl.State.Hit);
         }

@@ -22,7 +22,7 @@ namespace Kirara.TimelineAction
             }
         }
 
-        public override void Notify(ActionPlayer player)
+        public override void Notify(ActionCtrl actionCtrl)
         {
             CinemachineImpulseController.Instance
                 .GenerateImpulse(angle, speed);

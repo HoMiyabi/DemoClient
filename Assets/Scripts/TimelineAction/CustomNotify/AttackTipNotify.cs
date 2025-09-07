@@ -7,9 +7,9 @@ namespace Kirara.TimelineAction
     {
         public bool canParry;
 
-        public override void Notify(ActionPlayer player)
+        public override void Notify(ActionCtrl actionCtrl)
         {
-            if (player.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
+            if (actionCtrl.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
             {
                 monsterCtrl.DoAttackTip(canParry);
             }

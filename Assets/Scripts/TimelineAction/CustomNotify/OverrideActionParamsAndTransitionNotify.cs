@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using UnityEngine;
 
 namespace Kirara.TimelineAction
 {
@@ -8,17 +7,13 @@ namespace Kirara.TimelineAction
     {
         public string actionName;
 
-        public override void Notify(ActionPlayer player)
+        public override void Notify(ActionCtrl actionCtrl)
         {
-            var actionCtrl = player.GetComponent<ActionCtrl>();
-            if (actionCtrl == null)
+            if (actionCtrl.TryGetAction(actionName, out var action))
             {
-                Debug.LogWarning("ActionCtrl is null");
-                return;
+                actionCtrl.OverrideAction = action;
+                actionCtrl.OnSetActionParams?.Invoke(action.actionParams);
             }
-            var action = actionCtrl.ActionDict[actionName];
-            actionCtrl.OverrideAction = action;
-            actionCtrl.onSetActionParams?.Invoke(action.actionParams);
         }
     }
 }
