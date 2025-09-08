@@ -4,7 +4,7 @@ using UnityEngine.Timeline;
 namespace Kirara.TimelineAction
 {
     [CustomTimelineEditor(typeof(CommandTransitionNotifyState))]
-    public class CancelWindowPlayableAssetEditor : ClipEditor
+    public class CommandTransitionNotifyStateClipEditor : ClipEditor
     {
         public override void OnClipChanged(TimelineClip clip)
         {

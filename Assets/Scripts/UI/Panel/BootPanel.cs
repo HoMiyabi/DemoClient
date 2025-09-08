@@ -25,6 +25,7 @@ namespace Kirara.UI.Panel
         }
         #endregion
 
+        public string mainSceneName;
         public GameObject DialogPanelPrefab;
         private PatchController patchCtrl;
 
@@ -91,7 +92,10 @@ namespace Kirara.UI.Panel
                     Debug.Log("点击进入游戏");
                     StatusText.text = "点击进入游戏";
 
-                    BgBtn.onClick.AddListener(() => { LoadSceneMgr.Instance.LoadScene("CombatScene"); });
+                    BgBtn.onClick.AddListener(() =>
+                    {
+                        LoadSceneMgr.Instance.LoadScene(mainSceneName);
+                    });
                 });
             });
         }

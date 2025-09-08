@@ -66,9 +66,10 @@ namespace Kirara.TimelineAction
 
         public bool TryGetAction(string actionName, out KiraraActionSO action)
         {
-            if (ActionDict.TryGetValue(actionName, out action)) return true;
+            if (actionName != null && ActionDict.TryGetValue(actionName, out action)) return true;
 
-            Debug.LogWarning($"{name} 没有动作 {actionName}");
+            action = null;
+            Debug.LogWarning($"{name}没有动作: {actionName}");
             return false;
         }
 
@@ -88,16 +89,14 @@ namespace Kirara.TimelineAction
 
         private void PlayActionInternal(KiraraActionSO action, string actionName, float fadeDuration = 0f, Action onFinish = null)
         {
+            playCalled = true;
             _action = action;
             OverrideAction = null;
 
-            playCalled = true;
-
+            ClearNotifies();
+            ClearNotifyStates();
             // 切换的时候调用之前所有的end
             EndAndClearRunningNotifyStates();
-
-            ClearNotifyStates();
-            ClearNotifies();
 
             ActionUnpacker.Unpack(action, out _clip, _notifyStates, _notifies);
 
@@ -105,10 +104,10 @@ namespace Kirara.TimelineAction
             IsPlaying = true;
             _onFinish = onFinish;
 
-            Animator.CrossFadeInFixedTime(actionName, fadeDuration);
-
             OnExecuteAction?.Invoke(action, actionName);
             OnSetActionParams?.Invoke(action.actionParams);
+
+            Animator.CrossFadeInFixedTime(actionName, fadeDuration);
         }
 
         public void PlayAction(string actionName, float fadeDuration = 0f, Action onFinish = null)
