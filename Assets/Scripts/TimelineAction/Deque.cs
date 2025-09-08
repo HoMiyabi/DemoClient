@@ -1,6 +1,6 @@
 using System;
 
-namespace KiraraLoopScroll
+namespace Kirara.TimelineAction
 {
     /// <summary>
     /// 数组实现的简易双端队列

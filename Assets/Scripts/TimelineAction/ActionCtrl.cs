@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Kirara.TimelineAction;
 using UnityEngine;
 
-namespace Kirara
+namespace Kirara.TimelineAction
 {
     public class ActionCtrl : MonoBehaviour
     {
@@ -27,7 +26,32 @@ namespace Kirara
 
         public bool EnableFinishTransition { get; set; } = true;
 
+        public Deque<InputBufferItem> InputBuffer { get; private set; } = new(128);
+
+        public struct InputBufferItem
+        {
+            public EActionCommand command;
+            public EActionCommandPhase phase;
+            public double time;
+            public bool used;
+        }
+
         private Animator Animator { get; set; }
+
+        private bool playCalled = false;
+
+        // 所有的通知
+        private readonly List<ActionNotify> _notifies = new();
+        private int _notifiesFront;
+
+        // 所有的通知状态
+        private readonly List<ActionNotifyState> _notifyStates = new();
+        private int _notifyStatesFront;
+
+        // 所有运行的通知状态
+        private readonly List<ActionNotifyState> _runningNotifyStates = new();
+
+        private Action _onFinish;
 
         private void Awake()
         {
@@ -48,7 +72,7 @@ namespace Kirara
             return false;
         }
 
-        private bool IsActionExecutableInternal(string actionName)
+        public bool IsActionExecutableInternal(string actionName)
         {
             if (!TryGetAction(actionName, out var action)) return false;
 
@@ -67,10 +91,21 @@ namespace Kirara
             _action = action;
             OverrideAction = null;
 
-            // 结束转移
-            AddEndTransition(ref onFinish);
+            playCalled = true;
 
-            Play(action, actionName, fadeDuration, onFinish);
+            // 切换的时候调用之前所有的end
+            EndAndClearRunningNotifyStates();
+
+            ClearNotifyStates();
+            ClearNotifies();
+
+            ActionUnpacker.Unpack(action, out _clip, _notifyStates, _notifies);
+
+            Time = 0f;
+            IsPlaying = true;
+            _onFinish = onFinish;
+
+            Animator.CrossFadeInFixedTime(actionName, fadeDuration);
 
             OnExecuteAction?.Invoke(action, actionName);
             OnSetActionParams?.Invoke(action.actionParams);
@@ -82,47 +117,46 @@ namespace Kirara
             PlayActionInternal(action, actionName, fadeDuration, onFinish);
         }
 
-        private void AddEndTransition(ref Action onFinish)
-        {
-            // 结束取消
-            if (_action.isLoop) return;
-
-            var finishTransition = _action.finishTransition;
-            if (!string.IsNullOrEmpty(finishTransition.actionName))
-            {
-                onFinish += () =>
-                {
-                    PlayAction(finishTransition.actionName, finishTransition.fadeDuration);
-                };
-            }
-            else
-            {
-                Debug.LogWarning($"{name} {_action.name} 没有结束取消");
-            }
-        }
-
         #region Input Transition
 
         public void InputCommand(EActionCommand command, EActionCommandPhase phase)
         {
+            bool ok = false;
             if (OverrideAction)
             {
-                InputCommand(OverrideAction, command, phase);
+                ok = InputCommand(OverrideAction, command, phase);
             }
             else if (_action)
             {
-                InputCommand(_action, command, phase);
+                ok = InputCommand(_action, command, phase);
+            }
+
+            double time = UnityEngine.Time.timeAsDouble;
+            const double dt = 1;
+            if (!ok)
+            {
+                InputBuffer.PushBack(new InputBufferItem
+                {
+                    command = command,
+                    phase = phase,
+                    time = time
+                });
+            }
+            while (InputBuffer.TryPeekFront(out var item) &&
+                   item.time < time - dt)
+            {
+                InputBuffer.PopFront();
             }
         }
 
-        private void InputCommand(KiraraActionSO action, EActionCommand command, EActionCommandPhase phase)
+        private bool InputCommand(KiraraActionSO action, EActionCommand command, EActionCommandPhase phase)
         {
             var transition = GetExecutableCommandTransition(action, command, phase);
             if (transition != null)
             {
                 // Debug.Log($"{name} 输入指令 {command} {phase} 跳转到 {transition.actionName}");
                 PlayAction(transition.actionName, transition.fadeDuration);
-                return;
+                return true;
             }
 
             // 检查指令跳转通知状态
@@ -135,19 +169,22 @@ namespace Kirara
                         IsActionExecutableInternal(commandTransition.actionName))
                     {
                         PlayAction(commandTransition.actionName, commandTransition.fadeDuration);
-                        return;
+                        return true;
                     }
                 }
             }
 
-            if (string.IsNullOrEmpty(action.inheritActionTransition)) return;
+            if (string.IsNullOrEmpty(action.inheritActionTransition)) return false;
+
             var baseAction = ActionDict[action.inheritActionTransition];
             transition = GetExecutableCommandTransition(baseAction, command, phase);
             if (transition != null)
             {
                 // Debug.Log($"{name} 输入指令 {command} {phase} 跳转到 {transition.actionName}");
                 PlayAction(transition.actionName, transition.fadeDuration);
+                return true;
             }
+            return false;
         }
 
         private CommandTransitionInfo GetExecutableCommandTransition(
@@ -218,41 +255,16 @@ namespace Kirara
         #region Action Player
         private AnimationClip _clip;
 
-        // 所有运行的通知状态
-        public readonly List<ActionNotifyState> _runningNotifyStates = new();
-
-        // 所有的通知状态
-        private readonly List<ActionNotifyState> _notifyStates = new();
-        private int _notifyStatesFront;
-
-        // 所有的通知
-        private readonly List<ActionNotify> _notifies = new();
-        private int _notifiesFront;
-
-        private Action _onFinish;
-
-        public void Stop()
+        private void ClearNotifies()
         {
-            Debug.Log($"{name} Action Player Stop");
-            _clip = null;
-            Time = 0f;
-            IsPlaying = false;
-            _runningNotifyStates.Clear();
-            ClearNotifyStates();
-            ClearNotifies();
-            // _animator.enabled = false;
+            _notifies.Clear();
+            _notifiesFront = 0;
         }
 
         private void ClearNotifyStates()
         {
             _notifyStates.Clear();
             _notifyStatesFront = 0;
-        }
-
-        private void ClearNotifies()
-        {
-            _notifies.Clear();
-            _notifiesFront = 0;
         }
 
         private void EndAndClearRunningNotifyStates()
@@ -264,25 +276,16 @@ namespace Kirara
             _runningNotifyStates.Clear();
         }
 
-        private bool playCalled = false;
-        private void Play(KiraraActionSO action, string stateName, float fadeDuration = 0f, Action onFinish = null)
+        public void Stop()
         {
-            playCalled = true;
-
-            // 切换的时候调用之前所有的end
-            EndAndClearRunningNotifyStates();
-
-            ClearNotifyStates();
-            ClearNotifies();
-
-            _action = action;
-            ActionUnpacker.Unpack(action, out _clip, _notifyStates, _notifies);
-
+            Debug.Log($"{name} Action Player Stop");
+            _clip = null;
             Time = 0f;
-            IsPlaying = true;
-            _onFinish = onFinish;
-
-            Animator.CrossFadeInFixedTime(stateName, fadeDuration);
+            IsPlaying = false;
+            ClearNotifies();
+            ClearNotifyStates();
+            EndAndClearRunningNotifyStates();
+            // _animator.enabled = false;
         }
 
         private void ProcessNotifies()
