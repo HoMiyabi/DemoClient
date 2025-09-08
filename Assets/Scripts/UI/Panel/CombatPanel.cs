@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Kirara.UI.Panel
 {
@@ -10,6 +11,11 @@ namespace Kirara.UI.Panel
         {
             input = new GameInput();
             AddInput();
+        }
+
+        private void OnDestroy()
+        {
+            input.Dispose();
         }
 
         private void AddInput()
@@ -37,10 +43,7 @@ namespace Kirara.UI.Panel
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
-            // if (PlayerSystem.Instance != null)
-            // {
-            //     PlayerSystem.Instance.gameObject.SetActive(true);
-            // }
+            PlayerSystem.Instance.EnableInput = true;
 
             input.Enable();
         }
@@ -50,10 +53,7 @@ namespace Kirara.UI.Panel
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
 
-            // if (PlayerSystem.Instance != null)
-            // {
-            //     PlayerSystem.Instance.gameObject.SetActive(false);
-            // }
+            PlayerSystem.Instance.EnableInput = false;
 
             input.Disable();
         }

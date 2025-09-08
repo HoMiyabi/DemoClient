@@ -34,10 +34,10 @@ namespace Kirara
                 if (_frontRoleIdx == value) return;
                 _frontRoleIdx = value;
 
-                var ch = RoleCtrls[_frontRoleIdx];
-                ch.VCam = vcam;
-                vcam.Follow = ch.vcamFollow;
-                vcam.LookAt = ch.vcamLookAt;
+                var roleCtrl = RoleCtrls[_frontRoleIdx];
+                roleCtrl.VCam = vcam;
+                vcam.Follow = roleCtrl.vcamFollow;
+                vcam.LookAt = roleCtrl.vcamLookAt;
 
                 OnFrontRoleChanged?.Invoke();
             }
@@ -55,7 +55,24 @@ namespace Kirara
 
         public bool switchEnabled = true;
 
-        // public readonly Dictionary<EActionCommand, bool> pressedDict = new();
+        private bool _enableInput = true;
+        public bool EnableInput
+        {
+            get => _enableInput;
+            set
+            {
+                _enableInput = value;
+                vcam.GetComponent<CinemachineInputProvider>().enabled = value;
+                if (value)
+                {
+                    input.Combat.Enable();
+                }
+                else
+                {
+                    input.Combat.Disable();
+                }
+            }
+        }
 
         protected override void Awake()
         {
@@ -69,6 +86,7 @@ namespace Kirara
         private void OnDestroy()
         {
             cts.Cancel();
+            input.Dispose();
         }
 
         private int updateInterval = 16;
@@ -110,18 +128,6 @@ namespace Kirara
             return (idx - 1 + RoleCtrls.Count) % RoleCtrls.Count;
         }
 
-        private void OnEnable()
-        {
-            vcam.GetComponent<CinemachineInputProvider>().enabled = true;
-            input.Combat.Enable();
-        }
-
-        private void OnDisable()
-        {
-            vcam.GetComponent<CinemachineInputProvider>().enabled = false;
-            input.Combat.Disable();
-        }
-
         private void Start()
         {
             var handle = YooAssets.LoadAssetSync<AudioClip>("music1");
@@ -141,7 +147,7 @@ namespace Kirara
             Player = Instantiate(playerPrefab, transform);
         }
 
-        public static bool TryConvertInputActionToCommand(Guid id, out EActionCommand command)
+        private static bool TryConvertInputActionToCommand(Guid id, out EActionCommand command)
         {
             if (id == Instance.input.Combat.BaseAttack.id)
             {
@@ -277,12 +283,14 @@ namespace Kirara
         private void Update()
         {
             Player.transform.position = FrontRoleCtrl.transform.position;
-            UpdateInputPress();
-            // FrontRoleCtrl.ActionCtrl.UpdatePressed(pressedDict);
+            if (EnableInput)
+            {
+                UpdateInputPress();
+            }
 
             foreach (var roleCtrl in RoleCtrls)
             {
-                roleCtrl.Role.Update(Time.deltaTime);
+                roleCtrl.Role.Set.Update(Time.deltaTime);
             }
         }
 

@@ -80,11 +80,6 @@ namespace Kirara.Model
             Set.AttachBuff("RoleEnergyRegen");
         }
 
-        public void Update(float dt)
-        {
-            Set.Update(dt);
-        }
-
         #region 武器 Weapon
 
         public async UniTask RemoveWeapon()
