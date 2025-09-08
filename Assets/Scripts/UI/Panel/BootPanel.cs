@@ -43,10 +43,6 @@ namespace Kirara.UI.Panel
 
         private async UniTaskVoid Boot()
         {
-            SetStatusText("连接服务器...");
-            NetMgr.Instance.Init();
-            NetMgr.Instance.Connect();
-
             SetStatusText("加载资源...");
             YooAssets.Initialize();
 
@@ -65,11 +61,19 @@ namespace Kirara.UI.Panel
             var package = YooAssets.GetPackage("DefaultPackage");
             YooAssets.SetDefaultPackage(package);
 
+
+            SetStatusText("连接网络...");
+            NetMgr.Instance.Init();
+            NetMgr.Instance.Connect();
+
+
             SetStatusText("初始化脚本...");
             LuaMgr.Instance.Init();
 
+
             SetStatusText("加载配置...");
             ConfigMgr.LoadTables();
+
 
             SetStatusText("点击登录");
             BgBtn.onClick.AddListener(() =>
