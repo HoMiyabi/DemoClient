@@ -14,7 +14,7 @@ namespace Kirara.TimelineAction
 
         public static ScriptPlayable<ParticleControlPlayable> Create(
             PlayableGraph graph, GameObject owner,
-            GameObject prefab, Vector3 position, Vector3 rotation, Vector3 scale)
+            GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale)
         {
             var playable = ScriptPlayable<ParticleControlPlayable>.Create(graph);
             var behaviour = playable.GetBehaviour();
@@ -22,7 +22,7 @@ namespace Kirara.TimelineAction
             return playable;
         }
 
-        private void Init(GameObject owner, GameObject prefab, Vector3 position, Vector3 rotation, Vector3 scale)
+        private void Init(GameObject owner, GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale)
         {
 #if UNITY_EDITOR
             if (prefab == null) return;
@@ -30,7 +30,7 @@ namespace Kirara.TimelineAction
             go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, owner.transform);
 
             go.transform.localPosition = position;
-            go.transform.localRotation = Quaternion.Euler(rotation);
+            go.transform.localRotation = rotation;
             go.transform.localScale = scale;
             SetHideFlagsRecursive(go);
             particle = go.GetComponent<ParticleSystem>();

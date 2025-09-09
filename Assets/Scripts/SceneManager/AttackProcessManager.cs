@@ -103,6 +103,10 @@ namespace Kirara
                     Debug.LogWarning("monster == null");
                 }
             }
+            if (role.lastHitMonsters.Count > 0)
+            {
+                AudioMgr.Instance.PlaySFX(box.hitAudio, role.transform.position);
+            }
         }
 
         private static readonly Collider[] cols = new Collider[128];

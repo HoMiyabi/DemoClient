@@ -11,7 +11,7 @@ namespace Kirara.TimelineAction
         [NonSerialized] public GameObject owner;
         public GameObject prefab;
         public Vector3 position;
-        public Vector3 rotation;
+        public Quaternion rotation;
         public Vector3 scale;
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
@@ -25,7 +25,7 @@ namespace Kirara.TimelineAction
             var transform = actionCtrl.transform;
             var particle = ParticleMgr.Instance.Play(prefab, transform);
             particle.transform.localPosition = position;
-            particle.transform.localRotation = Quaternion.Euler(rotation);
+            particle.transform.localRotation = rotation;
             particle.transform.localScale = scale;
         }
     }

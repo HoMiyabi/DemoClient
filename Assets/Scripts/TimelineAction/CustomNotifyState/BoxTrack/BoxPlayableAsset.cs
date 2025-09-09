@@ -22,11 +22,13 @@ namespace Kirara.TimelineAction
         public float rotValue;
         public float rotMaxValue;
         public float hitGatherDist;
+        public AudioClip hitAudio;
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
-            this.owner = owner;
-            return ScriptPlayable<ActionNotifyStatePlayable>.Create(graph);
+            var playable = ScriptPlayable<BoxPlayable>.Create(graph);
+            playable.GetBehaviour().asset = this;
+            return playable;
         }
 
         public override void NotifyBegin(ActionCtrl actionCtrl)

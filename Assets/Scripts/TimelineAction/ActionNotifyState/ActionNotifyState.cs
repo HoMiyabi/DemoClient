@@ -12,7 +12,8 @@ namespace Kirara.TimelineAction
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
-            return ScriptPlayable<ActionNotifyStatePlayable>.Create(graph);
+            var playable = ScriptPlayable<ActionNotifyStatePlayable>.Create(graph);
+            return playable;
         }
 
         public virtual void NotifyBegin(ActionCtrl actionCtrl) {}

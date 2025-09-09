@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,7 +24,9 @@ namespace Kirara.TimelineAction
 
         private EEditMode editMode = EEditMode.None;
 
-        private readonly string[] editModeNames = {"移动", "旋转", "缩放" };
+        private readonly string[] editModeNames = {"位置", "旋转", "缩放"};
+
+        private List<ParticleControlPlayableAssetInspector> instances = new();
 
         private void OnEnable()
         {
@@ -32,12 +35,19 @@ namespace Kirara.TimelineAction
             rotationProp = serializedObject.FindProperty(nameof(_target.rotation));
             scaleProp = serializedObject.FindProperty(nameof(_target.scale));
 
-            SceneView.duringSceneGui += DuringSceneGUI;
+            if (!instances.Contains(this))
+            {
+                instances.Add(this);
+                SceneView.duringSceneGui += DuringSceneGUI;
+            }
         }
 
         private void OnDisable()
         {
-            SceneView.duringSceneGui -= DuringSceneGUI;
+            if (instances.Remove(this))
+            {
+                SceneView.duringSceneGui -= DuringSceneGUI;
+            }
         }
 
         public override void OnInspectorGUI()
@@ -71,19 +81,28 @@ namespace Kirara.TimelineAction
                 var worldPos = parent.TransformPoint(positionProp.vector3Value);
                 var newPos = Handles.PositionHandle(worldPos, Quaternion.identity);
                 var localPos = parent.InverseTransformPoint(newPos);
-                positionProp.vector3Value = localPos;
+                if (localPos != positionProp.vector3Value)
+                {
+                    positionProp.vector3Value = localPos;
+                }
             }
             else if (editMode == EEditMode.Rotate)
             {
                 var worldPos = parent.TransformPoint(positionProp.vector3Value);
-                var angle = Handles.RotationHandle(Quaternion.Euler(rotationProp.vector3Value), worldPos).eulerAngles;
-                rotationProp.vector3Value = angle;
+                var rot = Handles.RotationHandle(rotationProp.quaternionValue, worldPos);
+                if (rot != rotationProp.quaternionValue)
+                {
+                    rotationProp.quaternionValue = rot;
+                }
             }
             else if (editMode == EEditMode.Scale)
             {
                 var worldPos = parent.TransformPoint(positionProp.vector3Value);
                 var newScale = Handles.ScaleHandle(scaleProp.vector3Value, worldPos, Quaternion.identity);
-                scaleProp.vector3Value = newScale;
+                if (newScale != scaleProp.vector3Value)
+                {
+                    scaleProp.vector3Value = newScale;
+                }
             }
             serializedObject.ApplyModifiedProperties();
         }

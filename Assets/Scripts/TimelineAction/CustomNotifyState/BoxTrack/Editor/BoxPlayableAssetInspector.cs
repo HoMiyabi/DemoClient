@@ -22,6 +22,7 @@ namespace Kirara.TimelineAction
         private SerializedProperty rotValueProp;
         private SerializedProperty rotMaxValueProp;
         private SerializedProperty hitGatherDistProp;
+        private SerializedProperty hitAudioProp;
 
         private enum EEditMode
         {
@@ -54,6 +55,7 @@ namespace Kirara.TimelineAction
             rotValueProp = serializedObject.FindProperty(nameof(_target.rotValue));
             rotMaxValueProp = serializedObject.FindProperty(nameof(_target.rotMaxValue));
             hitGatherDistProp = serializedObject.FindProperty(nameof(_target.hitGatherDist));
+            hitAudioProp = serializedObject.FindProperty(nameof(_target.hitAudio));
 
             if (!instances.Contains(this))
             {
@@ -105,6 +107,7 @@ namespace Kirara.TimelineAction
                     EditorGUILayout.PropertyField(rotMaxValueProp, new GUIContent("旋转最大"));
                 }
                 EditorGUILayout.PropertyField(hitGatherDistProp, new GUIContent("命中聚集距离"));
+                EditorGUILayout.PropertyField(hitAudioProp, new GUIContent("命中音频"));
             }
         }
 
@@ -196,7 +199,10 @@ namespace Kirara.TimelineAction
                 var worldPos = parent.TransformPoint(centerProp.vector3Value);
                 var newWorldPos = Handles.PositionHandle(worldPos, Quaternion.identity);
                 var newLocalPos = parent.InverseTransformPoint(newWorldPos);
-                centerProp.vector3Value = newLocalPos;
+                if (newLocalPos != centerProp.vector3Value)
+                {
+                    centerProp.vector3Value = newLocalPos;
+                }
             }
             else if (editMode == EEditMode.Size)
             {
@@ -205,12 +211,18 @@ namespace Kirara.TimelineAction
                 if ((EBoxShape)boxShapeProp.enumValueIndex == EBoxShape.Sphere)
                 {
                     float newRadius = Handles.RadiusHandle(Quaternion.identity, worldPos, radiusProp.floatValue, true);
-                    radiusProp.floatValue = newRadius;
+                    if (newRadius != radiusProp.floatValue)
+                    {
+                        radiusProp.floatValue = newRadius;
+                    }
                 }
                 else if ((EBoxShape)boxShapeProp.enumValueIndex == EBoxShape.Box)
                 {
                     var newScale = Handles.ScaleHandle(sizeProp.vector3Value, worldPos, Quaternion.identity);
-                    sizeProp.vector3Value = newScale;
+                    if (newScale != sizeProp.vector3Value)
+                    {
+                        sizeProp.vector3Value = newScale;
+                    }
                 }
             }
         }

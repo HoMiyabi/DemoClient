@@ -1,15 +1,12 @@
 ﻿using System.ComponentModel;
-using Kirara.TimelineAction;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.Timeline;
 
 namespace Kirara.TimelineAction
 {
     [DisplayName("随机音频")]
     public class RandomAudioPlayableAsset : ActionNotifyState
     {
-        public TimelineClip timelineClip;
         public float audioClipsMaxLength;
 
         [Range(0f, 1f)] public float dontPlayProbability;

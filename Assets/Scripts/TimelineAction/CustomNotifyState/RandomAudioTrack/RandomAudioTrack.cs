@@ -12,7 +12,6 @@ namespace Kirara.TimelineAction
             base.OnCreateClip(clip);
             clip.duration = 1f;
             clip.displayName = "随机音频";
-            ((RandomAudioPlayableAsset)clip.asset).timelineClip = clip;
         }
     }
 }
