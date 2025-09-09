@@ -20,21 +20,20 @@ namespace Kirara
         public CinemachineVirtualCamera rightAssistVCam;
         public AudioClip[] hitClips;
 
-        public Transform Cam { get; private set; }
-        private Animator Animator { get; set; }
         public Role Role { get; private set; }
-        // private CombatStateMachine combatStateMachine { get; set; }
         public CinemachineVirtualCamera VCam { get; set; }
+        public Transform Cam { get; private set; }
+        public ActionCtrl ActionCtrl { get; private set; }
+        private Animator Animator { get; set; }
         private CharacterController CharacterController { get; set; }
         private ChGravity ChGravity { get; set; }
-        public ActionCtrl ActionCtrl { get; private set; }
 
         private bool EnableRotation { get; set; }
         private bool EnableRecenter { get; set; }
+        private bool EnableLookAtMonster { get; set; }
 
         public List<MonsterCtrl> lastHitMonsters = new();
 
-        public bool lookAtMonster;
 
         public NSyncRole SyncRole => new()
         {
@@ -102,7 +101,7 @@ namespace Kirara
             {
                 Recenter();
             }
-            if (lookAtMonster)
+            if (EnableLookAtMonster)
             {
                 UpdateLookAtMonster(15f);
             }
@@ -112,7 +111,7 @@ namespace Kirara
         {
             EnableRotation = actionParams.enableRotation;
             EnableRecenter = actionParams.enableRecenter;
-            lookAtMonster = actionParams.lookAtMonster;
+            EnableLookAtMonster = actionParams.lookAtMonster;
             SetShowState(actionParams.roleShowState);
         }
 
@@ -189,19 +188,19 @@ namespace Kirara
             AudioMgr.Instance.PlaySFX(clip, transform.position);
         }
 
-        public void LookAtMonster(float maxDist)
-        {
-            var monster = MonsterSystem.Instance.ClosestMonster(transform.position, out float dist);
-            if (monster == null) return;
+        // public void LookAtMonster(float maxDist)
+        // {
+        //     var monster = MonsterSystem.Instance.ClosestMonster(transform.position, out float dist);
+        //     if (monster == null) return;
+        //
+        //     if (dist < maxDist)
+        //     {
+        //         transform.DOLookAt(monster.transform.position,
+        //             0.05f, AxisConstraint.None, transform.up);
+        //     }
+        // }
 
-            if (dist < maxDist)
-            {
-                transform.DOLookAt(monster.transform.position,
-                    0.05f, AxisConstraint.None, transform.up);
-            }
-        }
-
-        public void UpdateLookAtMonster(float maxDist)
+        private void UpdateLookAtMonster(float maxDist)
         {
             var monster = MonsterSystem.Instance.ClosestMonster(transform.position, out float dist);
             if (monster == null) return;
@@ -209,9 +208,10 @@ namespace Kirara
             const float rotSpeed = 20f;
             if (dist < maxDist)
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation,
-                    Quaternion.LookRotation(monster.transform.position - transform.position),
-                    Time.deltaTime * rotSpeed);
+                var dir = monster.transform.position - transform.position;
+                dir.y = 0;
+                var targetRot = Quaternion.LookRotation(dir);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * rotSpeed);
             }
         }
 
