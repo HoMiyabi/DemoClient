@@ -13,7 +13,7 @@ namespace Kirara.TimelineAction
 
             var state = (ActionNotifyState)clip.asset;
             var type = state.GetType();
-            var attr = type.GetCustomAttribute<NotifyStateCreateArgsAttribute>();
+            var attr = type.GetCustomAttribute<NotifyStateDurationAttribute>();
             if (attr != null)
             {
                 clip.duration = attr.Duration;
