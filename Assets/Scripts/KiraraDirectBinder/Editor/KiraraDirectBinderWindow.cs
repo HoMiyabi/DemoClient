@@ -35,9 +35,16 @@ namespace KiraraDirectBinder.Editor
             }
         }
 
+        private class EditItem
+        {
+            public Component component;
+            public int binderIdx;
+            public string varName;
+        }
+
         private Component[] components;
         private string[] names;
-        private List<int> idxInBinder = new();
+        private readonly List<int> _comIdxToBinderIdx = new();
 
         [MenuItem("GameObject/Kirara Direct Binder Window _c", false, priority = 0)]
         public static void OpenWindow()
@@ -71,11 +78,11 @@ namespace KiraraDirectBinder.Editor
             names = new string[components.Length];
             for (int i = 0; i < components.Length; i++)
             {
-                int comIdxInBinder = Binder.items
+                int binderIdx = Binder.items
                     .FindIndex(x => x.component == components[i]);
-                if (comIdxInBinder != -1)
+                if (binderIdx != -1)
                 {
-                    names[i] = Binder.items[comIdxInBinder].fieldName;
+                    names[i] = Binder.items[binderIdx].fieldName;
                 }
                 else
                 {
@@ -166,13 +173,13 @@ namespace KiraraDirectBinder.Editor
         private void DrawBinderAndTarget()
         {
             float width = EditorGUIUtility.labelWidth;
-            EditorGUIUtility.labelWidth = 60f;
+            EditorGUIUtility.labelWidth = 50f;
 
             Binder = (KiraraDirectBinder)EditorGUILayout.ObjectField(
-                "Binder:", Binder, typeof(KiraraDirectBinder), true);
+                "Binder", Binder, typeof(KiraraDirectBinder), true);
 
             Target = (Transform)EditorGUILayout.ObjectField(
-                "选中对象:", Target, typeof(Transform), true);
+                "目标对象", Target, typeof(Transform), true);
 
             EditorGUIUtility.labelWidth = width;
         }
@@ -218,14 +225,14 @@ namespace KiraraDirectBinder.Editor
             }
         }
 
-        private void UpdateIdxInBinder()
+        private void UpdateComIdxToBinderIdx()
         {
-            idxInBinder.Clear();
+            _comIdxToBinderIdx.Clear();
             if (!Binder) return;
             foreach (var c in components)
             {
                 int idx = Binder.items.FindIndex(x => x.component == c);
-                idxInBinder.Add(idx);
+                _comIdxToBinderIdx.Add(idx);
             }
         }
 
@@ -235,13 +242,13 @@ namespace KiraraDirectBinder.Editor
         {
             DrawBinderAndTarget();
 
-            UpdateIdxInBinder();
+            UpdateComIdxToBinderIdx();
 
             float col2 = 0f;
             for (int i = 0; i < components.Length; i++)
             {
                 float width = EditorStyles.textField.CalcSize(new GUIContent(names[i])).x;
-                if (idxInBinder[i] != -1)
+                if (_comIdxToBinderIdx[i] != -1)
                 {
                     width += saveButtonWidth;
                 }
@@ -266,15 +273,14 @@ namespace KiraraDirectBinder.Editor
             {
                 var com = components[i];
 
-                int idxInBinder = Binder.items
-                    .FindIndex(x => x.component == components[i]);
+                int binderIdx = _comIdxToBinderIdx[i];
 
                 GUILayout.BeginHorizontal();
 
-                if (idxInBinder != -1)
+                if (binderIdx != -1)
                 {
                     // 组件在Binder里，可以删除
-                    DrawRemoveButton(i, idxInBinder);
+                    DrawRemoveButton(i, binderIdx);
                 }
                 else
                 {
@@ -283,16 +289,16 @@ namespace KiraraDirectBinder.Editor
                 }
 
                 float w = col2;
-                if (idxInBinder != -1)
+                if (binderIdx != -1)
                 {
                     w -= saveButtonWidth;
                 }
                 names[i] = GUILayout.TextField(names[i], GUILayout.MinWidth(w));
 
-                if (idxInBinder != -1)
+                if (binderIdx != -1)
                 {
                     // 组件在Binder里，可以重命名
-                    DrawRenameButton(i, idxInBinder);
+                    DrawRenameButton(i, binderIdx);
                 }
 
                 GUILayout.Label(com.GetType().Name, GUILayout.Width(maxTypeWidth));
