@@ -114,11 +114,13 @@ namespace Kirara.TimelineAction
                 EditorGUILayout.PropertyField(attackStrengthProp, new GUIContent("攻击强度"));
                 EditorGUILayout.PropertyField(hitIdProp, new GUIContent("Hit Id"));
                 EditorGUILayout.PropertyField(particlePrefabProp, new GUIContent("命中粒子 Prefab"));
-                EditorGUILayout.PropertyField(setRotProp, new GUIContent("设置旋转"));
+                EditorGUILayout.PropertyField(setRotProp, new GUIContent("设置粒子旋转"));
                 if (setRotProp.boolValue)
                 {
+                    EditorGUI.indentLevel += 1;
                     EditorGUILayout.PropertyField(rotValueProp, new GUIContent("旋转最小"));
                     EditorGUILayout.PropertyField(rotMaxValueProp, new GUIContent("旋转最大"));
+                    EditorGUI.indentLevel -= 1;
                 }
                 EditorGUILayout.PropertyField(hitGatherDistProp, new GUIContent("命中聚集距离"));
                 EditorGUILayout.PropertyField(hitAudioProp, new GUIContent("命中音频"));
