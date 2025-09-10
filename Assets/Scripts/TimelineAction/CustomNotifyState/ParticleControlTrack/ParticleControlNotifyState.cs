@@ -6,7 +6,7 @@ using UnityEngine.Playables;
 namespace Kirara.TimelineAction
 {
     [DisplayName("粒子控制")]
-    public class ParticleControlPlayableAsset : ActionNotifyState
+    public class ParticleControlNotifyState : ActionNotifyState
     {
         [NonSerialized] public GameObject owner;
         public GameObject prefab;

@@ -4,7 +4,7 @@ using UnityEngine.Timeline;
 namespace Kirara.TimelineAction
 {
     [CustomTimelineEditor(typeof(BoxPlayableAsset))]
-    public class BoxPlayableAssetEditor : ClipEditor
+    public class BoxPlayableAssetClipEditor : ClipEditor
     {
         public override void OnClipChanged(TimelineClip clip)
         {

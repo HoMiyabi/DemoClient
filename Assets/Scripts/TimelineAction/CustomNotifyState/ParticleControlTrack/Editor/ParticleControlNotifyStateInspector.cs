@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Kirara.TimelineAction
 {
-    [CustomEditor(typeof(ParticleControlPlayableAsset))]
-    public class ParticleControlPlayableAssetInspector : UnityEditor.Editor
+    [CustomEditor(typeof(ParticleControlNotifyState))]
+    public class ParticleControlNotifyStateInspector : UnityEditor.Editor
     {
-        private ParticleControlPlayableAsset _target;
+        private ParticleControlNotifyState _target;
 
         private SerializedProperty positionProp;
         private SerializedProperty rotationProp;
@@ -17,8 +17,8 @@ namespace Kirara.TimelineAction
         private enum EEditMode
         {
             None = -1,
-            Move = 0,
-            Rotate = 1,
+            Position = 0,
+            Rotation = 1,
             Scale = 2,
         }
 
@@ -26,13 +26,13 @@ namespace Kirara.TimelineAction
 
         private readonly string[] editModeNames = {"位置", "旋转", "缩放"};
 
-        private List<ParticleControlPlayableAssetInspector> instances = new();
+        private readonly List<ParticleControlNotifyStateInspector> instances = new();
 
         private void OnEnable()
         {
             if (target == null) return;
 
-            _target = (ParticleControlPlayableAsset)target;
+            _target = (ParticleControlNotifyState)target;
             positionProp = serializedObject.FindProperty(nameof(_target.position));
             rotationProp = serializedObject.FindProperty(nameof(_target.rotation));
             scaleProp = serializedObject.FindProperty(nameof(_target.scale));
@@ -78,7 +78,7 @@ namespace Kirara.TimelineAction
             serializedObject.Update();
             var parent = _target.owner.transform;
 
-            if (editMode == EEditMode.Move)
+            if (editMode == EEditMode.Position)
             {
                 var worldPos = parent.TransformPoint(positionProp.vector3Value);
                 var newPos = Handles.PositionHandle(worldPos, Quaternion.identity);
@@ -88,7 +88,7 @@ namespace Kirara.TimelineAction
                     positionProp.vector3Value = localPos;
                 }
             }
-            else if (editMode == EEditMode.Rotate)
+            else if (editMode == EEditMode.Rotation)
             {
                 var worldPos = parent.TransformPoint(positionProp.vector3Value);
                 var rot = Handles.RotationHandle(rotationProp.quaternionValue, worldPos);
