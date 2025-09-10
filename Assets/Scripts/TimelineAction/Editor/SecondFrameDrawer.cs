@@ -14,21 +14,21 @@ namespace Kirara.TimelineAction
                 var rect = new Rect(position.x, position.y, position.width / 3, position.height);
                 EditorGUI.LabelField(rect, label);
 
-                float width = EditorGUIUtility.labelWidth;
+                float oldLabelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = 18;
-                {
-                    rect.x += position.width / 3;
-                    property.floatValue = EditorGUI.FloatField(rect, "秒", property.floatValue);
 
-                    rect.x += position.width / 3;
-                    EditorGUI.BeginChangeCheck();
-                    float t = EditorGUI.FloatField(rect, "帧", property.floatValue * attr.FrameRate);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        property.floatValue = t / attr.FrameRate;
-                    }
+                rect.x += rect.width;
+                EditorGUI.PropertyField(rect, property, new GUIContent("秒"));
+
+                rect.x += rect.width;
+                EditorGUI.BeginChangeCheck();
+                float t = EditorGUI.FloatField(rect, "帧", property.floatValue * attr.FrameRate);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    property.floatValue = t / attr.FrameRate;
                 }
-                EditorGUIUtility.labelWidth = width;
+
+                EditorGUIUtility.labelWidth = oldLabelWidth;
             }
             else
             {

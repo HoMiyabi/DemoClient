@@ -30,6 +30,8 @@ namespace Kirara.TimelineAction
 
         private void OnEnable()
         {
+            if (target == null) return;
+
             _target = (ParticleControlPlayableAsset)target;
             positionProp = serializedObject.FindProperty(nameof(_target.position));
             rotationProp = serializedObject.FindProperty(nameof(_target.rotation));

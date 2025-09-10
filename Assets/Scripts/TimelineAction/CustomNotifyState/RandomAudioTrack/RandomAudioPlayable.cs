@@ -64,7 +64,7 @@ namespace Kirara.TimelineAction
 
             // Debug.Log("OnBehaviourPause");
 
-            audioSource.Pause();
+            // audioSource.Pause();
         }
     }
 }

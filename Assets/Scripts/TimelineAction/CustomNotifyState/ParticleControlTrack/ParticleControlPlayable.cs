@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Playables;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 namespace Kirara.TimelineAction
 {
     public class ParticleControlPlayable : PlayableBehaviour
@@ -27,12 +23,12 @@ namespace Kirara.TimelineAction
 #if UNITY_EDITOR
             if (prefab == null) return;
 
-            go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, owner.transform);
+            go = (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(prefab, owner.transform);
 
             go.transform.localPosition = position;
             go.transform.localRotation = rotation;
             go.transform.localScale = scale;
-            SetHideFlagsRecursive(go);
+            SetHideFlagsAll(go, HideFlags.DontSave);
             particle = go.GetComponent<ParticleSystem>();
             particle.Stop();
 #endif
@@ -45,6 +41,7 @@ namespace Kirara.TimelineAction
             if (go != null)
             {
                 Object.DestroyImmediate(go);
+                go = null;
             }
         }
 
@@ -56,15 +53,24 @@ namespace Kirara.TimelineAction
             particle.Simulate((float)playable.GetTime());
         }
 
-        private static void SetHideFlagsRecursive(GameObject gameObject)
+        // public override void OnBehaviourPlay(Playable playable, FrameData info)
+        // {
+        //     base.OnBehaviourPlay(playable, info);
+        //     if (particle == null) return;
+        //     if (!playable.GetGraph().IsPlaying()) return;
+        //
+        //     particle.Play();
+        // }
+
+        private static void SetHideFlagsAll(GameObject gameObject, HideFlags hideFlags)
         {
             if (gameObject == null)
                 return;
 
-            gameObject.hideFlags = HideFlags.HideAndDontSave;
+            gameObject.hideFlags = hideFlags;
             foreach (Transform child in gameObject.transform)
             {
-                SetHideFlagsRecursive(child.gameObject);
+                SetHideFlagsAll(child.gameObject, hideFlags);
             }
         }
     }

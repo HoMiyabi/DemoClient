@@ -10,9 +10,9 @@ namespace Kirara.TimelineAction
     {
         [NonSerialized] public GameObject owner;
         public GameObject prefab;
-        public Vector3 position;
-        public Quaternion rotation;
-        public Vector3 scale;
+        public Vector3 position = Vector3.zero;
+        public Quaternion rotation = Quaternion.identity;
+        public Vector3 scale = Vector3.one;
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {

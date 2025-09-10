@@ -65,6 +65,20 @@ namespace Kirara.TimelineAction
             }
         }
 
+        private void OnDisable()
+        {
+            instances.Remove(this);
+            // Debug.Log($"OnDisable remove instance {GetInstanceID()}, instances.Count = {instances.Count}");
+            SceneView.duringSceneGui -= DuringSceneGUI;
+        }
+
+        private void OnDestroy()
+        {
+            instances.Remove(this);
+            // Debug.Log($"OnDisable remove instance {GetInstanceID()}, instances.Count = {instances.Count}");
+            SceneView.duringSceneGui -= DuringSceneGUI;
+        }
+
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -130,17 +144,9 @@ namespace Kirara.TimelineAction
             }
         }
 
-        private void OnDisable()
-        {
-            if (instances.Remove(this))
-            {
-                // Debug.Log($"OnDisable remove instance {GetInstanceID()}, instances.Count = {instances.Count}");
-                SceneView.duringSceneGui -= DuringSceneGUI;
-            }
-        }
-
         private void DuringSceneGUI(SceneView sceneView)
         {
+            // Debug.Log($"DuringSceneGUI editMode: {editMode}, _target.owner: {_target.owner}");
             if (_target.owner == null)
             {
                 // Debug.LogWarning("BoxPlayableAssetInspector: owner is null");
@@ -171,6 +177,7 @@ namespace Kirara.TimelineAction
                 {
                     case EBoxShape.Sphere:
                     {
+                        // Debug.Log($"Draw center: {center}, radius: {radiusProp.floatValue}");
                         Handles.DrawWireDisc(center, Vector3.up, radiusProp.floatValue);
                         Handles.DrawWireDisc(center, Vector3.right, radiusProp.floatValue);
                         Handles.DrawWireDisc(center, Vector3.forward, radiusProp.floatValue);
@@ -232,6 +239,8 @@ namespace Kirara.TimelineAction
         {
             if (GUILayout.Button("只显示当前预览"))
             {
+                // SceneView.duringSceneGui -= DuringSceneGUI;
+                // SceneView.duringSceneGui += DuringSceneGUI;
                 bPreview = true;
                 foreach (var item in instances)
                 {

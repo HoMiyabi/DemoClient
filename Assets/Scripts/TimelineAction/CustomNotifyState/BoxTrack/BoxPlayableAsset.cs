@@ -26,6 +26,7 @@ namespace Kirara.TimelineAction
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
+            this.owner = owner;
             var playable = ScriptPlayable<BoxPlayable>.Create(graph);
             playable.GetBehaviour().asset = this;
             return playable;

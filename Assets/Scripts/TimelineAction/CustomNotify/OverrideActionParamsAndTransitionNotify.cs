@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using UnityEngine;
 
 namespace Kirara.TimelineAction
 {
@@ -14,6 +15,10 @@ namespace Kirara.TimelineAction
             {
                 actionCtrl.OverrideAction = action;
                 actionCtrl.OnSetActionParams?.Invoke(action.actionParams);
+            }
+            else
+            {
+                Debug.LogWarning($"找不到动作, 动作名: {actionName}");
             }
         }
     }

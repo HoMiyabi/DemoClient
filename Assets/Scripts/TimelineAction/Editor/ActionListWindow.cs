@@ -22,10 +22,10 @@ namespace Kirara.TimelineAction
         private GameObject _go;
         private GameObject GO { get => _go; set => SetGO(value); }
 
-        private Animator animator;
-        private ActionCtrl actionCtrl;
-        private PlayableDirector director;
-        private RuntimeAnimatorController rtAnimCtrl;
+        private Animator _animator;
+        private ActionCtrl _actionCtrl;
+        private PlayableDirector _director;
+        private RuntimeAnimatorController _rtAnimCtrl;
 
         private SearchField searchField;
         private string searchText;
@@ -69,19 +69,19 @@ namespace Kirara.TimelineAction
 
             // 更新Timeline窗口
             var timelineWindow = TimelineWindowHelper.GetWindow();
-            if (director)
+            if (_director)
             {
-                director.playableAsset = _action;
+                _director.playableAsset = _action;
 
                 foreach (var track in _action.GetRootTracks())
                 {
                     if (track is AnimationTrack)
                     {
-                        director.SetGenericBinding(track, animator);
+                        _director.SetGenericBinding(track, _animator);
                         break;
                     }
                 }
-                timelineWindow.SetTimeline(director);
+                timelineWindow.SetTimeline(_director);
             }
             else
             {
@@ -97,16 +97,16 @@ namespace Kirara.TimelineAction
 
         private void UpdateGO()
         {
-            GO = null;
             var actionCtrls = FindObjectsByType<ActionCtrl>(FindObjectsSortMode.None);
             foreach (var ctrl in actionCtrls)
             {
                 if (ctrl.actionList == ActionList)
                 {
                     GO = ctrl.gameObject;
-                    break;
+                    return;
                 }
             }
+            GO = null;
         }
 
         private void SetGO(GameObject go)
@@ -116,16 +116,16 @@ namespace Kirara.TimelineAction
             _go = go;
             if (_go)
             {
-                actionCtrl = _go.GetComponent<ActionCtrl>();
-                animator = _go.GetComponent<Animator>();
-                director = _go.GetComponent<PlayableDirector>();
-                SetActionList(actionCtrl ? actionCtrl.actionList : null, false);
+                _actionCtrl = _go.GetComponent<ActionCtrl>();
+                _animator = _go.GetComponent<Animator>();
+                _director = _go.GetComponent<PlayableDirector>();
+                SetActionList(_actionCtrl ? _actionCtrl.actionList : null, false);
             }
             else
             {
-                animator = null;
-                actionCtrl = null;
-                director = null;
+                _animator = null;
+                _actionCtrl = null;
+                _director = null;
                 SetActionList(null, false);
             }
         }
@@ -133,11 +133,9 @@ namespace Kirara.TimelineAction
         private void OnGUI()
         {
             float oldLabelWidth = EditorGUIUtility.labelWidth;
-            const float labelWidth = 80f;
-            EditorGUIUtility.labelWidth = labelWidth;
+            EditorGUIUtility.labelWidth = 80f;
 
             // 动作列表
-            EditorGUI.BeginChangeCheck();
             ActionList = (KiraraActionListSO)EditorGUILayout.ObjectField(
                 "动作列表", ActionList, typeof(KiraraActionListSO), false);
 
@@ -149,9 +147,11 @@ namespace Kirara.TimelineAction
             if (ActionList)
             {
                 EditorGUI.BeginChangeCheck();
-                ActionList.namePrefix = EditorGUILayout.TextField("名字前缀", ActionList.namePrefix);
+                string newNamePrefix = EditorGUILayout.TextField("名字前缀", ActionList.namePrefix);
                 if (EditorGUI.EndChangeCheck())
                 {
+                    Undo.RecordObject(ActionList, "修改名字前缀");
+                    ActionList.namePrefix = newNamePrefix;
                     EditorUtility.SetDirty(ActionList);
                 }
             }
@@ -159,35 +159,37 @@ namespace Kirara.TimelineAction
             EditorGUIUtility.labelWidth = oldLabelWidth;
 
             // 控制栏
+            EditorGUI.BeginDisabledGroup(ActionList == null || GO == null);
             using (new GUILayout.HorizontalScope())
             {
                 if (GUILayout.Button(MyEditorGUIIcon.PlayButton, GUILayout.ExpandWidth(false)))
                 {
-                    if (animator.runtimeAnimatorController == null)
+                    if (_animator.runtimeAnimatorController == null)
                     {
-                        animator.runtimeAnimatorController = rtAnimCtrl;
+                        _animator.runtimeAnimatorController = _rtAnimCtrl;
                     }
 
-                    actionCtrl.Refresh();
-                    actionCtrl.PlayActionFullName(Action.name);
+                    _actionCtrl.Refresh();
+                    _actionCtrl.PlayActionFullName(Action.name);
                 }
                 if (GUILayout.Button("Animator", GUILayout.ExpandWidth(false)))
                 {
-                    if (animator.runtimeAnimatorController == null)
+                    if (_animator.runtimeAnimatorController == null)
                     {
-                        animator.runtimeAnimatorController = rtAnimCtrl;
+                        _animator.runtimeAnimatorController = _rtAnimCtrl;
                     }
                 }
                 if (GUILayout.Button("Timeline", GUILayout.ExpandWidth(false)))
                 {
-                    rtAnimCtrl = animator.runtimeAnimatorController;
-                    animator.runtimeAnimatorController = null;
+                    _rtAnimCtrl = _animator.runtimeAnimatorController;
+                    _animator.runtimeAnimatorController = null;
                 }
                 if (GUILayout.Button("导出Json", GUILayout.ExpandWidth(false)))
                 {
                     Debug.Log(ActionList.ToJson());
                 }
             }
+            EditorGUI.EndDisabledGroup();
 
             searchText = searchField.OnGUI(searchText);
 
