@@ -100,7 +100,8 @@ namespace Kirara
 
         public void OnGUI()
         {
-            outputDirAsset = (DefaultAsset)EditorGUILayout.ObjectField("输出目录", outputDirAsset, typeof(DefaultAsset), false);
+            outputDirAsset = (DefaultAsset)EditorGUILayout.ObjectField("输出目录", outputDirAsset,
+                typeof(DefaultAsset), false);
             string outputDir = null;
             if (outputDirAsset != null)
             {
@@ -117,6 +118,7 @@ namespace Kirara
             EditorGUI.BeginDisabledGroup(outputDir == null);
             if (GUILayout.Button("提取"))
             {
+                bool overwrite = false;
                 foreach (var action in actions)
                 {
                     var output = ExtractAction(action);
@@ -127,14 +129,24 @@ namespace Kirara
                     string json = JsonConvert.SerializeObject(output, Formatting.Indented, settings);
 
 
-                    string outputPath = Path.Combine(outputDir, action.name + ".json");
-                    if (File.Exists(outputPath))
+                    string outputPath = Path.Combine(outputDir!, action.name + ".json");
+                    if (!overwrite && File.Exists(outputPath))
                     {
-                        bool ok = EditorUtility.DisplayDialog("提示", $"存在同名文件，位于{outputPath}",
-                            "覆盖", "跳过");
-                        if (!ok)
+                        int option = EditorUtility.DisplayDialogComplex(
+                            "提示",
+                            $"存在同名文件，位于{outputPath}",
+                            "覆盖",
+                            "跳过",
+                            "覆盖且不再提示");
+                        switch (option)
                         {
-                            continue;
+                            case 0:
+                                break;
+                            case 1:
+                                continue;
+                            case 2:
+                                overwrite = true;
+                                break;
                         }
                     }
                     Debug.Log($"{action.name}输出: {outputPath}");
