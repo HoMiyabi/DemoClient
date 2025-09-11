@@ -57,7 +57,7 @@ namespace Kirara
             ActionCtrl = GetComponent<ActionCtrl>();
             ActionCtrl.IsActionExecutable = IsActionExecutable;
             ActionCtrl.OnExecuteAction = OnExecuteAction;
-            ActionCtrl.OnSetActionParams = SetActionParams;
+            ActionCtrl.OnSetActionArgs = SetActionArgs;
 
             leftAssistVCam.enabled = false;
             rightAssistVCam.enabled = false;
@@ -93,50 +93,42 @@ namespace Kirara
 
         private void Update()
         {
-            if (EnableRotation)
-            {
-                ProcessRotation();
-            }
+            UpdateRotation();
+            UpdateRecenter();
+            UpdateLookAtMonster();
+        }
+
+        private void SetActionArgs(ActionArgs actionArgs)
+        {
+            EnableRotation = actionArgs.enableRotation;
+            EnableRecenter = actionArgs.enableRecenter;
+            EnableLookAtMonster = actionArgs.enableLookAtMonster;
+            SetShowState(actionArgs.roleShowState);
+        }
+
+        private void UpdateRecenter()
+        {
+            var pov = VCam.GetCinemachineComponent<CinemachinePOV>();
+            bool enableRecenter = false;
             if (EnableRecenter)
             {
-                Recenter();
+                var inputDir = PlayerSystem.Instance.input.Combat.Move.ReadValue<Vector2>();
+                if (inputDir != Vector2.zero)
+                {
+                    float angle = Vector2.Angle(inputDir, Vector2.up);
+                    if (angle is > 10f and < 170f)
+                    {
+                        enableRecenter = true;
+                    }
+                }
             }
-            if (EnableLookAtMonster)
-            {
-                UpdateLookAtMonster(15f);
-            }
+            pov.m_HorizontalRecentering.m_enabled = enableRecenter;
         }
 
-        public void SetActionParams(ActionParams actionParams)
+        private void UpdateRotation()
         {
-            EnableRotation = actionParams.enableRotation;
-            EnableRecenter = actionParams.enableRecenter;
-            EnableLookAtMonster = actionParams.lookAtMonster;
-            SetShowState(actionParams.roleShowState);
-        }
+            if (!EnableRotation) return;
 
-        private void Recenter()
-        {
-            var inputDir = PlayerSystem.Instance.input.Combat.Move.ReadValue<Vector2>();
-            if (inputDir == Vector2.zero)
-            {
-                return;
-            }
-
-            var pov = VCam.GetCinemachineComponent<CinemachinePOV>();
-            float angle = Vector2.Angle(inputDir, Vector2.up);
-            if (angle is < 10f or > 170f)
-            {
-                pov.m_HorizontalRecentering.m_enabled = false;
-            }
-            else
-            {
-                pov.m_HorizontalRecentering.m_enabled = true;
-            }
-        }
-
-        private void ProcessRotation()
-        {
             var inputDir = PlayerSystem.Instance.input.Combat.Move.ReadValue<Vector2>();
             if (inputDir == Vector2.zero)
             {
@@ -156,7 +148,7 @@ namespace Kirara
             transform.DORotateQuaternion(rot, 0.1f);
         }
 
-        public void TryTriggerHitstop(float duration, float speed)
+        public void TriggerHitstopIfHit(float duration, float speed)
         {
             if (lastHitMonsters.Count > 0)
             {
@@ -183,10 +175,10 @@ namespace Kirara
             transform.rotation *= Animator.deltaRotation;
         }
 
-        public void PlaySFX(AudioClip clip)
-        {
-            AudioMgr.Instance.PlaySFX(clip, transform.position);
-        }
+        // public void PlaySFX(AudioClip clip)
+        // {
+        //     AudioMgr.Instance.PlaySFX(clip, transform.position);
+        // }
 
         // public void LookAtMonster(float maxDist)
         // {
@@ -200,8 +192,11 @@ namespace Kirara
         //     }
         // }
 
-        private void UpdateLookAtMonster(float maxDist)
+        private void UpdateLookAtMonster()
         {
+            if (!EnableLookAtMonster) return;
+            float maxDist = 15f;
+
             var monster = MonsterSystem.Instance.ClosestMonster(transform.position, out float dist);
             if (monster == null) return;
 

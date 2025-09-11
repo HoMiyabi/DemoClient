@@ -44,7 +44,7 @@ namespace Kirara
             if (box.particlePrefab)
             {
                 var vfxWPos = target.transform.position + new Vector3(0, 1f, 0);
-                if (box.setRot)
+                if (box.setParticleRot)
                 {
                     ParticleMgr.Instance.Play(box.particlePrefab, vfxWPos, role.transform.forward,
                         box.rotValue, box.rotMaxValue);

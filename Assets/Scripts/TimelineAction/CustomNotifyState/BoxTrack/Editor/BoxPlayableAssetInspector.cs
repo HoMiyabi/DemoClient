@@ -51,7 +51,7 @@ namespace Kirara.TimelineAction
             attackStrengthProp = serializedObject.FindProperty(nameof(_target.hitStrength));
             hitIdProp = serializedObject.FindProperty(nameof(_target.hitId));
             particlePrefabProp = serializedObject.FindProperty(nameof(_target.particlePrefab));
-            setRotProp = serializedObject.FindProperty(nameof(_target.setRot));
+            setRotProp = serializedObject.FindProperty(nameof(_target.setParticleRot));
             rotValueProp = serializedObject.FindProperty(nameof(_target.rotValue));
             rotMaxValueProp = serializedObject.FindProperty(nameof(_target.rotMaxValue));
             hitGatherDistProp = serializedObject.FindProperty(nameof(_target.hitGatherDist));

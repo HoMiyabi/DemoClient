@@ -14,7 +14,7 @@ namespace Kirara.TimelineAction
 
         public Func<KiraraActionSO, bool> IsActionExecutable { get; set; }
         public Action<KiraraActionSO, string> OnExecuteAction { get; set; }
-        public Action<ActionParams> OnSetActionParams { get; set; }
+        public Action<ActionArgs> OnSetActionArgs { get; set; }
 
         public float Time { get; private set; }
         public bool IsPlaying { get; private set; }
@@ -105,7 +105,7 @@ namespace Kirara.TimelineAction
             _onFinish = onFinish;
 
             OnExecuteAction?.Invoke(action, actionName);
-            OnSetActionParams?.Invoke(action.actionParams);
+            OnSetActionArgs?.Invoke(action.actionArgs);
 
             Animator.CrossFadeInFixedTime(actionName, fadeDuration);
         }

@@ -14,7 +14,7 @@ namespace Kirara.TimelineAction
             if (actionCtrl.TryGetAction(actionName, out var action))
             {
                 actionCtrl.OverrideAction = action;
-                actionCtrl.OnSetActionParams?.Invoke(action.actionParams);
+                actionCtrl.OnSetActionArgs?.Invoke(action.actionArgs);
             }
             else
             {

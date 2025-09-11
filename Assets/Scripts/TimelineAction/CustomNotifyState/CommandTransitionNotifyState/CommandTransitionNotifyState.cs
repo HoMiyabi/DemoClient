@@ -14,6 +14,7 @@ namespace Kirara.TimelineAction
 
         public override void NotifyBegin(ActionCtrl actionCtrl)
         {
+            // 处理输入缓冲内有对应输入的转移
             double time = Time.timeAsDouble;
             for (int i = actionCtrl.InputBuffer.Count - 1; i >= 0; i--)
             {

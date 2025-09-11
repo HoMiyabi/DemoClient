@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 
 namespace Kirara.TimelineAction
 {
@@ -18,7 +19,7 @@ namespace Kirara.TimelineAction
         public EHitStrength hitStrength;
         public int hitId;
         public GameObject particlePrefab;
-        public bool setRot;
+        [FormerlySerializedAs("setRot")] public bool setParticleRot;
         public float rotValue;
         public float rotMaxValue;
         public float hitGatherDist;

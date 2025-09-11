@@ -30,6 +30,7 @@ namespace Kirara
         {
             CharacterController = GetComponent<CharacterController>();
             ActionCtrl = GetComponent<ActionCtrl>();
+            ActionCtrl.EnableFinishTransition = false;
         }
 
         public void Set(MonsterModel model)

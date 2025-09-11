@@ -1,13 +1,14 @@
 ﻿using System;
+using UnityEngine.Serialization;
 
 namespace Kirara.TimelineAction
 {
     [Serializable]
-    public class ActionParams
+    public class ActionArgs
     {
         public bool enableRotation = false;
         public bool enableRecenter = false;
-        public bool lookAtMonster = false;
+        [FormerlySerializedAs("lookAtMonster")] public bool enableLookAtMonster = false;
         public ERoleShowState roleShowState = ERoleShowState.Front;
 
         // public static ActionParams GetStateDefault(EActionState state)

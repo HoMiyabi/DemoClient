@@ -27,8 +27,8 @@ namespace Kirara
             serializer.Serialize(writer, value.hitStrength);
             writer.WritePropertyName("hitId");
             serializer.Serialize(writer, value.hitId);
-            writer.WritePropertyName("setRot");
-            serializer.Serialize(writer, value.setRot);
+            writer.WritePropertyName("setParticleRot");
+            serializer.Serialize(writer, value.setParticleRot);
             writer.WritePropertyName("rotValue");
             serializer.Serialize(writer, value.rotValue);
             writer.WritePropertyName("rotMaxValue");

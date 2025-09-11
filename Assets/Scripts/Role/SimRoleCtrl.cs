@@ -17,7 +17,7 @@ namespace Kirara
         {
             Animator = GetComponent<Animator>();
             ActionCtrl = GetComponent<ActionCtrl>();
-            ActionCtrl.OnSetActionParams = SetActionParams;
+            ActionCtrl.OnSetActionArgs = SetActionArgs;
             ActionCtrl.EnableFinishTransition = false;
         }
 
@@ -51,9 +51,9 @@ namespace Kirara
             ActionCtrl.PlayAction(actionName, fadeDuration, onFinish);
         }
 
-        private void SetActionParams(ActionParams actionParams)
+        private void SetActionArgs(ActionArgs actionArgs)
         {
-            SetShowState(actionParams.roleShowState);
+            SetShowState(actionArgs.roleShowState);
         }
 
         private void SetShowState(ERoleShowState state)
