@@ -80,7 +80,7 @@ namespace Kirara.Quest
                     {
                         Quest.OnTrack();
                     }
-                    QuestSystem.Instance.SendStartQuest(this).Forget();
+                    QuestSystem.Instance.SendStartQuest(this);
                 }
                 else
                 {

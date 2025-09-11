@@ -50,11 +50,11 @@ namespace Manager
         {
             foreach (var questChain in chains)
             {
-                SendStartQuest(questChain).Forget();
+                SendStartQuest(questChain);
             }
         }
 
-        public async UniTaskVoid SendStartQuest(QuestChain questChain)
+        public void SendStartQuest(QuestChain questChain)
         {
             var req = new ReqStartQuest
             {

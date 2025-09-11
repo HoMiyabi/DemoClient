@@ -1,9 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Kirara.Model;
 using Kirara.Service;
-using Manager;
-using TMPro;
-using UnityEngine.UI;
 using YooAsset;
 
 namespace Kirara.UI.Panel
@@ -11,37 +8,40 @@ namespace Kirara.UI.Panel
     public class UpgradeDiscDialogPanel : BasePanel
     {
         #region View
-        private Button              UICloseBtn;
-        private UIDiscPosIcon       UIDiscPosIcon;
-        private UIStatBar           UIMainStatBar;
-        private UIStatBar           UISubStatBar1;
-        private UIStatBar           UISubStatBar2;
-        private UIStatBar           UISubStatBar3;
-        private UIStatBar           UISubStatBar4;
-        private Button              UpgradeBtn;
-        private Button              UIUpgradeMaterial;
-        private Button              DecBtn;
-        private TextMeshProUGUI     CountText;
-        private UIDiscIcon          UIDiscIcon;
-        private UIDiscNameText      UIDiscNameText;
-        private UIUpgradeDiscExpBar UIUpgradeDiscExpBar;
-        private void InitUI()
+        private bool _isBound;
+        private UnityEngine.UI.Button         UICloseBtn;
+        private Kirara.UI.UIDiscPosIcon       UIDiscPosIcon;
+        private Kirara.UI.UIStatBar           UIMainStatBar;
+        private Kirara.UI.UIStatBar           UISubStatBar1;
+        private Kirara.UI.UIStatBar           UISubStatBar2;
+        private Kirara.UI.UIStatBar           UISubStatBar3;
+        private Kirara.UI.UIStatBar           UISubStatBar4;
+        private UnityEngine.UI.Button         UpgradeBtn;
+        private UnityEngine.UI.Button         UIUpgradeMaterial;
+        private UnityEngine.UI.Button         DecBtn;
+        private TMPro.TextMeshProUGUI         CountText;
+        private Kirara.UI.UIDiscIcon          UIDiscIcon;
+        private Kirara.UI.UIDiscNameText      UIDiscNameText;
+        private Kirara.UI.UIUpgradeDiscExpBar UIUpgradeDiscExpBar;
+        public override void BindUI()
         {
-            var c               = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UICloseBtn          = c.Q<Button>(0, "UICloseBtn");
-            UIDiscPosIcon       = c.Q<UIDiscPosIcon>(1, "UIDiscPosIcon");
-            UIMainStatBar       = c.Q<UIStatBar>(2, "UIMainStatBar");
-            UISubStatBar1       = c.Q<UIStatBar>(3, "UISubStatBar1");
-            UISubStatBar2       = c.Q<UIStatBar>(4, "UISubStatBar2");
-            UISubStatBar3       = c.Q<UIStatBar>(5, "UISubStatBar3");
-            UISubStatBar4       = c.Q<UIStatBar>(6, "UISubStatBar4");
-            UpgradeBtn          = c.Q<Button>(7, "UpgradeBtn");
-            UIUpgradeMaterial   = c.Q<Button>(8, "UIUpgradeMaterial");
-            DecBtn              = c.Q<Button>(9, "DecBtn");
-            CountText           = c.Q<TextMeshProUGUI>(10, "CountText");
-            UIDiscIcon          = c.Q<UIDiscIcon>(11, "UIDiscIcon");
-            UIDiscNameText      = c.Q<UIDiscNameText>(12, "UIDiscNameText");
-            UIUpgradeDiscExpBar = c.Q<UIUpgradeDiscExpBar>(13, "UIUpgradeDiscExpBar");
+            if (_isBound) return;
+            _isBound = true;
+            var b               = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UICloseBtn          = b.Q<UnityEngine.UI.Button>(0, "UICloseBtn");
+            UIDiscPosIcon       = b.Q<Kirara.UI.UIDiscPosIcon>(1, "UIDiscPosIcon");
+            UIMainStatBar       = b.Q<Kirara.UI.UIStatBar>(2, "UIMainStatBar");
+            UISubStatBar1       = b.Q<Kirara.UI.UIStatBar>(3, "UISubStatBar1");
+            UISubStatBar2       = b.Q<Kirara.UI.UIStatBar>(4, "UISubStatBar2");
+            UISubStatBar3       = b.Q<Kirara.UI.UIStatBar>(5, "UISubStatBar3");
+            UISubStatBar4       = b.Q<Kirara.UI.UIStatBar>(6, "UISubStatBar4");
+            UpgradeBtn          = b.Q<UnityEngine.UI.Button>(7, "UpgradeBtn");
+            UIUpgradeMaterial   = b.Q<UnityEngine.UI.Button>(8, "UIUpgradeMaterial");
+            DecBtn              = b.Q<UnityEngine.UI.Button>(9, "DecBtn");
+            CountText           = b.Q<TMPro.TextMeshProUGUI>(10, "CountText");
+            UIDiscIcon          = b.Q<Kirara.UI.UIDiscIcon>(11, "UIDiscIcon");
+            UIDiscNameText      = b.Q<Kirara.UI.UIDiscNameText>(12, "UIDiscNameText");
+            UIUpgradeDiscExpBar = b.Q<Kirara.UI.UIUpgradeDiscExpBar>(13, "UIUpgradeDiscExpBar");
         }
         #endregion
 
@@ -67,9 +67,9 @@ namespace Kirara.UI.Panel
         private MaterialItem mat;
         private int MatCount => mat?.Count ?? 0;
 
-        private void Awake()
+        protected override void Awake()
         {
-            InitUI();
+            base.Awake();
 
             int matCid = 1;
 
