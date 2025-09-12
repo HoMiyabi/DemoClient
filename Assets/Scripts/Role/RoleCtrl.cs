@@ -32,6 +32,8 @@ namespace Kirara
         private bool EnableRecenter { get; set; }
         private bool EnableLookAtMonster { get; set; }
 
+        public bool IsAttacking { get; set; }
+
         public List<MonsterCtrl> lastHitMonsters = new();
 
 
@@ -299,15 +301,21 @@ namespace Kirara
             ActionCtrl.PlayAction(ActionName.SwitchIn_Normal);
         }
 
-        public void SwitchOutNormal()
+        public void ShouldSwitchOutNormal()
         {
-            transform.DOKill();
-            ActionCtrl.PlayAction(ActionName.SwitchOut_Normal);
+            if (!IsAttacking)
+            {
+                transform.DOKill();
+                ActionCtrl.PlayAction(ActionName.SwitchOut_Normal);
+            }
         }
 
-        public void SwitchOutAided()
+        public void ShouldSwitchOutAided()
         {
-            ActionCtrl.PlayAction(ActionName.Background);
+            if (!IsAttacking)
+            {
+                ActionCtrl.PlayAction(ActionName.Background);
+            }
         }
 
         public async UniTaskVoid EnterParryAid()

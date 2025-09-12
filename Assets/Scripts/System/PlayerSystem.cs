@@ -252,12 +252,12 @@ namespace Kirara
             var monster = MonsterSystem.Instance.ClosestDodgeDetectMonster(prev.transform.position, out float dist);
             if (monster != null)
             {
-                prev.SwitchOutAided();
+                prev.ShouldSwitchOutAided();
                 FrontRoleCtrl.SwitchInParryAid(monster);
             }
             else
             {
-                prev.SwitchOutNormal();
+                prev.ShouldSwitchOutNormal();
                 FrontRoleCtrl.SwitchInNormal(prev, isNext);
             }
         }

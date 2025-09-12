@@ -13,7 +13,7 @@ namespace Kirara
         [SerializeField] private Transform monsterParent;
         public readonly Dictionary<int, MonsterCtrl> monsters = new();
 
-        public List<MonsterCtrl> DodgeDetectMonsters { get; private set; } = new();
+        public List<MonsterCtrl> DodgeDetectMonsters { get; } = new();
 
         public event Action<MonsterCtrl> OnMonsterSpawn;
         public event Action<MonsterCtrl> OnMonsterDie;

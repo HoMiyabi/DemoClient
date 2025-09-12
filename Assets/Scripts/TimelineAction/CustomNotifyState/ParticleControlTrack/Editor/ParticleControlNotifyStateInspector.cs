@@ -40,16 +40,21 @@ namespace Kirara.TimelineAction
             if (!instances.Contains(this))
             {
                 instances.Add(this);
+                SceneView.duringSceneGui -= DuringSceneGUI;
                 SceneView.duringSceneGui += DuringSceneGUI;
             }
         }
 
         private void OnDisable()
         {
-            if (instances.Remove(this))
-            {
-                SceneView.duringSceneGui -= DuringSceneGUI;
-            }
+            instances.Remove(this);
+            SceneView.duringSceneGui -= DuringSceneGUI;
+        }
+
+        private void OnDestroy()
+        {
+            instances.Remove(this);
+            SceneView.duringSceneGui -= DuringSceneGUI;
         }
 
         public override void OnInspectorGUI()

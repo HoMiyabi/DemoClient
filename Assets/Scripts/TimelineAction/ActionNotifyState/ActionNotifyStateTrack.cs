@@ -20,7 +20,7 @@ namespace Kirara.TimelineAction
             }
             else
             {
-                clip.duration = 1f;
+                clip.duration = 0.5;
             }
             var nameAttr = type.GetCustomAttribute<DisplayNameAttribute>();
             if (nameAttr != null)
