@@ -14,7 +14,7 @@ namespace Kirara.Manager
 
         public void Init()
         {
-            KiraraNetwork.Init(new MsgMeta(), GetType().Assembly);
+            KiraraNetwork.Init(new MsgMeta().Init(), GetType().Assembly);
         }
 
         public void Connect()

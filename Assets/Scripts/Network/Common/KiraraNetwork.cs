@@ -8,12 +8,12 @@ namespace Kirara.Network
 {
     public static class KiraraNetwork
     {
-        public static IMsgMeta MsgMeta { get; private set; }
+        public static MsgMeta MsgMeta { get; private set; }
         public static int SessionTimeoutMs { get; private set; } = 8000;
         public static Dictionary<uint, IMsgHandler> Handlers { get; private set; }
         public static ConcurrentDictionary<uint, Action<IMessage>> RpcCallbacks { get; private set; } = new();
 
-        public static void Init(IMsgMeta msgMeta, Assembly assembly)
+        public static void Init(MsgMeta msgMeta, Assembly assembly)
         {
             MsgMeta = msgMeta;
             Scan(assembly);
