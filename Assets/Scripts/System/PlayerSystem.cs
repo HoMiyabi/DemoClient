@@ -285,7 +285,7 @@ namespace Kirara
             Player.transform.position = FrontRoleCtrl.transform.position;
             if (EnableInput)
             {
-                UpdateInputPress();
+                UpdateActionCtrlInputPress();
             }
 
             foreach (var roleCtrl in RoleCtrls)
@@ -294,7 +294,7 @@ namespace Kirara
             }
         }
 
-        private void UpdateInputPress()
+        private void UpdateActionCtrlInputPress()
         {
             if (input.Combat.BaseAttack.phase == InputActionPhase.Started)
             {

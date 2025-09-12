@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace Kirara.TimelineAction
 {
-    public class ActionCtrl : MonoBehaviour
+    public class ActionCtrl : MonoBehaviour, INotificationReceiver
     {
         public KiraraActionListSO actionList;
         private Dictionary<string, KiraraActionSO> ActionDict { get; set; }
@@ -405,5 +406,13 @@ namespace Kirara.TimelineAction
         }
 
         #endregion
+
+        public void OnNotify(Playable origin, INotification notification, object context)
+        {
+            // if (notification is ActionNotify actionNotify)
+            // {
+            //     Debug.Log($"{name} OnNotify name: {actionNotify.GetType().Name}, time: {origin.GetTime()}, isPlaying: {origin.GetGraph().IsPlaying()}");
+            // }
+        }
     }
 }
