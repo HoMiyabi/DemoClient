@@ -46,12 +46,12 @@ namespace Kirara
                 var vfxWPos = target.transform.position + new Vector3(0, 1f, 0);
                 if (box.setParticleRot)
                 {
-                    ParticleMgr.Instance.Play(box.particlePrefab, vfxWPos, role.transform.forward,
+                    ParticleMgr.Instance.PlayAt(box.particlePrefab, vfxWPos, role.transform.forward,
                         box.rotValue, box.rotMaxValue);
                 }
                 else
                 {
-                    ParticleMgr.Instance.Play(box.particlePrefab, vfxWPos);
+                    ParticleMgr.Instance.PlayAt(box.particlePrefab, vfxWPos);
                 }
             }
         }

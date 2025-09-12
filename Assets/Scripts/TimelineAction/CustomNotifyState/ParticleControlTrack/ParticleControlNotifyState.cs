@@ -23,10 +23,7 @@ namespace Kirara.TimelineAction
         public override void NotifyBegin(ActionCtrl actionCtrl)
         {
             var transform = actionCtrl.transform;
-            var particle = ParticleMgr.Instance.Play(prefab, transform);
-            particle.transform.localPosition = position;
-            particle.transform.localRotation = rotation;
-            particle.transform.localScale = scale;
+            ParticleMgr.Instance.PlayAsChild(prefab, transform, position, rotation, scale);
         }
     }
 }
