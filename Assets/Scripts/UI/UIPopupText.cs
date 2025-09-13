@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Text;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 
 namespace Kirara.UI
@@ -9,13 +8,16 @@ namespace Kirara.UI
     public class UIPopupText : MonoBehaviour
     {
         #region View
-        private TextMeshProUGUI Text;
-        private CanvasGroup     CanvasGroup;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI   Text;
+        private UnityEngine.CanvasGroup CanvasGroup;
+        public void BindUI()
         {
-            var c       = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            Text        = c.Q<TextMeshProUGUI>(0, "Text");
-            CanvasGroup = c.Q<CanvasGroup>(1, "CanvasGroup");
+            if (_isBound) return;
+            _isBound = true;
+            var b       = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            Text        = b.Q<TMPro.TextMeshProUGUI>(0, "Text");
+            CanvasGroup = b.Q<UnityEngine.CanvasGroup>(1, "CanvasGroup");
         }
         #endregion
 
@@ -34,9 +36,9 @@ namespace Kirara.UI
 
         private void Awake()
         {
-            InitUI();
+            BindUI();
 
-            _rectTransform = transform as RectTransform;
+            _rectTransform = (RectTransform)transform;
         }
 
         public UIPopupText SetInfo(Transform follow, Vector3 localPos, double dmg, bool isCrit)

@@ -3,9 +3,7 @@ using cfg.main;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
 using Kirara.TimelineAction;
-using Kirara.UI;
 using UnityEngine;
-using YooAsset;
 
 namespace Kirara
 {
@@ -216,16 +214,6 @@ namespace Kirara
             //         }
             //     }
             // }
-        }
-
-        public void DoAttackTip(bool canParry)
-        {
-            Debug.Log("攻击提示");
-            var handle = YooAssets.LoadAssetSync<AudioClip>("AttackTip");
-            AudioMgr.Instance.PlaySFX(handle.AssetObject as AudioClip, transform.position);
-            handle.Release();
-
-            UIMgr.Instance.AddHUD<UIAttackLight>().Set(canParry, attackLightFollow);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Kirara.TimelineAction
         {
             if (actionCtrl.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
             {
-                monsterCtrl.DoAttackTip(canParry);
+                MonsterSystem.Instance.DoAttackTip(monsterCtrl, canParry);
             }
         }
     }

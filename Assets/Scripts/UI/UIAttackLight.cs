@@ -7,35 +7,54 @@ namespace Kirara.UI
 {
     public class UIAttackLight : MonoBehaviour
     {
-        public Sprite redLight;
-        public Sprite yellowLight;
+        #region View
+        private bool _isBound;
+        private UnityEngine.UI.Image leftImg;
+        private UnityEngine.UI.Image rightImg;
+        private UnityEngine.UI.Image upImg;
+        private UnityEngine.UI.Image downImg;
+        public void BindUI()
+        {
+            if (_isBound) return;
+            _isBound = true;
+            var b    = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            leftImg  = b.Q<UnityEngine.UI.Image>(0, "leftImg");
+            rightImg = b.Q<UnityEngine.UI.Image>(1, "rightImg");
+            upImg    = b.Q<UnityEngine.UI.Image>(2, "upImg");
+            downImg  = b.Q<UnityEngine.UI.Image>(3, "downImg");
+        }
+        #endregion
 
-        public Image imgLeft;
-        public Image imgRight;
-        public Image imgUp;
-        public Image imgDown;
+        public Sprite redLightSprite;
+        public Sprite yellowLightSprite;
 
-        private Transform wsFollow;
+        private Transform _wsFollow;
         private RectTransform rectTransform;
+
+        private void Awake()
+        {
+            BindUI();
+            rectTransform = transform as RectTransform;
+        }
 
         public UIAttackLight Set(bool isYellow, Transform wsFollow)
         {
-            this.wsFollow = wsFollow;
+            _wsFollow = wsFollow;
 
             Sprite sprite = null;
             if (isYellow)
             {
-                sprite = yellowLight;
+                sprite = yellowLightSprite;
             }
             else
             {
-                sprite = redLight;
+                sprite = redLightSprite;
             }
 
-            SetImage(imgLeft, sprite);
-            SetImage(imgRight, sprite);
-            SetImage(imgUp, sprite);
-            SetImage(imgDown, sprite);
+            SetImage(leftImg, sprite);
+            SetImage(rightImg, sprite);
+            SetImage(upImg, sprite);
+            SetImage(downImg, sprite);
             UniTask.Void(async () =>
             {
                 await UniTask.WaitForSeconds(0.6f);
@@ -47,14 +66,9 @@ namespace Kirara.UI
             return this;
         }
 
-        private void Awake()
-        {
-            rectTransform = transform as RectTransform;
-        }
-
         private void Update()
         {
-            RectUtils.SetRectWorldPos(rectTransform, wsFollow.position);
+            RectUtils.SetRectWorldPos(rectTransform, _wsFollow.position);
         }
 
         private void SetImage(Image image, Sprite sprite)

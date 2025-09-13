@@ -20,6 +20,9 @@ namespace Kirara
         public delegate void OnMonsterTakeDamageDel(MonsterCtrl monsterCtrl, double damage, bool isCrit);
         public event OnMonsterTakeDamageDel OnMonsterTakeDamage;
 
+        public delegate void OnMonsterAttackTipDel(MonsterCtrl monsterCtrl, bool canParry);
+        public event OnMonsterAttackTipDel OnMonsterAttackTip;
+
         public void MonsterTakeDamage(NotifyMonsterTakeDamage msg)
         {
             if (monsterCtrls.TryGetValue(msg.MonsterId, out var monsterCtrl))
@@ -66,6 +69,11 @@ namespace Kirara
             {
                 Debug.LogWarning($"MonsterDie找不到Monster monsterId={monsterId}");
             }
+        }
+
+        public void DoAttackTip(MonsterCtrl monsterCtrl, bool canParry)
+        {
+            OnMonsterAttackTip?.Invoke(monsterCtrl, canParry);
         }
 
         public MonsterCtrl ClosestMonster(Vector3 worldPos, out float dist)
