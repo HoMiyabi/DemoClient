@@ -39,7 +39,7 @@ namespace Kirara.UI
             _rectTransform = transform as RectTransform;
         }
 
-        public UIPopupText SetDamage(Transform follow, Vector3 localPos, double dmg, bool isCrit)
+        public UIPopupText SetInfo(Transform follow, Vector3 localPos, double dmg, bool isCrit)
         {
             _follow = follow;
             _localPos = localPos;

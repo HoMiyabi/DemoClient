@@ -6,7 +6,6 @@ using Kirara.TimelineAction;
 using Kirara.UI;
 using UnityEngine;
 using YooAsset;
-using Random = UnityEngine.Random;
 
 namespace Kirara
 {
@@ -18,8 +17,6 @@ namespace Kirara
 
         [SerializeField] private BoxCollider boxCollider;
         [SerializeField] private SphereCollider sphereCollider;
-
-        public event Action onDie;
 
         // public RoleCtrl ParryingRole { get; set; }
         private CharacterController CharacterController { get; set; }
@@ -38,15 +35,9 @@ namespace Kirara
             Model = model;
         }
 
-        public void HandleTakeDamage(NotifyMonsterTakeDamage msg)
+        public void HandleSelfTakeDamage(NotifyMonsterTakeDamage msg)
         {
             Model.Set[EAttrType.CurrHp] = msg.CurrHp;
-
-            // 伤害跳字
-            var popupTextLocalPos = new Vector3(0, 1.5f, 0) + Random.insideUnitSphere * 0.3f;
-
-            UIMgr.Instance.AddHUD<UIPopupText>().
-                SetDamage(transform, popupTextLocalPos, msg.Damage, msg.IsCrit).Play();
 
             // Model.AttrSet[EAttrType.CurrHp] = Math.Max(0, Model.AttrSet[EAttrType.CurrHp] - damage);
             //
@@ -54,9 +45,8 @@ namespace Kirara
             //     Model.AttrSet[EAttrType.CurrDaze] + daze, Model.AttrSet[EAttrType.MaxDaze]);
         }
 
-        public void Die()
+        public void HandleSelfDie()
         {
-            onDie?.Invoke();
             Destroy(gameObject);
         }
 

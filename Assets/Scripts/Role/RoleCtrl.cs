@@ -52,7 +52,6 @@ namespace Kirara
             Cam = Camera.main.transform;
             Animator = GetComponent<Animator>();
 
-            // combatStateMachine = GetComponent<CombatStateMachine>();
             CharacterController = GetComponent<CharacterController>();
             ChGravity = GetComponent<ChGravity>();
 
@@ -150,7 +149,7 @@ namespace Kirara
             transform.DORotateQuaternion(rot, 0.1f);
         }
 
-        public void TriggerHitstopIfHit(float duration, float speed)
+        public void TriggerHitstopIfHitMonster(float duration, float speed)
         {
             if (lastHitMonsters.Count > 0)
             {
@@ -252,17 +251,16 @@ namespace Kirara
         public void SwitchInParryAid(MonsterCtrl monster)
         {
             Debug.Log($"{name} 角色进入格挡");
-            ChGravity.enabled = true;
-            gameObject.SetActive(true);
 
             // 格挡
             // todo)) 格挡点数
             const float parryDist = 3f;
+            // 面向敌人
             transform.forward = -monster.transform.forward;
             SetPos(monster.transform.position + monster.transform.forward * parryDist);
-            ActionCtrl.PlayAction(ActionName.Attack_ParryAid_Start);
-            // monster.ParryingRole = this;
 
+            // monster.ParryingRole = this;
+            ActionCtrl.PlayAction(ActionName.Attack_ParryAid_Start);
         }
 
         private Vector3 switchNextLocalPos = new(1, 0, -1);
@@ -367,6 +365,11 @@ namespace Kirara
         {
             leftAssistVCam.enabled = false;
             rightAssistVCam.enabled = false;
+        }
+
+        public bool TryTriggerPerfectDodge()
+        {
+            return false;
         }
     }
 }

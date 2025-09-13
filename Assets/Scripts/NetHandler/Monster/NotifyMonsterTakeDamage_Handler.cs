@@ -6,10 +6,7 @@ namespace Kirara.NetHandler.Monster
     {
         protected override void Run(Session session, NotifyMonsterTakeDamage msg)
         {
-            if (MonsterSystem.Instance.monsters.TryGetValue(msg.MonsterId, out var monster))
-            {
-                monster.HandleTakeDamage(msg);
-            }
+            MonsterSystem.Instance.MonsterTakeDamage(msg);
         }
     }
 }

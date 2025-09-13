@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kirara.Model;
-using Kirara.UI;
 using Manager;
 using UnityEngine;
 using YooAsset;
@@ -11,12 +10,24 @@ namespace Kirara
     public class MonsterSystem : UnitySingleton<MonsterSystem>
     {
         [SerializeField] private Transform monsterParent;
-        public readonly Dictionary<int, MonsterCtrl> monsters = new();
+        public readonly Dictionary<int, MonsterCtrl> monsterCtrls = new();
 
         public List<MonsterCtrl> DodgeDetectMonsters { get; } = new();
 
         public event Action<MonsterCtrl> OnMonsterSpawn;
         public event Action<MonsterCtrl> OnMonsterDie;
+
+        public delegate void OnMonsterTakeDamageDel(MonsterCtrl monsterCtrl, double damage, bool isCrit);
+        public event OnMonsterTakeDamageDel OnMonsterTakeDamage;
+
+        public void MonsterTakeDamage(NotifyMonsterTakeDamage msg)
+        {
+            if (monsterCtrls.TryGetValue(msg.MonsterId, out var monsterCtrl))
+            {
+                monsterCtrl.HandleSelfTakeDamage(msg);
+                OnMonsterTakeDamage?.Invoke(monsterCtrl, msg.Damage, msg.IsCrit);
+            }
+        }
 
         public void SpawnMonster(NSyncMonster syncMonster)
         {
@@ -32,7 +43,7 @@ namespace Kirara
 
             var monster = go.GetComponent<MonsterCtrl>();
             monster.Set(new MonsterModel(syncMonster.MonsterCid, syncMonster.MonsterId, syncMonster.Hp));
-            monsters.Add(syncMonster.MonsterCid, monster);
+            monsterCtrls.Add(syncMonster.MonsterCid, monster);
             if (!string.IsNullOrEmpty(syncMonster.ActionName))
             {
                 monster.PlayAction(syncMonster.ActionName);
@@ -46,10 +57,10 @@ namespace Kirara
 
         public void MonsterDie(int monsterId)
         {
-            if (monsters.Remove(monsterId, out var monster))
+            if (monsterCtrls.Remove(monsterId, out var monster))
             {
                 OnMonsterDie?.Invoke(monster);
-                monster.Die();
+                monster.HandleSelfDie();
             }
             else
             {
@@ -59,7 +70,7 @@ namespace Kirara
 
         public MonsterCtrl ClosestMonster(Vector3 worldPos, out float dist)
         {
-            return ClosestMonster(worldPos, monsters.Values, out dist);
+            return ClosestMonster(worldPos, monsterCtrls.Values, out dist);
         }
 
         public MonsterCtrl ClosestDodgeDetectMonster(Vector3 worldPos, out float dist)

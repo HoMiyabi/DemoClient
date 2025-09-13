@@ -23,10 +23,10 @@ namespace Kirara
         [SerializeField] private RectTransform topCanvas;
         private RectTransform[] canvass;
 
-        private List<AbstractBasePanel> stk;
-
-
-        public int NormalCount => stk.Count;
+        private List<AbstractBasePanel> hudStack;
+        private List<AbstractBasePanel> normalStack;
+        private List<AbstractBasePanel> topStack;
+        private List<AbstractBasePanel>[] stacks;
 
         protected override void Awake()
         {
@@ -39,13 +39,17 @@ namespace Kirara
                 DontDestroyOnLoad(canvas.gameObject);
             }
 
-            stk = new List<AbstractBasePanel>();
+            hudStack = new List<AbstractBasePanel>();
+            normalStack = new List<AbstractBasePanel>();
+            topStack = new List<AbstractBasePanel>();
+            stacks = new[] { hudStack, normalStack, topStack };
         }
 
-        private T Init<T>(GameObject go) where T : AbstractBasePanel
+        private T Init<T>(GameObject go, UILayer layer) where T : AbstractBasePanel
         {
             var panel = go.GetComponent<T>();
 
+            var stk = stacks[(int)layer];
             if (stk.Count > 0)
             {
                 stk[^1].OnPause();
@@ -57,31 +61,27 @@ namespace Kirara
             return panel;
         }
 
-        public T PushPanel<T>(GameObject prefab) where T : AbstractBasePanel
+        public T PushPanel<T>(GameObject prefab, UILayer layer = UILayer.Normal) where T : AbstractBasePanel
         {
-            var go = Instantiate(prefab, canvass[(int)UILayer.Normal]);
-            return Init<T>(go);
+            var go = Instantiate(prefab, canvass[(int)layer]);
+            return Init<T>(go, layer);
         }
 
-        public T PushPanel<T>() where T : AbstractBasePanel
+        public T PushPanel<T>(UILayer layer = UILayer.Normal) where T : AbstractBasePanel
         {
-            var go = LoadInLayer(typeof(T).Name, UILayer.Normal);
-            return Init<T>(go);
+            var go = LoadAssetInLayer(typeof(T).Name, layer);
+            return Init<T>(go, layer);
         }
 
-        public AbstractBasePanel PushPanel(string location)
+        public AbstractBasePanel PushPanel(string location, UILayer layer = UILayer.Normal)
         {
-            var go = LoadInLayer(location, UILayer.Normal);
-            return Init<AbstractBasePanel>(go);
+            var go = LoadAssetInLayer(location, layer);
+            return Init<AbstractBasePanel>(go, layer);
         }
 
-        public AbstractBasePanel PushPanel(Type type)
+        public void PopPanel(AbstractBasePanel panel, UILayer layer = UILayer.Normal)
         {
-            return PushPanel(type.Name);
-        }
-
-        public void PopPanel(AbstractBasePanel panel)
-        {
+            var stk = stacks[(int)layer];
             if (stk.Count == 0 || stk[^1] != panel)
             {
                 Debug.LogError($"PopPanel，但不在{nameof(stk)}中");
@@ -103,8 +103,9 @@ namespace Kirara
             }
         }
 
-        public void PopAllPanel()
+        public void PopAllPanel(UILayer layer = UILayer.Normal)
         {
+            var stk = stacks[(int)layer];
             while (stk.Count > 0)
             {
                 PopPanel(stk[^1]);
@@ -121,7 +122,7 @@ namespace Kirara
             return AddView<T>(UILayer.Top);
         }
 
-        private GameObject LoadInLayer(string location, UILayer layer)
+        private GameObject LoadAssetInLayer(string location, UILayer layer)
         {
             var handle = YooAssets.LoadAssetSync<GameObject>(location);
             var go = handle.InstantiateSync(canvass[(int)layer]);
@@ -132,7 +133,7 @@ namespace Kirara
         private T AddView<T>(UILayer layer)
         {
             string location = typeof(T).Name;
-            var go = LoadInLayer(location, layer);
+            var go = LoadAssetInLayer(location, layer);
             return go.GetComponent<T>();
         }
     }

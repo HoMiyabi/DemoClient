@@ -181,6 +181,7 @@ namespace Kirara
         {
             CreateTeamRoles();
             NetFn.Send(new MsgEnterRoom());
+            UIMgr.Instance.PushPanel<PopupTextPanel>(UILayer.HUD);
             UIMgr.Instance.PushPanel<CombatPanel>();
 
             FrontRoleId = PlayerService.Player.FrontRoleId;

@@ -8,7 +8,7 @@ namespace Kirara.NetHandler.Monster
         {
             foreach (var syncMonster in msg.Monsters)
             {
-                if (MonsterSystem.Instance.monsters.TryGetValue(syncMonster.MonsterCid, out var monster))
+                if (MonsterSystem.Instance.monsterCtrls.TryGetValue(syncMonster.MonsterCid, out var monster))
                 {
                     monster.UpdateSync(syncMonster);
                 }

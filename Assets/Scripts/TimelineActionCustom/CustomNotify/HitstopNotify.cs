@@ -13,7 +13,7 @@ namespace Kirara.TimelineAction
         {
             var roleCtrl = actionCtrl.GetComponent<RoleCtrl>();
             if (!roleCtrl) return;
-            roleCtrl.TriggerHitstopIfHit(duration, animationSpeed);
+            roleCtrl.TriggerHitstopIfHitMonster(duration, animationSpeed);
         }
     }
 }
