@@ -40,7 +40,7 @@ namespace Kirara.TimelineAction
             EditorGUILayout.PropertyField(signalTransitionsProp, new GUIContent("信号跳转"));
 
             EditorGUILayout.Space();
-            GUILayout.Label("跳转到本动作的动作:");
+            EditorGUILayout.LabelField("跳转到本动作的动作:");
             var instance = ActionListWindow.Instance;
             if (instance && instance.ActionList &&
                 instance.ActionList.actions != null && instance.Action == target)
@@ -52,7 +52,7 @@ namespace Kirara.TimelineAction
                 }
                 EditorGUI.indentLevel++;
 
-                GUILayout.Label("结束跳转:");
+                EditorGUILayout.LabelField("结束跳转:");
                 EditorGUI.indentLevel++;
                 foreach (var action in instance.ActionList.actions)
                 {
@@ -64,7 +64,7 @@ namespace Kirara.TimelineAction
                 }
                 EditorGUI.indentLevel--;
 
-                GUILayout.Label("指令跳转:");
+                EditorGUILayout.LabelField("指令跳转:");
                 EditorGUI.indentLevel++;
                 foreach (var action in instance.ActionList.actions)
                 {
@@ -79,7 +79,7 @@ namespace Kirara.TimelineAction
                 }
                 EditorGUI.indentLevel--;
 
-                GUILayout.Label("信号跳转:");
+                EditorGUILayout.LabelField("信号跳转:");
                 EditorGUI.indentLevel++;
                 foreach (var action in instance.ActionList.actions)
                 {
