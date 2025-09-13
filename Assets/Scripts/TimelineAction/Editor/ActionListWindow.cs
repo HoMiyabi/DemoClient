@@ -89,6 +89,7 @@ namespace Kirara.TimelineAction.Editor
                 timelineWindow.SetTimeline(_action);
             }
             timelineWindow.Repaint();
+            timelineWindow.Focus();
 
             // 更新动作细节窗口
             var detailsWindow = ActionDetailsWindow.GetWindow();
