@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel;
-using UnityEngine;
 
 namespace Kirara.TimelineAction
 {
-    [DisplayName("启用格挡支援")]
-    public class EnableParryAidNotifyState : ActionNotifyState
+    [DisplayName("控制格挡支援通知状态")]
+    public class ControlParryAidNotifyState : ActionNotifyState
     {
         public override void NotifyBegin(ActionCtrl actionCtrl)
         {
-            var roleCtrl = actionCtrl.GetComponent<RoleCtrl>();
-            if (roleCtrl)
+            if (actionCtrl.TryGetComponent<RoleCtrl>(out var roleCtrl))
             {
                 NetFn.Send(new MsgRoleSetParry()
                 {
@@ -21,8 +19,7 @@ namespace Kirara.TimelineAction
 
         public override void NotifyEnd(ActionCtrl actionCtrl)
         {
-            var roleCtrl = actionCtrl.GetComponent<RoleCtrl>();
-            if (roleCtrl)
+            if (actionCtrl.TryGetComponent<RoleCtrl>(out var roleCtrl))
             {
                 NetFn.Send(new MsgRoleSetParry()
                 {
@@ -30,7 +27,6 @@ namespace Kirara.TimelineAction
                     Parrying = false
                 });
             }
-            // ch.EnableParryAid = false;
         }
     }
 }

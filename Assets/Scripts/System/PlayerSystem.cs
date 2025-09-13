@@ -296,23 +296,26 @@ namespace Kirara
 
         private void UpdateActionCtrlInputPress()
         {
-            if (input.Combat.BaseAttack.phase == InputActionPhase.Started)
+            // Debug.Log($"BaseAttack.phase: {input.Combat.BaseAttack.phase}\n" +
+            //           $"Dodge.phase: {input.Combat.Dodge.phase}\n" +
+            //           $"Move.phase: {input.Combat.Move.phase}");
+            if (input.Combat.BaseAttack.phase is InputActionPhase.Started or InputActionPhase.Performed)
             {
                 FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.BaseAttack, EActionCommandPhase.Press);
             }
-            if (input.Combat.Dodge.phase == InputActionPhase.Started)
+            if (input.Combat.Dodge.phase is InputActionPhase.Started or InputActionPhase.Performed)
             {
                 FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.Dodge, EActionCommandPhase.Press);
             }
-            if (input.Combat.Move.phase == InputActionPhase.Started)
+            if (input.Combat.Move.phase is InputActionPhase.Started or InputActionPhase.Performed)
             {
                 FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.Move, EActionCommandPhase.Press);
             }
-            if (input.Combat.SpecialAttack.phase == InputActionPhase.Started)
+            if (input.Combat.SpecialAttack.phase is InputActionPhase.Started or InputActionPhase.Performed)
             {
                 FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.SpecialAttack, EActionCommandPhase.Press);
             }
-            if (input.Combat.Ultimate.phase == InputActionPhase.Started)
+            if (input.Combat.Ultimate.phase is InputActionPhase.Started or InputActionPhase.Performed)
             {
                 FrontRoleCtrl.ActionCtrl.InputCommand(EActionCommand.Ultimate, EActionCommandPhase.Press);
             }

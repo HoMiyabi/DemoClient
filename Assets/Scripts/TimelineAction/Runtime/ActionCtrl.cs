@@ -141,6 +141,10 @@ namespace Kirara.TimelineAction
                     phase = phase,
                     time = time
                 });
+                // if (command == EActionCommand.Dodge && phase == EActionCommandPhase.Press)
+                // {
+                //     Debug.Log($"{name} 输入指令 {command} {phase}, time: {Time} 无跳转");
+                // }
             }
             while (InputBuffer.TryPeekFront(out var item) &&
                    item.time < time - dt)
