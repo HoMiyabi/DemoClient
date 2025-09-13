@@ -240,7 +240,7 @@ namespace Kirara.TimelineAction
             {
                 foreach (var signalTransition in action.signalTransitions)
                 {
-                    if (signalTransition.signalName == signalName &&
+                    if (signalTransition.Check(signalName) &&
                         IsActionExecutableInternal(signalTransition.actionName))
                     {
                         return signalTransition;

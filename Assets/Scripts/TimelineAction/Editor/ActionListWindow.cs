@@ -2,12 +2,13 @@
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Search;
+using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using SearchField = UnityEditor.IMGUI.Controls.SearchField;
 
-namespace Kirara.TimelineAction
+namespace Kirara.TimelineAction.Editor
 {
     public class ActionListWindow : EditorWindow
     {
@@ -68,7 +69,7 @@ namespace Kirara.TimelineAction
             _action = action;
 
             // 更新Timeline窗口
-            var timelineWindow = TimelineWindowHelper.GetWindow();
+            var timelineWindow = TimelineEditor.GetOrCreateWindow();
             if (_director)
             {
                 _director.playableAsset = _action;
@@ -162,7 +163,7 @@ namespace Kirara.TimelineAction
             EditorGUI.BeginDisabledGroup(ActionList == null || GO == null);
             using (new GUILayout.HorizontalScope())
             {
-                if (GUILayout.Button(MyEditorGUIIcon.PlayButton, GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(EditorGUIIcon.PlayButton, GUILayout.ExpandWidth(false)))
                 {
                     if (_animator.runtimeAnimatorController == null)
                     {
@@ -225,12 +226,12 @@ namespace Kirara.TimelineAction
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    MyGUIUtils.BeginHighlight(style, action == Action);
+                    GUIHighlight.Begin(style, action == Action);
                     if (GUILayout.Button(action.name, style))
                     {
                         Action = action;
                     }
-                    MyGUIUtils.EndHighlight();
+                    GUIHighlight.End();
 
                     if (GUILayout.Button("...", GUILayout.ExpandWidth(false)))
                     {

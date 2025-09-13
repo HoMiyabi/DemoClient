@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Kirara.TimelineAction
@@ -45,7 +44,7 @@ namespace Kirara.TimelineAction
 
         public string ToJson()
         {
-            return JsonConvert.SerializeObject(this);
+            return "";
         }
     }
 }

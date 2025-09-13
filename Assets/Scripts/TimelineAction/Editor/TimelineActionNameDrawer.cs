@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Kirara.TimelineAction
+namespace Kirara.TimelineAction.Editor
 {
     [CustomPropertyDrawer(typeof(TimelineActionNameAttribute))]
     public class TimelineActionNameDrawer : PropertyDrawer

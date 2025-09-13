@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 
 namespace Kirara.TimelineAction
 {
     [Serializable]
-    public class FinishTransitionInfo
+    public class TransitionInfo
     {
         [TimelineActionName]
         public string actionName;

@@ -16,7 +16,7 @@ namespace Kirara.TimelineAction
         public ActionArgs actionArgs;
 
         [FormerlySerializedAs("finishCancelInfo")]
-        public FinishTransitionInfo finishTransition;
+        public TransitionInfo finishTransition;
 
         [FormerlySerializedAs("inheritTransitionActionName")]
         [TimelineActionName]

@@ -3,11 +3,9 @@ using System;
 namespace Kirara.TimelineAction
 {
     [Serializable]
-    public class CommandTransitionInfo
+    public class CommandTransitionInfo : TransitionInfo
     {
-        [TimelineActionName]
-        public string actionName;
-        public float fadeDuration = 0.15f;
+        // 条件
         public EActionCommand command;
         public EActionCommandPhase phase;
 

@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Kirara.TimelineAction
+namespace Kirara.TimelineAction.Editor
 {
     public class ActionDetailsWindow : EditorWindow
     {
