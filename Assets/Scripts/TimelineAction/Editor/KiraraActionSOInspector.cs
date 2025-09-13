@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -42,7 +40,7 @@ namespace Kirara.TimelineAction
             EditorGUILayout.PropertyField(signalTransitionsProp, new GUIContent("信号跳转"));
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("跳转到本动作的动作:");
+            GUILayout.Label("跳转到本动作的动作:");
             var instance = ActionListWindow.Instance;
             if (instance && instance.ActionList &&
                 instance.ActionList.actions != null && instance.Action == target)
@@ -54,19 +52,19 @@ namespace Kirara.TimelineAction
                 }
                 EditorGUI.indentLevel++;
 
-                EditorGUILayout.LabelField("结束跳转:");
+                GUILayout.Label("结束跳转:");
                 EditorGUI.indentLevel++;
                 foreach (var action in instance.ActionList.actions)
                 {
                     if (action == null) continue;
                     if (action.finishTransition.actionName == shortName)
                     {
-                        DrawLabelAndOpen(instance, action.name, action);
+                        DrawLabelAndOpen(instance, action);
                     }
                 }
                 EditorGUI.indentLevel--;
 
-                EditorGUILayout.LabelField("指令跳转:");
+                GUILayout.Label("指令跳转:");
                 EditorGUI.indentLevel++;
                 foreach (var action in instance.ActionList.actions)
                 {
@@ -75,13 +73,13 @@ namespace Kirara.TimelineAction
                     {
                         if (transition.actionName == shortName)
                         {
-                            DrawLabelAndOpen(instance, $"{action.name}: {transition.command}, {transition.phase}", action);
+                            DrawLabelAndOpen(instance, action, $"{transition.command}, {transition.phase}");
                         }
                     }
                 }
                 EditorGUI.indentLevel--;
 
-                EditorGUILayout.LabelField("信号跳转:");
+                GUILayout.Label("信号跳转:");
                 EditorGUI.indentLevel++;
                 foreach (var action in instance.ActionList.actions)
                 {
@@ -91,7 +89,7 @@ namespace Kirara.TimelineAction
                     {
                         if (transition.actionName == shortName)
                         {
-                            DrawLabelAndOpen(instance, $"{action.name}: {transition.signalName}", action);
+                            DrawLabelAndOpen(instance, action, transition.signalName);
                         }
                     }
                 }
@@ -103,14 +101,20 @@ namespace Kirara.TimelineAction
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawLabelAndOpen(ActionListWindow instance, string label, KiraraActionSO action)
+        private void DrawLabelAndOpen(ActionListWindow instance, KiraraActionSO action, string rightLabel = null)
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(label);
+
+            EditorGUILayout.LabelField(action.name, GUILayout.ExpandWidth(true));
+            if (rightLabel != null)
+            {
+                GUILayout.Label(rightLabel, GUILayout.ExpandWidth(false));
+            }
             if (GUILayout.Button("打开", GUILayout.ExpandWidth(false)))
             {
                 instance.Action = action;
             }
+
             EditorGUILayout.EndHorizontal();
         }
     }
