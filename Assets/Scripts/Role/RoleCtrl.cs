@@ -367,9 +367,32 @@ namespace Kirara
             rightAssistVCam.enabled = false;
         }
 
+        private Collider[] cols = new Collider[8];
+
         public bool TryTriggerPerfectDodge()
         {
+            GetCharacterControllerPoints(out var p0, out var p1, out float radius);
+            int size = Physics.OverlapCapsuleNonAlloc(p0, p1, radius, cols,
+                LayerMask.GetMask("DodgeJudge"));
+            if (size > 0)
+            {
+                Debug.Log("完美闪避");
+                var clips = PlayerSystem.Instance.dodgeSuccessTipClips;
+                AudioMgr.Instance.PlaySFX(clips.RandomItem(), transform.position);
+                return true;
+            }
             return false;
+        }
+
+        private void GetCharacterControllerPoints(out Vector3 p0, out Vector3 p1, out float radius)
+        {
+            var chCtrl = CharacterController;
+            var offset = new Vector3(0f, chCtrl.height * 0.5f - chCtrl.radius, 0f);
+            var p0Local = chCtrl.center - offset;
+            var p1Local = chCtrl.center + offset;
+            p0 = transform.TransformPoint(p0Local);
+            p1 = transform.TransformPoint(p1Local);
+            radius = chCtrl.radius;
         }
     }
 }

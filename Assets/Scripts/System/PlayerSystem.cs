@@ -13,6 +13,8 @@ namespace Kirara
 {
     public class PlayerSystem : UnitySingleton<PlayerSystem>
     {
+        public AudioClip[] dodgeSuccessTipClips;
+
         [SerializeField] private Transform RoleParent;
         [SerializeField] public CinemachineVirtualCamera vcam;
         [SerializeField] private GameObject playerPrefab;
@@ -181,7 +183,9 @@ namespace Kirara
         {
             CreateTeamRoles();
             NetFn.Send(new MsgEnterRoom());
+
             UIMgr.Instance.PushPanel<PopupTextPanel>(UILayer.HUD);
+            UIMgr.Instance.PushPanel<AttackTipPanel>(UILayer.HUD);
             UIMgr.Instance.PushPanel<CombatPanel>();
 
             FrontRoleId = PlayerService.Player.FrontRoleId;
