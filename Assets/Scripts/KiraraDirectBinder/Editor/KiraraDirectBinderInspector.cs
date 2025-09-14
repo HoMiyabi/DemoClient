@@ -66,15 +66,12 @@ namespace KiraraDirectBinder.Editor
             DrawComponent(componentRect, componentProp);
         }
 
-        private static readonly Color invalidVarNameColor = Color.yellow;
-        private static readonly Color referenceNullColor = Color.red + new Color(0f, 0.5f, 0.6f);
-
         private void DrawVarName(Rect r, SerializedProperty prop)
         {
             var oldColor = GUI.color;
             if (!VarName.IsValid(prop.stringValue) || varNameFreq[prop.stringValue] >= 2)
             {
-                GUI.color = invalidVarNameColor;
+                GUI.color = ColorPalette.invalidVarNameColor;
             }
             EditorGUI.PropertyField(r, prop, GUIContent.none);
             GUI.color = oldColor;
@@ -88,7 +85,7 @@ namespace KiraraDirectBinder.Editor
             var oldColor = GUI.color;
             if (isNull)
             {
-                GUI.color = referenceNullColor;
+                GUI.color = ColorPalette.nullReferenceColor;
             }
             EditorGUI.PropertyField(r, prop, GUIContent.none);
             GUI.color = oldColor;
@@ -182,21 +179,21 @@ namespace KiraraDirectBinder.Editor
 
             DrawDragArea();
 
-            if (GUILayout.Button("复制C#代码 override"))
+            if (GUILayout.Button("复制C#代码 public override"))
             {
-                string code = CodeGenerator.GenCSharpCode(_target, "override ");
+                string code = CSharpGen.Run(_target, "public override");
                 GUIUtility.systemCopyBuffer = code;
             }
 
-            if (GUILayout.Button("复制C#代码"))
+            if (GUILayout.Button("复制C#代码 public"))
             {
-                string code = CodeGenerator.GenCSharpCode(_target, "");
+                string code = CSharpGen.Run(_target, "public");
                 GUIUtility.systemCopyBuffer = code;
             }
 
             if (GUILayout.Button("复制Lua代码"))
             {
-                string code = CodeGenerator.GenLuaCode(_target);
+                string code = LuaGen.Run(_target);
                 GUIUtility.systemCopyBuffer = code;
             }
 

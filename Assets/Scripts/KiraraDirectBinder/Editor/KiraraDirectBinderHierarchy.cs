@@ -27,9 +27,6 @@ namespace KiraraDirectBinder.Editor
 
         private static readonly HashSet<string> varNameSet = new();
 
-        private static readonly Color invalidVarNameColor = Color.yellow;
-        private static readonly Color nullReferenceColor = Color.red + new Color(0f, 0.5f, 0.6f);
-
         private static void OnHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
         {
             var go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
@@ -96,7 +93,7 @@ namespace KiraraDirectBinder.Editor
                 rect.x -= v.x;
                 rect.width = v.x;
 
-                EditorGUI.DrawRect(rect, nullReferenceColor);
+                EditorGUI.DrawRect(rect, ColorPalette.nullReferenceColor);
                 GUI.Label(rect, tip, new GUIStyle(GUI.skin.label)
                 {
                     alignment = TextAnchor.MiddleLeft,
@@ -121,7 +118,7 @@ namespace KiraraDirectBinder.Editor
                 rect.x -= v.x;
                 rect.width = v.x;
 
-                EditorGUI.DrawRect(rect, invalidVarNameColor);
+                EditorGUI.DrawRect(rect, ColorPalette.invalidVarNameColor);
                 GUI.Label(rect, tip, new GUIStyle(GUI.skin.label)
                 {
                     alignment = TextAnchor.MiddleLeft
