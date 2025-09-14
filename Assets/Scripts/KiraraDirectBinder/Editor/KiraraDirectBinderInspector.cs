@@ -72,7 +72,7 @@ namespace KiraraDirectBinder.Editor
         private void DrawVarName(Rect r, SerializedProperty prop)
         {
             var oldColor = GUI.color;
-            if (string.IsNullOrWhiteSpace(prop.stringValue) || varNameFreq[prop.stringValue] >= 2)
+            if (!VarName.IsValid(prop.stringValue) || varNameFreq[prop.stringValue] >= 2)
             {
                 GUI.color = invalidVarNameColor;
             }

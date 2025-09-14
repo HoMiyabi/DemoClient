@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
@@ -18,7 +17,7 @@ namespace KiraraDirectBinder.Editor
                 if (value == _binder) return;
 
                 _binder = value;
-                Set();
+                UpdateData();
             }
         }
 
@@ -31,20 +30,19 @@ namespace KiraraDirectBinder.Editor
                 if (value == _target) return;
 
                 _target = value;
-                Set();
+                UpdateData();
             }
         }
 
-        private class EditItem
+        private struct EditItem
         {
             public Component component;
             public int binderIdx;
             public string varName;
         }
 
-        private Component[] components;
-        private string[] names;
-        private readonly List<int> _comIdxToBinderIdx = new();
+        private readonly List<EditItem> _editItems = new();
+        private readonly List<Component> _components = new();
 
         [MenuItem("GameObject/Kirara Direct Binder Window _c", false, priority = 0)]
         public static void OpenWindow()
@@ -56,39 +54,50 @@ namespace KiraraDirectBinder.Editor
             var window = GetWindow<KiraraDirectBinderWindow>(true, "Kirara Direct Binder Window");
             window._target = tra;
             window._binder = FindBinder(tra);
-            window.Set();
+            window.UpdateData();
+            if (window._binder)
+            {
+                EditorGUIUtility.PingObject(window._binder);
+            }
         }
 
-        private void Set()
+        private void UpdateData()
         {
-            UpdateComponents();
-            UpdateComponentNames();
-
+            UpdateEditItems();
             UpdateWindowPosition();
         }
 
-        private void UpdateComponentNames()
+        private void UpdateEditItems()
         {
+            _editItems.Clear();
+
             if (!Target || !Binder)
             {
-                names = Array.Empty<string>();
                 return;
             }
 
-            names = new string[components.Length];
-            for (int i = 0; i < components.Length; i++)
+            string targetName = Target.name;
+            string targetVarName = VarName.ReplaceToValid(targetName);
+
+            Target.GetComponents(_components);
+            foreach (var component in _components)
             {
-                int binderIdx = Binder.items
-                    .FindIndex(x => x.component == components[i]);
-                if (binderIdx != -1)
+                int binderIdx = Binder.items.FindIndex(x => x.component == component);
+
+                string varName = binderIdx != -1 ?
+                    Binder.items[binderIdx].fieldName :
+                    targetVarName;
+
+                _editItems.Add(new EditItem
                 {
-                    names[i] = Binder.items[binderIdx].fieldName;
-                }
-                else
-                {
-                    names[i] = components[i].name.Replace(" ", "").Replace("(", "").Replace(")", "");
-                }
+                    component = component,
+                    binderIdx = binderIdx,
+                    varName = varName
+                });
             }
+
+            _editItems.Sort((x, y) =>
+                MatchScore(y.component, targetName) - MatchScore(x.component, targetName));
         }
 
         private void UpdateWindowPosition()
@@ -124,24 +133,6 @@ namespace KiraraDirectBinder.Editor
                 return 1;
             }
             return 0;
-        }
-
-        /// <summary>
-        /// 把匹配的组件放在前面
-        /// </summary>
-        /// <returns></returns>
-        private void UpdateComponents()
-        {
-            if (!Target || !Binder)
-            {
-                components = Array.Empty<Component>();
-                return;
-            }
-
-            string _name = Target.name;
-            components = Target.GetComponents<Component>();
-            Array.Sort(components, (x, y) =>
-                MatchScore(y, _name) - MatchScore(x, _name));
         }
 
         /// <summary>
@@ -184,55 +175,37 @@ namespace KiraraDirectBinder.Editor
             EditorGUIUtility.labelWidth = width;
         }
 
-        private void DrawAddButton(int i)
-        {
-            if (GUILayout.Button("+", GUILayout.ExpandWidth(false)))
-            {
-                Undo.RecordObject(_binder, $"添加{nameof(Binder)}" +
-                                           $".{nameof(Binder.items)}" +
-                                           $"字段{names[i]} " +
-                                           $"类型{components[i].GetType().Name}");
-                Binder.items.Add(new KiraraDirectBinder.Item(names[i], components[i]));
-                EditorUtility.SetDirty(Binder);
-                Close();
-            }
-        }
-
-        private void DrawRemoveButton(int i, int idxInBinder)
+        private void DrawRemoveButton(in EditItem item)
         {
             if (GUILayout.Button("-", GUILayout.ExpandWidth(false)))
             {
-                Undo.RecordObject(_binder, $"删除{nameof(_binder)}" +
-                                           $".{nameof(_binder.items)}" +
-                                           $"字段{_binder.items[idxInBinder].fieldName} " +
-                                           $"类型{components[i].GetType().Name}");
-                _binder.items.RemoveAt(idxInBinder);
+                Undo.RecordObject(Binder, "KiraraDirectBinder删除Item");
+                Binder.items.RemoveAt(item.binderIdx);
                 EditorUtility.SetDirty(Binder);
+                // 如果这里不Close可能要更新窗口数据
                 Close();
             }
         }
 
-        private void DrawRenameButton(int i, int idxInBinder)
+        private void DrawAddButton(in EditItem item)
         {
-            if (GUILayout.Button("✓", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button("+", GUILayout.ExpandWidth(false)))
             {
-                Undo.RecordObject(_binder, $"修改{nameof(_binder)}" +
-                                           $".{nameof(_binder.items)}" +
-                                           $"字段新名字{names[i]} " +
-                                           $"类型{components[i].GetType().Name}");
-                Binder.items[idxInBinder] = new KiraraDirectBinder.Item(names[i], components[i]);
+                Undo.RecordObject(Binder, "KiraraDirectBinder添加Item");
+                Binder.items.Add(new KiraraDirectBinder.Item(item.varName, item.component));
                 EditorUtility.SetDirty(Binder);
+                // 如果这里不Close可能要更新窗口数据
+                Close();
             }
         }
 
-        private void UpdateComIdxToBinderIdx()
+        private void DrawRenameSaveButton(in EditItem item)
         {
-            _comIdxToBinderIdx.Clear();
-            if (!Binder) return;
-            foreach (var c in components)
+            if (GUILayout.Button("✓", GUILayout.ExpandWidth(false)))
             {
-                int idx = Binder.items.FindIndex(x => x.component == c);
-                _comIdxToBinderIdx.Add(idx);
+                Undo.RecordObject(_binder, "KiraraDirectBinder重命名Item");
+                Binder.items[item.binderIdx] = new KiraraDirectBinder.Item(item.varName, item.component);
+                EditorUtility.SetDirty(Binder);
             }
         }
 
@@ -242,23 +215,23 @@ namespace KiraraDirectBinder.Editor
         {
             DrawBinderAndTarget();
 
-            UpdateComIdxToBinderIdx();
-
             float col2 = 0f;
-            for (int i = 0; i < components.Length; i++)
+
+            foreach (var item in _editItems)
             {
-                float width = EditorStyles.textField.CalcSize(new GUIContent(names[i])).x;
-                if (_comIdxToBinderIdx[i] != -1)
+                float width = EditorStyles.textField.CalcSize(new GUIContent(item.varName)).x;
+                if (item.binderIdx != -1)
                 {
                     width += saveButtonWidth;
                 }
                 col2 = Mathf.Max(col2, width);
             }
 
-            float maxTypeWidth = components.Length > 0 ? components
+            float maxTypeWidth = _editItems
                 .Select(x =>
-                    GUI.skin.label.CalcSize(new GUIContent(x.GetType().Name)).x)
-                .Max() : 0;
+                    GUI.skin.label.CalcSize(new GUIContent(x.component.GetType().Name)).x)
+                .DefaultIfEmpty()
+                .Max();
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
@@ -269,39 +242,44 @@ namespace KiraraDirectBinder.Editor
             GUILayout.Label("组件类型", GUILayout.Width(maxTypeWidth));
             GUILayout.EndHorizontal();
 
-            for (int i = 0; i < components.Length; i++)
+            for (int i = 0; i < _editItems.Count; i++)
             {
-                var com = components[i];
-
-                int binderIdx = _comIdxToBinderIdx[i];
-
+                var item = _editItems[i];
                 GUILayout.BeginHorizontal();
-
-                if (binderIdx != -1)
+                if (item.binderIdx != -1)
                 {
                     // 组件在Binder里，可以删除
-                    DrawRemoveButton(i, binderIdx);
+                    DrawRemoveButton(item);
                 }
                 else
                 {
                     // 组件不在Binder里，可以添加
-                    DrawAddButton(i);
+                    DrawAddButton(item);
                 }
 
                 float w = col2;
-                if (binderIdx != -1)
+                if (item.binderIdx != -1)
                 {
                     w -= saveButtonWidth;
                 }
-                names[i] = GUILayout.TextField(names[i], GUILayout.MinWidth(w));
 
-                if (binderIdx != -1)
+                EditorGUI.BeginChangeCheck();
+                item.varName = GUILayout.TextField(item.varName, GUILayout.MinWidth(w));
+                if (EditorGUI.EndChangeCheck())
                 {
-                    // 组件在Binder里，可以重命名
-                    DrawRenameButton(i, binderIdx);
+                    // Undo.RecordObject(Binder, "KiraraDirectBinder修改Item");
+                    // Binder.items[i] = new KiraraDirectBinder.Item(item.varName, item.component);
+                    // EditorUtility.SetDirty(Binder);
+                    _editItems[i] = item;
                 }
 
-                GUILayout.Label(com.GetType().Name, GUILayout.Width(maxTypeWidth));
+                if (item.binderIdx != -1)
+                {
+                    // 组件在Binder里，可以重命名保存到Binder
+                    DrawRenameSaveButton(item);
+                }
+
+                GUILayout.Label(item.component.GetType().Name, GUILayout.Width(maxTypeWidth));
 
                 GUILayout.EndHorizontal();
             }

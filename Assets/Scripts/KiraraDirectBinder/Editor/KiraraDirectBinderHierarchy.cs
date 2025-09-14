@@ -96,7 +96,7 @@ namespace KiraraDirectBinder.Editor
                 rect.x -= v.x;
                 rect.width = v.x;
 
-                UnityEditor.EditorGUI.DrawRect(rect, nullReferenceColor);
+                EditorGUI.DrawRect(rect, nullReferenceColor);
                 GUI.Label(rect, tip, new GUIStyle(GUI.skin.label)
                 {
                     alignment = TextAnchor.MiddleLeft,
@@ -107,7 +107,7 @@ namespace KiraraDirectBinder.Editor
             varNameSet.Clear();
             foreach (var item in binder.items)
             {
-                if (string.IsNullOrWhiteSpace(item.fieldName) || !varNameSet.Add(item.fieldName))
+                if (!VarName.IsValid(item.fieldName) || !varNameSet.Add(item.fieldName))
                 {
                     invalidVarName = true;
                     break;
