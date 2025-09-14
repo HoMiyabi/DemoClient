@@ -21,7 +21,7 @@ namespace Kirara.UI.Panel
         {
             Debug.Log("攻击提示");
             var handle = YooAssets.LoadAssetSync<AudioClip>("Attack_Tip");
-            AudioMgr.Instance.PlaySFX(handle.AssetObject as AudioClip, transform.position);
+            AudioMgr.Instance.PlaySFX(handle.AssetObject as AudioClip, monsterCtrl.attackLightFollow.position);
             handle.Release();
 
             Instantiate(AttackLightPrefab, transform).GetComponent<UIAttackLight>()

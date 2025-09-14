@@ -17,7 +17,7 @@ namespace Kirara
             if (pool.Count < maxPoolCount)
             {
                 go.SetActive(false);
-                go.transform.parent = transform;
+                go.transform.SetParent(transform, false);
                 pool.Push(go);
             }
             else
@@ -92,16 +92,12 @@ namespace Kirara
             return particle;
         }
 
-        public ParticleSystem PlayAsChild(GameObject prefab, Transform parent,
-            Vector3 localPosition , Quaternion localRotation, Vector3 localScale)
+        public ParticleSystem PlayAsChild(GameObject prefab, Transform parent)
         {
             GetGameObjectAndPool(prefab, out var go, out var pool);
 
-            go.transform.parent = parent;
+            go.transform.SetParent(parent, false);
             go.SetActive(true);
-            go.transform.localPosition = localPosition;
-            go.transform.localRotation = localRotation;
-            go.transform.localScale = localScale;
 
             var particle = go.GetComponent<ParticleSystem>();
             particle.Play();

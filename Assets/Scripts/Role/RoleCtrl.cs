@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using cfg.main;
 using Cinemachine;
 using UnityEngine;
@@ -343,9 +344,9 @@ namespace Kirara
         {
             Debug.Log($"{name} 角色被攻击，伤害：{damage}");
             Role.Set[EAttrType.CurrHp] -= damage;
-            if (ActionCtrl.TryGetAction("Hit_L_Front", out _))
+            if (ActionCtrl.TryGetAction(ActionName.Hit_L_Front, out _))
             {
-                ActionCtrl.PlayAction("Hit_L_Front");
+                ActionCtrl.PlayAction(ActionName.Hit_L_Front);
             }
         }
 
@@ -377,8 +378,16 @@ namespace Kirara
             if (size > 0)
             {
                 Debug.Log("完美闪避");
+                Debug.Log($"检测到碰撞体: {string.Join(", ", cols.Take(size).Select(x => x.name).ToArray())}");
+                // 播放音效
                 var clips = PlayerSystem.Instance.dodgeSuccessTipClips;
                 AudioMgr.Instance.PlaySFX(clips.RandomItem(), transform.position);
+
+                // 播放特效
+                ParticleMgr.Instance.PlayAsChild(PlayerSystem.Instance.PerfectDodgeSparklePrefab, vcamFollow);
+
+                // 后处理
+                PostVolumeMgr.Instance.StartPerfectDodgeProfile();
                 return true;
             }
             return false;
