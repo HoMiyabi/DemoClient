@@ -12,9 +12,9 @@ namespace Manager
         public string PackageVersion { get; private set; }
         public ResourceDownloaderOperation Downloader { get; private set; }
 
-        public delegate void InitPackageFailedDel(Action retry);
-        public delegate void RequestPackageVersionFailedDel(Action retry);
-        public delegate void UpdatePackageManifestFailedDel(Action retry);
+        public delegate void InitPackageFailedDel(string message, Action retry);
+        public delegate void RequestPackageVersionFailedDel(string message, Action retry);
+        public delegate void UpdatePackageManifestFailedDel(string message, Action retry);
         public delegate void FoundUpdateFilesDel(int totalCount, long totalBytes, Action startDownload);
         public delegate void WebFileDownloadFailedDel(DownloadErrorData data, Action retry);
 
@@ -41,8 +41,8 @@ namespace Manager
             // 2. 请求最新Package版本
             // 3. 更新Package清单
             // 4. 创建下载器
-            // 5. 下载资源包文件
-            // 6. 清理缓存
+            // 5. 下载资源包文件 (联网)
+            // 6. 清理缓存文件
 
             // 可能的执行路径:
             // 1 -> 2 -> 3 -> 4 (无需更新)
@@ -65,7 +65,7 @@ namespace Manager
 
                 // 请求重试
                 var utcs = new UniTaskCompletionSource();
-                OnInitPackageFailed?.Invoke(() => utcs.TrySetResult());
+                OnInitPackageFailed?.Invoke(op.Error, () => utcs.TrySetResult());
                 await utcs.Task;
             }
 
@@ -84,7 +84,7 @@ namespace Manager
 
                 // 请求重试
                 var utcs = new UniTaskCompletionSource();
-                OnRequestPackageVersionFailed?.Invoke(() => utcs.TrySetResult());
+                OnRequestPackageVersionFailed?.Invoke(op.Error, () => utcs.TrySetResult());
                 await utcs.Task;
             }
 
@@ -99,11 +99,11 @@ namespace Manager
                     break;
                 }
                 // 更新失败
-                LogWarning(op.Error);
+                LogWarning("更新Package清单失败: " + op.Error);
 
                 // 请求重试
                 var utcs = new UniTaskCompletionSource();
-                OnUpdatePackageManifestFailed?.Invoke(() => utcs.TrySetResult());
+                OnUpdatePackageManifestFailed?.Invoke(op.Error, () => utcs.TrySetResult());
                 await utcs.Task;
             }
 
@@ -133,12 +133,12 @@ namespace Manager
                 await DownloadPackageFiles().ToUniTask();
                 if (op.Status == EOperationStatus.Succeed)
                 {
-                    Log("资源文件下载完毕");
+                    Log("资源文件下载成功");
                     OnDownloadSuccess?.Invoke();
                     break;
                 }
                 // 下载失败
-                LogWarning(op.Error);
+                LogWarning("资源文件下载失败: " + op.Error);
 
                 // 请求重试
                 var utcsRetry = new UniTaskCompletionSource();
@@ -150,22 +150,24 @@ namespace Manager
             await ClearCacheBundle().ToUniTask();
             if (op.Status == EOperationStatus.Succeed)
             {
-                Log("清理缓存文件完毕");
+                Log("清理缓存文件成功");
             }
             else
             {
-                LogWarning(op.Error);
+                LogWarning("清理缓存文件失败: " + op.Error);
             }
         }
 
-        private static void Log(object message)
+        private const string _tag = "[PatchController] ";
+
+        private static void Log(string message)
         {
-            Debug.Log("[Asset] " + message);
+            Debug.Log(_tag + message);
         }
 
         private static void LogWarning(object message)
         {
-            Debug.LogWarning("[Asset] " + message);
+            Debug.LogWarning(_tag + message);
         }
 
         private IEnumerator InitPackage()
