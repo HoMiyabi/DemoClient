@@ -255,7 +255,7 @@ namespace Kirara
 
             // 格挡
             // todo)) 格挡点数
-            const float parryDist = 3f;
+            const float parryDist = 3.5f;
             // 面向敌人
             transform.forward = -monster.transform.forward;
             SetPos(monster.transform.position + monster.transform.forward * parryDist);
@@ -317,9 +317,10 @@ namespace Kirara
             }
         }
 
-        public async UniTaskVoid EnterParryAid()
+        public async UniTaskVoid EnterAttackParryAid()
         {
-            ActionCtrl.PlayAction(ActionName.Attack_ParryAid_H);
+            Debug.Log($"{name} 角色成功格挡");
+            ActionCtrl.PlayAction(ActionName.Attack_ParryAid_L);
 
             const float duration = 0.5f;
             ActionCtrl.Speed = 0f;
@@ -340,13 +341,20 @@ namespace Kirara
             Role.Set[EAttrType.CurrEnergy] -= cost;
         }
 
-        public void HandleTakeDamage(double damage)
+        public void HandleMonsterAttackRole(NotifyMonsterAttackRole msg)
         {
-            Debug.Log($"{name} 角色被攻击，伤害：{damage}");
-            Role.Set[EAttrType.CurrHp] -= damage;
-            if (ActionCtrl.TryGetAction(ActionName.Hit_L_Front, out _))
+            if (msg.Parried)
             {
-                ActionCtrl.PlayAction(ActionName.Hit_L_Front);
+                EnterAttackParryAid().Forget();
+            }
+            else
+            {
+                Debug.Log($"{name} 角色被攻击，伤害：{msg.Damage}");
+                Role.Set[EAttrType.CurrHp] -= msg.Damage;
+                if (ActionCtrl.TryGetAction(ActionName.Hit_L_Front, out _))
+                {
+                    ActionCtrl.PlayAction(ActionName.Hit_L_Front);
+                }
             }
         }
 

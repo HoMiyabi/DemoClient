@@ -2,16 +2,16 @@ using Kirara.Network;
 
 namespace Kirara.NetHandler
 {
-    public class NotifyRoleTakeDamage_Handler : MsgHandler<NotifyRoleTakeDamage>
+    public class NotifyMonsterAttackRole_Handler : MsgHandler<NotifyMonsterAttackRole>
     {
-        protected override void Run(Session session, NotifyRoleTakeDamage msg)
+        protected override void Run(Session session, NotifyMonsterAttackRole msg)
         {
             var roleCtrls = PlayerSystem.Instance.RoleCtrls;
             foreach (var roleCtrl in roleCtrls)
             {
                 if (roleCtrl.Role.Id == msg.RoleId)
                 {
-                    roleCtrl.HandleTakeDamage(msg.Damage);
+                    roleCtrl.HandleMonsterAttackRole(msg);
                 }
             }
         }

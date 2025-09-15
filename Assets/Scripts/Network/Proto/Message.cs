@@ -139,11 +139,11 @@ public static partial class MessageReflection {
           "BSKZAQoRTm90aWZ5T2J0YWluSXRlbXMSIAoIQ3VySXRlbXMYASADKAsyDi5O",
           "Q3VycmVuY3lJdGVtEiAKCE1hdEl0ZW1zGAIgAygLMg4uTk1hdGVyaWFsSXRl",
           "bRIdCglEaXNjSXRlbXMYAyADKAsyCi5ORGlzY0l0ZW0SIQoLV2VhcG9uSXRl",
-          "bXMYBCADKAsyDC5OV2VhcG9uSXRlbSI2ChROb3RpZnlSb2xlVGFrZURhbWFn",
-          "ZRIOCgZSb2xlSWQYASABKAkSDgoGRGFtYWdlGAIgASgBIjMKD01zZ1JvbGVT",
-          "ZXRQYXJyeRIOCgZSb2xlSWQYASABKAkSEAoIUGFycnlpbmcYAiABKAgiMgoP",
-          "TXNnUm9sZVNldERvZGdlEg4KBlJvbGVJZBgBIAEoCRIPCgdEb2RnaW5nGAIg",
-          "ASgIYgZwcm90bzM="));
+          "bXMYBCADKAsyDC5OV2VhcG9uSXRlbSJKChdOb3RpZnlNb25zdGVyQXR0YWNr",
+          "Um9sZRIOCgZSb2xlSWQYASABKAkSDgoGRGFtYWdlGAIgASgBEg8KB1BhcnJp",
+          "ZWQYAyABKAgiMwoPTXNnUm9sZVNldFBhcnJ5Eg4KBlJvbGVJZBgBIAEoCRIQ",
+          "CghQYXJyeWluZxgCIAEoCCIyCg9Nc2dSb2xlU2V0RG9kZ2USDgoGUm9sZUlk",
+          "GAEgASgJEg8KB0RvZGdpbmcYAiABKAhiBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -229,7 +229,7 @@ public static partial class MessageReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgGatherMaterial), global::MsgGatherMaterial.Parser, new[]{ "MaterialCid", "Count" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgCompleteQuestChain), global::MsgCompleteQuestChain.Parser, new[]{ "QuestChainCid" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NotifyObtainItems), global::NotifyObtainItems.Parser, new[]{ "CurItems", "MatItems", "DiscItems", "WeaponItems" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NotifyRoleTakeDamage), global::NotifyRoleTakeDamage.Parser, new[]{ "RoleId", "Damage" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NotifyMonsterAttackRole), global::NotifyMonsterAttackRole.Parser, new[]{ "RoleId", "Damage", "Parried" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgRoleSetParry), global::MsgRoleSetParry.Parser, new[]{ "RoleId", "Parrying" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgRoleSetDodge), global::MsgRoleSetDodge.Parser, new[]{ "RoleId", "Dodging" }, null, null, null, null)
         }));
@@ -20360,19 +20360,19 @@ public sealed partial class NotifyObtainItems : pb::IMessage<NotifyObtainItems>
 }
 
 /// <summary>
-/// 角色接受伤害
+/// 怪物攻击角色
 /// </summary>
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDamage>
+public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonsterAttackRole>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
 #endif
 {
-  private static readonly pb::MessageParser<NotifyRoleTakeDamage> _parser = new pb::MessageParser<NotifyRoleTakeDamage>(() => new NotifyRoleTakeDamage());
+  private static readonly pb::MessageParser<NotifyMonsterAttackRole> _parser = new pb::MessageParser<NotifyMonsterAttackRole>(() => new NotifyMonsterAttackRole());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public static pb::MessageParser<NotifyRoleTakeDamage> Parser { get { return _parser; } }
+  public static pb::MessageParser<NotifyMonsterAttackRole> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -20388,7 +20388,7 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public NotifyRoleTakeDamage() {
+  public NotifyMonsterAttackRole() {
     OnConstruction();
   }
 
@@ -20396,16 +20396,17 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public NotifyRoleTakeDamage(NotifyRoleTakeDamage other) : this() {
+  public NotifyMonsterAttackRole(NotifyMonsterAttackRole other) : this() {
     roleId_ = other.roleId_;
     damage_ = other.damage_;
+    parried_ = other.parried_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public NotifyRoleTakeDamage Clone() {
-    return new NotifyRoleTakeDamage(this);
+  public NotifyMonsterAttackRole Clone() {
+    return new NotifyMonsterAttackRole(this);
   }
 
   /// <summary>Field number for the "RoleId" field.</summary>
@@ -20432,15 +20433,27 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
     }
   }
 
+  /// <summary>Field number for the "Parried" field.</summary>
+  public const int ParriedFieldNumber = 3;
+  private bool parried_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public override bool Equals(object other) {
-    return Equals(other as NotifyRoleTakeDamage);
+  public bool Parried {
+    get { return parried_; }
+    set {
+      parried_ = value;
+    }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public bool Equals(NotifyRoleTakeDamage other) {
+  public override bool Equals(object other) {
+    return Equals(other as NotifyMonsterAttackRole);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(NotifyMonsterAttackRole other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
@@ -20449,6 +20462,7 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
     }
     if (RoleId != other.RoleId) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Damage, other.Damage)) return false;
+    if (Parried != other.Parried) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -20458,6 +20472,7 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
     int hash = 1;
     if (RoleId.Length != 0) hash ^= RoleId.GetHashCode();
     if (Damage != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Damage);
+    if (Parried != false) hash ^= Parried.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -20484,6 +20499,10 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
       output.WriteRawTag(17);
       output.WriteDouble(Damage);
     }
+    if (Parried != false) {
+      output.WriteRawTag(24);
+      output.WriteBool(Parried);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -20502,6 +20521,10 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
       output.WriteRawTag(17);
       output.WriteDouble(Damage);
     }
+    if (Parried != false) {
+      output.WriteRawTag(24);
+      output.WriteBool(Parried);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
     }
@@ -20518,6 +20541,9 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
     if (Damage != 0D) {
       size += 1 + 8;
     }
+    if (Parried != false) {
+      size += 1 + 1;
+    }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
     }
@@ -20526,7 +20552,7 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public void MergeFrom(NotifyRoleTakeDamage other) {
+  public void MergeFrom(NotifyMonsterAttackRole other) {
     if (other == null) {
       return;
     }
@@ -20535,6 +20561,9 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
     }
     if (other.Damage != 0D) {
       Damage = other.Damage;
+    }
+    if (other.Parried != false) {
+      Parried = other.Parried;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -20563,6 +20592,10 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
           Damage = input.ReadDouble();
           break;
         }
+        case 24: {
+          Parried = input.ReadBool();
+          break;
+        }
       }
     }
   #endif
@@ -20588,6 +20621,10 @@ public sealed partial class NotifyRoleTakeDamage : pb::IMessage<NotifyRoleTakeDa
         }
         case 17: {
           Damage = input.ReadDouble();
+          break;
+        }
+        case 24: {
+          Parried = input.ReadBool();
           break;
         }
       }

@@ -41,6 +41,8 @@ namespace Kirara.TimelineAction
 
         private bool playCalled = false;
 
+        private readonly List<ActionNotifyState> _enterTrackNotifyStates = new();
+
         // 所有的通知
         private readonly List<ActionNotify> _notifies = new();
         private int _notifiesFront;
@@ -97,9 +99,9 @@ namespace Kirara.TimelineAction
             ClearNotifies();
             ClearNotifyStates();
             // 切换的时候调用之前所有的end
-            EndAndClearRunningNotifyStates();
+            CallEndAndClearRunningNotifyStates();
 
-            ActionUnpacker.Unpack(action, out _clip, _notifyStates, _notifies);
+            ActionUnpacker.Unpack(action, out _clip, _enterTrackNotifyStates, _notifyStates, _notifies);
 
             Time = 0f;
             IsPlaying = true;
@@ -107,6 +109,13 @@ namespace Kirara.TimelineAction
 
             OnExecuteAction?.Invoke(action, actionName);
             OnSetActionArgs?.Invoke(action.actionArgs);
+
+            foreach (var notifyState in _enterTrackNotifyStates)
+            {
+                notifyState.NotifyBegin(this);
+                notifyState.NotifyEnd(this);
+            }
+            _enterTrackNotifyStates.Clear();
 
             Animator.CrossFadeInFixedTime(actionName, fadeDuration);
         }
@@ -271,7 +280,7 @@ namespace Kirara.TimelineAction
             _notifyStatesFront = 0;
         }
 
-        private void EndAndClearRunningNotifyStates()
+        private void CallEndAndClearRunningNotifyStates()
         {
             foreach (var state in _runningNotifyStates)
             {
@@ -288,7 +297,7 @@ namespace Kirara.TimelineAction
             IsPlaying = false;
             ClearNotifies();
             ClearNotifyStates();
-            EndAndClearRunningNotifyStates();
+            CallEndAndClearRunningNotifyStates();
             // _animator.enabled = false;
         }
 

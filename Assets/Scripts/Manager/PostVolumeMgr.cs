@@ -1,28 +1,36 @@
-using System.Collections;
+using DG.Tweening;
 using Kirara;
-using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Manager
 {
     public class PostVolumeMgr : UnitySingleton<PostVolumeMgr>
     {
-        public Volume volume;
+        public Volume defaultVolume;
+        public Volume perfectDodgeVolume;
 
-        public VolumeProfile defaultProfile;
-        public VolumeProfile perfectDodgeProfile;
+        public float enterDuration = 0.3f;
+        public float holdDuration = 1f;
+        public float exitDuration = 0.3f;
+
+        private Sequence sequence;
 
         public void StartPerfectDodgeProfile()
         {
-            StopAllCoroutines();
-            StartCoroutine(DoPerfectDodgeProfileInternal());
-        }
+            sequence?.Kill();
 
-        private IEnumerator DoPerfectDodgeProfileInternal()
-        {
-            volume.profile = perfectDodgeProfile;
-            yield return new WaitForSeconds(1f);
-            volume.profile = defaultProfile;
+            sequence = DOTween.Sequence();
+            sequence.Append(DOTween.To(
+                () => perfectDodgeVolume.weight,
+                x => perfectDodgeVolume.weight = x,
+                1f, enterDuration));
+            sequence.AppendInterval(holdDuration);
+            sequence.Append(DOTween.To(
+                () => perfectDodgeVolume.weight,
+                x => perfectDodgeVolume.weight = x,
+                0f, exitDuration));
+            sequence.OnComplete(() => sequence = null);
+            sequence.Play();
         }
     }
 }

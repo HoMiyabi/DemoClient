@@ -42,6 +42,7 @@ namespace Kirara.TimelineAction
         public static void Unpack(
             KiraraActionSO action,
             out AnimationClip clip,
+            List<ActionNotifyState> enterTrackNotifyStates,
             List<ActionNotifyState> notifyStates,
             List<ActionNotify> notifies)
         {
@@ -68,12 +69,17 @@ namespace Kirara.TimelineAction
                         }
                     }
                 }
+                else if (track is EnterTrack enterTrack)
+                {
+                    TimelineClipsToNotifyStates(enterTrack.GetClips(), enterTrackNotifyStates);
+                }
                 else
                 {
                     TimelineClipsToNotifyStates(track.GetClips(), notifyStates);
                 }
             }
 
+            enterTrackNotifyStates.Sort((l, r) => l.start.CompareTo(r.start));
             notifyStates.Sort((l, r) => l.start.CompareTo(r.start));
             notifies.Sort((l, r) => l.time.CompareTo(r.time));
         }
