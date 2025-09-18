@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using Cysharp.Threading.Tasks;
 using Kirara.Network;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace Kirara.Manager
         public int port;
 
         public Session session { get; private set; }
+
+        private readonly NetMsgProcessor processor = new();
 
         public void Init()
         {
@@ -31,7 +34,33 @@ namespace Kirara.Manager
             //     {
             //         Debug.LogWarning("连接断开");
             //     }, false);
-            session = Client.Connect(host, port);
+        }
+
+        public delegate void OnConnectionFailedDel(string message, Action retry);
+
+        public async UniTask ConnectAsync(OnConnectionFailedDel onConnectionFailed)
+        {
+            Socket socket;
+            while (true)
+            {
+                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                try
+                {
+                    await socket.ConnectAsync(host, port);
+                    break;
+                }
+                catch (SocketException e)
+                {
+                    socket.Dispose();
+                    await UniTask.SwitchToMainThread();
+                    var utcs = new UniTaskCompletionSource();
+                    onConnectionFailed?.Invoke(e.Message, () => utcs.TrySetResult());
+                    await utcs.Task;
+                }
+            }
+
+            session = new Session(socket, processor);
+            _ = session.ReceiveAsync();
             RepeatSendPing().Forget();
         }
 
@@ -63,7 +92,7 @@ namespace Kirara.Manager
 
         private void Update()
         {
-            Client.processor.Update();
+            processor.Update();
         }
     }
 }

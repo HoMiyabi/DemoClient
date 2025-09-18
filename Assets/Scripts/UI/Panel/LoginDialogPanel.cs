@@ -26,16 +26,16 @@ namespace Kirara.UI.Panel
         }
         #endregion
 
-        public bool LoginSuccess { get; private set; }
+        public Action OnLoginSuccess;
 
         private void Start()
         {
             UICloseBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
-            LoginBtn.onClick.AddListener(() => btnLogin_onClick().Forget());
-            RegisterBtn.onClick.AddListener(() => btnRegister_onClick().Forget());
+            LoginBtn.onClick.AddListener(() => LoginBtn_onClick().Forget());
+            RegisterBtn.onClick.AddListener(() => RegisterBtn_onClick().Forget());
         }
 
-        private async UniTaskVoid btnLogin_onClick()
+        private async UniTaskVoid LoginBtn_onClick()
         {
             try
             {
@@ -44,8 +44,8 @@ namespace Kirara.UI.Panel
                     Username = UsernameInput.text,
                     Password = PasswordInput.text
                 });
-                LoginSuccess = true;
                 UIMgr.Instance.PopPanel(this);
+                OnLoginSuccess?.Invoke();
             }
             catch (ResultException e)
             {
@@ -57,7 +57,7 @@ namespace Kirara.UI.Panel
             }
         }
 
-        private async UniTaskVoid btnRegister_onClick()
+        private async UniTaskVoid RegisterBtn_onClick()
         {
             var rsp = await NetFn.ReqRegister(new ReqRegister
             {

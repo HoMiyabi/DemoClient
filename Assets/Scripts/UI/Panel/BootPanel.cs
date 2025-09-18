@@ -37,13 +37,14 @@ namespace Kirara.UI.Panel
 
         private void SetStatusText(string text)
         {
-            Debug.Log(text);
+            Debug.Log("[BootPanel] " + text);
             StatusText.text = text;
         }
 
         private async UniTaskVoid Boot()
         {
             SetStatusText("加载资源...");
+            await UniTask.WaitForSeconds(0.3f);
             YooAssets.Initialize();
 
             patchCtrl = new PatchController("DefaultPackage")
@@ -63,44 +64,46 @@ namespace Kirara.UI.Panel
 
 
             SetStatusText("连接网络...");
+            await UniTask.WaitForSeconds(0.3f);
             NetMgr.Instance.Init();
-            NetMgr.Instance.Connect();
-
+            await NetMgr.Instance.ConnectAsync(OnConnectionFailed);
 
             SetStatusText("初始化脚本...");
+            await UniTask.WaitForSeconds(0.3f);
             LuaMgr.Instance.Init();
 
 
             SetStatusText("加载配置...");
+            await UniTask.WaitForSeconds(0.3f);
             ConfigMgr.LoadTables();
 
 
             SetStatusText("点击登录");
+            var loginUtcs = new UniTaskCompletionSource();
             BgBtn.onClick.AddListener(() =>
             {
-                var login = UIMgr.Instance.PushPanel<LoginDialogPanel>();
-                login.onClosed = UniTask.Action(async () =>
+                var loginPanel = UIMgr.Instance.PushPanel<LoginDialogPanel>();
+                loginPanel.OnLoginSuccess = () =>
                 {
-                    if (!login.LoginSuccess) return;
+                    loginUtcs.TrySetResult();
+                };
+            });
 
-                    BgBtn.onClick.RemoveAllListeners();
+            await loginUtcs.Task;
+            BgBtn.onClick.RemoveAllListeners();
 
-                    Debug.Log("获取数据...");
-                    StatusText.text = "获取数据...";
-                    await PlayerService.FetchData();
+            SetStatusText("获取数据...");
+            await UniTask.WaitForSeconds(0.3f);
+            await PlayerService.FetchData();
 
-                    Debug.Log("初始化设置...");
-                    StatusText.text = "初始化设置...";
-                    SettingsMgr.Init(PlayerService.Player.Uid);
+            SetStatusText("初始化设置...");
+            await UniTask.WaitForSeconds(0.3f);
+            SettingsMgr.Init(PlayerService.Player.Uid);
 
-                    Debug.Log("点击进入游戏");
-                    StatusText.text = "点击进入游戏";
-
-                    BgBtn.onClick.AddListener(() =>
-                    {
-                        LoadSceneMgr.Instance.LoadScene(mainSceneName);
-                    });
-                });
+            SetStatusText("点击进入");
+            BgBtn.onClick.AddListener(() =>
+            {
+                LoadSceneMgr.Instance.LoadScene(mainSceneName);
             });
         }
 
@@ -184,6 +187,22 @@ namespace Kirara.UI.Panel
         private void OnDownloadUpdate(DownloadUpdateData data)
         {
             UIProgressBar.Progress = data.Progress;
+        }
+
+        private void OnConnectionFailed(string message, Action retry)
+        {
+            Debug.LogWarning("连接失败: " + message);
+
+            var panel = UIMgr.Instance.PushPanel<DialogPanel>(DialogPanelPrefab);
+            panel.Title = "连接失败";
+            panel.Content = message;
+            panel.OkText = "重试";
+            panel.HasCloseBtn = false;
+            panel.OkBtnOnClick.AddListener(() =>
+            {
+                UIMgr.Instance.PopPanel(panel);
+                retry();
+            });
         }
 
         private void ShowProgressBar(float progress)
