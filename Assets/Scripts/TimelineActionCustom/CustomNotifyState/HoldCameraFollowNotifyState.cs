@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System.ComponentModel;
+using UnityEngine;
 
 namespace Kirara.TimelineAction
 {
+    [DisplayName("保持相机跟随通知状态")]
     public class HoldCameraFollowNotifyState : ActionNotifyState
     {
         private Transform vcamFollow;

@@ -4,7 +4,7 @@ using UnityEngine.Playables;
 
 namespace Kirara.TimelineAction
 {
-    [DisplayName("随机音频")]
+    [DisplayName("随机音频通知状态")]
     public class RandomAudioPlayableAsset : ActionNotifyState
     {
         public float audioClipsMaxLength;

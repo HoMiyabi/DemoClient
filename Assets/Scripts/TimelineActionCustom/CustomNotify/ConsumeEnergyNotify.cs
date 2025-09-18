@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using cfg.main;
 
 namespace Kirara.TimelineAction
 {

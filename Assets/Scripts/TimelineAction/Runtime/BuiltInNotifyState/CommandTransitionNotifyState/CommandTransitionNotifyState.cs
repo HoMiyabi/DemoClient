@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 
 namespace Kirara.TimelineAction
 {
-    [DisplayName("指令转移")]
+    [DisplayName("指令转移通知状态")]
     public class CommandTransitionNotifyState : ActionNotifyState
     {
         [SecondFrame(60)]

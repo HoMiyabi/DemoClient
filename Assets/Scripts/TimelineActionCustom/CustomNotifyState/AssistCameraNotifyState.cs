@@ -1,5 +1,8 @@
+using System.ComponentModel;
+
 namespace Kirara.TimelineAction
 {
+    [DisplayName("控制支援相机通知状态")]
     public class AssistCameraNotifyState : ActionNotifyState
     {
         public override void NotifyBegin(ActionCtrl actionCtrl)
