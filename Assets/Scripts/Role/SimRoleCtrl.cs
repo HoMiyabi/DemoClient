@@ -7,11 +7,10 @@ namespace Kirara
 {
     public class SimRoleCtrl : MonoBehaviour
     {
-        public KiraraActionListSO actionList;
         private Animator Animator { get; set; }
         private SimRole SimRole { get; set; }
         private ActionCtrl ActionCtrl { get; set; }
-        private float followSpeed = 25f;
+        private float viewFollowSpeed = 25f;
 
         private void Awake()
         {
@@ -21,17 +20,21 @@ namespace Kirara
             ActionCtrl.EnableFinishTransition = false;
         }
 
-        public void Set(SimRole simRole)
+        public void Set(SimRole simRole, string actionName)
         {
             SimRole = simRole;
             transform.position = simRole.Pos;
             transform.rotation = simRole.Rot;
+            if (!string.IsNullOrEmpty(actionName))
+            {
+                PlayAction(actionName);
+            }
         }
 
         private void Update()
         {
-            transform.position = Vector3.Lerp(transform.position, SimRole.Pos, Time.deltaTime * followSpeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, SimRole.Rot, Time.deltaTime * followSpeed);
+            transform.position = Vector3.Lerp(transform.position, SimRole.Pos, Time.deltaTime * viewFollowSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, SimRole.Rot, Time.deltaTime * viewFollowSpeed);
         }
 
         public void UpdateImmediate()

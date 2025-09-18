@@ -280,6 +280,7 @@ namespace Kirara
                 var handle = YooAssets.LoadAssetSync<GameObject>(role.Config.PrefabLoc);
                 var go = handle.InstantiateSync(RoleParent, false);
                 var roleCtrl = go.GetComponent<RoleCtrl>();
+                handle.Release();
                 roleCtrl.Set(role);
 
                 RoleCtrls.Add(roleCtrl);

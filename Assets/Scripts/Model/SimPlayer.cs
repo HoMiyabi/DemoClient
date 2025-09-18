@@ -25,7 +25,7 @@ namespace Kirara.Model
                 var go = handle.InstantiateSync(SimPlayerSystem.Instance.simRoleParent);
 
                 var simRoleCtrl = go.GetComponent<SimRoleCtrl>();
-                simRoleCtrl.Set(simRole);
+                simRoleCtrl.Set(simRole, nSimRole.ActionName);
                 SimRoleCtrls.Add(simRole.Id, simRoleCtrl);
             }
         }
