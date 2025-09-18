@@ -39,9 +39,9 @@ namespace KiraraDirectBinder.Editor
             var r = new Rect(selectionRect);
             r.position += rectOffset;
 
-            for (int i = 0; i < KiraraDirectBinder.binders.Count; i++)
+            for (int i = 0; i < KiraraDirectBinderList.binders.Count; i++)
             {
-                var binder = KiraraDirectBinder.binders[i];
+                var binder = KiraraDirectBinderList.binders[i];
                 foreach (var item in binder.items)
                 {
                     if (item.component)
@@ -63,9 +63,9 @@ namespace KiraraDirectBinder.Editor
             // 绘制Binder
             var binderRect = new Rect(selectionRect);
             binderRect.x += binderRect.width - GUI.skin.label.CalcSize(new GUIContent(text)).x;
-            for (int i = 0; i < KiraraDirectBinder.binders.Count; i++)
+            for (int i = 0; i < KiraraDirectBinderList.binders.Count; i++)
             {
-                var binder = KiraraDirectBinder.binders[i];
+                var binder = KiraraDirectBinderList.binders[i];
                 if (binder.gameObject == go)
                 {
                     DrawBinderHierarchyWindowItem(i, binderRect);
@@ -75,7 +75,7 @@ namespace KiraraDirectBinder.Editor
 
         private static void DrawBinderHierarchyWindowItem(int index, Rect rect)
         {
-            var binder = KiraraDirectBinder.binders[index];
+            var binder = KiraraDirectBinderList.binders[index];
             GUI.Label(rect, text, new GUIStyle()
             {
                 normal = new GUIStyleState()

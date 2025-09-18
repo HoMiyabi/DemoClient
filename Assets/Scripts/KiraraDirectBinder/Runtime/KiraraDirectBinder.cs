@@ -63,16 +63,14 @@ namespace KiraraDirectBinder
         }
 
 #if UNITY_EDITOR
-        public static readonly List<KiraraDirectBinder> binders = new();
-
         private void OnEnable()
         {
-            binders.Add(this);
+            KiraraDirectBinderList.binders.Add(this);
         }
 
         private void OnDisable()
         {
-            binders.Remove(this);
+            KiraraDirectBinderList.binders.Remove(this);
         }
 #endif
     }
