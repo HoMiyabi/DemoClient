@@ -19,7 +19,10 @@ namespace Kirara
 
         public CinemachineVirtualCamera leftAssistVCam;
         public CinemachineVirtualCamera rightAssistVCam;
-        public AudioClip[] hitClips;
+
+        public float inputRotationSpeed = 15f;
+        public float lookAtMonsterRotationSpeed = 20f;
+        private Quaternion TargetRotation { get; set; }
 
         public Role Role { get; private set; }
         public CinemachineVirtualCamera VCam { get; set; }
@@ -129,25 +132,22 @@ namespace Kirara
 
         private void UpdateRotation()
         {
-            if (!EnableRotation) return;
-
-            var inputDir = PlayerSystem.Instance.input.Combat.Move.ReadValue<Vector2>();
-            if (inputDir == Vector2.zero)
+            if (EnableRotation)
             {
-                return;
+                var inputDir = PlayerSystem.Instance.input.Combat.Move.ReadValue<Vector2>();
+                if (inputDir != Vector2.zero)
+                {
+                    var camForward = Cam.transform.forward;
+                    var camRight = Cam.transform.right;
+                    camForward.y = 0;
+                    camRight.y = 0;
+                    camForward.Normalize();
+                    camRight.Normalize();
+                    var moveDirWS = camForward * inputDir.y + camRight * inputDir.x;
+                    TargetRotation = Quaternion.LookRotation(moveDirWS, Vector3.up);
+                }
+                transform.rotation = Quaternion.Slerp(transform.rotation, TargetRotation, Time.deltaTime * inputRotationSpeed);
             }
-
-            var camForward = VCam.transform.forward;
-            var camRight = VCam.transform.right;
-            camForward.y = 0;
-            camRight.y = 0;
-            camForward.Normalize();
-            camRight.Normalize();
-            var wsMoveDir = camForward * inputDir.y + camRight * inputDir.x;
-            var rot = Quaternion.LookRotation(wsMoveDir);
-
-            transform.DOKill();
-            transform.DORotateQuaternion(rot, 0.1f);
         }
 
         public void TriggerHitstopIfHitMonster(float duration, float speed)
@@ -202,13 +202,12 @@ namespace Kirara
             var monster = MonsterSystem.Instance.ClosestMonster(transform.position, out float dist);
             if (monster == null) return;
 
-            const float rotSpeed = 20f;
             if (dist < maxDist)
             {
                 var dir = monster.transform.position - transform.position;
                 dir.y = 0;
-                var targetRot = Quaternion.LookRotation(dir);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * rotSpeed);
+                TargetRotation = Quaternion.LookRotation(dir, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, TargetRotation, Time.deltaTime * lookAtMonsterRotationSpeed);
             }
         }
 
