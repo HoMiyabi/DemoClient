@@ -111,7 +111,7 @@ namespace Kirara
 
         }
 
-        public void BeginDodgeDetect(BoxPlayableAsset box)
+        public void BeginDodgeDetect(BoxNotifyState box)
         {
             switch (box.boxShape)
             {
@@ -140,7 +140,7 @@ namespace Kirara
             MonsterSystem.Instance.DodgeDetectMonsters.Add(this);
         }
 
-        public void EndDodgeDetect(BoxPlayableAsset box)
+        public void EndDodgeDetect(BoxNotifyState box)
         {
             switch (box.boxShape)
             {
@@ -163,7 +163,7 @@ namespace Kirara
             MonsterSystem.Instance.DodgeDetectMonsters.Remove(this);
         }
 
-        public void BoxBegin(BoxPlayableAsset box)
+        public void BoxBegin(BoxNotifyState box)
         {
             switch (box.boxType)
             {
@@ -179,7 +179,7 @@ namespace Kirara
             }
         }
 
-        public void BoxEnd(BoxPlayableAsset box)
+        public void BoxEnd(BoxNotifyState box)
         {
             if (box.boxType == EBoxType.DodgeBox)
             {

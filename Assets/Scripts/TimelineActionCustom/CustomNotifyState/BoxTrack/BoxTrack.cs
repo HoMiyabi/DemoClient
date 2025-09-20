@@ -3,7 +3,7 @@ using UnityEngine.Timeline;
 
 namespace Kirara.TimelineAction
 {
-    [TrackClipType(typeof(BoxPlayableAsset)), DisplayName("盒子轨道")]
+    [TrackClipType(typeof(BoxNotifyState)), DisplayName("盒子轨道")]
     public class BoxTrack : TrackAsset
     {
         protected override void OnCreateClip(TimelineClip clip)

@@ -7,7 +7,7 @@ namespace Kirara.TimelineAction
     [DisplayName("指令转移通知状态")]
     public class CommandTransitionNotifyState : ActionNotifyState
     {
-        [SecondFrame(60)]
+        [TimeField(60)]
         public float inputBufferDuration = 0.1f;
 
         [FormerlySerializedAs("cancelInfo")] public CommandTransitionInfo commandTransition;

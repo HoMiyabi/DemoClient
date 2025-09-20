@@ -8,6 +8,6 @@ namespace Kirara.ActionExtractor
         public string name;
         public AnimRootMotion rootMotion;
         public bool isLoop;
-        public List<BoxPlayableAsset> boxes = new();
+        public List<BoxNotifyState> boxes = new();
     }
 }

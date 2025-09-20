@@ -37,7 +37,7 @@ namespace Kirara
             daze = CalcDaze(role, dazeMult);
         }
 
-        private static void PlayVisual(RoleCtrl role, MonsterCtrl target, double dmg, bool isCrit, BoxPlayableAsset box)
+        private static void PlayVisual(RoleCtrl role, MonsterCtrl target, double dmg, bool isCrit, BoxNotifyState box)
         {
             // 命中特效
             // Debug.Log($"prefab={box.particlePrefab}, setRot={box.setRot}, rotValue={box.rotValue}");
@@ -56,7 +56,7 @@ namespace Kirara
             }
         }
 
-        public static void HandleRoleHitEachTarget(RoleCtrl role, MonsterCtrl target, BoxPlayableAsset box)
+        public static void HandleRoleHitEachTarget(RoleCtrl role, MonsterCtrl target, BoxNotifyState box)
         {
             if (box.hitId == 0)
             {
@@ -84,7 +84,7 @@ namespace Kirara
             PlayVisual(role, target, dmg, isCrit, box);
         }
 
-        public static void RoleAttack(RoleCtrl role, BoxPlayableAsset box)
+        public static void RoleAttack(RoleCtrl role, BoxNotifyState box)
         {
             int count = PhysicsOverlap(box, role.transform, LayerMask.GetMask("Monster"));
 
@@ -111,7 +111,7 @@ namespace Kirara
 
         private static readonly Collider[] cols = new Collider[128];
 
-        private static int PhysicsOverlap(BoxPlayableAsset box, Transform parent, int layerMask)
+        private static int PhysicsOverlap(BoxNotifyState box, Transform parent, int layerMask)
         {
             var worldPos = parent.TransformPoint(box.center);
             if (box.boxShape == EBoxShape.Sphere)

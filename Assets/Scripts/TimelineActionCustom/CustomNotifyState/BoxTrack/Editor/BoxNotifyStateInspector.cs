@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Kirara.TimelineAction
 {
-    [CustomEditor(typeof(BoxPlayableAsset))]
-    public class BoxPlayableAssetInspector : UnityEditor.Editor
+    [CustomEditor(typeof(BoxNotifyState))]
+    public class BoxNotifyStateInspector : UnityEditor.Editor
     {
-        private BoxPlayableAsset _target;
+        private BoxNotifyState _target;
 
         private SerializedProperty boxTypeProp;
         private SerializedProperty boxShapeProp;
@@ -23,6 +23,8 @@ namespace Kirara.TimelineAction
         private SerializedProperty rotMaxValueProp;
         private SerializedProperty hitGatherDistProp;
         private SerializedProperty hitAudioProp;
+        private SerializedProperty hitstopDurationProp;
+        private SerializedProperty hitstopSpeedProp;
 
         private enum EEditMode
         {
@@ -35,12 +37,12 @@ namespace Kirara.TimelineAction
 
         private readonly string[] editModeNames = {"中心", "尺寸"};
 
-        private static readonly List<BoxPlayableAssetInspector> instances = new();
+        private static readonly List<BoxNotifyStateInspector> instances = new();
         private bool bPreview = true;
 
         private void OnEnable()
         {
-            _target = target as BoxPlayableAsset;
+            _target = target as BoxNotifyState;
 
             boxTypeProp = serializedObject.FindProperty(nameof(_target.boxType));
 
@@ -56,6 +58,8 @@ namespace Kirara.TimelineAction
             rotMaxValueProp = serializedObject.FindProperty(nameof(_target.rotMaxValue));
             hitGatherDistProp = serializedObject.FindProperty(nameof(_target.hitGatherDist));
             hitAudioProp = serializedObject.FindProperty(nameof(_target.hitAudio));
+            hitstopDurationProp = serializedObject.FindProperty(nameof(_target.hitstopDuration));
+            hitstopSpeedProp = serializedObject.FindProperty(nameof(_target.hitstopSpeed));
 
             if (!instances.Contains(this))
             {
@@ -124,6 +128,9 @@ namespace Kirara.TimelineAction
                 }
                 EditorGUILayout.PropertyField(hitGatherDistProp, new GUIContent("命中聚集距离"));
                 EditorGUILayout.PropertyField(hitAudioProp, new GUIContent("命中音频"));
+                EditorGUILayout.Space();
+                EditorGUILayout.PropertyField(hitstopDurationProp, new GUIContent("命中停顿时长"));
+                EditorGUILayout.PropertyField(hitstopSpeedProp, new GUIContent("命中停顿速度"));
             }
         }
 

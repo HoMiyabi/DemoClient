@@ -3,7 +3,7 @@ using UnityEngine.Timeline;
 
 namespace Kirara.TimelineAction
 {
-    [TrackClipType(typeof(RandomAudioPlayableAsset)),
+    [TrackClipType(typeof(RandomAudioNotifyState)),
      DisplayName("随机音频轨道")]
     public class RandomAudioTrack : TrackAsset
     {

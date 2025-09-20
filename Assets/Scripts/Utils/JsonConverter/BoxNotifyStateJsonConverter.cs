@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 
 namespace Kirara
 {
-    public class BoxPlayableAssetJsonConverter : JsonConverter<BoxPlayableAsset>
+    public class BoxNotifyStateJsonConverter : JsonConverter<BoxNotifyState>
     {
-        public override void WriteJson(JsonWriter writer, BoxPlayableAsset value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, BoxNotifyState value, JsonSerializer serializer)
         {
             writer.WriteStartObject();
             writer.WritePropertyName("start");
@@ -38,7 +38,7 @@ namespace Kirara
             writer.WriteEndObject();
         }
 
-        public override BoxPlayableAsset ReadJson(JsonReader reader, Type objectType, BoxPlayableAsset existingValue, bool hasExistingValue,
+        public override BoxNotifyState ReadJson(JsonReader reader, Type objectType, BoxNotifyState existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
             return null;

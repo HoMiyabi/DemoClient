@@ -2,11 +2,11 @@
 
 namespace Kirara.TimelineAction
 {
-    public class SecondFrameAttribute : PropertyAttribute
+    public class TimeFieldAttribute : PropertyAttribute
     {
         public float FrameRate { get; set; }
 
-        public SecondFrameAttribute(float frameRate)
+        public TimeFieldAttribute(float frameRate)
         {
             FrameRate = frameRate;
         }

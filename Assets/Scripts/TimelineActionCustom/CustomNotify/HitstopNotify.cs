@@ -5,7 +5,7 @@ namespace Kirara.TimelineAction
     [DisplayName("命中停顿通知")]
     public class HitstopNotify : ActionNotify
     {
-        [SecondFrame(60)]
+        [TimeField(60)]
         public float duration = 0.05f;
         public float animationSpeed;
 

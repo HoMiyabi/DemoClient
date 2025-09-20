@@ -5,7 +5,7 @@ namespace Kirara.TimelineAction
 {
     public class BoxPlayable : PlayableBehaviour
     {
-        public BoxPlayableAsset asset;
+        public BoxNotifyState asset;
         private AudioSource audioSource;
 
         public override void OnPlayableCreate(Playable playable)

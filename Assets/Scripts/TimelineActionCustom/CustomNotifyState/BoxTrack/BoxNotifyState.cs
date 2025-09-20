@@ -6,8 +6,8 @@ using UnityEngine.Serialization;
 
 namespace Kirara.TimelineAction
 {
-    [DisplayName("盒子")]
-    public class BoxPlayableAsset : ActionNotifyState
+    [DisplayName("盒子通知状态")]
+    public class BoxNotifyState : ActionNotifyState
     {
         [NonSerialized] public GameObject owner;
 
@@ -24,6 +24,11 @@ namespace Kirara.TimelineAction
         public float rotMaxValue;
         public float hitGatherDist;
         public AudioClip hitAudio;
+
+        // 命中停顿
+        [TimeField(60)]
+        public float hitstopDuration = 0.05f;
+        public float hitstopSpeed = 0f;
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {

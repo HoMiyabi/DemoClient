@@ -88,10 +88,10 @@ namespace Kirara
                 {
                     foreach (var timelineClip in boxTrack.GetClips())
                     {
-                        var asset = (BoxPlayableAsset)timelineClip.asset;
+                        var asset = (BoxNotifyState)timelineClip.asset;
                         asset.start = (float)timelineClip.start;
                         asset.length = (float)timelineClip.duration;
-                        output.boxes.Add((BoxPlayableAsset)timelineClip.asset);
+                        output.boxes.Add((BoxNotifyState)timelineClip.asset);
                     }
                 }
             }
@@ -125,7 +125,7 @@ namespace Kirara
 
                     var settings = new JsonSerializerSettings();
                     settings.Converters.Add(new Vector3JsonConverter());
-                    settings.Converters.Add(new BoxPlayableAssetJsonConverter());
+                    settings.Converters.Add(new BoxNotifyStateJsonConverter());
                     string json = JsonConvert.SerializeObject(output, Formatting.Indented, settings);
 
 

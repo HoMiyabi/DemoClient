@@ -327,7 +327,7 @@ namespace Kirara
             ActionCtrl.Speed = 1f;
         }
 
-        public void BoxBegin(BoxPlayableAsset box)
+        public void BoxBegin(BoxNotifyState box)
         {
             if (box.boxType == EBoxType.HitBox)
             {
