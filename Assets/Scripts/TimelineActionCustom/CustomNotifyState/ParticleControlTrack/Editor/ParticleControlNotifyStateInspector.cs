@@ -10,6 +10,7 @@ namespace Kirara.TimelineAction
     {
         private ParticleControlNotifyState _target;
 
+        private SerializedProperty prefabProp;
         private SerializedProperty positionProp;
         private SerializedProperty rotationProp;
         private SerializedProperty scaleProp;
@@ -33,6 +34,7 @@ namespace Kirara.TimelineAction
             if (target == null) return;
 
             _target = (ParticleControlNotifyState)target;
+            prefabProp = serializedObject.FindProperty(nameof(_target.prefab));
             positionProp = serializedObject.FindProperty(nameof(_target.position));
             rotationProp = serializedObject.FindProperty(nameof(_target.rotation));
             scaleProp = serializedObject.FindProperty(nameof(_target.scale));
@@ -59,7 +61,12 @@ namespace Kirara.TimelineAction
 
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(prefabProp);
+            EditorGUILayout.PropertyField(positionProp, new GUIContent("位置"));
+            EditorGUILayout.PropertyField(rotationProp, new GUIContent("旋转"));
+            EditorGUILayout.PropertyField(scaleProp, new GUIContent("缩放"));
+
             EditorGUI.BeginChangeCheck();
             var clickMode = (EEditMode)GUILayout.Toolbar((int)editMode, editModeNames);
             if (EditorGUI.EndChangeCheck())
@@ -74,6 +81,7 @@ namespace Kirara.TimelineAction
                 }
                 SceneView.RepaintAll();
             }
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void DuringSceneGUI(SceneView sceneView)
@@ -82,7 +90,6 @@ namespace Kirara.TimelineAction
 
             serializedObject.Update();
             var parent = _target.owner.transform;
-
             if (editMode == EEditMode.Position)
             {
                 var worldPos = parent.TransformPoint(positionProp.vector3Value);

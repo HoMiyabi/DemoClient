@@ -51,9 +51,9 @@ namespace Kirara.TimelineAction
             {
                 audioSource.clip = asset.hitAudio;
                 audioSource.Play();
-                TriggerHitstop(playable).Forget();
                 // Debug.Log($"Play {asset.hitAudio.name}");
             }
+            TriggerHitstop(playable).Forget();
         }
 
         private async UniTaskVoid TriggerHitstop(Playable playable)
