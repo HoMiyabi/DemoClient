@@ -88,24 +88,25 @@ namespace Kirara
         {
             int count = PhysicsOverlap(box, role.transform, LayerMask.GetMask("Monster"));
 
-            role.lastHitMonsters.Clear();
+            bool hitMonster = false;
             for (int i = 0; i < count; i++)
             {
                 var col = cols[i];
-                var monster = col.GetComponent<MonsterCtrl>();
-                if (monster)
+                if (col.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
                 {
-                    HandleRoleHitEachTarget(role, monster, box);
-                    role.lastHitMonsters.Add(monster);
+                    hitMonster = true;
+                    HandleRoleHitEachTarget(role, monsterCtrl, box);
+                    monsterCtrl.TriggerHitstop(box.hitstopDuration, box.hitstopSpeed).Forget();
                 }
                 else
                 {
-                    Debug.LogWarning("monster == null");
+                    Debug.LogWarning("Can't find monsterCtrl");
                 }
             }
-            if (role.lastHitMonsters.Count > 0)
+            if (hitMonster)
             {
-                AudioMgr.Instance.PlaySFX(box.hitAudio, role.transform.position);
+                AudioMgr.Instance.PlaySFX(box.hitAudio, role.transform.position + Vector3.forward);
+                role.TriggerHitstop(box.hitstopDuration, box.hitstopSpeed).Forget();
             }
         }
 

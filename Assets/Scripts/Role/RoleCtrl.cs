@@ -38,7 +38,7 @@ namespace Kirara
 
         public bool IsAttacking { get; set; }
 
-        public List<MonsterCtrl> lastHitMonsters = new();
+        // public List<MonsterCtrl> lastHitMonsters = new();
 
 
         public NSyncRole SyncRole => new()
@@ -150,19 +150,19 @@ namespace Kirara
             }
         }
 
-        public void TriggerHitstopIfHitMonster(float duration, float speed)
-        {
-            if (lastHitMonsters.Count > 0)
-            {
-                TriggerHitstop(duration, speed).Forget();
-                foreach (var monster in lastHitMonsters)
-                {
-                    monster.TriggerHitstop(duration, speed).Forget();
-                }
-            }
-        }
+        // public void TriggerHitstopIfHitMonster(float duration, float speed)
+        // {
+        //     if (lastHitMonsters.Count > 0)
+        //     {
+        //         TriggerHitstop(duration, speed).Forget();
+        //         foreach (var monster in lastHitMonsters)
+        //         {
+        //             monster.TriggerHitstop(duration, speed).Forget();
+        //         }
+        //     }
+        // }
 
-        private async UniTaskVoid TriggerHitstop(float duration, float speed)
+        public async UniTaskVoid TriggerHitstop(float duration, float speed)
         {
             if (duration <= 0f) return;
 

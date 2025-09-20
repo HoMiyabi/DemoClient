@@ -11,9 +11,9 @@ namespace Kirara.TimelineAction
 
         public override void Notify(ActionCtrl actionCtrl)
         {
-            var roleCtrl = actionCtrl.GetComponent<RoleCtrl>();
-            if (!roleCtrl) return;
-            roleCtrl.TriggerHitstopIfHitMonster(duration, animationSpeed);
+            // var roleCtrl = actionCtrl.GetComponent<RoleCtrl>();
+            // if (!roleCtrl) return;
+            // roleCtrl.TriggerHitstopIfHitMonster(duration, animationSpeed);
         }
     }
 }

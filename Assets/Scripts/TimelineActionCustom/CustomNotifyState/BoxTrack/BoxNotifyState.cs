@@ -43,13 +43,10 @@ namespace Kirara.TimelineAction
             if (actionCtrl.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
             {
                 monsterCtrl.BoxBegin(this);
-                return;
             }
-
-            if (actionCtrl.TryGetComponent<RoleCtrl>(out var roleCtrl))
+            else if (actionCtrl.TryGetComponent<RoleCtrl>(out var roleCtrl))
             {
                 roleCtrl.BoxBegin(this);
-                return;
             }
         }
 
@@ -58,7 +55,6 @@ namespace Kirara.TimelineAction
             if (actionCtrl.TryGetComponent<MonsterCtrl>(out var monsterCtrl))
             {
                 monsterCtrl.BoxEnd(this);
-                return;
             }
 
             // HitstopNotify不知道怎么不见了在Timeline里面

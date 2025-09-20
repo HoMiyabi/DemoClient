@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -50,8 +51,18 @@ namespace Kirara.TimelineAction
             {
                 audioSource.clip = asset.hitAudio;
                 audioSource.Play();
+                TriggerHitstop(playable).Forget();
                 // Debug.Log($"Play {asset.hitAudio.name}");
             }
+        }
+
+        private async UniTaskVoid TriggerHitstop(Playable playable)
+        {
+            if (asset.duration <= 0f) return;
+            double oldValue = playable.GetGraph().GetRootPlayable(0).GetSpeed();
+            playable.GetGraph().GetRootPlayable(0).SetSpeed(asset.hitstopSpeed);
+            await UniTask.WaitForSeconds(asset.hitstopDuration);
+            playable.GetGraph().GetRootPlayable(0).SetSpeed(oldValue);
         }
 
         public override void OnBehaviourPause(Playable playable, FrameData info)
