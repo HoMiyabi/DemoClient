@@ -75,7 +75,10 @@ namespace Kirara.UI
 
         private void UpdatePos()
         {
-            RectUtils.SetRectWorldPos(_rectTransform, _follow, _localPos, false);
+            if (_follow)
+            {
+                RectUtils.SetRectWorldPos(_rectTransform, _follow, _localPos, false);
+            }
         }
 
         private void Update()
