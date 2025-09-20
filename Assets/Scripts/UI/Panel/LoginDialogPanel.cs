@@ -1,6 +1,8 @@
 using System;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Kirara.Network;
+using UnityEngine;
 
 namespace Kirara.UI.Panel
 {
@@ -8,11 +10,13 @@ namespace Kirara.UI.Panel
     {
         #region View
         private bool _isBound;
-        private UnityEngine.UI.Button UICloseBtn;
-        private TMPro.TMP_InputField  UsernameInput;
-        private TMPro.TMP_InputField  PasswordInput;
-        private UnityEngine.UI.Button LoginBtn;
-        private UnityEngine.UI.Button RegisterBtn;
+        private UnityEngine.UI.Button     UICloseBtn;
+        private TMPro.TMP_InputField      UsernameInput;
+        private TMPro.TMP_InputField      PasswordInput;
+        private UnityEngine.UI.Button     LoginBtn;
+        private UnityEngine.UI.Button     RegisterBtn;
+        private UnityEngine.CanvasGroup   CanvasGroup;
+        private UnityEngine.RectTransform Box;
         public override void BindUI()
         {
             if (_isBound) return;
@@ -23,10 +27,32 @@ namespace Kirara.UI.Panel
             PasswordInput = b.Q<TMPro.TMP_InputField>(2, "PasswordInput");
             LoginBtn      = b.Q<UnityEngine.UI.Button>(3, "LoginBtn");
             RegisterBtn   = b.Q<UnityEngine.UI.Button>(4, "RegisterBtn");
+            CanvasGroup   = b.Q<UnityEngine.CanvasGroup>(5, "CanvasGroup");
+            Box           = b.Q<UnityEngine.RectTransform>(6, "Box");
         }
         #endregion
 
         public Action OnLoginSuccess;
+
+        public override void PlayEnter()
+        {
+            CanvasGroup.alpha = 0f;
+            var t1 = CanvasGroup.DOFade(1f, 0.1f);
+
+            Box.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+            var t2 = Box.DOScale(1f, 0.1f);
+
+            t2.onComplete = base.PlayEnter;
+        }
+
+        public override void PlayExit()
+        {
+            CanvasGroup.DOFade(0f, 0.1f);
+
+            var t = Box.DOScale(0.8f, 0.1f);
+
+            t.onComplete = base.PlayExit;
+        }
 
         private void Start()
         {

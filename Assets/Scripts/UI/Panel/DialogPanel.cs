@@ -15,7 +15,7 @@ namespace Kirara.UI.Panel
         private TMPro.TextMeshProUGUI     ContentText;
         private UnityEngine.UI.Button     OkBtn;
         private UnityEngine.UI.Button     CloseBtn;
-        private UnityEngine.RectTransform BoxTra;
+        private UnityEngine.RectTransform Box;
         private UnityEngine.UI.Image      BgImg;
         private UnityEngine.CanvasGroup   CanvasGroup;
         private TMPro.TextMeshProUGUI     OkBtnText;
@@ -29,7 +29,7 @@ namespace Kirara.UI.Panel
             ContentText = b.Q<TMPro.TextMeshProUGUI>(2, "ContentText");
             OkBtn       = b.Q<UnityEngine.UI.Button>(3, "OkBtn");
             CloseBtn    = b.Q<UnityEngine.UI.Button>(4, "CloseBtn");
-            BoxTra      = b.Q<UnityEngine.RectTransform>(5, "BoxTra");
+            Box         = b.Q<UnityEngine.RectTransform>(5, "Box");
             BgImg       = b.Q<UnityEngine.UI.Image>(6, "BgImg");
             CanvasGroup = b.Q<UnityEngine.CanvasGroup>(7, "CanvasGroup");
             OkBtnText   = b.Q<TMPro.TextMeshProUGUI>(8, "OkBtnText");
@@ -43,22 +43,22 @@ namespace Kirara.UI.Panel
 
         public override void PlayEnter()
         {
-            CanvasGroup.alpha = 0.9f;
-            var t1 = CanvasGroup.DOFade(1f, 0.05f);
+            CanvasGroup.alpha = 0f;
+            var t1 = CanvasGroup.DOFade(1f, 0.1f);
 
-            BoxTra.localScale = new Vector3(0.9f, 0.9f, 0.9f);
-            var t2 = BoxTra.DOScale(1f, 0.05f);
+            Box.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+            var t2 = Box.DOScale(1f, 0.1f);
 
-            t2.onComplete = () => onPlayEnterFinished?.Invoke();
+            t2.onComplete = base.PlayEnter;
         }
 
         public override void PlayExit()
         {
-            CanvasGroup.DOFade(0.9f, 0.05f);
+            CanvasGroup.DOFade(0f, 0.1f);
 
-            var t = BoxTra.DOScale(0.9f, 0.05f);
+            var t = Box.DOScale(0.8f, 0.1f);
 
-            t.onComplete = () => onPlayExitFinished?.Invoke();
+            t.onComplete = base.PlayExit;
         }
 
         public string Title

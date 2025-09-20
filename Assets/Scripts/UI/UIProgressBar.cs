@@ -7,14 +7,14 @@ namespace Kirara.UI
         #region View
         private bool _isBound;
         private TMPro.TextMeshProUGUI Text;
-        private UnityEngine.UI.Image  BarImg;
+        private UnityEngine.UI.Image  Front;
         public void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
-            var b  = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            Text   = b.Q<TMPro.TextMeshProUGUI>(0, "Text");
-            BarImg = b.Q<UnityEngine.UI.Image>(1, "BarImg");
+            var b = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            Text  = b.Q<TMPro.TextMeshProUGUI>(0, "Text");
+            Front = b.Q<UnityEngine.UI.Image>(1, "Front");
         }
         #endregion
 
@@ -33,7 +33,7 @@ namespace Kirara.UI
             {
                 _progress = value;
                 Text.text = value.ToString("P0");
-                BarImg.fillAmount = value;
+                Front.fillAmount = value;
             }
         }
     }

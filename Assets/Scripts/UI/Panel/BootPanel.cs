@@ -32,6 +32,7 @@ namespace Kirara.UI.Panel
         private void Start()
         {
             StatusText.text = string.Empty;
+            HideProgressBar();
             Boot().Forget();
         }
 
