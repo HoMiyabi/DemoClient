@@ -129,6 +129,9 @@ namespace KiraraLoopScroll
             }
         }
 
+        protected float FrontPos => Pos - DirViewportSize * 0.5f;
+        protected float BackPos => Pos + DirViewportSize * 0.5f;
+
         private float scrollVelocity;
         private Vector2 prevPointerPos;
 

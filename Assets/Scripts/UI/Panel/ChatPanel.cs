@@ -86,7 +86,6 @@ namespace Kirara.UI.Panel
             UIOverlayBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             SendBtn.onClick.AddListener(SendBtn_onClick);
 
-
             // 贴纸
             UISelectSticker.Set(this);
 
@@ -113,7 +112,7 @@ namespace Kirara.UI.Panel
             ChatLoopScroll.SetSource(new LoopScrollGOPool(ChatItemPrefab, transform));
             ChatLoopScroll.provideData = ProvideChatData;
 
-            ChattingPlayer = friends.FirstOrDefault();
+            ChattingPlayer = null;
 
             SocialService.OnChatMsgsAdd += OnChatMsgsAdd;
         }

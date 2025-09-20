@@ -1,5 +1,4 @@
-﻿using System;
-using cfg.main;
+﻿using cfg.main;
 using Kirara.Model;
 using UnityEngine;
 
@@ -8,48 +7,44 @@ namespace Kirara.UI
     public class UIRoleBasicStat : MonoBehaviour
     {
         #region View
-        private UIStatBar HPStatBar;
-        private UIStatBar ATKStatBar;
-        private UIStatBar DEFStatBar;
-        private UIStatBar ImpactStatBar;
-        private UIStatBar CRIT_RateStatBar;
-        private UIStatBar CRIT_DMGStatBar;
-        private UIStatBar AnomalyMasteryStatBar;
-        private UIStatBar AnomalyProficiencyStatBar;
-        private UIStatBar PEN_RatioStatBar;
-        private UIStatBar EnergyRegenStatBar;
-        private void InitUI()
+        private bool _isBound;
+        private Kirara.UI.UIStatBar   HPStatBar;
+        private Kirara.UI.UIStatBar   ATKStatBar;
+        private Kirara.UI.UIStatBar   DEFStatBar;
+        private Kirara.UI.UIStatBar   ImpactStatBar;
+        private Kirara.UI.UIStatBar   CRIT_RateStatBar;
+        private Kirara.UI.UIStatBar   CRIT_DMGStatBar;
+        private Kirara.UI.UIStatBar   AnomalyMasteryStatBar;
+        private Kirara.UI.UIStatBar   AnomalyProficiencyStatBar;
+        private Kirara.UI.UIStatBar   PEN_RatioStatBar;
+        private Kirara.UI.UIStatBar   EnergyRegenStatBar;
+        private TMPro.TextMeshProUGUI NameText;
+        public void BindUI()
         {
-            var c                     = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            HPStatBar                 = c.Q<UIStatBar>(0, "HPStatBar");
-            ATKStatBar                = c.Q<UIStatBar>(1, "ATKStatBar");
-            DEFStatBar                = c.Q<UIStatBar>(2, "DEFStatBar");
-            ImpactStatBar             = c.Q<UIStatBar>(3, "ImpactStatBar");
-            CRIT_RateStatBar          = c.Q<UIStatBar>(4, "CRIT_RateStatBar");
-            CRIT_DMGStatBar           = c.Q<UIStatBar>(5, "CRIT_DMGStatBar");
-            AnomalyMasteryStatBar     = c.Q<UIStatBar>(6, "AnomalyMasteryStatBar");
-            AnomalyProficiencyStatBar = c.Q<UIStatBar>(7, "AnomalyProficiencyStatBar");
-            PEN_RatioStatBar          = c.Q<UIStatBar>(8, "PEN_RatioStatBar");
-            EnergyRegenStatBar        = c.Q<UIStatBar>(9, "EnergyRegenStatBar");
+            if (_isBound) return;
+            _isBound = true;
+            var b                     = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            HPStatBar                 = b.Q<Kirara.UI.UIStatBar>(0, "HPStatBar");
+            ATKStatBar                = b.Q<Kirara.UI.UIStatBar>(1, "ATKStatBar");
+            DEFStatBar                = b.Q<Kirara.UI.UIStatBar>(2, "DEFStatBar");
+            ImpactStatBar             = b.Q<Kirara.UI.UIStatBar>(3, "ImpactStatBar");
+            CRIT_RateStatBar          = b.Q<Kirara.UI.UIStatBar>(4, "CRIT_RateStatBar");
+            CRIT_DMGStatBar           = b.Q<Kirara.UI.UIStatBar>(5, "CRIT_DMGStatBar");
+            AnomalyMasteryStatBar     = b.Q<Kirara.UI.UIStatBar>(6, "AnomalyMasteryStatBar");
+            AnomalyProficiencyStatBar = b.Q<Kirara.UI.UIStatBar>(7, "AnomalyProficiencyStatBar");
+            PEN_RatioStatBar          = b.Q<Kirara.UI.UIStatBar>(8, "PEN_RatioStatBar");
+            EnergyRegenStatBar        = b.Q<Kirara.UI.UIStatBar>(9, "EnergyRegenStatBar");
+            NameText                  = b.Q<TMPro.TextMeshProUGUI>(10, "NameText");
         }
         #endregion
 
         private Role Role { get; set; }
 
-        private void Awake()
-        {
-            InitUI();
-        }
-
         public void Set(Role role)
         {
+            BindUI();
             Role = role;
-            UpdateInfo();
-        }
-
-        private void OnEnable()
-        {
-            UpdateInfo();
+            NameText.text = role.Config.Name;
         }
 
         private void UpdateInfo()
