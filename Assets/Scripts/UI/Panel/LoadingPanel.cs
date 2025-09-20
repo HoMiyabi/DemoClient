@@ -28,6 +28,7 @@ namespace Kirara.UI.Panel
             //     Debug.Log("场景加载完成");
             //     UIManager.Instance.PopPanel(UILayer.Top);
             // };
+            UIProgressBar.Progress = 0f;
             StartCoroutine(UpdateProgress(handle));
         }
 
@@ -44,7 +45,7 @@ namespace Kirara.UI.Panel
 
             while (UIProgressBar.Progress < 1f)
             {
-                UIProgressBar.Progress += Time.deltaTime * 3f;
+                UIProgressBar.Progress += Time.deltaTime;
                 yield return null;
             }
             Destroy(gameObject);

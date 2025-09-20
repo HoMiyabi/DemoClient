@@ -5,19 +5,18 @@ function NavigationPanel:BindUI()
         return
     end
     self._isBound = true
-    local b           = self.com:GetComponent(typeof(CS.KiraraDirectBinder.KiraraDirectBinder))
+    local b           = self.panel:GetComponent(typeof(CS.KiraraDirectBinder.KiraraDirectBinder))
     self.SettingBtn   = b:Q(0, "SettingBtn")
     self.InventoryBtn = b:Q(1, "InventoryBtn")
     self.UIBackBtn    = b:Q(2, "UIBackBtn")
     self.FriendBtn    = b:Q(3, "FriendBtn")
-    self.TestBtn      = b:Q(4, "TestBtn")
 end
 
 
 function NavigationPanel:Awake()
     self.UIBackBtn.onClick:AddListener(function()
         print("Pop Panel")
-        CS.Kirara.UIMgr.Instance:PopPanel(self.com)
+        CS.Kirara.UIMgr.Instance:PopPanel(self.panel)
     end)
 
     self.SettingBtn.onClick:AddListener(function()
@@ -35,16 +34,16 @@ function NavigationPanel:Awake()
         CS.Kirara.UIMgr.Instance:PushPanel('SocialPanel')
     end)
 
-    self.TestBtn.onClick:AddListener(function()
-        print('TestBtn onClick')
-        local panel = CS.Kirara.UIMgr.Instance:PushPanel('DialogPanel')
-        panel.Title = '提示'
-        panel.Content = '热更新测试'
-        panel.OkText = 'Ciallo~'
-        panel.OkBtnOnClick:AddListener(function()
-            CS.Kirara.UIMgr.Instance:PopPanel(panel)
-        end)
-    end)
+    --self.TestBtn.onClick:AddListener(function()
+    --    print('TestBtn onClick')
+    --    local panel = CS.Kirara.UIMgr.Instance:PushPanel('DialogPanel')
+    --    panel.Title = '提示'
+    --    panel.Content = '热更新测试'
+    --    panel.OkText = 'Ciallo~'
+    --    panel.OkBtnOnClick:AddListener(function()
+    --        CS.Kirara.UIMgr.Instance:PopPanel(panel)
+    --    end)
+    --end)
 end
 
 return NavigationPanel

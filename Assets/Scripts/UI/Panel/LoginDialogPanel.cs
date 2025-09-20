@@ -85,16 +85,22 @@ namespace Kirara.UI.Panel
 
         private async UniTaskVoid RegisterBtn_onClick()
         {
-            var rsp = await NetFn.ReqRegister(new ReqRegister
+            try
             {
-                Username = UsernameInput.text,
-                Password = PasswordInput.text
-            });
-
-            var panel = UIMgr.Instance.PushPanel<DialogPanel>();
-            panel.Title = "提示";
-            panel.Content = rsp.Result.Msg;
-            panel.OkBtnOnClick.AddListener(() => UIMgr.Instance.PopPanel(panel));
+                var rsp = await NetFn.ReqRegister(new ReqRegister
+                {
+                    Username = UsernameInput.text,
+                    Password = PasswordInput.text
+                });
+            }
+            catch (ResultException e)
+            {
+                var rsp = (RspRegister)e.Msg;
+                var panel = UIMgr.Instance.PushPanel<DialogPanel>();
+                panel.Title = "提示";
+                panel.Content = rsp.Result.Msg;
+                panel.OkBtnOnClick.AddListener(() => UIMgr.Instance.PopPanel(panel));
+            }
         }
     }
 }

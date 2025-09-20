@@ -138,17 +138,17 @@ namespace KiraraLoopScroll
 
         public int _totalCount;
 
-        public delegate GameObject GetObject(int index);
+        public delegate GameObject GetObjectDel(int index);
 
-        public delegate void ReturnObject(GameObject go);
+        public delegate void ReturnObjectDel(GameObject go);
 
-        public delegate void ProvideData(GameObject go, int index);
+        public delegate void ProvideDataDel(GameObject go, int index);
 
-        public GetObject getObject;
-        public ReturnObject returnObject;
-        public ProvideData provideData;
+        public GetObjectDel getObject;
+        public ReturnObjectDel returnObject;
+        public ProvideDataDel provideData;
 
-        public void SetSourceFunc(GetObject getObject, ReturnObject returnObject)
+        public void SetSourceFunc(GetObjectDel getObject, ReturnObjectDel returnObject)
         {
             this.getObject = getObject;
             this.returnObject = returnObject;

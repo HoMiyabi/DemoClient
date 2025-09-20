@@ -7,61 +7,83 @@ namespace Kirara.UI.Panel
     {
         #region View
         private bool _isBound;
-        private UnityEngine.UI.Button     UIBackBtn;
-        private UnityEngine.RectTransform Content;
+        private UnityEngine.UI.Button             UIBackBtn;
+        private KiraraLoopScroll.LinearScrollView ScrollView;
         public override void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
-            var b     = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
-            Content   = b.Q<UnityEngine.RectTransform>(1, "Content");
+            var b      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIBackBtn  = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            ScrollView = b.Q<KiraraLoopScroll.LinearScrollView>(1, "ScrollView");
         }
         #endregion
 
         public GameObject SettingItemPrefab;
 
-        private void Start()
+        protected override void Awake()
         {
+            base.Awake();
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
 
-            Content.DestroyChildren();
+            ScrollView._totalCount = 4;
+            ScrollView.SetSource(new LoopScrollGOPool(SettingItemPrefab, transform));
+            ScrollView.provideData = ProvideData;
+        }
 
-            Instantiate(SettingItemPrefab, Content).GetComponent<UISettingItem>()
-                .Set("主音量",0, 10,
-                    SettingsMgr.settings.MainVolume, value =>
+        private void ProvideData(GameObject go, int index)
+        {
+            var item = go.GetComponent<UISettingItem>();
+            switch (index)
+            {
+                case 0:
                 {
-                    SettingsMgr.settings.MainVolume = value;
-                    SettingsMgr.Save();
-                    // AudioManger.Instance.masterVolume = value / 10f;
-                });
-
-            Instantiate(SettingItemPrefab, Content).GetComponent<UISettingItem>()
-                .Set("音乐音量", 0, 10,
-                    SettingsMgr.settings.MusicVolume, value =>
+                    item.Set("主音量", 0, 10,
+                        SettingsMgr.settings.MainVolume, value =>
+                        {
+                            SettingsMgr.settings.MainVolume = value;
+                            SettingsMgr.Save();
+                            // AudioManger.Instance.masterVolume = value / 10f;
+                        });
+                    break;
+                }
+                case 1:
                 {
-                    SettingsMgr.settings.MusicVolume = value;
-                    SettingsMgr.Save();
-                    // AudioManger.Instance.sfxVolume = value / 10f;
-                });
-
-            Instantiate(SettingItemPrefab, Content).GetComponent<UISettingItem>()
-                .Set("语音音量", 0, 10,
-                    SettingsMgr.settings.DialogVolume, value =>
+                    item                .Set("音乐音量", 0, 10,
+                        SettingsMgr.settings.MusicVolume, value =>
+                        {
+                            SettingsMgr.settings.MusicVolume = value;
+                            SettingsMgr.Save();
+                            // AudioManger.Instance.sfxVolume = value / 10f;
+                        });
+                    break;
+                }
+                case 2:
                 {
-                    SettingsMgr.settings.DialogVolume = value;
-                    SettingsMgr.Save();
-                    // AudioManger.Instance.sfxVolume = value / 10f;
-                });
-
-            Instantiate(SettingItemPrefab, Content).GetComponent<UISettingItem>()
-                .Set("音效音量", 0, 10,
-                    SettingsMgr.settings.SFXVolume, value =>
+                    item.Set("语音音量", 0, 10,
+                        SettingsMgr.settings.DialogVolume, value =>
+                        {
+                            SettingsMgr.settings.DialogVolume = value;
+                            SettingsMgr.Save();
+                            // AudioManger.Instance.sfxVolume = value / 10f;
+                        });
+                    break;
+                }
+                case 3:
                 {
-                    SettingsMgr.settings.SFXVolume = value;
-                    SettingsMgr.Save();
-                    // AudioManger.Instance.sfxVolume = value / 10f;
-                });
+                    item.Set("音效音量", 0, 10,
+                        SettingsMgr.settings.SFXVolume, value =>
+                        {
+                            SettingsMgr.settings.SFXVolume = value;
+                            SettingsMgr.Save();
+                            // AudioManger.Instance.sfxVolume = value / 10f;
+                        });
+                    break;
+                }
+                default:
+                    Debug.LogWarning("index out of range");
+                    break;
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Kirara.LuaUtils
             // 执行脚本
             object[] ret = luaEnv.DoString(luaScript.text, luaScript.name);
             table = (LuaTable)ret[0];
-            table.Set("com", this);
+            table.Set("panel", this);
 
             // 从 Lua 脚本域中获取定义的函数
             var bindUI = table.Get<Action<LuaTable>>("BindUI");
