@@ -111,8 +111,8 @@ namespace Kirara.UI.Panel
         private void OnInitPackageFailed(string message, Action retry)
         {
             var panel = UIMgr.Instance.PushPanel<DialogPanel>(DialogPanelPrefab);
-            panel.Title = "提示";
-            panel.Content = "初始化资源失败: " + message;
+            panel.Title = "初始化资源失败";
+            panel.Content = message;
             panel.OkText = "重试";
             panel.HasCloseBtn = false;
             panel.OkBtnOnClick.AddListener(() =>
@@ -125,8 +125,8 @@ namespace Kirara.UI.Panel
         private void OnRequestPackageVersionFailed(string message, Action retry)
         {
             var panel = UIMgr.Instance.PushPanel<DialogPanel>(DialogPanelPrefab);
-            panel.Title = "提示";
-            panel.Content = "请求资源版本失败: " + message;
+            panel.Title = "请求资源版本失败";
+            panel.Content = message;
             panel.OkText = "重试";
             panel.HasCloseBtn = false;
             panel.OkBtnOnClick.AddListener(() =>
@@ -139,8 +139,8 @@ namespace Kirara.UI.Panel
         private void OnUpdatePackageManifestFailed(string message, Action retry)
         {
             var panel = UIMgr.Instance.PushPanel<DialogPanel>(DialogPanelPrefab);
-            panel.Title = "提示";
-            panel.Content = "更新资源清单失败: " + message;
+            panel.Title = "更新资源清单失败";
+            panel.Content = message;
             panel.OkText = "重试";
             panel.HasCloseBtn = false;
             panel.OkBtnOnClick.AddListener(() =>
@@ -154,7 +154,7 @@ namespace Kirara.UI.Panel
         {
             var panel = UIMgr.Instance.PushPanel<DialogPanel>(DialogPanelPrefab);
             panel.Title = "发现更新";
-            panel.Content = $"文件：{totalCount}个，大小：{totalBytes * AssetMgr.BToMB:F2}MB";
+            panel.Content = $"文件：{totalCount}个\n大小：{totalBytes * AssetMgr.BToMB:F2}MB";
             panel.OkText = "更新";
             panel.HasCloseBtn = false;
             panel.OkBtnOnClick.AddListener(() =>
