@@ -11,7 +11,6 @@
 ---@field public remainingTimes table
 ---@field public EAttrType table
 BuffComponent = {}
-BuffComponent.__index = BuffComponent
 
 function BuffComponent:RefreshPolicy_RefreshMin()
     local minIdx = 1
@@ -103,19 +102,21 @@ function BuffComponent:GetMinRemainingTime()
     return min
 end
 
----@param ctx table
-function BuffComponent:OnAttackHit(ctx)
-end
-
+--- 动作开始时触发
 ---@param ctx table
 function BuffComponent:OnActionStart(ctx)
 end
 
+--- 攻击命中且在结算伤害前触发
+---@param ctx table
+function BuffComponent:OnAttackHit(ctx)
+end
+
 ---@param set userdata
 ---@param name string
+---@return table
 function BuffComponent.New(set, name)
-    local obj = {}
-    setmetatable(obj, BuffComponent)
+    local obj = setmetatable({}, {__index = BuffComponent})
     -- 属性增益集
     ---@type userdata
     obj.set = set

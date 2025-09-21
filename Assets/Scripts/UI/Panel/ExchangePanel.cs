@@ -69,5 +69,15 @@ namespace Kirara.UI.Panel
                     });
                 });
         }
+
+        public override void PlayEnter()
+        {
+            PanelPlayEnter(CanvasGroup);
+        }
+
+        public override void PlayExit()
+        {
+            PanelPlayExit(CanvasGroup);
+        }
     }
 }

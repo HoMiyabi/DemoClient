@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Kirara.Model;
 using Manager;
 using UnityEngine;
 using UnityEngine.Events;
@@ -44,8 +45,10 @@ namespace Kirara.UI.Panel
         }
         #endregion
 
-        public string Title { get => TitleText.text; set => TitleText.text = value; }
         public int Value => UINumSlider.Value;
+
+        private CurrencyItem currency;
+        private NExchangeItem item;
 
         private AssetHandle fromIconHandle;
         private AssetHandle toIconHandle;
@@ -54,7 +57,7 @@ namespace Kirara.UI.Panel
         {
             base.Awake();
 
-            Title = "购买确认";
+            TitleText.text = "购买确认";
             UICloseBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             UIOverlayBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
         }
@@ -68,12 +71,15 @@ namespace Kirara.UI.Panel
             }
         }
 
-        public void Clear()
+        private void Clear()
         {
             fromIconHandle?.Release();
             fromIconHandle = null;
             toIconHandle?.Release();
             toIconHandle = null;
+            item = null;
+
+            UINumSlider.OnValueChanged -= OnExchangeCountChanged;
         }
 
         private void OnDestroy()
@@ -91,14 +97,14 @@ namespace Kirara.UI.Panel
             DialogPlayExit(CanvasGroup, Box);
         }
 
-        public void SetFrom(NExchangeItem item)
+        public void SetFrom()
         {
             var fromConfig = ConfigMgr.tb.TbCurrencyItemConfig[item.FromConfigId];
             fromIconHandle = YooAssets.LoadAssetSync<Sprite>(fromConfig.IconLoc);
             FromIcon.sprite = fromIconHandle.AssetObject as Sprite;
         }
 
-        public void SetTo(NExchangeItem item)
+        public void SetTo()
         {
             var toConfig = ConfigMgr.tb.TbWeaponConfig[item.ToConfigId];
             toIconHandle = YooAssets.LoadAssetSync<Sprite>(toConfig.IconLoc);
@@ -107,30 +113,31 @@ namespace Kirara.UI.Panel
             ToDescText.text = toConfig.Desc;
         }
 
-        private void SetCount(NExchangeItem item)
+        private void SetCount()
         {
             var items = PlayerService.Player.Currencies;
-            var currency = items.First(x => x.Cid == item.FromConfigId);
+            currency = items.First(x => x.Cid == item.FromConfigId);
             UINumSlider.Set(1, currency.Count / item.FromCount);
 
-            ExchangeCountText.text = "兑换数量 X 1";
-            UINumSlider.OnValueChanged += (exchangeCnt) =>
-            {
-                ExchangeCountText.text = $"兑换数量 X {exchangeCnt}";
-            };
-            UINumSlider.OnValueChanged += (exchangeCnt) =>
-            {
-                FromCountCostText.text = $"{currency.Count} / {item.FromCount * exchangeCnt}";
-            };
+            UINumSlider.OnValueChanged += OnExchangeCountChanged;
+            OnExchangeCountChanged(1);
+        }
+
+        private void OnExchangeCountChanged(int exchangeCount)
+        {
+            ExchangeCountText.text = $"兑换数量 X {exchangeCount}";
+            FromCountCostText.text = $"{currency.Count} / {item.FromCount * exchangeCount}";
         }
 
         public ExchangeDialogPanel Set(NExchangeItem item)
         {
             Clear();
 
-            SetFrom(item);
-            SetTo(item);
-            SetCount(item);
+            this.item = item;
+
+            SetFrom();
+            SetTo();
+            SetCount();
 
             return this;
         }

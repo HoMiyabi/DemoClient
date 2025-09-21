@@ -25,25 +25,23 @@ namespace Kirara.UI.Panel
         private KiraraLoopScroll.LinearScrollView ChatFriendScrollView;
         private UnityEngine.CanvasGroup           CanvasGroup;
         private UnityEngine.RectTransform         Box;
-        private UnityEngine.CanvasGroup           UISelectStickerCanvasGroup;
         public override void BindUI()
         {
-        if (_isBound) return;
-        _isBound = true;
-            var b                      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIOverlayBtn               = b.Q<UnityEngine.UI.Button>(0, "UIOverlayBtn");
-            UIBackBtn                  = b.Q<UnityEngine.UI.Button>(1, "UIBackBtn");
-            ChatTextInput              = b.Q<TMPro.TMP_InputField>(2, "ChatTextInput");
-            SendBtn                    = b.Q<UnityEngine.UI.Button>(3, "SendBtn");
-            UsernameText               = b.Q<TMPro.TextMeshProUGUI>(4, "UsernameText");
-            UISelectStickerOverlay     = b.Q<UnityEngine.UI.Button>(5, "UISelectStickerOverlay");
-            UISelectSticker            = b.Q<Kirara.UI.UISelectSticker>(6, "UISelectSticker");
-            StickerBtn                 = b.Q<UnityEngine.UI.Button>(7, "StickerBtn");
-            ChatLoopScroll             = b.Q<KiraraLoopScroll.LinearScrollView>(8, "ChatLoopScroll");
-            ChatFriendScrollView       = b.Q<KiraraLoopScroll.LinearScrollView>(9, "ChatFriendScrollView");
-            CanvasGroup                = b.Q<UnityEngine.CanvasGroup>(10, "CanvasGroup");
-            Box                        = b.Q<UnityEngine.RectTransform>(11, "Box");
-            UISelectStickerCanvasGroup = b.Q<UnityEngine.CanvasGroup>(12, "UISelectStickerCanvasGroup");
+            if (_isBound) return;
+            _isBound = true;
+            var b                  = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIOverlayBtn           = b.Q<UnityEngine.UI.Button>(0, "UIOverlayBtn");
+            UIBackBtn              = b.Q<UnityEngine.UI.Button>(1, "UIBackBtn");
+            ChatTextInput          = b.Q<TMPro.TMP_InputField>(2, "ChatTextInput");
+            SendBtn                = b.Q<UnityEngine.UI.Button>(3, "SendBtn");
+            UsernameText           = b.Q<TMPro.TextMeshProUGUI>(4, "UsernameText");
+            UISelectStickerOverlay = b.Q<UnityEngine.UI.Button>(5, "UISelectStickerOverlay");
+            UISelectSticker        = b.Q<Kirara.UI.UISelectSticker>(6, "UISelectSticker");
+            StickerBtn             = b.Q<UnityEngine.UI.Button>(7, "StickerBtn");
+            ChatLoopScroll         = b.Q<KiraraLoopScroll.LinearScrollView>(8, "ChatLoopScroll");
+            ChatFriendScrollView   = b.Q<KiraraLoopScroll.LinearScrollView>(9, "ChatFriendScrollView");
+            CanvasGroup            = b.Q<UnityEngine.CanvasGroup>(10, "CanvasGroup");
+            Box                    = b.Q<UnityEngine.RectTransform>(11, "Box");
         }
         #endregion
 
@@ -115,17 +113,14 @@ namespace Kirara.UI.Panel
             StickerBtn.onClick.AddListener(() =>
             {
                 UISelectStickerOverlay.gameObject.SetActive(true);
-                UISelectSticker.gameObject.SetActive(true);
-                UISelectStickerCanvasGroup.alpha = 0f;
-                UISelectStickerCanvasGroup.DOFade(1f, 0.1f);
+
+                UISelectSticker.Show();
             });
             UISelectStickerOverlay.onClick.AddListener(() =>
             {
                 UISelectStickerOverlay.gameObject.SetActive(false);
-                UISelectStickerCanvasGroup.DOFade(0f, 0.1f).OnComplete(() =>
-                {
-                    UISelectStickerOverlay.gameObject.SetActive(false);
-                });
+
+                UISelectSticker.Hide();
             });
 
             // 聊天人选择列表

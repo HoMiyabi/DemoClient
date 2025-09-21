@@ -1,40 +1,41 @@
 ﻿using cfg.main;
-using Kirara.Model;
+using Kirara.AttrBuff;
 using Kirara.TimelineAction;
 using Manager;
 using UnityEngine;
 
 namespace Kirara
 {
-    public class AttackProcessManager
+    public static class AttackProcessManager
     {
-        private static bool GetIsCrit(Role role)
+        private static bool CalcIsCrit(AttrBuffSet set)
         {
-            return Random.Range(0f, 1f) <= role.Set[EAttrType.CritRate];
+            return Random.Range(0f, 1f) <= set[EAttrType.CritRate];
         }
 
-        private static double CalcDamage(Role role, double dmgMult, bool isCrit)
+        private static double CalcDamage(AttrBuffSet set, double dmgMult, bool isCrit)
         {
-            double damage = role.Set[EAttrType.Atk] * dmgMult;
+            double damage = set[EAttrType.Atk] * dmgMult;
             if (isCrit)
             {
-                damage *= 1f + role.Set[EAttrType.CritDmg];
+                damage *= 1 + set[EAttrType.CritDmg];
             }
+            damage *= 1 + set[EAttrType.ZengShang];
             return damage;
         }
 
-        private static double CalcDaze(Role role, double dazeMult)
+        private static double CalcDaze(AttrBuffSet set, double dazeMult)
         {
-            double daze = role.Set[EAttrType.Impact] * dazeMult;
+            double daze = set[EAttrType.Impact] * dazeMult;
             return daze;
         }
 
-        private static void CalcNumeric(Role role, double dmgMult, double dazeMult,
+        private static void CalcNumeric(AttrBuffSet set, double dmgMult, double dazeMult,
             out double damage, out double daze, out bool isCrit)
         {
-            isCrit = GetIsCrit(role);
-            damage = CalcDamage(role, dmgMult, isCrit);
-            daze = CalcDaze(role, dazeMult);
+            isCrit = CalcIsCrit(set);
+            damage = CalcDamage(set, dmgMult, isCrit);
+            daze = CalcDaze(set, dazeMult);
         }
 
         private static void PlayVisual(RoleCtrl role, MonsterCtrl target, double dmg, bool isCrit, BoxNotifyState box)
@@ -66,7 +67,7 @@ namespace Kirara
 
             var config = ConfigMgr.tb.TbChHitNumericConfig[box.hitId];
 
-            CalcNumeric(role.Role, config.DmgMult, config.DazeMult,
+            CalcNumeric(role.Role.Set, config.DmgMult, config.DazeMult,
                 out double dmg, out double daze, out bool isCrit);
 
             // target.TakeEffect(dmg, daze);
@@ -84,7 +85,7 @@ namespace Kirara
             PlayVisual(role, target, dmg, isCrit, box);
         }
 
-        public static void RoleAttack(RoleCtrl role, BoxNotifyState box)
+        public static void RoleAttack(RoleCtrl role, BoxNotifyState box, string actionType)
         {
             int count = PhysicsOverlap(box, role.transform, LayerMask.GetMask("Monster"));
 
@@ -107,6 +108,11 @@ namespace Kirara
             {
                 AudioMgr.Instance.PlaySFX(box.hitAudio, role.transform.position + Vector3.forward);
                 role.TriggerHitstop(box.hitstopDuration, box.hitstopSpeed).Forget();
+
+                role.Role.Set.OnAttackHit(new OnAttackHitContext
+                {
+                    actionType = actionType
+                });
             }
         }
 

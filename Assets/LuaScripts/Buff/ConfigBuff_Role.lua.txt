@@ -1,12 +1,12 @@
 local config = {}
 
 
----@param self Buff
+---@param self BuffComponent
 config.RoleEnergyRegen = function(self)
 
-    ---@param self Buff
+    ---@param self BuffComponent
     self.OnUpdate = function(self, dt)
-        local mul = 8
+        local mul = 6
         local maxEnergy = 120;
         local currEnergy = self.set[self.EAttrType.CurrEnergy]
 

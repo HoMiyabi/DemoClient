@@ -92,7 +92,7 @@ namespace Kirara.UI
             value = minValue;
             Slider.SetValueWithoutNotify(minValue);
 
-            Slider.onValueChanged.AddListener(v => OnValueChanged?.Invoke((int)v));
+            Slider.onValueChanged.AddListener(v => OnValueChanged?.Invoke(Mathf.RoundToInt(v)));
 
             return this;
         }

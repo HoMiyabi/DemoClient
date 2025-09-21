@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Kirara;
 using Kirara.Model;
-using Manager;
 using UnityEngine;
 using YooAsset;
 
@@ -20,14 +19,14 @@ public class UIInventoryCellDisc : MonoBehaviour
     {
         if (_isBound) return;
         _isBound = true;
-        var c              = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-        InfoText           = c.Q<TMPro.TextMeshProUGUI>(0, "InfoText");
-        WearerIconImg      = c.Q<UnityEngine.UI.Image>(1, "WearerIconImg");
-        IconImg            = c.Q<UnityEngine.UI.Image>(2, "IconImg");
-        Btn                = c.Q<UnityEngine.UI.Button>(3, "Btn");
-        UIInventoryRankBar = c.Q<Kirara.UI.UIInventoryRankBar>(4, "UIInventoryRankBar");
-        UIDiscPosIcon      = c.Q<Kirara.UI.UIDiscPosIcon>(5, "UIDiscPosIcon");
-        SelectBorder       = c.Q<UnityEngine.UI.Image>(6, "SelectBorder");
+        var b              = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+        InfoText           = b.Q<TMPro.TextMeshProUGUI>(0, "InfoText");
+        WearerIconImg      = b.Q<UnityEngine.UI.Image>(1, "WearerIconImg");
+        IconImg            = b.Q<UnityEngine.UI.Image>(2, "IconImg");
+        Btn                = b.Q<UnityEngine.UI.Button>(3, "Btn");
+        UIInventoryRankBar = b.Q<Kirara.UI.UIInventoryRankBar>(4, "UIInventoryRankBar");
+        UIDiscPosIcon      = b.Q<Kirara.UI.UIDiscPosIcon>(5, "UIDiscPosIcon");
+        SelectBorder       = b.Q<UnityEngine.UI.Image>(6, "SelectBorder");
     }
     #endregion
 

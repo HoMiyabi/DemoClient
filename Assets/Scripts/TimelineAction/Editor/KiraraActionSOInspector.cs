@@ -8,6 +8,7 @@ namespace Kirara.TimelineAction.Editor
     {
         private SerializedProperty m_DurationModeProp;
         private SerializedProperty actionIdProp;
+        private SerializedProperty actionTypeProp;
         private SerializedProperty isLoopProp;
         private SerializedProperty actionArgsProp;
         private SerializedProperty finishTransitionProp;
@@ -19,6 +20,7 @@ namespace Kirara.TimelineAction.Editor
         {
             m_DurationModeProp = serializedObject.FindProperty("m_DurationMode");
             isLoopProp = serializedObject.FindProperty(nameof(KiraraActionSO.isLoop));
+            actionTypeProp = serializedObject.FindProperty(nameof(KiraraActionSO.actionType));
             actionIdProp = serializedObject.FindProperty(nameof(KiraraActionSO.actionId));
             actionArgsProp = serializedObject.FindProperty(nameof(KiraraActionSO.actionArgs));
             finishTransitionProp = serializedObject.FindProperty(nameof(KiraraActionSO.finishTransition));
@@ -31,7 +33,8 @@ namespace Kirara.TimelineAction.Editor
         {
             serializedObject.Update();
             EditorGUILayout.PropertyField(m_DurationModeProp);
-            EditorGUILayout.PropertyField(actionIdProp);
+            EditorGUILayout.PropertyField(actionIdProp, new GUIContent("动作Id"));
+            EditorGUILayout.PropertyField(actionTypeProp, new GUIContent("动作类型"));
             EditorGUILayout.PropertyField(isLoopProp, new GUIContent("循环"));
             EditorGUILayout.PropertyField(actionArgsProp, new GUIContent("动作参数"));
             EditorGUILayout.PropertyField(inheritActionTransitionProp, new GUIContent("继承此动作的跳转"));

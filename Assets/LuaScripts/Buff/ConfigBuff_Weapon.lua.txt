@@ -1,14 +1,15 @@
 local config = {}
 
+-- 属性伤害和支援相关还没完善，所以都统一为增伤且无法触发支援相关
 
----@param self Buff
+---@param self BuffComponent
 config.LiuHuangShi = function(self)
 
-    ---@param self Buff
+    ---@param self BuffComponent
     self.OnAttackHit = function(self, ctx)
-        if ctx.attackType == "NormalAttack"
-                or ctx.attackType == "DashAttack"
-                or ctx.attackType == "闪避反击" then
+        if ctx.actionType == "普通攻击"
+                or ctx.actionType == "冲刺攻击"
+                or ctx.actionType == "闪避反击" then
             if not self:HasTimer("LiuHuangShi_Timer") then
                 self:SetTimer("LiuHuangShi_Timer", 0.5)
                 self:AttachBuff("LiuHuangShi_1")
@@ -18,19 +19,19 @@ config.LiuHuangShi = function(self)
 end
 
 
----@param self Buff
+---@param self BuffComponent
 config.LiuHuangShi_1 = function(self)
     self.duration = 8
     self.stackLimit = 8
-    self.attrs[self.EAttrType.AttackPct] = self:Inject("Rate")
+    self.attrs[self.EAttrType.AttackPct] = 0.035
 end
 
 
----@param self Buff
+---@param self BuffComponent
 config.DeMaLaDianChi2Xing = function(self)
-    self.attrs[self.EAttrType.ElectricDmgPct] = 0.15
+    self.attrs[self.EAttrType.ZengShang] = 0.15
 
-    ---@param self Buff
+    ---@param self BuffComponent
     self.OnAttackHit = function(self, ctx)
         if ctx.actionType == "闪避反击" or ctx.actionType == "支援攻击" then
             self:AttachBuff("DeMaLaDianChi2Xing_1")
@@ -39,17 +40,17 @@ config.DeMaLaDianChi2Xing = function(self)
 end
 
 
----@param self Buff
+---@param self BuffComponent
 config.DeMaLaDianChi2Xing_1 = function(self)
     self.duration = 8
-    self.attrs[self.EAttrType.NengLiangHuoDeXiaoLv] = 0.18
+    self.attrs[self.EAttrType.EnergyEffi] = 0.18
 end
 
 
----@param self Buff
+---@param self BuffComponent
 config.XingHuiYinQing = function(self)
 
-    ---@param self Buff
+    ---@param self BuffComponent
     self.OnActionStart = function(self, ctx)
         if ctx.actionType == "闪避反击" or ctx.actionType == "快速支援" then
             self.AttachBuff("XingHuiYinQing_1")
@@ -58,18 +59,18 @@ config.XingHuiYinQing = function(self)
 end
 
 
----@param self Buff
+---@param self BuffComponent
 config.XingHuiYinQing_1 = function(self)
     self.duration = 12
     self.attrs[self.EAttrType.AtkPct] = 0.12
 end
 
 
----@param self Buff
+---@param self BuffComponent
 config.XianLuoXingDian = function(self)
     self.attrs[self.EAttrType.CritDmg] = 0.5
 
-    ---@param self Buff
+    ---@param self BuffComponent
     self.OnActionStart = function(self, ctx)
         if ctx.actionType == "强化特殊技" then
             self:AttachBuff("XianLuoXingDian_2")
@@ -78,11 +79,11 @@ config.XianLuoXingDian = function(self)
 end
 
 
----@param self Buff
+---@param self BuffComponent
 config.XianLuoXingDian_2 = function(self)
     self.duration = 15
     self.stackLimit = 2
-    self.attrs[self.EAttrType.IceDmg] = 0.2
+    self.attrs[self.EAttrType.ZengShang] = 0.2
 end
 
 

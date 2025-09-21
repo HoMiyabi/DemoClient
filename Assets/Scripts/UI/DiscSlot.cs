@@ -39,6 +39,7 @@ namespace Kirara.UI
             if (Role != null)
             {
                 Role.OnDiscChanged -= UpdateView;
+                Role = null;
             }
             icon?.Release();
             icon = null;
@@ -61,14 +62,14 @@ namespace Kirara.UI
 
             if (disc != null)
             {
-                icon = YooAssets.LoadAssetSync<Sprite>(disc.IconLoc);
+                icon = YooAssets.LoadAssetSync<Sprite>(disc.Config.EquipmentIconLoc);
                 Img.sprite = icon.AssetObject as Sprite;
                 Img.color = Color.white;
             }
             else
             {
                 Img.sprite = null;
-                Img.color = Color.white;
+                Img.color = Color.clear;
             }
         }
 

@@ -168,21 +168,42 @@ namespace Kirara.AttrBuff
             var buff = Buffs.Find(x => x.name == name);
             if (buff == null)
             {
-                buff = NewBuff(this, name);
-                var init = configBuffs[name];
-                init(buff);
-                Buffs.Add(buff);
+                if (configBuffs.TryGetValue(name, out var initBuff))
+                {
+                    buff = NewBuff(this, name);
+                    initBuff(buff);
+                    Buffs.Add(buff);
+                }
+                else
+                {
+                    Debug.LogWarning($"Buff不存在 name: {name}");
+                    return;
+                }
             }
             buff.Attached();
         }
 
         public double Inject(string buffName, string varName)
         {
-            if (buffName == "ShenHaiFangKe_1" && varName == "Rate")
-            {
-                return 0.114514;
-            }
             return 0;
+        }
+
+        public void OnActionStart(OnActionStartContext ctx)
+        {
+            // 可能在OnActionStart中添加新的Buff，不能foreach
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                Buffs[i].OnActionStart(ctx);
+            }
+        }
+
+        public void OnAttackHit(OnAttackHitContext ctx)
+        {
+            // 可能在OnAttackHit中添加新的Buff，不能foreach
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                Buffs[i].OnAttackHit(ctx);
+            }
         }
 
         #endregion

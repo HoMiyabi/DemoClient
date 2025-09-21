@@ -1,30 +1,32 @@
 ﻿using System.Text;
 using cfg.main;
 using Manager;
-using TMPro;
 using UnityEngine;
 
 namespace Kirara.UI
 {
-    public class UIAbilityInfo : MonoBehaviour
+    public class UIBuffInfo : MonoBehaviour
     {
         #region View
-        private TextMeshProUGUI Text;
-        private void InitUI()
+        private bool _isBound;
+        private TMPro.TextMeshProUGUI Text;
+        public void BindUI()
         {
-            var c = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            Text  = c.Q<TextMeshProUGUI>(0, "Text");
+            if (_isBound) return;
+            _isBound = true;
+            var b = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            Text  = b.Q<TMPro.TextMeshProUGUI>(0, "Text");
         }
         #endregion
 
         private readonly StringBuilder sb = new();
-        private string cacheText = "";
 
-        private readonly EAttrType[] attrTypes = {EAttrType.Atk, EAttrType.CritRate, EAttrType.CritDmg, EAttrType.Impact};
+        private readonly EAttrType[] attrTypes = {
+            EAttrType.Atk, EAttrType.CritRate, EAttrType.CritDmg, EAttrType.ZengShang};
 
         private void Awake()
         {
-            InitUI();
+            BindUI();
         }
 
         private void UpdateEffectText()
@@ -47,13 +49,8 @@ namespace Kirara.UI
                     buff.name, buff.stackCount, buff.stackLimit,
                     buff.GetMinRemainingTime(), buff.duration);
             }
-            string text = sb.ToString();
-            if (text != cacheText)
-            {
-                Debug.Log($"{text.GetHashCode()} {text}");
-                cacheText = text;
-                Text.text = cacheText;
-            }
+
+            Text.SetText(sb);
         }
 
         private void Update()

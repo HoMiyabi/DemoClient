@@ -6,6 +6,7 @@ using Cinemachine;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Kirara.AttrBuff;
 using Kirara.Model;
 using Kirara.TimelineAction;
 using Manager;
@@ -74,6 +75,11 @@ namespace Kirara
             {
                 RoleId = Role.Id,
                 ActionName = actionName
+            });
+
+            Role.Set.OnActionStart(new OnActionStartContext
+            {
+                actionType = action.actionType
             });
         }
 
@@ -331,7 +337,7 @@ namespace Kirara
         {
             if (box.boxType == EBoxType.HitBox)
             {
-                AttackProcessManager.RoleAttack(this, box);
+                AttackProcessManager.RoleAttack(this, box, ActionCtrl.Action.actionType);
             }
         }
 

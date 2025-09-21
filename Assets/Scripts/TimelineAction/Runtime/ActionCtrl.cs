@@ -11,6 +11,7 @@ namespace Kirara.TimelineAction
         private Dictionary<string, KiraraActionSO> ActionDict { get; set; }
 
         private KiraraActionSO _action;
+        public KiraraActionSO Action => _action;
         public KiraraActionSO OverrideAction { get; set; }
 
         public Func<KiraraActionSO, bool> IsActionExecutable { get; set; }

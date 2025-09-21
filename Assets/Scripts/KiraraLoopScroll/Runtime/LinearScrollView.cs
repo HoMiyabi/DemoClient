@@ -316,8 +316,8 @@ namespace KiraraLoopScroll
             {
                 PopFront();
             }
-            itemFrontPos = DirViewportSize;
-            itemBackPos = DirViewportSize;
+            itemFrontPos = DirViewportSize - BottomPadding;
+            itemBackPos = DirViewportSize - BottomPadding;
             itemFrontIndex = _totalCount;
             itemBackIndex = _totalCount;
             SetPos(0, true);

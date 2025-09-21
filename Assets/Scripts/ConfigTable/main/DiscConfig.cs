@@ -24,6 +24,7 @@ public sealed partial class DiscConfig : Luban.BeanBase
         Name = (string)_obj.GetValue("name");
         Rank = (string)_obj.GetValue("rank");
         IconLoc = (string)_obj.GetValue("icon_loc");
+        EquipmentIconLoc = (string)_obj.GetValue("equipment_icon_loc");
         SetAbility2Name = (string)_obj.GetValue("set_ability_2_name");
         SetAbility4Name = (string)_obj.GetValue("set_ability_4_name");
         SetAbility2Desc = (string)_obj.GetValue("set_ability_2_desc");
@@ -49,6 +50,10 @@ public sealed partial class DiscConfig : Luban.BeanBase
     /// 图标路径
     /// </summary>
     public readonly string IconLoc;
+    /// <summary>
+    /// 装备页图标路径
+    /// </summary>
+    public readonly string EquipmentIconLoc;
     /// <summary>
     /// 2件套效果名
     /// </summary>
@@ -85,6 +90,7 @@ public sealed partial class DiscConfig : Luban.BeanBase
         + "name:" + Name + ","
         + "rank:" + Rank + ","
         + "iconLoc:" + IconLoc + ","
+        + "equipmentIconLoc:" + EquipmentIconLoc + ","
         + "setAbility2Name:" + SetAbility2Name + ","
         + "setAbility4Name:" + SetAbility4Name + ","
         + "setAbility2Desc:" + SetAbility2Desc + ","
