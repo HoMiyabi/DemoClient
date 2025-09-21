@@ -10,21 +10,21 @@ namespace Kirara.UI
     {
         #region View
         private bool _isBound;
-        private Kirara.UI.UIDiscDetail UIDiscDetail;
-        private UnityEngine.UI.Button  UpgradeBtn;
-        private UnityEngine.UI.Button  EquipBtn;
-        private TMPro.TextMeshProUGUI  EquipBtnText;
-        private KiraraLoopScroll.GridScrollView         Scroller;
+        private Kirara.UI.UIDiscDetail          UIDiscDetail;
+        private UnityEngine.UI.Button           UpgradeBtn;
+        private UnityEngine.UI.Button           EquipBtn;
+        private TMPro.TextMeshProUGUI           EquipBtnText;
+        private KiraraLoopScroll.GridScrollView ScrollView;
         public void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
-            var c        = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIDiscDetail = c.Q<Kirara.UI.UIDiscDetail>(0, "UIDiscDetail");
-            UpgradeBtn   = c.Q<UnityEngine.UI.Button>(1, "UpgradeBtn");
-            EquipBtn     = c.Q<UnityEngine.UI.Button>(2, "EquipBtn");
-            EquipBtnText = c.Q<TMPro.TextMeshProUGUI>(3, "EquipBtnText");
-            Scroller     = c.Q<KiraraLoopScroll.GridScrollView>(4, "Scroller");
+            var b        = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIDiscDetail = b.Q<Kirara.UI.UIDiscDetail>(0, "UIDiscDetail");
+            UpgradeBtn   = b.Q<UnityEngine.UI.Button>(1, "UpgradeBtn");
+            EquipBtn     = b.Q<UnityEngine.UI.Button>(2, "EquipBtn");
+            EquipBtnText = b.Q<TMPro.TextMeshProUGUI>(3, "EquipBtnText");
+            ScrollView   = b.Q<KiraraLoopScroll.GridScrollView>(4, "ScrollView");
         }
         #endregion
 
@@ -47,8 +47,8 @@ namespace Kirara.UI
             });
 
             var pool = new LoopScrollGOPool(UIInventoryCellDiscPrefab, transform);
-            Scroller.SetSource(pool);
-            Scroller.provideData = ProvideData;
+            ScrollView.SetSource(pool);
+            ScrollView.provideData = ProvideData;
 
             _selectedDisc.Observe(OnSelectionChanged);
         }
@@ -86,8 +86,8 @@ namespace Kirara.UI
                 .ToList();
             ReorderDisc();
 
-            Scroller._totalCount = discs.Count;
-            Scroller.RefreshToStart();
+            ScrollView._totalCount = discs.Count;
+            ScrollView.RefreshToStart();
 
             if (discs.Count > 0)
             {

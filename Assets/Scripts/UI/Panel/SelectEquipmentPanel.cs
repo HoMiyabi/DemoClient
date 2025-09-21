@@ -21,7 +21,7 @@ namespace Kirara.UI.Panel
         #endregion
 
         private Role ch;
-        private UICharacterEquipment equipment;
+        private UIRoleEquipment equipment;
 
         private void Start()
         {
@@ -33,19 +33,19 @@ namespace Kirara.UI.Panel
             equipment.ResetParentAndOnClick();
         }
 
-        public void SetDisc(Role ch, UICharacterEquipment equipment, int pos)
+        public void SetDisc(Role ch, UIRoleEquipment equipment, int pos)
         {
             Set(ch, equipment);
             SetDisc(pos);
         }
 
-        public void SetWeapon(Role ch, UICharacterEquipment equipment)
+        public void SetWeapon(Role ch, UIRoleEquipment equipment)
         {
             Set(ch, equipment);
             SetWeapon();
         }
 
-        private void Set(Role ch, UICharacterEquipment equipment)
+        private void Set(Role ch, UIRoleEquipment equipment)
         {
             this.ch = ch;
             this.equipment = equipment;

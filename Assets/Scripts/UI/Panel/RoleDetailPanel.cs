@@ -1,5 +1,4 @@
-﻿using System;
-using Kirara.Model;
+﻿using Kirara.Model;
 
 namespace Kirara.UI.Panel
 {
@@ -10,7 +9,7 @@ namespace Kirara.UI.Panel
         private UnityEngine.UI.Button          UIBackBtn;
         private Kirara.UI.UITabController      UITabController;
         private Kirara.UI.UIRoleBasicStat      UICharacterBasicStat;
-        private Kirara.UI.UICharacterEquipment UICharacterEquipment;
+        private Kirara.UI.UIRoleEquipment UIRoleEquipment;
         public override void BindUI()
         {
             if (_isBound) return;
@@ -19,7 +18,7 @@ namespace Kirara.UI.Panel
             UIBackBtn            = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
             UITabController      = b.Q<Kirara.UI.UITabController>(1, "UITabController");
             UICharacterBasicStat = b.Q<Kirara.UI.UIRoleBasicStat>(2, "UICharacterBasicStat");
-            UICharacterEquipment = b.Q<Kirara.UI.UICharacterEquipment>(3, "UICharacterEquipment");
+            UIRoleEquipment      = b.Q<Kirara.UI.UIRoleEquipment>(3, "UIRoleEquipment");
         }
         #endregion
 
@@ -35,7 +34,7 @@ namespace Kirara.UI.Panel
             Role = role;
 
             UICharacterBasicStat.Set(role);
-            UICharacterEquipment.Set(role);
+            UIRoleEquipment.Set(role);
         }
     }
 }

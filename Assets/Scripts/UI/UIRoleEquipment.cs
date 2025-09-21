@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace Kirara.UI
 {
-    public class UICharacterEquipment : MonoBehaviour
+    public class UIRoleEquipment : MonoBehaviour
     {
         #region View
         private UIWeaponSlot UIWeaponSlot;
@@ -31,7 +31,7 @@ namespace Kirara.UI
         private DiscSlot[] discSlots;
         public int SlotCount => discSlots.Length;
 
-        private Role ch;
+        private Role role;
 
         private Transform parent;
 
@@ -52,14 +52,14 @@ namespace Kirara.UI
             return discSlots[pos - 1];
         }
 
-        public void Set(Role ch)
+        public void Set(Role role)
         {
-            this.ch = ch;
+            this.role = role;
             for (int pos = 1; pos <= SlotCount; pos++)
             {
-                Slot(pos).Set(ch, pos, OpenSelectDisc);
+                Slot(pos).Set(role, pos, OpenSelectDisc);
             }
-            UIWeaponSlot.Set(ch, OpenSelectWeapon);
+            UIWeaponSlot.Set(role, OpenSelectWeapon);
         }
 
         public void ResetParentAndOnClick()
@@ -75,12 +75,12 @@ namespace Kirara.UI
 
         private void OpenSelectDisc(int discPos)
         {
-            UIMgr.Instance.PushPanel<SelectEquipmentPanel>().SetDisc(ch, this, discPos);
+            UIMgr.Instance.PushPanel<SelectEquipmentPanel>().SetDisc(role, this, discPos);
         }
 
         private void OpenSelectWeapon()
         {
-            UIMgr.Instance.PushPanel<SelectEquipmentPanel>().SetWeapon(ch, this);
+            UIMgr.Instance.PushPanel<SelectEquipmentPanel>().SetWeapon(role, this);
         }
     }
 }

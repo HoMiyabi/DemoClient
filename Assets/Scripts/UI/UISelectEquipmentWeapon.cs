@@ -10,19 +10,19 @@ namespace Kirara.UI
     {
         #region View
         private bool _isBound;
-        private Kirara.UI.UIWeaponDetail UIWeaponDetail;
-        private UnityEngine.UI.Button    EquipBtn;
-        private TMPro.TextMeshProUGUI    EquipBtnText;
-        private KiraraLoopScroll.GridScrollView           Scroller;
+        private Kirara.UI.UIWeaponDetail        UIWeaponDetail;
+        private UnityEngine.UI.Button           EquipBtn;
+        private TMPro.TextMeshProUGUI           EquipBtnText;
+        private KiraraLoopScroll.GridScrollView ScrollView;
         public void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
-            var c          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIWeaponDetail = c.Q<Kirara.UI.UIWeaponDetail>(0, "UIWeaponDetail");
-            EquipBtn       = c.Q<UnityEngine.UI.Button>(1, "EquipBtn");
-            EquipBtnText   = c.Q<TMPro.TextMeshProUGUI>(2, "EquipBtnText");
-            Scroller       = c.Q<KiraraLoopScroll.GridScrollView>(3, "Scroller");
+            var b          = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIWeaponDetail = b.Q<Kirara.UI.UIWeaponDetail>(0, "UIWeaponDetail");
+            EquipBtn       = b.Q<UnityEngine.UI.Button>(1, "EquipBtn");
+            EquipBtnText   = b.Q<TMPro.TextMeshProUGUI>(2, "EquipBtnText");
+            ScrollView     = b.Q<KiraraLoopScroll.GridScrollView>(3, "ScrollView");
         }
         #endregion
 
@@ -37,8 +37,8 @@ namespace Kirara.UI
             BindUI();
 
             var pool = new LoopScrollGOPool(UIInventoryCellWeaponPrefab, transform);
-            Scroller.SetSource(pool);
-            Scroller.provideData = ProvideData;
+            ScrollView.SetSource(pool);
+            ScrollView.provideData = ProvideData;
             _selectedWeapon.Observe(OnSelectionChanged);
         }
 
@@ -72,7 +72,8 @@ namespace Kirara.UI
 
             weapons = GetWeapons();
 
-            Scroller._totalCount = weapons.Count;
+            ScrollView._totalCount = weapons.Count;
+            ScrollView.RefreshToStart();
 
             if (weapons.Count > 0)
             {

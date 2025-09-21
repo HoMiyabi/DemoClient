@@ -47,7 +47,6 @@ public class UIInventoryCellDisc : MonoBehaviour
             _disc = null;
         }
         _selected?.Remove(OnSelectionChanged);
-        _disc = null;
     }
 
     private DiscItem _disc;
