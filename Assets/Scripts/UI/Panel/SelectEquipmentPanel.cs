@@ -79,13 +79,12 @@ namespace Kirara.UI.Panel
 
         public override void PlayEnter()
         {
-            CanvasGroup.alpha = 0f;
-            CanvasGroup.DOFade(1f, 0.1f).OnComplete(base.PlayEnter);
+            PanelPlayEnter(CanvasGroup);
         }
 
         public override void PlayExit()
         {
-            CanvasGroup.DOFade(0f, 0.1f).OnComplete(base.PlayExit);
+            PanelPlayExit(CanvasGroup);
         }
     }
 }

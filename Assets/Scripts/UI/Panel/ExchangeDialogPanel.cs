@@ -10,17 +10,19 @@ namespace Kirara.UI.Panel
     {
         #region View
         private bool _isBound;
-        private TMPro.TextMeshProUGUI TitleText;
-        private TMPro.TextMeshProUGUI ToNameCountText;
-        private TMPro.TextMeshProUGUI ToDescText;
-        private Kirara.UI.UINumSlider UINumSlider;
-        private UnityEngine.UI.Button UICloseBtn;
-        private UnityEngine.UI.Image  FromIcon;
-        private TMPro.TextMeshProUGUI FromCountCostText;
-        private UnityEngine.UI.Button UIOverlayBtn;
-        private TMPro.TextMeshProUGUI ExchangeCountText;
-        private UnityEngine.UI.Button ConfirmBtn;
-        private UnityEngine.UI.Image  ToIcon;
+        private TMPro.TextMeshProUGUI     TitleText;
+        private TMPro.TextMeshProUGUI     ToNameCountText;
+        private TMPro.TextMeshProUGUI     ToDescText;
+        private Kirara.UI.UINumSlider     UINumSlider;
+        private UnityEngine.UI.Button     UICloseBtn;
+        private UnityEngine.UI.Image      FromIcon;
+        private TMPro.TextMeshProUGUI     FromCountCostText;
+        private UnityEngine.UI.Button     UIOverlayBtn;
+        private TMPro.TextMeshProUGUI     ExchangeCountText;
+        private UnityEngine.UI.Button     ConfirmBtn;
+        private UnityEngine.UI.Image      ToIcon;
+        private UnityEngine.CanvasGroup   CanvasGroup;
+        private UnityEngine.RectTransform Box;
         public override void BindUI()
         {
             if (_isBound) return;
@@ -37,6 +39,8 @@ namespace Kirara.UI.Panel
             ExchangeCountText = b.Q<TMPro.TextMeshProUGUI>(8, "ExchangeCountText");
             ConfirmBtn        = b.Q<UnityEngine.UI.Button>(9, "ConfirmBtn");
             ToIcon            = b.Q<UnityEngine.UI.Image>(10, "ToIcon");
+            CanvasGroup       = b.Q<UnityEngine.CanvasGroup>(11, "CanvasGroup");
+            Box               = b.Q<UnityEngine.RectTransform>(12, "Box");
         }
         #endregion
 
@@ -50,7 +54,7 @@ namespace Kirara.UI.Panel
         {
             base.Awake();
 
-            Title = "兑换确认";
+            Title = "购买确认";
             UICloseBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
             UIOverlayBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
         }
@@ -75,6 +79,16 @@ namespace Kirara.UI.Panel
         private void OnDestroy()
         {
             Clear();
+        }
+
+        public override void PlayEnter()
+        {
+            DialogPlayEnter(CanvasGroup, Box);
+        }
+
+        public override void PlayExit()
+        {
+            DialogPlayExit(CanvasGroup, Box);
         }
 
         public void SetFrom(NExchangeItem item)

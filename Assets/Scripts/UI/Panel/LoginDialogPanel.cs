@@ -1,8 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using Kirara.Network;
-using UnityEngine;
 
 namespace Kirara.UI.Panel
 {
@@ -36,22 +34,12 @@ namespace Kirara.UI.Panel
 
         public override void PlayEnter()
         {
-            CanvasGroup.alpha = 0f;
-            var t1 = CanvasGroup.DOFade(1f, 0.1f);
-
-            Box.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-            var t2 = Box.DOScale(1f, 0.1f);
-
-            t2.onComplete = base.PlayEnter;
+            DialogPlayEnter(CanvasGroup, Box);
         }
 
         public override void PlayExit()
         {
-            CanvasGroup.DOFade(0f, 0.1f);
-
-            var t = Box.DOScale(0.8f, 0.1f);
-
-            t.onComplete = base.PlayExit;
+            DialogPlayExit(CanvasGroup, Box);
         }
 
         private void Start()

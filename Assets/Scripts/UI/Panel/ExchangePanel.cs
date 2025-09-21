@@ -11,13 +11,15 @@ namespace Kirara.UI.Panel
         private bool _isBound;
         private UnityEngine.UI.Button           UIBackBtn;
         private KiraraLoopScroll.GridScrollView ScrollView;
+        private UnityEngine.CanvasGroup         CanvasGroup;
         public override void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
-            var b      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn  = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
-            ScrollView = b.Q<KiraraLoopScroll.GridScrollView>(1, "ScrollView");
+            var b       = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIBackBtn   = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            ScrollView  = b.Q<KiraraLoopScroll.GridScrollView>(1, "ScrollView");
+            CanvasGroup = b.Q<UnityEngine.CanvasGroup>(2, "CanvasGroup");
         }
         #endregion
 
