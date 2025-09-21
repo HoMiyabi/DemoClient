@@ -351,6 +351,8 @@ namespace Kirara
             if (msg.Parried)
             {
                 EnterAttackParryAid().Forget();
+                var monsterCtrl = MonsterSystem.Instance.monsterCtrls[msg.MonsterId];
+                monsterCtrl.EnterParried().Forget();
             }
             else
             {

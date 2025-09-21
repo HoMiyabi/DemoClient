@@ -139,12 +139,12 @@ public static partial class MessageReflection {
           "Cg1RdWVzdENoYWluQ2lkGAEgASgFIpkBChFOb3RpZnlPYnRhaW5JdGVtcxIg",
           "CghDdXJJdGVtcxgBIAMoCzIOLk5DdXJyZW5jeUl0ZW0SIAoITWF0SXRlbXMY",
           "AiADKAsyDi5OTWF0ZXJpYWxJdGVtEh0KCURpc2NJdGVtcxgDIAMoCzIKLk5E",
-          "aXNjSXRlbRIhCgtXZWFwb25JdGVtcxgEIAMoCzIMLk5XZWFwb25JdGVtIkoK",
-          "F05vdGlmeU1vbnN0ZXJBdHRhY2tSb2xlEg4KBlJvbGVJZBgBIAEoCRIOCgZE",
-          "YW1hZ2UYAiABKAESDwoHUGFycmllZBgDIAEoCCIzCg9Nc2dSb2xlU2V0UGFy",
-          "cnkSDgoGUm9sZUlkGAEgASgJEhAKCFBhcnJ5aW5nGAIgASgIIjIKD01zZ1Jv",
-          "bGVTZXREb2RnZRIOCgZSb2xlSWQYASABKAkSDwoHRG9kZ2luZxgCIAEoCGIG",
-          "cHJvdG8z"));
+          "aXNjSXRlbRIhCgtXZWFwb25JdGVtcxgEIAMoCzIMLk5XZWFwb25JdGVtIl0K",
+          "F05vdGlmeU1vbnN0ZXJBdHRhY2tSb2xlEhEKCU1vbnN0ZXJJZBgBIAEoBRIO",
+          "CgZSb2xlSWQYAiABKAkSDgoGRGFtYWdlGAMgASgBEg8KB1BhcnJpZWQYBCAB",
+          "KAgiMwoPTXNnUm9sZVNldFBhcnJ5Eg4KBlJvbGVJZBgBIAEoCRIQCghQYXJy",
+          "eWluZxgCIAEoCCIyCg9Nc2dSb2xlU2V0RG9kZ2USDgoGUm9sZUlkGAEgASgJ",
+          "Eg8KB0RvZGdpbmcYAiABKAhiBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -230,7 +230,7 @@ public static partial class MessageReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgGatherMaterial), global::MsgGatherMaterial.Parser, new[]{ "MaterialCid", "Count" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgCompleteQuestChain), global::MsgCompleteQuestChain.Parser, new[]{ "QuestChainCid" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NotifyObtainItems), global::NotifyObtainItems.Parser, new[]{ "CurItems", "MatItems", "DiscItems", "WeaponItems" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NotifyMonsterAttackRole), global::NotifyMonsterAttackRole.Parser, new[]{ "RoleId", "Damage", "Parried" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NotifyMonsterAttackRole), global::NotifyMonsterAttackRole.Parser, new[]{ "MonsterId", "RoleId", "Damage", "Parried" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgRoleSetParry), global::MsgRoleSetParry.Parser, new[]{ "RoleId", "Parrying" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgRoleSetDodge), global::MsgRoleSetDodge.Parser, new[]{ "RoleId", "Dodging" }, null, null, null, null)
         }));
@@ -20435,6 +20435,7 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public NotifyMonsterAttackRole(NotifyMonsterAttackRole other) : this() {
+    monsterId_ = other.monsterId_;
     roleId_ = other.roleId_;
     damage_ = other.damage_;
     parried_ = other.parried_;
@@ -20447,8 +20448,20 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
     return new NotifyMonsterAttackRole(this);
   }
 
+  /// <summary>Field number for the "MonsterId" field.</summary>
+  public const int MonsterIdFieldNumber = 1;
+  private int monsterId_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int MonsterId {
+    get { return monsterId_; }
+    set {
+      monsterId_ = value;
+    }
+  }
+
   /// <summary>Field number for the "RoleId" field.</summary>
-  public const int RoleIdFieldNumber = 1;
+  public const int RoleIdFieldNumber = 2;
   private string roleId_ = "";
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -20460,7 +20473,7 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
   }
 
   /// <summary>Field number for the "Damage" field.</summary>
-  public const int DamageFieldNumber = 2;
+  public const int DamageFieldNumber = 3;
   private double damage_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -20472,7 +20485,7 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
   }
 
   /// <summary>Field number for the "Parried" field.</summary>
-  public const int ParriedFieldNumber = 3;
+  public const int ParriedFieldNumber = 4;
   private bool parried_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -20498,6 +20511,7 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
     if (ReferenceEquals(other, this)) {
       return true;
     }
+    if (MonsterId != other.MonsterId) return false;
     if (RoleId != other.RoleId) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Damage, other.Damage)) return false;
     if (Parried != other.Parried) return false;
@@ -20508,6 +20522,7 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
+    if (MonsterId != 0) hash ^= MonsterId.GetHashCode();
     if (RoleId.Length != 0) hash ^= RoleId.GetHashCode();
     if (Damage != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Damage);
     if (Parried != false) hash ^= Parried.GetHashCode();
@@ -20529,16 +20544,20 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
+    if (MonsterId != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(MonsterId);
+    }
     if (RoleId.Length != 0) {
-      output.WriteRawTag(10);
+      output.WriteRawTag(18);
       output.WriteString(RoleId);
     }
     if (Damage != 0D) {
-      output.WriteRawTag(17);
+      output.WriteRawTag(25);
       output.WriteDouble(Damage);
     }
     if (Parried != false) {
-      output.WriteRawTag(24);
+      output.WriteRawTag(32);
       output.WriteBool(Parried);
     }
     if (_unknownFields != null) {
@@ -20551,16 +20570,20 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (MonsterId != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(MonsterId);
+    }
     if (RoleId.Length != 0) {
-      output.WriteRawTag(10);
+      output.WriteRawTag(18);
       output.WriteString(RoleId);
     }
     if (Damage != 0D) {
-      output.WriteRawTag(17);
+      output.WriteRawTag(25);
       output.WriteDouble(Damage);
     }
     if (Parried != false) {
-      output.WriteRawTag(24);
+      output.WriteRawTag(32);
       output.WriteBool(Parried);
     }
     if (_unknownFields != null) {
@@ -20573,6 +20596,9 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
+    if (MonsterId != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(MonsterId);
+    }
     if (RoleId.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(RoleId);
     }
@@ -20593,6 +20619,9 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
   public void MergeFrom(NotifyMonsterAttackRole other) {
     if (other == null) {
       return;
+    }
+    if (other.MonsterId != 0) {
+      MonsterId = other.MonsterId;
     }
     if (other.RoleId.Length != 0) {
       RoleId = other.RoleId;
@@ -20622,15 +20651,19 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
-        case 10: {
+        case 8: {
+          MonsterId = input.ReadInt32();
+          break;
+        }
+        case 18: {
           RoleId = input.ReadString();
           break;
         }
-        case 17: {
+        case 25: {
           Damage = input.ReadDouble();
           break;
         }
-        case 24: {
+        case 32: {
           Parried = input.ReadBool();
           break;
         }
@@ -20653,15 +20686,19 @@ public sealed partial class NotifyMonsterAttackRole : pb::IMessage<NotifyMonster
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
-        case 10: {
+        case 8: {
+          MonsterId = input.ReadInt32();
+          break;
+        }
+        case 18: {
           RoleId = input.ReadString();
           break;
         }
-        case 17: {
+        case 25: {
           Damage = input.ReadDouble();
           break;
         }
-        case 24: {
+        case 32: {
           Parried = input.ReadBool();
           break;
         }
