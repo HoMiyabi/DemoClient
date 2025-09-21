@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using XLua;
 
 namespace Kirara
@@ -9,7 +10,8 @@ namespace Kirara
         [LuaCallCSharp]
         public static List<Type> myLuaCallCSharpList = new()
         {
-            typeof(KiraraDirectBinder.KiraraDirectBinder)
+            typeof(KiraraDirectBinder.KiraraDirectBinder),
+            typeof(DOTweenModuleUI),
         };
     }
 }

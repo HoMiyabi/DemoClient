@@ -92,7 +92,6 @@ namespace Kirara
             panel.OnPause();
             panel.onPlayExitFinished += () =>
             {
-                panel.onClosed?.Invoke();
                 Destroy(panel.gameObject);
             };
             panel.PlayExit();

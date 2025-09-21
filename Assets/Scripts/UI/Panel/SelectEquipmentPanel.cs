@@ -1,4 +1,5 @@
-﻿using Kirara.Model;
+﻿using DG.Tweening;
+using Kirara.Model;
 
 namespace Kirara.UI.Panel
 {
@@ -9,14 +10,16 @@ namespace Kirara.UI.Panel
         private UnityEngine.UI.Button             UIBackBtn;
         private Kirara.UI.UISelectEquipmentDisc   UISelectEquipmentDisc;
         private Kirara.UI.UISelectEquipmentWeapon UISelectEquipmentWeapon;
+        private UnityEngine.CanvasGroup           CanvasGroup;
         public override void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
-            var c                   = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn               = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
-            UISelectEquipmentDisc   = c.Q<Kirara.UI.UISelectEquipmentDisc>(1, "UISelectEquipmentDisc");
-            UISelectEquipmentWeapon = c.Q<Kirara.UI.UISelectEquipmentWeapon>(2, "UISelectEquipmentWeapon");
+            var b                   = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIBackBtn               = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            UISelectEquipmentDisc   = b.Q<Kirara.UI.UISelectEquipmentDisc>(1, "UISelectEquipmentDisc");
+            UISelectEquipmentWeapon = b.Q<Kirara.UI.UISelectEquipmentWeapon>(2, "UISelectEquipmentWeapon");
+            CanvasGroup             = b.Q<UnityEngine.CanvasGroup>(3, "CanvasGroup");
         }
         #endregion
 
@@ -72,6 +75,17 @@ namespace Kirara.UI.Panel
             UISelectEquipmentWeapon.gameObject.SetActive(true);
 
             UISelectEquipmentWeapon.Set(ch);
+        }
+
+        public override void PlayEnter()
+        {
+            CanvasGroup.alpha = 0f;
+            CanvasGroup.DOFade(1f, 0.1f).OnComplete(base.PlayEnter);
+        }
+
+        public override void PlayExit()
+        {
+            CanvasGroup.DOFade(0f, 0.1f).OnComplete(base.PlayExit);
         }
     }
 }

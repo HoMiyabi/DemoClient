@@ -7,7 +7,6 @@ namespace Kirara.UI.Panel
     [LuaCallCSharp]
     public abstract class AbstractBasePanel : MonoBehaviour
     {
-        public Action onClosed;
         public Action onPlayEnterFinished;
         public Action onPlayExitFinished;
 

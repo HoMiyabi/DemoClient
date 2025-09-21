@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using Kirara.Model;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ namespace Kirara.UI.Panel
         private KiraraLoopScroll.GridScrollView WeaponLoopScroll;
         private KiraraLoopScroll.GridScrollView DiscLoopScroll;
         private Kirara.UI.UITabController       UITabController;
+        private UnityEngine.CanvasGroup         CanvasGroup;
         public override void BindUI()
         {
             if (_isBound) return;
@@ -32,6 +34,7 @@ namespace Kirara.UI.Panel
             WeaponLoopScroll  = b.Q<KiraraLoopScroll.GridScrollView>(6, "WeaponLoopScroll");
             DiscLoopScroll    = b.Q<KiraraLoopScroll.GridScrollView>(7, "DiscLoopScroll");
             UITabController   = b.Q<Kirara.UI.UITabController>(8, "UITabController");
+            CanvasGroup       = b.Q<UnityEngine.CanvasGroup>(9, "CanvasGroup");
         }
         #endregion
 
@@ -58,6 +61,17 @@ namespace Kirara.UI.Panel
 
             SetItems();
             SetTab();
+        }
+
+        public override void PlayEnter()
+        {
+            CanvasGroup.alpha = 0f;
+            CanvasGroup.DOFade(1f, 0.1f).OnComplete(base.PlayEnter);
+        }
+
+        public override void PlayExit()
+        {
+            CanvasGroup.DOFade(0f, 0.1f).OnComplete(base.PlayExit);
         }
 
         private void SetItems()

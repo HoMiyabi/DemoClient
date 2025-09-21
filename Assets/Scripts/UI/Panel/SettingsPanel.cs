@@ -1,4 +1,5 @@
-﻿using Manager;
+﻿using DG.Tweening;
+using Manager;
 using UnityEngine;
 
 namespace Kirara.UI.Panel
@@ -9,13 +10,15 @@ namespace Kirara.UI.Panel
         private bool _isBound;
         private UnityEngine.UI.Button             UIBackBtn;
         private KiraraLoopScroll.LinearScrollView ScrollView;
+        private UnityEngine.CanvasGroup           CanvasGroup;
         public override void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
-            var b      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-            UIBackBtn  = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
-            ScrollView = b.Q<KiraraLoopScroll.LinearScrollView>(1, "ScrollView");
+            var b       = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+            UIBackBtn   = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+            ScrollView  = b.Q<KiraraLoopScroll.LinearScrollView>(1, "ScrollView");
+            CanvasGroup = b.Q<UnityEngine.CanvasGroup>(2, "CanvasGroup");
         }
         #endregion
 
@@ -29,6 +32,17 @@ namespace Kirara.UI.Panel
             ScrollView._totalCount = 4;
             ScrollView.SetSource(new LoopScrollGOPool(SettingItemPrefab, transform));
             ScrollView.provideData = ProvideData;
+        }
+
+        public override void PlayEnter()
+        {
+            CanvasGroup.alpha = 0f;
+            CanvasGroup.DOFade(1f, 0.1f).OnComplete(base.PlayEnter);
+        }
+
+        public override void PlayExit()
+        {
+            CanvasGroup.DOFade(0f, 0.1f).OnComplete(base.PlayExit);
         }
 
         private void ProvideData(GameObject go, int index)

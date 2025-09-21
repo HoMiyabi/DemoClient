@@ -1,6 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Kirara.Model;
 using Kirara.Service;
+using UnityEngine;
 using YooAsset;
 
 namespace Kirara.UI.Panel
@@ -23,10 +25,12 @@ namespace Kirara.UI.Panel
         private Kirara.UI.UIDiscIcon          UIDiscIcon;
         private Kirara.UI.UIDiscNameText      UIDiscNameText;
         private Kirara.UI.UIUpgradeDiscExpBar UIUpgradeDiscExpBar;
+        private UnityEngine.CanvasGroup       CanvasGroup;
+        private UnityEngine.RectTransform     Box;
         public override void BindUI()
         {
-            if (_isBound) return;
-            _isBound = true;
+        if (_isBound) return;
+        _isBound = true;
             var b               = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             UICloseBtn          = b.Q<UnityEngine.UI.Button>(0, "UICloseBtn");
             UIDiscPosIcon       = b.Q<Kirara.UI.UIDiscPosIcon>(1, "UIDiscPosIcon");
@@ -42,6 +46,8 @@ namespace Kirara.UI.Panel
             UIDiscIcon          = b.Q<Kirara.UI.UIDiscIcon>(11, "UIDiscIcon");
             UIDiscNameText      = b.Q<Kirara.UI.UIDiscNameText>(12, "UIDiscNameText");
             UIUpgradeDiscExpBar = b.Q<Kirara.UI.UIUpgradeDiscExpBar>(13, "UIUpgradeDiscExpBar");
+            CanvasGroup         = b.Q<UnityEngine.CanvasGroup>(14, "CanvasGroup");
+            Box                 = b.Q<UnityEngine.RectTransform>(15, "Box");
         }
         #endregion
 
@@ -166,6 +172,20 @@ namespace Kirara.UI.Panel
         private void UpdateUpgradeBtnView()
         {
             UpgradeBtn.interactable = UseCount >= 1;
+        }
+
+        public override void PlayEnter()
+        {
+            Box.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+            Box.DOScale(1f, 0.1f);
+            CanvasGroup.alpha = 0f;
+            CanvasGroup.DOFade(1f, 0.1f).OnComplete(base.PlayEnter);
+        }
+
+        public override void PlayExit()
+        {
+            Box.DOScale(0.8f, 0.1f);
+            CanvasGroup.DOFade(0f, 0.1f).OnComplete(base.PlayExit);
         }
     }
 }

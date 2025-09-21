@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using cfg.main;
+using DG.Tweening;
 using Kirara;
 using Kirara.UI;
 using Kirara.UI.Panel;
@@ -13,14 +14,16 @@ public class RoleSelectPanel : BasePanel
     private UnityEngine.UI.Button           UIBackBtn;
     private UnityEngine.UI.Button           SelectBtn;
     private KiraraLoopScroll.GridScrollView LoopScroll;
+    private UnityEngine.CanvasGroup         CanvasGroup;
     public override void BindUI()
     {
         if (_isBound) return;
         _isBound = true;
-        var c      = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
-        UIBackBtn  = c.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
-        SelectBtn  = c.Q<UnityEngine.UI.Button>(1, "SelectBtn");
-        LoopScroll = c.Q<KiraraLoopScroll.GridScrollView>(2, "LoopScroll");
+        var b       = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
+        UIBackBtn   = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
+        SelectBtn   = b.Q<UnityEngine.UI.Button>(1, "SelectBtn");
+        LoopScroll  = b.Q<KiraraLoopScroll.GridScrollView>(2, "LoopScroll");
+        CanvasGroup = b.Q<UnityEngine.CanvasGroup>(3, "CanvasGroup");
     }
     #endregion
 
@@ -71,5 +74,16 @@ public class RoleSelectPanel : BasePanel
         int i = (idx % list.Count + list.Count) % list.Count;
         var config = list[i];
         cell.Set(config, i, selected);
+    }
+
+    public override void PlayEnter()
+    {
+        CanvasGroup.alpha = 0f;
+        CanvasGroup.DOFade(1f, 0.1f).OnComplete(base.PlayEnter);
+    }
+
+    public override void PlayExit()
+    {
+        CanvasGroup.DOFade(0f, 0.1f).OnComplete(base.PlayExit);
     }
 }

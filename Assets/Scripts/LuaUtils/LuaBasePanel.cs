@@ -16,6 +16,8 @@ namespace Kirara.LuaUtils
         private Action<LuaTable> luaStart;
         private Action<LuaTable> luaUpdate;
         private Action<LuaTable> luaOnDestroy;
+        private Action<LuaTable> luaPlayEnter;
+        private Action<LuaTable> luaPlayExit;
 
         private void Awake()
         {
@@ -42,6 +44,8 @@ namespace Kirara.LuaUtils
             table.Get("Start", out luaStart);
             table.Get("Update", out luaUpdate);
             table.Get("OnDestroy", out luaOnDestroy);
+            table.Get("PlayEnter", out luaPlayEnter);
+            table.Get("PlayExit", out luaPlayExit);
 
             bindUI?.Invoke(table);
             luaAwake?.Invoke(table);
@@ -66,6 +70,30 @@ namespace Kirara.LuaUtils
             luaStart = null;
             luaUpdate = null;
             luaOnDestroy = null;
+        }
+
+        public override void PlayEnter()
+        {
+            if (luaPlayEnter != null)
+            {
+                luaPlayEnter(table);
+            }
+            else
+            {
+                base.PlayEnter();
+            }
+        }
+
+        public override void PlayExit()
+        {
+            if (luaPlayExit != null)
+            {
+                luaPlayExit(table);
+            }
+            else
+            {
+                base.PlayExit();
+            }
         }
     }
 }

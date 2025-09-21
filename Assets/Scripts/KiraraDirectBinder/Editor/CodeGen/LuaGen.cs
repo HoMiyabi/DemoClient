@@ -18,7 +18,7 @@ namespace KiraraDirectBinder.Editor
                 sb.AppendLine("    return");
                 sb.AppendLine("end");
                 sb.AppendLine("self._isBound = true");
-                sb.AppendLine($"{"local b".PadRight(equalLeftLen)} = self.com:GetComponent(typeof(CS.KiraraDirectBinder.KiraraDirectBinder))");
+                sb.AppendLine($"{"local b".PadRight(equalLeftLen)} = self.panel:GetComponent(typeof(CS.KiraraDirectBinder.KiraraDirectBinder))");
 
                 for (int i = 0; i < binder.items.Count; i++)
                 {

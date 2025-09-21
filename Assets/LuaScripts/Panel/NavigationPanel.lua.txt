@@ -10,6 +10,7 @@ function NavigationPanel:BindUI()
     self.InventoryBtn = b:Q(1, "InventoryBtn")
     self.UIBackBtn    = b:Q(2, "UIBackBtn")
     self.FriendBtn    = b:Q(3, "FriendBtn")
+    self.CanvasGroup  = b:Q(4, "CanvasGroup")
 end
 
 
@@ -44,6 +45,25 @@ function NavigationPanel:Awake()
     --        CS.Kirara.UIMgr.Instance:PopPanel(panel)
     --    end)
     --end)
+end
+
+function NavigationPanel:PlayEnter()
+    self.CanvasGroup.alpha = 0
+    local t = self.CanvasGroup:DOFade(1, 0.1)
+    t.onComplete = function()
+        if self.panel.onPlayEnterFinished ~= nil then
+            self.panel.onPlayEnterFinished()
+        end
+    end
+end
+
+function NavigationPanel:PlayExit()
+    local t = self.CanvasGroup:DOFade(0, 0.1)
+    t.onComplete = function()
+        if self.panel.onPlayExitFinished ~= nil then
+            self.panel.onPlayExitFinished()
+        end
+    end
 end
 
 return NavigationPanel
