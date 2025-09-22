@@ -263,7 +263,7 @@ namespace Kirara
 
             // 格挡
             // todo)) 格挡点数
-            const float parryDist = 4f;
+            const float parryDist = 4.5f;
             // 面向敌人
             transform.forward = -monster.transform.forward;
             SetPos(monster.transform.position + monster.transform.forward * parryDist);
@@ -356,6 +356,12 @@ namespace Kirara
                 EnterAttackParryAid().Forget();
                 var monsterCtrl = MonsterSystem.Instance.monsterCtrls[msg.MonsterId];
                 monsterCtrl.EnterParried().Forget();
+
+                // 播放粒子
+                var pos = new Vector3(0, 1, 1.5f);
+                pos = transform.TransformPoint(pos);
+                ParticleMgr.Instance.PlayAt(PlayerSystem.Instance.ParrySuccessParticlePrefab, pos);
+                PostVolumeMgr.Instance.StartPerfectDodgeProfile();
             }
             else
             {

@@ -13,8 +13,11 @@ namespace Kirara
 {
     public class PlayerSystem : UnitySingleton<PlayerSystem>
     {
+        // 暂时放这里吧
         public AudioClip[] dodgeSuccessTipClips;
         public GameObject PerfectDodgeSparklePrefab;
+        public GameObject ParrySuccessParticlePrefab;
+
 
         [SerializeField] private Transform RoleParent;
         [SerializeField] public CinemachineVirtualCamera vcam;
