@@ -138,22 +138,25 @@ namespace Kirara
 
         private void UpdateRotation()
         {
-            if (EnableRotation)
+            if (!EnableRotation) return;
+
+            var inputDir = PlayerSystem.Instance.input.Combat.Move.ReadValue<Vector2>();
+            if (inputDir == Vector2.zero)
             {
-                var inputDir = PlayerSystem.Instance.input.Combat.Move.ReadValue<Vector2>();
-                if (inputDir != Vector2.zero)
-                {
-                    var camForward = Cam.transform.forward;
-                    var camRight = Cam.transform.right;
-                    camForward.y = 0;
-                    camRight.y = 0;
-                    camForward.Normalize();
-                    camRight.Normalize();
-                    var moveDirWS = camForward * inputDir.y + camRight * inputDir.x;
-                    TargetRotation = Quaternion.LookRotation(moveDirWS, Vector3.up);
-                }
-                transform.rotation = Quaternion.Slerp(transform.rotation, TargetRotation, Time.deltaTime * inputRotationSpeed);
+                return;
             }
+
+            var camForward = VCam.transform.forward;
+            var camRight = VCam.transform.right;
+            camForward.y = 0;
+            camRight.y = 0;
+            camForward.Normalize();
+            camRight.Normalize();
+            var wsMoveDir = camForward * inputDir.y + camRight * inputDir.x;
+            var rot = Quaternion.LookRotation(wsMoveDir);
+
+            transform.DOKill();
+            transform.DORotateQuaternion(rot, 0.1f);
         }
 
         // public void TriggerHitstopIfHitMonster(float duration, float speed)
@@ -260,7 +263,7 @@ namespace Kirara
 
             // 格挡
             // todo)) 格挡点数
-            const float parryDist = 3.5f;
+            const float parryDist = 4f;
             // 面向敌人
             transform.forward = -monster.transform.forward;
             SetPos(monster.transform.position + monster.transform.forward * parryDist);

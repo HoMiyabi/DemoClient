@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using cfg.main;
 using Cysharp.Threading.Tasks;
 using Kirara.Model;
@@ -19,7 +21,9 @@ namespace Kirara
         // public RoleCtrl ParryingRole { get; set; }
         private CharacterController CharacterController { get; set; }
         public MonsterModel Model { get; private set; }
-        public ActionCtrl ActionCtrl { get; private set; }
+        private ActionCtrl ActionCtrl { get; set; }
+
+        private List<Vector3> Path { get; set; } = new();
 
         private void Awake()
         {
@@ -214,6 +218,25 @@ namespace Kirara
             //         }
             //     }
             // }
+        }
+
+        public void UpdatePath(NotifyMonsterPath notify)
+        {
+            Path.Clear();
+            Path.AddRange(notify.Path.Select(v => v.Unity()));
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            foreach (var point in Path)
+            {
+                Gizmos.DrawSphere(point, 0.1f);
+            }
+            for (int i = 0; i < Path.Count - 1; i++)
+            {
+                Gizmos.DrawLine(Path[i], Path[i + 1]);
+            }
         }
     }
 }

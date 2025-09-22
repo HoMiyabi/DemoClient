@@ -190,6 +190,16 @@ namespace Kirara.TimelineAction.Editor
                 {
                     Debug.Log(ActionList.ToJson());
                 }
+
+                if (GUILayout.Button("聚焦", GUILayout.ExpandWidth(false)))
+                {
+                    if (GO != null)
+                    {
+                        Selection.activeGameObject = GO;
+                        SceneView.lastActiveSceneView.FrameSelected();
+                        SceneView.lastActiveSceneView.Focus();
+                    }
+                }
             }
             EditorGUI.EndDisabledGroup();
 

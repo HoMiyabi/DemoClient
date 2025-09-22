@@ -144,7 +144,8 @@ public static partial class MessageReflection {
           "CgZSb2xlSWQYAiABKAkSDgoGRGFtYWdlGAMgASgBEg8KB1BhcnJpZWQYBCAB",
           "KAgiMwoPTXNnUm9sZVNldFBhcnJ5Eg4KBlJvbGVJZBgBIAEoCRIQCghQYXJy",
           "eWluZxgCIAEoCCIyCg9Nc2dSb2xlU2V0RG9kZ2USDgoGUm9sZUlkGAEgASgJ",
-          "Eg8KB0RvZGdpbmcYAiABKAhiBnByb3RvMw=="));
+          "Eg8KB0RvZGdpbmcYAiABKAgiPwoRTm90aWZ5TW9uc3RlclBhdGgSEQoJTW9u",
+          "c3RlcklkGAEgASgFEhcKBFBhdGgYAiADKAsyCS5OVmVjdG9yM2IGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -232,7 +233,8 @@ public static partial class MessageReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::NotifyObtainItems), global::NotifyObtainItems.Parser, new[]{ "CurItems", "MatItems", "DiscItems", "WeaponItems" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NotifyMonsterAttackRole), global::NotifyMonsterAttackRole.Parser, new[]{ "MonsterId", "RoleId", "Damage", "Parried" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::MsgRoleSetParry), global::MsgRoleSetParry.Parser, new[]{ "RoleId", "Parrying" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::MsgRoleSetDodge), global::MsgRoleSetDodge.Parser, new[]{ "RoleId", "Dodging" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::MsgRoleSetDodge), global::MsgRoleSetDodge.Parser, new[]{ "RoleId", "Dodging" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NotifyMonsterPath), global::NotifyMonsterPath.Parser, new[]{ "MonsterId", "Path" }, null, null, null, null)
         }));
   }
   #endregion
@@ -21170,6 +21172,230 @@ public sealed partial class MsgRoleSetDodge : pb::IMessage<MsgRoleSetDodge>
         }
         case 16: {
           Dodging = input.ReadBool();
+          break;
+        }
+      }
+    }
+  }
+  #endif
+
+}
+
+[global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+public sealed partial class NotifyMonsterPath : pb::IMessage<NotifyMonsterPath>
+#if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    , pb::IBufferMessage
+#endif
+{
+  private static readonly pb::MessageParser<NotifyMonsterPath> _parser = new pb::MessageParser<NotifyMonsterPath>(() => new NotifyMonsterPath());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pb::MessageParser<NotifyMonsterPath> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::MessageReflection.Descriptor.MessageTypes[85]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public NotifyMonsterPath() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public NotifyMonsterPath(NotifyMonsterPath other) : this() {
+    monsterId_ = other.monsterId_;
+    path_ = other.path_.Clone();
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public NotifyMonsterPath Clone() {
+    return new NotifyMonsterPath(this);
+  }
+
+  /// <summary>Field number for the "MonsterId" field.</summary>
+  public const int MonsterIdFieldNumber = 1;
+  private int monsterId_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int MonsterId {
+    get { return monsterId_; }
+    set {
+      monsterId_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "Path" field.</summary>
+  public const int PathFieldNumber = 2;
+  private static readonly pb::FieldCodec<global::NVector3> _repeated_path_codec
+      = pb::FieldCodec.ForMessage(18, global::NVector3.Parser);
+  private readonly pbc::RepeatedField<global::NVector3> path_ = new pbc::RepeatedField<global::NVector3>();
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public pbc::RepeatedField<global::NVector3> Path {
+    get { return path_; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override bool Equals(object other) {
+    return Equals(other as NotifyMonsterPath);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(NotifyMonsterPath other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (MonsterId != other.MonsterId) return false;
+    if(!path_.Equals(other.path_)) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (MonsterId != 0) hash ^= MonsterId.GetHashCode();
+    hash ^= path_.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void WriteTo(pb::CodedOutputStream output) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    output.WriteRawMessage(this);
+  #else
+    if (MonsterId != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(MonsterId);
+    }
+    path_.WriteTo(output, _repeated_path_codec);
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (MonsterId != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(MonsterId);
+    }
+    path_.WriteTo(ref output, _repeated_path_codec);
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(ref output);
+    }
+  }
+  #endif
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int CalculateSize() {
+    int size = 0;
+    if (MonsterId != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(MonsterId);
+    }
+    size += path_.CalculateSize(_repeated_path_codec);
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(NotifyMonsterPath other) {
+    if (other == null) {
+      return;
+    }
+    if (other.MonsterId != 0) {
+      MonsterId = other.MonsterId;
+    }
+    path_.Add(other.path_);
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(pb::CodedInputStream input) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    input.ReadRawMessage(this);
+  #else
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+    if ((tag & 7) == 4) {
+      // Abort on any end group tag.
+      return;
+    }
+    switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 8: {
+          MonsterId = input.ReadInt32();
+          break;
+        }
+        case 18: {
+          path_.AddEntriesFrom(input, _repeated_path_codec);
+          break;
+        }
+      }
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+    if ((tag & 7) == 4) {
+      // Abort on any end group tag.
+      return;
+    }
+    switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+          break;
+        case 8: {
+          MonsterId = input.ReadInt32();
+          break;
+        }
+        case 18: {
+          path_.AddEntriesFrom(ref input, _repeated_path_codec);
           break;
         }
       }
