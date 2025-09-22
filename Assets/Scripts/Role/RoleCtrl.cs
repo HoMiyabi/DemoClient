@@ -354,7 +354,7 @@ namespace Kirara
             if (msg.Parried)
             {
                 EnterAttackParryAid().Forget();
-                var monsterCtrl = MonsterSystem.Instance.monsterCtrls[msg.MonsterId];
+                var monsterCtrl = MonsterSystem.Instance.IdToMonsterCtrl[msg.MonsterId];
                 monsterCtrl.EnterParried().Forget();
 
                 // 播放粒子

@@ -18,6 +18,7 @@ namespace Kirara
             {
                 go.SetActive(false);
                 go.transform.SetParent(transform, false);
+                go.transform.localPosition = Vector3.zero;
                 pool.Push(go);
             }
             else
@@ -55,10 +56,14 @@ namespace Kirara
             return ps;
         }
 
+        // private int id = 0;
+
         public ParticleSystem PlayAt(GameObject prefab, Vector3 worldPosition)
         {
             GetGameObjectAndPool(prefab, out var go, out var pool);
 
+            // go.name = $"Particle_{id++}";
+            // Debug.Log($"播放粒子, name: {go.name}");
             go.transform.position = worldPosition;
             go.SetActive(true);
             var particle = go.GetComponent<ParticleSystem>();

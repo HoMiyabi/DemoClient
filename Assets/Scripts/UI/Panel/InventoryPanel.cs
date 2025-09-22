@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DG.Tweening;
 using Kirara.Model;
 using UnityEngine;
@@ -11,8 +10,6 @@ namespace Kirara.UI.Panel
         #region View
         private bool _isBound;
         private UnityEngine.UI.Button           UIBackBtn;
-        private TMPro.TextMeshProUGUI           CoinText;
-        private UnityEngine.UI.Image            CoinIconImg;
         private TMPro.TextMeshProUGUI           InventoryNameText;
         private Kirara.UI.UIDiscDetail          UIDiscDetail;
         private Kirara.UI.UIWeaponDetail        UIWeaponDetail;
@@ -20,21 +17,23 @@ namespace Kirara.UI.Panel
         private KiraraLoopScroll.GridScrollView DiscLoopScroll;
         private Kirara.UI.UITabController       UITabController;
         private UnityEngine.CanvasGroup         CanvasGroup;
+        private Kirara.UI.UICurrencyArea        UICurrencyArea1;
+        private Kirara.UI.UICurrencyArea        UICurrencyArea2;
         public override void BindUI()
         {
             if (_isBound) return;
             _isBound = true;
             var b             = GetComponent<KiraraDirectBinder.KiraraDirectBinder>();
             UIBackBtn         = b.Q<UnityEngine.UI.Button>(0, "UIBackBtn");
-            CoinText          = b.Q<TMPro.TextMeshProUGUI>(1, "CoinText");
-            CoinIconImg       = b.Q<UnityEngine.UI.Image>(2, "CoinIconImg");
-            InventoryNameText = b.Q<TMPro.TextMeshProUGUI>(3, "InventoryNameText");
-            UIDiscDetail      = b.Q<Kirara.UI.UIDiscDetail>(4, "UIDiscDetail");
-            UIWeaponDetail    = b.Q<Kirara.UI.UIWeaponDetail>(5, "UIWeaponDetail");
-            WeaponLoopScroll  = b.Q<KiraraLoopScroll.GridScrollView>(6, "WeaponLoopScroll");
-            DiscLoopScroll    = b.Q<KiraraLoopScroll.GridScrollView>(7, "DiscLoopScroll");
-            UITabController   = b.Q<Kirara.UI.UITabController>(8, "UITabController");
-            CanvasGroup       = b.Q<UnityEngine.CanvasGroup>(9, "CanvasGroup");
+            InventoryNameText = b.Q<TMPro.TextMeshProUGUI>(1, "InventoryNameText");
+            UIDiscDetail      = b.Q<Kirara.UI.UIDiscDetail>(2, "UIDiscDetail");
+            UIWeaponDetail    = b.Q<Kirara.UI.UIWeaponDetail>(3, "UIWeaponDetail");
+            WeaponLoopScroll  = b.Q<KiraraLoopScroll.GridScrollView>(4, "WeaponLoopScroll");
+            DiscLoopScroll    = b.Q<KiraraLoopScroll.GridScrollView>(5, "DiscLoopScroll");
+            UITabController   = b.Q<Kirara.UI.UITabController>(6, "UITabController");
+            CanvasGroup       = b.Q<UnityEngine.CanvasGroup>(7, "CanvasGroup");
+            UICurrencyArea1   = b.Q<Kirara.UI.UICurrencyArea>(8, "UICurrencyArea1");
+            UICurrencyArea2   = b.Q<Kirara.UI.UICurrencyArea>(9, "UICurrencyArea2");
         }
         #endregion
 
@@ -53,8 +52,9 @@ namespace Kirara.UI.Panel
 
             UIBackBtn.onClick.AddListener(() => UIMgr.Instance.PopPanel(this));
 
-            CoinText.text = PlayerService.Player.Currencies
-                .Find(x => x.Cid == 1)?.Count.ToString() ?? "0";
+
+            UICurrencyArea1.Set(1);
+            UICurrencyArea2.Set(2);
 
             _selectedWeapon.Add(value => UIWeaponDetail.Set(value));
             _selectedDisc.Add(value => UIDiscDetail.Set(value));

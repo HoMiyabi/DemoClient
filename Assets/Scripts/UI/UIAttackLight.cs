@@ -68,6 +68,7 @@ namespace Kirara.UI
 
         private void Update()
         {
+            if (_wsFollow == null) return;
             RectUtils.SetRectWorldPos(rectTransform, _wsFollow.position);
         }
 

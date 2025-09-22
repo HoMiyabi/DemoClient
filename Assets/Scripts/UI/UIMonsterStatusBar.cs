@@ -76,9 +76,9 @@ namespace Kirara.UI
 
         public void Update()
         {
-            if (MonsterSystem.Instance.monsterCtrls.Count > 0)
+            if (MonsterSystem.Instance.IdToMonsterCtrl.Count > 0)
             {
-                var monsterCtrl = MonsterSystem.Instance.monsterCtrls.Values.First();
+                var monsterCtrl = MonsterSystem.Instance.IdToMonsterCtrl.Values.First();
                 Monster = monsterCtrl.Model;
             }
             else

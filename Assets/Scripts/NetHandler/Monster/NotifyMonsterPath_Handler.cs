@@ -6,7 +6,7 @@ namespace Kirara.NetHandler.Monster
     {
         protected override void Run(Session session, NotifyMonsterPath msg)
         {
-            if (MonsterSystem.Instance.monsterCtrls.TryGetValue(msg.MonsterId, out var monsterCtrl))
+            if (MonsterSystem.Instance.IdToMonsterCtrl.TryGetValue(msg.MonsterId, out var monsterCtrl))
             {
                 monsterCtrl.UpdatePath(msg);
             }

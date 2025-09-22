@@ -10,7 +10,8 @@ namespace Kirara
     public class MonsterSystem : UnitySingleton<MonsterSystem>
     {
         [SerializeField] private Transform monsterParent;
-        public readonly Dictionary<int, MonsterCtrl> monsterCtrls = new();
+
+        public Dictionary<int, MonsterCtrl> IdToMonsterCtrl { get; } = new();
 
         public List<MonsterCtrl> DodgeDetectMonsters { get; } = new();
 
@@ -25,7 +26,7 @@ namespace Kirara
 
         public void MonsterTakeDamage(NotifyMonsterTakeDamage msg)
         {
-            if (monsterCtrls.TryGetValue(msg.MonsterId, out var monsterCtrl))
+            if (IdToMonsterCtrl.TryGetValue(msg.MonsterId, out var monsterCtrl))
             {
                 monsterCtrl.HandleSelfTakeDamage(msg);
                 OnMonsterTakeDamage?.Invoke(monsterCtrl, msg.Damage, msg.IsCrit);
@@ -46,7 +47,7 @@ namespace Kirara
 
             var monster = go.GetComponent<MonsterCtrl>();
             monster.Set(new MonsterModel(syncMonster.MonsterCid, syncMonster.MonsterId, syncMonster.Hp));
-            monsterCtrls.Add(syncMonster.MonsterCid, monster);
+            IdToMonsterCtrl.Add(syncMonster.MonsterId, monster);
             if (!string.IsNullOrEmpty(syncMonster.ActionName))
             {
                 monster.PlayAction(syncMonster.ActionName);
@@ -60,7 +61,7 @@ namespace Kirara
 
         public void MonsterDie(int monsterId)
         {
-            if (monsterCtrls.Remove(monsterId, out var monster))
+            if (IdToMonsterCtrl.Remove(monsterId, out var monster))
             {
                 OnMonsterDie?.Invoke(monster);
                 monster.HandleSelfDie();
@@ -78,7 +79,7 @@ namespace Kirara
 
         public MonsterCtrl ClosestMonster(Vector3 worldPos, out float dist)
         {
-            return ClosestMonster(worldPos, monsterCtrls.Values, out dist);
+            return ClosestMonster(worldPos, IdToMonsterCtrl.Values, out dist);
         }
 
         public MonsterCtrl ClosestDodgeDetectMonster(Vector3 worldPos, out float dist)

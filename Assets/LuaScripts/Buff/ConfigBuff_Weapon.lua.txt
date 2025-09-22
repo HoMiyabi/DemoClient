@@ -23,7 +23,7 @@ end
 config.LiuHuangShi_1 = function(self)
     self.duration = 8
     self.stackLimit = 8
-    self.attrs[self.EAttrType.AttackPct] = 0.035
+    self.attrs[self.EAttrType.AtkPct] = 0.035
 end
 
 
