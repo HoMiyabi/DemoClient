@@ -384,6 +384,11 @@ namespace Kirara
             var assistVCam = leftDist < rightDist ? leftAssistVCam : rightAssistVCam;
 
             assistVCam.enabled = true;
+
+            // 设置支援相机退出后水平不调整
+            var assistVcamAngles = assistVCam.transform.rotation.eulerAngles;
+            var pov = VCam.GetCinemachineComponent<CinemachinePOV>();
+            pov.m_HorizontalAxis.Value = assistVcamAngles.y;
         }
 
         public void ExitAssistCamera()

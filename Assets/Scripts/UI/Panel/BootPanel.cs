@@ -25,6 +25,8 @@ namespace Kirara.UI.Panel
         }
         #endregion
 
+        public Vector2Int resolution = new(1024, 576);
+
         public string mainSceneName;
         public GameObject DialogPanelPrefab;
         private PatchController patchCtrl;
@@ -44,6 +46,10 @@ namespace Kirara.UI.Panel
 
         private async UniTaskVoid Boot()
         {
+            // 设置分辨率相关
+            Screen.SetResolution(resolution.x, resolution.y, FullScreenMode.Windowed);
+
+
             SetStatusText("加载资源...");
             await UniTask.WaitForSeconds(0.3f);
             YooAssets.Initialize();
