@@ -407,7 +407,7 @@ namespace Kirara
             if (size > 0)
             {
                 Debug.Log("完美闪避");
-                Debug.Log($"检测到碰撞体: {string.Join(", ", cols.Take(size).Select(x => x.name).ToArray())}");
+                Debug.Log($"检测到碰撞体: {string.Join(", ", cols.Take(size).Select(x => $"{x.name}(enabled: {x.enabled})").ToArray())}");
                 // 播放音效
                 var clips = PlayerSystem.Instance.dodgeSuccessTipClips;
                 AudioMgr.Instance.PlaySFX(clips.RandomItem(), transform.position);
