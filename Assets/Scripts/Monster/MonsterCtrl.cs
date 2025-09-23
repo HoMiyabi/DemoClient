@@ -17,6 +17,7 @@ namespace Kirara
 
         [SerializeField] private BoxCollider boxCollider;
         [SerializeField] private SphereCollider sphereCollider;
+        [SerializeField] private LineRenderer pathLineRenderer;
 
         // public RoleCtrl ParryingRole { get; set; }
         private CharacterController CharacterController { get; set; }
@@ -222,20 +223,13 @@ namespace Kirara
 
         public void UpdatePath(NotifyMonsterPath notify)
         {
+            // 绘制服务器下发的寻路路径
             Path.Clear();
             Path.AddRange(notify.Path.Select(v => v.Unity()));
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.yellow;
-            foreach (var point in Path)
+            pathLineRenderer.positionCount = Path.Count;
+            for (int i = 0; i < Path.Count; i++)
             {
-                Gizmos.DrawSphere(point, 0.1f);
-            }
-            for (int i = 0; i < Path.Count - 1; i++)
-            {
-                Gizmos.DrawLine(Path[i], Path[i + 1]);
+                pathLineRenderer.SetPosition(i, Path[i]);
             }
         }
     }
