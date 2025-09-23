@@ -61,6 +61,7 @@ namespace Kirara.UI
             FriendRequestCountText.text = $"好友请求数量 {friendRequests.Count}";
 
             ScrollView._totalCount = friendRequests.Count;
+            ScrollView.RefreshToStart();
         }
 
         private async UniTaskVoid SearchBtn_onClick()

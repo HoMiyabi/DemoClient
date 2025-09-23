@@ -47,6 +47,7 @@ namespace Kirara.UI
             FriendCountText.text = $"好友数量 {friends.Count}";
 
             ScrollView._totalCount = friends.Count;
+            ScrollView.RefreshToStart();
         }
 
         private void ProvideData(GameObject go, int idx)

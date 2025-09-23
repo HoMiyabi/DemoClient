@@ -80,6 +80,10 @@ namespace Kirara.UI.Panel
                     Username = UsernameInput.text,
                     Password = PasswordInput.text
                 });
+                var panel = UIMgr.Instance.PushPanel<DialogPanel>();
+                panel.Title = "提示";
+                panel.Content = rsp.Result.Msg;
+                panel.OkBtnOnClick.AddListener(() => UIMgr.Instance.PopPanel(panel));
             }
             catch (ResultException e)
             {
